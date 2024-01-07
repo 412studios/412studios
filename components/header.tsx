@@ -10,9 +10,13 @@ export default function Header() {
             
             {/* Desktop */}
             <div className='hidden md:flex p-8'>
+
                 <a href="/" className='flex items-center w-32 h-auto mr-12' aria-label="logo header">
-                    <Logo className="h-full w-auto" />
+
+                    <Logo />
+
                 </a>
+
                 <div className="flex items-center justify-center h-20">
                     <a href="/" className='link-hover mr-4'>Home</a>
                     <a href="/about" className='link-hover'>About</a>

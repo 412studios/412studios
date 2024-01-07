@@ -54,14 +54,14 @@ font-style: italic;
   --foreground-rgb: 43, 43, 43;
   --background-start-rgb: 200, 200, 200;
   --background-end-rgb: 200, 200, 200;
-  --highlight-rgb: 75, 139, 98;
+  --highlight-rgb: 105, 119, 147;
 }
 @media (prefers-color-scheme: dark) {
   :root {
     --foreground-rgb: 240, 240, 240;
     --background-start-rgb: 43, 43, 43;
     --background-end-rgb: 43, 43, 43;
-    --highlight-rgb: 183, 255, 181;
+    --highlight-rgb: 182, 196, 228;
   }
 }
 
@@ -87,13 +87,14 @@ h1 {
 }
 
 #logo-icon {
-  fill: none;
-  stroke-width: .5rem;
+  fill: rgb(var(--foreground-rgb));
+  stroke-width: 0rem;
   stroke: rgb(var(--foreground-rgb));
   transition: .5s;
 }
 #logo-icon:hover {
   stroke: rgb(var(--highlight-rgb));
+  fill: rgb(var(--highlight-rgb));
 }
 
 .social-icon {

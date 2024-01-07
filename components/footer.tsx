@@ -19,11 +19,11 @@ export default function Footer() {
         */}
       </div>
       
-      <div className='w-full text-center pt-4 pb-2 md:pt-0'>
+      {/* <div className='w-full text-center pt-4 pb-2 md:pt-0'>
         <p>
           412 Studios
         </p>
-      </div>
+      </div> */}
 
       <div className='w-full'>
         <a href="#" className="w-32 h-auto py-2 flex m-auto md:ml-auto md:mr-0" aria-label="logo footer">
