@@ -10,13 +10,9 @@ export default function Header() {
             
             {/* Desktop */}
             <div className='hidden md:flex p-8'>
-
                 <a href="/" className='flex items-center w-32 h-auto mr-12' aria-label="logo header">
-
                     <Logo />
-
                 </a>
-
                 <div className="flex items-center justify-center h-20">
                     <a href="/" className='link-hover mr-4'>Home</a>
                     <a href="/about" className='link-hover'>About</a>
@@ -46,7 +42,7 @@ export default function Header() {
                 >
                     <div className='pt-4 flex flex-col'>
                         <a href="/" className='link-hover w-full'>Home</a>
-                        <a href="#" className='link-hover w-full pt-2'>About</a>
+                        <a href="/about" className='link-hover w-full pt-2'>About</a>
                         {/* <a href="#" className='link-hover w-full'>Contact</a> */}
                     </div>
                 </div>

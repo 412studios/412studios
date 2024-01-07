@@ -51,13 +51,17 @@ font-style: italic;
 */
 
 :root {
+  --white-rgb: 240, 240, 240;
+  --black-rgb: 240, 240, 240;
   --foreground-rgb: 43, 43, 43;
-  --background-start-rgb: 200, 200, 200;
-  --background-end-rgb: 200, 200, 200;
+  --background-start-rgb: 240, 240, 240;
+  --background-end-rgb: 240, 240, 240;
   --highlight-rgb: 105, 119, 147;
 }
 @media (prefers-color-scheme: dark) {
   :root {
+    --white-rgb: 240, 240, 240;
+    --black-rgb: 240, 240, 240;
     --foreground-rgb: 240, 240, 240;
     --background-start-rgb: 43, 43, 43;
     --background-end-rgb: 43, 43, 43;

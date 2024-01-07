@@ -1,8 +1,6 @@
 export default function About() {
     return (
-        // <main className="">
-        <main className="bg-gradient-to-t">
-        {/* <main className="bg-gradient-to-t from-highlight-rgb to-background-start-rgb min-h-screen"> */}
+        <main>
             <div className="max-w-screen-xl mx-auto p-12">
 
                 <h1 className="text-4xl md:text-9xl">412 Studios</h1>
@@ -55,5 +53,3 @@ export default function About() {
         </main>
     )
 }
-
-
