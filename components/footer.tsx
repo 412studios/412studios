@@ -1,5 +1,6 @@
 import { Logo } from '../public/logo';
 import { Insta } from '../public/icons/insta';
+import { Youtube } from '../public/icons/youtube';
 
 export default function Footer() {
   return (
@@ -9,14 +10,9 @@ export default function Footer() {
         <a href="https://www.instagram.com/412studios.ca/" target='_blank' className='w-8 h-8 mr-2 w-full md:w-auto' aria-label="instagram link">
           <Insta className="social-icon h-full w-auto m-auto md:ml-0" />
         </a>
-        {/* 
-        <a href="https://www.instagram.com/412studios.ca/" target='_blank' className='w-8 h-8 mr-2 w-full md:w-auto'>
-          <Insta className="social-icon h-full w-auto m-auto md:ml-0" />
+        <a href="https://www.youtube.com/channel/UCiIHqiNLRHtjsaKBVRh0ipQ" target='_blank' className='w-8 h-8 mr-2 w-full md:w-auto' aria-label="instagram link">
+          <Youtube className="social-icon h-full w-auto m-auto md:ml-0" />
         </a>
-        <a href="https://www.instagram.com/412studios.ca/" target='_blank' className='w-8 h-8 mr-2 w-full md:w-auto'>
-          <Insta className="social-icon h-full w-auto m-auto md:ml-0" />
-        </a> 
-        */}
       </div>
       
       {/* 
