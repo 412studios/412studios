@@ -19,12 +19,16 @@ function Logo(props: any) {
   // const { scene: gltfScene } = useGLTF("/obj/logo.gltf");
 
   const { onLoaded } = props;
-  const { scene: gltfScene } = useGLTF('/obj/logo.gltf', undefined, undefined, () => {
-    if (onLoaded) {
-      onLoaded(); // Call the callback when the model is loaded
-    }
-  });
-
+  const { scene: gltfScene } = useGLTF(
+    "/obj/logo.gltf",
+    undefined,
+    undefined,
+    () => {
+      if (onLoaded) {
+        onLoaded(); // Call the callback when the model is loaded
+      }
+    },
+  );
 
   useFrame(() => {
     if (direction == true) {
@@ -112,7 +116,6 @@ const handleClick = (event: any) => {
 };
 
 export default function Page() {
-  
   //Dynamic scale
   const [logoScale, setLogoScale] = useState([5, 5, 5]);
   const [isLoaded, setIsLoaded] = useState(false); // New state for tracking loading
@@ -131,12 +134,21 @@ export default function Page() {
     setIsLoaded(true);
   };
 
+  const headerHeight = document.querySelector("header")?.clientHeight;
+  // Create a style object for the <main> element
+  const mainStyle = {
+    height: `calc(100vh - ${headerHeight}px)`,
+  };
+
   return (
-    <main className="h-screen">
-      <Canvas onClick={handleClick} style={{
-        opacity: isLoaded ? 1 : 0, // Change opacity based on loading state
-        transition: 'opacity 1s ease' // CSS transition for smooth fading
-      }}>
+    <main style={mainStyle}>
+      <Canvas
+        onClick={handleClick}
+        style={{
+          opacity: isLoaded ? 1 : 0, // Change opacity based on loading state
+          transition: "opacity 1s ease", // CSS transition for smooth fading
+        }}
+      >
         <color attach="background" args={["rgb(240, 240, 240)"]} />
         <ambientLight intensity={1.5} />
         <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} />

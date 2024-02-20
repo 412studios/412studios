@@ -1,20 +1,20 @@
-import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
-import './globals.css'
-import Header from '../components/header';
-import Footer from '../components/footer';
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import "./globals.css";
+import Header from "../components/header";
+import Footer from "../components/footer";
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: '412 Studios',
-  description: '412 Studio Home',
-}
+  title: "412 Studios",
+  description: "412 Studio Home",
+};
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
     <html lang="en">
@@ -24,5 +24,5 @@ export default function RootLayout({
         <Footer />
       </body>
     </html>
-  )
+  );
 }

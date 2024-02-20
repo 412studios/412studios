@@ -23,7 +23,7 @@ font-weight: 700;
 font-style: italic;
 */
 
-/* 
+/*
 Bookmania Light
 font-family: "bookmania", serif;
 font-weight: 300;
@@ -47,84 +47,62 @@ font-style: normal;
 Bookmania Bold Italic
 font-family: "bookmania", serif;
 font-weight: 700;
-font-style: italic; 
+font-style: italic;
+*/
+
+/*
+--white: #2B2B2B;
+--black: #fafafa;
 */
 
 :root {
-  --white-rgb: 240, 240, 240;
-  --black-rgb: 240, 240, 240;
-  --foreground-rgb: 43, 43, 43;
-  --background-start-rgb: 240, 240, 240;
-  --background-end-rgb: 240, 240, 240;
-  --highlight-rgb: 105, 119, 147;
+    --white-rgb: 240, 240, 240;
+    --black-rgb: 43, 43, 43;
+
+    --foreground-rgb: 43, 43, 43;
+    --background-start-rgb: 240, 240, 240;
+    --background-end-rgb: 240, 240, 240;
+    --highlight-rgb: 105, 119, 147;
 }
 @media (prefers-color-scheme: dark) {
-  :root {
-    --white-rgb: 240, 240, 240;
-    --black-rgb: 240, 240, 240;
-    --foreground-rgb: 240, 240, 240;
-    --background-start-rgb: 43, 43, 43;
-    --background-end-rgb: 43, 43, 43;
-    --highlight-rgb: 182, 196, 228;
-  }
+    :root {
+        --white-rgb: 240, 240, 240;
+        --black-rgb: 43, 43, 43;
+
+        --foreground-rgb: 240, 240, 240;
+        --background-start-rgb: 43, 43, 43;
+        --background-end-rgb: 43, 43, 43;
+        --highlight-rgb: 182, 196, 228;
+    }
 }
 
 html {
-  scroll-behavior: smooth;
+    scroll-behavior: smooth;
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+    color: rgb(var(--foreground-rgb));
+    background: linear-gradient(
+            to bottom,
+            transparent,
+            rgb(var(--background-end-rgb))
+        )
+        rgb(var(--background-start-rgb));
     font-family: "forma-djr-display", sans-serif;
     font-weight: 500;
     font-style: normal;
 }
 
-h1 {
-  font-size: 5rem;
+.b {
+    border: solid red;
 }
 
-#logo-icon {
-  fill: rgb(var(--foreground-rgb));
-  stroke-width: 0rem;
-  stroke: rgb(var(--foreground-rgb));
-  transition: .5s;
+.icon {
+    fill: rgb(var(--foreground-rgb));
+    cursor: hover;
+    transition: 0.5s;
 }
-#logo-icon:hover {
-  stroke: rgb(var(--highlight-rgb));
-  fill: rgb(var(--highlight-rgb));
+.icon:hover {
+    fill: rgb(var(--highlight-rgb));
+    cursor: pointer;
 }
-
-.social-icon {
-  color: rgb(var(--foreground-rgb));
-  transition: .5s;
-}
-.social-icon:hover {
-  color: rgb(var(--highlight-rgb));
-}
-
-.link-hover {
-  padding-right: 1rem;
-  transition: .5s;
-}
-.link-hover:hover {
-  padding-right: 1rem;
-  color: rgb(var(--highlight-rgb));
-}
-
-.body-text {
-  font-family: "bookmania", serif;
-  font-weight: 400;
-  font-style: normal;
-}
-
-/* 
---white: #2B2B2B;
---black: #fafafa; 
-*/
