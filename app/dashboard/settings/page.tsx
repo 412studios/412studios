@@ -2,7 +2,6 @@ import Link from "next/link";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -11,15 +10,6 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { ThemeToggle } from "@/app/components/Themetoggle";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { SubmitButton } from "@/app/components/SubmitButtons";
 import prisma from "@/app/lib/db";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
@@ -116,7 +106,7 @@ export default async function SettingsPage() {
           </CardContent>
           <CardFooter>
             <div className="flex w-full items-center justify-between">
-              <SubmitButton />
+              <Button>Submit</Button>
               <Link href="/dashboard">
                 <Button>Back</Button>
               </Link>
