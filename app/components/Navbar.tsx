@@ -14,7 +14,7 @@ export async function Navbar() {
   return (
     <nav className="bg-background flex h-[10vh] min-h-[100px] items-center border-b">
       <div className="container flex items-center justify-between">
-        <Link href="/" className="">
+        <Link href="/" className="" aria-label="Home">
           <Logo className="text-foreground max-h-[60px]" />
         </Link>
         <div className="flex items-center gap-x-5">
