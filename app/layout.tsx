@@ -11,6 +11,7 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "412 Studios",
   description: "412 Studios Toronto",
+  metadataBase: new URL("https://www.412studios.ca/"),
   icons: [
     {
       rel: "icon",
