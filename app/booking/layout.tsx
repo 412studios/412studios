@@ -54,22 +54,22 @@ async function getData({
   }
 }
 
-async function checkVerification(userId: string) {
-  noStore();
-  const data = await prisma.user.findUnique({
-    where: {
-      id: userId,
-    },
-    select: {
-      name: true,
-      email: true,
-      role: true,
-      isUserVerified: true,
-      verifyFormSubmitted: true,
-    },
-  });
-  return data;
-}
+// async function checkVerification(userId: string) {
+//   noStore();
+//   const data = await prisma.user.findUnique({
+//     where: {
+//       id: userId,
+//     },
+//     select: {
+//       name: true,
+//       email: true,
+//       role: true,
+//       isUserVerified: true,
+//       verifyFormSubmitted: true,
+//     },
+//   });
+//   return data;
+// }
 
 export default async function DashboardLayout({
   children,
@@ -90,11 +90,9 @@ export default async function DashboardLayout({
     id: user.id as string,
     lastName: user.family_name as string,
   });
-
-  const userDetails = await checkVerification(user?.id as string);
-  if (userDetails?.isUserVerified != true) {
-    return redirect("/");
-  }
-
+  // const userDetails = await checkVerification(user?.id as string);
+  // if (userDetails?.isUserVerified != true) {
+  //   return redirect("/");
+  // }
   return <>{children}</>;
 }

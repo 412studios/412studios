@@ -52,13 +52,7 @@ export default async function Main() {
               <Button className="w-full">All Users</Button>
             </Link>
           </CardContent>
-          <CardFooter>
-            <Link href="/admin/verify" className="w-full">
-              <Button className="w-full">
-                Check for users pending verification
-              </Button>
-            </Link>
-          </CardFooter>
+          <CardFooter>412 Studio</CardFooter>
         </Card>
       </div>
     </main>

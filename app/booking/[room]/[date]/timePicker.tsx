@@ -67,6 +67,11 @@ export default function TimePicker(context: any) {
     });
   };
 
+  let showDayBookingLink = false;
+  if (bookedTimes[bookedTimes.length - 1] >= 8 || bookedTimes.length == 0) {
+    showDayBookingLink = true;
+  }
+
   return (
     <div className="m-4">
       <CardHeader>
@@ -84,9 +89,8 @@ export default function TimePicker(context: any) {
             <Button>Back</Button>
           </Link>
         </div>
-
-        {bookedTimes.length <= 1 && (
-          <Link href={`/booking/${context.room}/${context.date}/0823`}>
+        {showDayBookingLink && (
+          <Link href={`/booking/${context.room}/${context.date}/0815`}>
             <Button className="mt-4 w-full">Book Full Day</Button>
           </Link>
         )}

@@ -53,38 +53,7 @@ export default async function Main() {
           <h1 className="text-4xl">{data?.name}</h1>
           <p className="text-muted-foreground text-lg">{data?.email}</p>
 
-          <div>
-            {data?.isUserVerified ? (
-              <div>
-                <span className="me-2 rounded bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800 dark:bg-blue-900 dark:text-blue-300">
-                  Verified
-                </span>
-              </div>
-            ) : data?.verifyFormSubmitted ? (
-              <div>
-                <span className="me-2 rounded bg-yellow-100 px-2.5 py-0.5 text-xs font-medium text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300">
-                  Verification Pending
-                </span>
-              </div>
-            ) : (
-              <div>
-                <div
-                  className="mb-4 mt-2 rounded-lg bg-red-50 p-4 text-sm text-red-800 dark:bg-gray-800 dark:text-red-400"
-                  role="alert"
-                >
-                  <span className="font-medium">
-                    Please verify your account before booking.{" "}
-                    <Link href="/dashboard/verification/" className="underline">
-                      Verify Now
-                    </Link>
-                  </span>
-                </div>
-              </div>
-            )}
-          </div>
-
           <div className="mb-4 mt-4 border"></div>
-
           {data?.isUserVerified && (
             <div>
               <Link href="/booking">
@@ -96,7 +65,7 @@ export default async function Main() {
               <Link href="/dashboard/bookings">
                 <span className="hover:bg-accent hover:text-accent-forground group mb-2 flex items-center rounded-md px-3 py-2 text-sm font-medium">
                   <Notebook className="text-primary mr-2 h-4 w-4" />
-                  <span>View Booking Details</span>
+                  <span>View Bookings</span>
                 </span>
               </Link>
             </div>

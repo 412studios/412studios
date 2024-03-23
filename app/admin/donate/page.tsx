@@ -35,7 +35,7 @@ export default async function ConfirmDonation() {
         process.env.NODE_ENV === "production"
           ? (process.env.PRODUCTION_URL as string)
           : "http://localhost:3000",
-      priceId: "price_1OwRowIZy9dQPWTEV9lUCWFY",
+      priceId: "price_1OxZT7IZy9dQPWTEPHMxvd8J",
       quantity: 1,
       mode: "payment",
       bookingId: "",

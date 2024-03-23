@@ -34,6 +34,7 @@ export const getStripeSession = async ({
     },
     success_url: `${domainUrl}/booking/success/${bookingId}`,
     cancel_url: `${domainUrl}/booking/cancel/${bookingId}`,
+    automatic_tax: { enabled: true },
   });
 
   return session.url as string;
@@ -67,6 +68,7 @@ export const getStripeDonation = async ({
     },
     success_url: `${domainUrl}/admin/`,
     cancel_url: `${domainUrl}/admin/`,
+    automatic_tax: { enabled: true },
   });
 
   return session.url as string;
