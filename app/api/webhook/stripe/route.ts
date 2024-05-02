@@ -45,9 +45,10 @@ export async function POST(req: Request) {
         currentPeriodStart: subscription.current_period_start,
         currentPeriodEnd: subscription.current_period_end,
         status: subscription.status,
-        planId: subscription.items.data[0].plan.id,
-        interval: String(subscription.items.data[0].plan.interval),
-        roomId: 123,
+        planId: "",
+        // planId: subscription.items.data[0].plan.id,
+        interval: "month",
+        roomId: 0,
         availableHours: 100,
       },
     });

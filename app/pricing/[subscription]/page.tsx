@@ -38,21 +38,6 @@ export default function Page(context: any) {
     }
   };
 
-  const testSubmit = async () => {
-    setIsLoading(true);
-    const testRoomId = { room: 3 };
-    try {
-      await PostSubscription(
-        testRoomId,
-        parseInt(
-          prices[context.params.subscription].subscription.toString() + "00",
-        ),
-      );
-    } catch (error) {
-      console.error("Failed to post booking:", error);
-    }
-  };
-
   useEffect(() => {
     const fetchAvailability = async () => {
       const data = await CheckAvailability(
