@@ -50,7 +50,7 @@ async function getSubscription(userId: string) {
           AND: [{ availableHours: { gt: 0 } }, { status: "cancelled" }],
         },
         {
-          AND: [{ availableHours: { lte: 0 } }, { status: "active" }],
+          status: "active",
         },
       ],
     },
