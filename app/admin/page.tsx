@@ -45,9 +45,6 @@ export default async function Main() {
             <CardDescription>{data?.email}</CardDescription>
           </CardHeader>
           <CardContent>
-            <Link href="/admin/donate" className="w-full">
-              <Button className="mb-6 w-full">Donation Page</Button>
-            </Link>
             <Link href="/admin/users" className="w-full">
               <Button className="w-full">All Users</Button>
             </Link>

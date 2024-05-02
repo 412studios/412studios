@@ -10,66 +10,97 @@ export const getStripeSession = async ({
   priceId,
   domainUrl,
   customerId,
-  quantity,
-  mode,
   bookingId,
+  unit_amount,
 }: {
   priceId: string;
   domainUrl: string;
   customerId: string;
-  quantity: number;
-  mode: StripeMode;
   bookingId: string;
+  unit_amount: number;
 }) => {
   const session = await stripe.checkout.sessions.create({
     customer: customerId,
-    // mode: "subscription",
-    mode: mode,
+    mode: "payment",
     billing_address_collection: "auto",
-    line_items: [{ price: priceId, quantity: quantity }],
+    line_items: [
+      {
+        price_data: {
+          currency: "cad",
+          product_data: {
+            name: "412 Studios Booking",
+            metadata: { bookingId },
+          },
+          unit_amount: unit_amount,
+        },
+        quantity: 1,
+      },
+    ],
     payment_method_types: ["card"],
     customer_update: {
       address: "auto",
       name: "auto",
     },
-    success_url: `${domainUrl}/booking/success/${bookingId}`,
-    cancel_url: `${domainUrl}/booking/cancel/${bookingId}`,
+    success_url: `${domainUrl}/pricing/success/${bookingId}`,
+    cancel_url: `${domainUrl}/pricing/cancel/${bookingId}`,
     automatic_tax: { enabled: true },
   });
-
   return session.url as string;
 };
 
-export const getStripeDonation = async ({
+export const createStripeSubscription = async ({
   priceId,
   domainUrl,
   customerId,
-  quantity,
-  mode,
   bookingId,
+  unit_amount,
 }: {
   priceId: string;
   domainUrl: string;
   customerId: string;
-  quantity: number;
-  mode: StripeMode;
   bookingId: string;
+  unit_amount: number;
 }) => {
   const session = await stripe.checkout.sessions.create({
     customer: customerId,
-    // mode: "subscription",
-    mode: mode,
+    mode: "subscription",
     billing_address_collection: "auto",
-    line_items: [{ price: priceId, quantity: quantity }],
+    line_items: [
+      {
+        price_data: {
+          currency: "cad",
+          product_data: {
+            name: "412 Studios Membership",
+            metadata: { bookingId },
+          },
+          unit_amount: unit_amount,
+          recurring: { interval: "month" }, // Specify the billing interval
+        },
+        quantity: 1,
+      },
+    ],
     payment_method_types: ["card"],
     customer_update: {
       address: "auto",
       name: "auto",
     },
-    success_url: `${domainUrl}/admin/`,
-    cancel_url: `${domainUrl}/admin/`,
-    automatic_tax: { enabled: true },
+    success_url: `${domainUrl}/pricing/success/${bookingId}`,
+    cancel_url: `${domainUrl}/pricing/cancel/${bookingId}`,
   });
+  // return session.url as string;
+  return { url: session.url as any, id: session.id as any };
+};
 
-  return session.url as string;
+export const getStripeSubId = async (subId: string) => {
+  const session = await stripe.checkout.sessions.retrieve(subId);
+  return session;
+};
+
+export const deleteStripeSub = async (subId: string) => {
+  try {
+    const subscription = await stripe.subscriptions.cancel(subId);
+    return true;
+  } catch (error) {
+    return false;
+  }
 };

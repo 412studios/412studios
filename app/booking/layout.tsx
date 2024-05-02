@@ -4,6 +4,8 @@ import { redirect } from "next/navigation";
 import prisma from "../lib/db";
 import { stripe } from "../lib/stripe";
 import { unstable_noStore as noStore } from "next/cache";
+import { prices } from "./components/variables/prices";
+import Page from "./page";
 
 async function getData({
   email,
@@ -54,22 +56,107 @@ async function getData({
   }
 }
 
-// async function checkVerification(userId: string) {
-//   noStore();
-//   const data = await prisma.user.findUnique({
-//     where: {
-//       id: userId,
-//     },
-//     select: {
-//       name: true,
-//       email: true,
-//       role: true,
-//       isUserVerified: true,
-//       verifyFormSubmitted: true,
-//     },
-//   });
-//   return data;
-// }
+async function checkVerification(userId: string) {
+  noStore();
+  const data = await prisma.user.findUnique({
+    where: {
+      id: userId,
+    },
+    select: {
+      name: true,
+      email: true,
+      role: true,
+      isUserVerified: true,
+      verifyFormSubmitted: true,
+    },
+  });
+  return data;
+}
+
+const formatDateToNumeric = (date: Date | undefined): string => {
+  if (!date) return "";
+  const year = date.getFullYear().toString();
+  const month = (date.getMonth() + 1).toString().padStart(2, "0");
+  const day = date.getDate().toString().padStart(2, "0");
+  return year + month + day;
+};
+
+async function getSubscription(userId: string) {
+  noStore();
+  const data = await prisma.subscription.findMany({
+    where: {
+      userId: userId,
+      OR: [
+        {
+          AND: [{ availableHours: { gt: 0 } }, { status: "cancelled" }],
+        },
+        {
+          AND: [{ availableHours: { lte: 0 } }, { status: "active" }],
+        },
+      ],
+    },
+    select: {
+      availableHours: true,
+      userId: true,
+      status: true,
+      roomId: true,
+    },
+    orderBy: {
+      roomId: "asc",
+    },
+  });
+
+  const today = new Date();
+  const numericToday = parseInt(formatDateToNumeric(today));
+
+  // Fetch the current subscription details
+  const subscriptions = await prisma.subscription.findMany({
+    where: {
+      userId: userId,
+      currentPeriodEnd: {
+        lt: numericToday,
+      },
+      status: "active",
+    },
+    select: {
+      currentPeriodStart: true,
+      currentPeriodEnd: true,
+      subscriptionId: true,
+    },
+  });
+
+  for (const subscription of subscriptions) {
+    //JS AUTO CHANGES DATE TO 01
+    const originalDate = new Date(subscription.currentPeriodStart);
+    const updatedStart = new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      originalDate.getDate(),
+    );
+    const numericNewStart = parseInt(formatDateToNumeric(updatedStart));
+
+    const updatedEnd = new Date(
+      today.getFullYear(),
+      today.getMonth() + 1,
+      originalDate.getDate(),
+    );
+    const numericNewEnd = parseInt(formatDateToNumeric(updatedEnd));
+
+    await prisma.subscription.updateMany({
+      where: {
+        userId: userId,
+        subscriptionId: subscription.subscriptionId,
+      },
+      data: {
+        currentPeriodStart: numericNewStart,
+        currentPeriodEnd: numericNewEnd,
+        availableHours: 16,
+      },
+    });
+  }
+
+  return data;
+}
 
 export default async function DashboardLayout({
   children,
@@ -79,20 +166,25 @@ export default async function DashboardLayout({
   //redirect user of not logged in
   const { getUser } = getKindeServerSession();
   const user = await getUser();
-
   if (!user) {
     return redirect("/");
   }
-
   await getData({
     email: user.email as string,
     firstName: user.given_name as string,
     id: user.id as string,
     lastName: user.family_name as string,
   });
-  // const userDetails = await checkVerification(user?.id as string);
-  // if (userDetails?.isUserVerified != true) {
-  //   return redirect("/");
-  // }
-  return <>{children}</>;
+
+  const subData = await getSubscription(user?.id as string);
+
+  const userDetails = await checkVerification(user?.id as string);
+  if (userDetails?.isUserVerified != true) {
+    return redirect("/");
+  }
+  return (
+    <>
+      <Page user={user} sub={subData} />
+    </>
+  );
 }

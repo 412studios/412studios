@@ -24,6 +24,21 @@ export default async function PageCancel(context: any) {
         },
       });
     }
+
+    // HANDLE CONFIRMING SUBSCRIPTION + RETRIEVING ID FOR CANCELLING
+    const successfulSub = await prisma.subscription.findUnique({
+      where: {
+        subscriptionId: context.params.id,
+      },
+    });
+
+    if (successfulSub?.stripeSessionId) {
+      await prisma.subscription.deleteMany({
+        where: {
+          subscriptionId: context.params.id,
+        },
+      });
+    }
   }
   await postData(context.params.id);
 
@@ -47,7 +62,7 @@ export default async function PageCancel(context: any) {
               </div>
               <div className="mt-5 w-full sm:mt-6">
                 <Button className="w-full" asChild>
-                  <Link href="/booking">Book Now</Link>
+                  <Link href="/pricing">Book Now</Link>
                 </Button>
               </div>
             </div>

@@ -4,8 +4,8 @@ import { Button } from "@/components/ui/button";
 import prisma from "@/app/lib/db";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { unstable_noStore as noStore } from "next/cache";
-import { prices } from "@/app/booking/prices";
-import { timeSlots } from "@/app/booking/timeSlots";
+import { prices } from "@/app/booking/components/variables/prices";
+import { timeSlots } from "@/app/booking/components/variables/timeSlots";
 import {
   Table,
   TableHeader,
@@ -82,15 +82,13 @@ export default async function SettingsPage() {
                   <TableHead>Date</TableHead>
                   <TableHead>Start Time</TableHead>
                   <TableHead>End Time</TableHead>
-                  <TableHead>Total</TableHead>
+                  {/* <TableHead>Total</TableHead> */}
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {bookings.map((booking, index) => (
                   <TableRow key={index}>
-                    <TableCell>
-                      Studio {prices[booking.roomId - 1].room}
-                    </TableCell>
+                    <TableCell>Studio {prices[booking.roomId].room}</TableCell>
                     <TableCell>
                       {numericToDate(booking.date.toString())}
                     </TableCell>
@@ -104,7 +102,7 @@ export default async function SettingsPage() {
                         parseInt(timeSlots[booking.endTime].startTime) + 1,
                       )}
                     </TableCell>
-                    <TableCell>$ {booking.totalPrice}.00</TableCell>
+                    {/* <TableCell>$ {booking.totalPrice}.00</TableCell> */}
                   </TableRow>
                 ))}
               </TableBody>

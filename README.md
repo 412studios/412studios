@@ -1,6 +1,4 @@
-## Getting Started
-
-First, run the development server:
+# 412 Studios
 
 ```bash
 npm run dev
@@ -12,26 +10,49 @@ pnpm dev
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Open [http://localhost:3000](http://localhost:3000)
 
 ## More
 
-```
+```bash
 npm run dev
 ```
 
-```
+```bash
 npx prisma db push
 ```
 
-```
+```bash
 npx prisma studio
 ```
+
+## TODO
+
+7 x 4 x 16 = 112
+subscription is 16 hours per month
+
+112 / 16 = 7
+7 subs per room per month
+
+7 x 4 x 16 = 448
+28
+
+page loads
+https://www.youtube.com/watch?v=2Tj6lcfJytA
+
+smoking fee \*125$ charged after
+producer fee
+
+https://www.division88.com/booking
+
+a room 85 with eng 75 without
+
+c room 55 with 45 without
+
+bi-weekly
+
+engineering fee with subscription
+
+backend custom pricing per user
+
+inquiery page

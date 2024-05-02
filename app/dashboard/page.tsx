@@ -7,6 +7,7 @@ import {
   Book,
   Plus,
   Notebook,
+  RefreshCw,
 } from "lucide-react";
 import { unstable_noStore as noStore } from "next/cache";
 import prisma from "@/app/lib/db";
@@ -39,62 +40,104 @@ async function getData(userId: string) {
   return data;
 }
 
+async function getSubscription(userId: string) {
+  noStore();
+  const data = await prisma.subscription.findMany({
+    where: {
+      userId: userId,
+      OR: [
+        {
+          AND: [{ availableHours: { gt: 0 } }, { status: "cancelled" }],
+        },
+        {
+          AND: [{ availableHours: { lte: 0 } }, { status: "active" }],
+        },
+      ],
+    },
+    select: {
+      availableHours: true,
+      userId: true,
+      status: true,
+    },
+  });
+  return data;
+}
+
 export default async function Main() {
   noStore();
 
   const { getUser } = getKindeServerSession();
   const user = await getUser();
   const data = await getData(user?.id as string);
+  const subData = await getSubscription(user?.id as string);
 
   return (
     <main className="p-8">
       <div className="mx-auto max-w-screen-lg rounded-lg">
-        <Card className="p-8">
-          <h1 className="text-4xl">{data?.name}</h1>
-          <p className="text-muted-foreground text-lg">{data?.email}</p>
+        <Card className="p-4">
+          <CardHeader>
+            <CardTitle>{data?.name}</CardTitle>
+            <CardDescription>{data?.email}</CardDescription>
+            {typeof subData[0] !== "undefined" &&
+              subData[0].status === "success" && (
+                <p>
+                  <span className="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-blue-400 border border-blue-400">
+                    Subscribed
+                  </span>
+                </p>
+              )}
+          </CardHeader>
 
-          <div className="mb-4 mt-4 border"></div>
-          {data?.isUserVerified && (
-            <div>
-              <Link href="/booking">
-                <span className="hover:bg-accent hover:text-accent-forground group mb-2 flex items-center rounded-md px-3 py-2 text-sm font-medium">
-                  <Plus className="text-primary mr-2 h-4 w-4" />
-                  <span>Book Now</span>
-                </span>
-              </Link>
-              <Link href="/dashboard/bookings">
+          <CardContent>
+            {data?.isUserVerified && (
+              <div>
+                <Link href="/pricing">
+                  <span className="hover:bg-accent hover:text-accent-forground group mb-2 flex items-center rounded-md px-3 py-2 text-sm font-medium">
+                    <Plus className="text-primary mr-2 h-4 w-4" />
+                    <span>Book Now</span>
+                  </span>
+                </Link>
+                {/* <Link href="/dashboard/bookings">
                 <span className="hover:bg-accent hover:text-accent-forground group mb-2 flex items-center rounded-md px-3 py-2 text-sm font-medium">
                   <Notebook className="text-primary mr-2 h-4 w-4" />
                   <span>View Bookings</span>
                 </span>
+              </Link> */}
+              </div>
+            )}
+
+            {typeof subData[0] !== "undefined" && subData[0].userId && (
+              <Link href="/dashboard/subscriptions">
+                <span className="hover:bg-accent hover:text-accent-forground group mb-2 flex items-center rounded-md px-3 py-2 text-sm font-medium">
+                  <RefreshCw className="text-primary mr-2 h-4 w-4" />
+                  <span>Manage Subscriptions</span>
+                </span>
               </Link>
-            </div>
-          )}
+            )}
 
-          <Link href="/dashboard/settings">
-            <span className="hover:bg-accent hover:text-accent-forground group flex items-center rounded-md px-3 py-2 text-sm font-medium">
-              <Settings className="text-primary mr-2 h-4 w-4" />
-              <span>Settings</span>
-            </span>
-          </Link>
-
-          {data?.role === "admin" && (
-            <Link
-              href="/admin"
-              className="hover:bg-accent hover:text-accent-forground group mt-2 flex items-center rounded-md px-3 py-2 text-sm font-medium"
-            >
-              <Shield className="text-primary mr-2 h-4 w-4" />
-              Admin Dashboard
+            <Link href="/dashboard/settings">
+              <span className="hover:bg-accent hover:text-accent-forground group flex items-center rounded-md px-3 py-2 text-sm font-medium">
+                <Settings className="text-primary mr-2 h-4 w-4" />
+                <span>Settings</span>
+              </span>
             </Link>
-          )}
 
-          <div className="mb-4 mt-4 border"></div>
+            {data?.role === "admin" && (
+              <Link
+                href="/admin"
+                className="hover:bg-accent hover:text-accent-forground group mt-2 flex items-center rounded-md px-3 py-2 text-sm font-medium"
+              >
+                <Shield className="text-primary mr-2 h-4 w-4" />
+                Admin Dashboard
+              </Link>
+            )}
+          </CardContent>
 
-          <p>
+          <CardFooter>
             <LogoutLink>
               <Button>Logout</Button>
             </LogoutLink>
-          </p>
+          </CardFooter>
         </Card>
       </div>
     </main>

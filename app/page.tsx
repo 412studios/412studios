@@ -6,6 +6,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import Image from "next/image";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { LoginLink } from "@kinde-oss/kinde-auth-nextjs/components";
 import {
@@ -20,17 +21,17 @@ import {
 export default async function Home() {
   return (
     <main className="container">
-      <section className="bg-background border">
+      <section className="bg-background mt-12 rounded-xl">
         <div className="h-auto">
-          <Carousel className="">
+          <Carousel>
             <CarouselContent>
-              <CarouselItem>
+              <CarouselItem className="border-none">
                 <Image
                   src="/images/studio-a.jpg"
                   alt="Studio 1"
                   width={4000}
                   height={9}
-                  className="mx-auto rounded-sm"
+                  className="mx-auto rounded-3xl"
                 />
               </CarouselItem>
               <CarouselItem>
@@ -39,7 +40,7 @@ export default async function Home() {
                   alt="Studio 1"
                   width={4000}
                   height={9}
-                  className="mx-auto rounded-sm"
+                  className="mx-auto rounded-3xl"
                 />
               </CarouselItem>
               <CarouselItem>
@@ -48,7 +49,7 @@ export default async function Home() {
                   alt="Studio 1"
                   width={4000}
                   height={9}
-                  className="mx-auto rounded-sm"
+                  className="mx-auto rounded-3xl"
                 />
               </CarouselItem>
             </CarouselContent>
@@ -65,9 +66,9 @@ export default async function Home() {
           expression.
         </p>
         <p>
-          <LoginLink>
+          <Link href="/pricing">
             <Button>Book Now</Button>
-          </LoginLink>
+          </Link>
         </p>
       </section>
 
@@ -90,9 +91,9 @@ export default async function Home() {
                 </div>
               </CardContent>
               <CardFooter>
-                <LoginLink className="w-full">
+                <Link href="/pricing" className="w-full">
                   <Button className="w-full">Book Now</Button>
-                </LoginLink>
+                </Link>
               </CardFooter>
             </Card>
           </div>
@@ -113,9 +114,9 @@ export default async function Home() {
                 </div>
               </CardContent>
               <CardFooter>
-                <LoginLink className="w-full">
+                <Link href="/pricing" className="w-full">
                   <Button className="w-full">Book Now</Button>
-                </LoginLink>
+                </Link>
               </CardFooter>
             </Card>
           </div>
@@ -136,9 +137,9 @@ export default async function Home() {
                 </div>
               </CardContent>
               <CardFooter>
-                <LoginLink className="w-full">
+                <Link href="/pricing" className="w-full">
                   <Button className="w-full">Book Now</Button>
-                </LoginLink>
+                </Link>
               </CardFooter>
             </Card>
           </div>

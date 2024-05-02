@@ -17,7 +17,7 @@ function Calendar({
   const [fromMonth, setFromMonth] = React.useState(fromDate || new Date());
   // Calculate the max date by adding 6 months to the current date
   const currentDate = new Date();
-  const maxDate = new Date(currentDate.setMonth(currentDate.getMonth() + 6));
+  const maxDate = new Date(currentDate.setMonth(currentDate.getMonth() + 4));
   const handleMonthChange = (month: Date) => {
     if (fromDate && month >= fromDate && month <= maxDate) {
       setFromMonth(month);
@@ -25,19 +25,13 @@ function Calendar({
   };
 
   const today = new Date();
-  const oneMonthAgo = new Date(new Date().setMonth(today.getMonth() - 1));
+  const oneMonthAgo = new Date(new Date().setMonth(today.getMonth() - 30));
   const dayBeforeToday = new Date(new Date().setDate(today.getDate() - 1));
-
   const disabledDays = [{ from: oneMonthAgo, to: dayBeforeToday }];
-
-  // const handleDayClick = (day: Date) => {
-  //   console.log(day);
-  // };
 
   return (
     <DayPicker
-      // showOutsideDays={showOutsideDays}
-      className={cn("p-3", className)}
+      className={cn("border-rose-300 p-3", className)}
       classNames={{
         months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
         month: "space-y-4",
