@@ -53,14 +53,15 @@ export const createStripeSubscription = async ({
   domainUrl,
   customerId,
   bookingId,
-  unit_amount,
+  unitAmount,
 }: {
   priceId: string;
   domainUrl: string;
   customerId: string;
   bookingId: string;
-  unit_amount: number;
+  unitAmount: number;
 }) => {
+  const taxedAmount = Math.round(unitAmount * 1.13);
   const session = await stripe.checkout.sessions.create({
     customer: customerId,
     mode: "subscription",
@@ -73,7 +74,7 @@ export const createStripeSubscription = async ({
             name: "412 Studios Membership",
             metadata: { bookingId },
           },
-          unit_amount: unit_amount,
+          unit_amount: taxedAmount,
           tax_behavior: "exclusive",
           recurring: { interval: "month" },
         },

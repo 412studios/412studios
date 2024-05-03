@@ -56,7 +56,7 @@ export default async function Main() {
         </div>
         <Card className="p-4">
           <CardHeader>
-            <CardTitle>Users pending verification</CardTitle>
+            <CardTitle>Users</CardTitle>
           </CardHeader>
           <CardContent>
             <Table>
@@ -64,7 +64,6 @@ export default async function Main() {
                 <TableRow>
                   <TableCell>Name</TableCell>
                   <TableCell>Email</TableCell>
-                  <TableCell>Details</TableCell>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -72,15 +71,6 @@ export default async function Main() {
                   <TableRow key={index}>
                     <TableCell>{user.name}</TableCell>
                     <TableCell>{user.email}</TableCell>
-                    <TableCell>
-                      <Link
-                        key={user.id}
-                        href={`/admin/verify/${user.id}`}
-                        passHref
-                      >
-                        <Button>Details</Button>
-                      </Link>
-                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>

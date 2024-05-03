@@ -25,3 +25,8 @@ npx prisma db push
 ```bash
 npx prisma studio
 ```
+
+TODO
+
+Auto select room from pricing
+Homepage Design
