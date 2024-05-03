@@ -74,7 +74,8 @@ export const createStripeSubscription = async ({
             metadata: { bookingId },
           },
           unit_amount: unit_amount,
-          recurring: { interval: "month" }, // Specify the billing interval
+          tax_behavior: "exclusive",
+          recurring: { interval: "month" },
         },
         quantity: 1,
       },
