@@ -89,7 +89,7 @@ export default function Page(context: any) {
               {prices[context.params.subscription].subscription}.00
             </CardDescription>
             <CardDescription>
-              Includes four four-hour sessions every month.
+              Includes four X four sessions every month.
             </CardDescription>
           </CardContent>
           <CardFooter>

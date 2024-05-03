@@ -40,7 +40,7 @@ export default async function Page() {
                   className="mx-auto rounded-sm"
                 />
                 <div className="mt-6">
-                  <CardTitle className="mb-4">Hourly pricing</CardTitle>
+                  <CardTitle className="mb-4">Hourly Pricing</CardTitle>
                   <CardDescription>
                     Daily Rate: {prices[element.id].dayRate}
                   </CardDescription>
@@ -62,7 +62,7 @@ export default async function Page() {
                   <CardTitle className="my-4">Subscription Pricing</CardTitle>
                   <CardDescription>
                     Monthly subscription price:{" "}
-                    {prices[element.id].subscription}.00
+                    {prices[element.id].subscription}
                   </CardDescription>
                   <CardDescription>
                     Includes four four-hour sessions every month.
