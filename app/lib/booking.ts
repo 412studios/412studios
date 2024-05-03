@@ -157,7 +157,7 @@ export async function PostSubscription(input: any, price: number) {
         : "http://localhost:3000",
     priceId: subscriptionPriceId,
     bookingId: subscriptionId,
-    unit_amount: price,
+    unitAmount: price,
   });
   const updatedSubscription = await prisma.subscription.update({
     where: {
