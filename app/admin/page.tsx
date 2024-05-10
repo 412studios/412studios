@@ -45,8 +45,11 @@ export default async function Main() {
             <CardDescription>{data?.email}</CardDescription>
           </CardHeader>
           <CardContent>
+            <Link href="/admin/bookings" className="w-full">
+              <Button className="w-full">View Booking Calendar</Button>
+            </Link>
             <Link href="/admin/users" className="w-full">
-              <Button className="w-full">All Users</Button>
+              <Button className="w-full mt-4">View All Users</Button>
             </Link>
           </CardContent>
           <CardFooter>412 Studio</CardFooter>

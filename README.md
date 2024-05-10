@@ -30,3 +30,6 @@ TODO
 
 Auto select room from pricing
 Homepage Design
+limit subscription to once a week
+
+add main app route redirect

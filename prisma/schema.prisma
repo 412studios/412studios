@@ -22,6 +22,7 @@ model User {
   phone               String?
   socialLinks         String?
   categories          String?
+  Bookings            Bookings[]
 }
 
 model Bookings {
@@ -36,6 +37,9 @@ model Bookings {
   stripeProductId String
   totalHours      Int
   totalPrice      Float
+
+  // Define the relation to User
+  user User @relation(fields: [userId], references: [id])
 }
 
 model Subscription {
