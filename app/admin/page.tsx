@@ -45,7 +45,7 @@ export default async function Main() {
             <CardDescription>{data?.email}</CardDescription>
           </CardHeader>
           <CardContent>
-            <Link href="/admin/bookings" className="w-full">
+            <Link href="/admin/bookings/0" className="w-full">
               <Button className="w-full">View Booking Calendar</Button>
             </Link>
             <Link href="/admin/users" className="w-full">

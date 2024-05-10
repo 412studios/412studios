@@ -201,7 +201,7 @@ export async function PostSubscriptionBooking(
       startTime: startTime,
       endTime: endTime,
       userId: user?.id || "",
-      status: "pending",
+      status: "success",
       stripeProductId: "none",
       totalHours: duration,
       totalPrice: 0,

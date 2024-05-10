@@ -59,6 +59,7 @@ export default async function Main(context: any) {
   const bookings = await prisma.bookings.findMany({
     where: {
       roomId: parseInt(context.params.id),
+      status: "success",
       date: {
         gte: parseInt(todayISOString),
       },
