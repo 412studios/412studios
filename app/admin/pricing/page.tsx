@@ -1,15 +1,6 @@
 "use client";
 import { useState } from "react";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import {
   Table,
   TableHeader,
@@ -17,21 +8,19 @@ import {
   TableBody,
   TableCell,
 } from "@/components/ui/table";
-
 interface Price {
   room: string;
   dayRate: number;
   hourlyRate: number;
   subscriptionPrice: number;
+  engineerPrice: number;
 }
-
 interface PageProps {
   prices: Price[];
 }
 
-export default function Page({ prices: initialPrices }: PageProps) {
-  const [prices, setPrices] = useState<Price[]>(initialPrices);
-
+export default function Page(data: any) {
+  const [prices, setPrices] = useState<Price[]>(data.prices);
   const handleChange = (index: number, field: string, value: string) => {
     if (!isNaN(Number(value)) && value !== "") {
       const newPrices = prices.map((price, i) => {
@@ -43,8 +32,6 @@ export default function Page({ prices: initialPrices }: PageProps) {
       setPrices(newPrices);
     }
   };
-
-  console.log(prices);
 
   return (
     <>

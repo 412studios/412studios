@@ -26,12 +26,9 @@ async function getPricing() {
 export default async function Main() {
   "use server";
   const prices = await getPricing();
-
   async function submit(formData: FormData) {
     "use server";
-    // console.log(formData);
     for (let i = 0; i < prices.length; i++) {
-      // console.log(i);
       await prisma.pricing.update({
         where: {
           id: i.toString(),
