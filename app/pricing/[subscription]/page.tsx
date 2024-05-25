@@ -41,9 +41,7 @@ export default function Page(context: any) {
 
   useEffect(() => {
     const fetchAvailability = async () => {
-      const data = await CheckAvailability(
-        parseInt(context.params.subscription),
-      );
+      const data = await CheckAvailability(context.params.subscription);
       setIsAvailable(data[0] <= 25);
       setUserHasSub(data[1] <= 1);
       setIsLoading(false);
