@@ -10,8 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
-import { timeSlots, subscriptionTimeSlots } from "./variables/timeSlots";
+import { timeSlots } from "./variables/timeSlots";
 
 export const PickEng = ({
   prices,
@@ -32,7 +31,7 @@ export const PickEng = ({
     "select a start time",
   ]);
 
-  const startArr: any = [];
+  let startArr: any = [];
   let min = 0;
   let max = 0;
   if (options.subRooms.includes(parseInt(options.room)) == true) {
@@ -42,11 +41,13 @@ export const PickEng = ({
     }
   } else {
     min = options.startTime;
-    max = options.endTime - options.startTime;
+    max = options.endTime;
   }
-
   for (let i = min; i < max; i++) {
     startArr.push(i);
+  }
+  if (options.startTime == -1 || options.endTime == -1) {
+    startArr = [];
   }
 
   useEffect(() => {

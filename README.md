@@ -27,8 +27,6 @@ npx prisma studio
 ```
 
 TODO
-
-engineer option
 limit subscription to once a week
 
 Auto select room from pricing
