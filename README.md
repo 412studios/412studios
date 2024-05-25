@@ -28,8 +28,8 @@ npx prisma studio
 
 TODO
 
-Auto select room from pricing
-Homepage Design
+engineer option
 limit subscription to once a week
 
-add main app route redirect
+Auto select room from pricing
+Homepage Design

@@ -17,9 +17,7 @@ import {
 
 async function getData() {
   noStore();
-
   const users = await prisma.user.findMany();
-
   return users;
 }
 

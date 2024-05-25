@@ -65,22 +65,28 @@ export const ShowDetails = ({
 
   options.subscription[options.room] && (duration *= 4);
 
+  let engFee = 0;
+  let total = 0;
+  if (options.engDuration > 0) {
+    engFee = options.engDuration * prices[options.room]?.engineerPrice;
+    total = engFee + parseInt(displayPrice);
+  }
+
   const submit = async () => {
     setIsLoading(true);
     try {
-      // console.log(parseInt(displayPrice + "00"));
-      await PostBooking(options, parseInt(displayPrice + "00"));
+      await PostBooking(options, parseInt(total + "00"));
     } catch (error) {
       console.error("Failed to post booking:", error);
     }
   };
 
   const submitSubscription = async () => {
-    setIsLoading(true);
+    // setIsLoading(true);
     const startTime = options.startTime * 4;
     const endTime = options.endTime * 4 + 3;
     try {
-      await PostSubscriptionBooking(options, startTime, endTime);
+      await PostSubscriptionBooking(options, startTime, endTime, engFee);
     } catch (error) {
       console.error("Failed to post booking:", error);
     }
@@ -135,6 +141,32 @@ export const ShowDetails = ({
                     <>
                       <TableRow>
                         <TableCell className="w-[100px] font-medium">
+                          Engineering Time
+                        </TableCell>
+                        <TableCell>
+                          {options.engDuration < 2 ? (
+                            <>None</>
+                          ) : (
+                            <>{options.engDuration} Hours</>
+                          )}
+                        </TableCell>
+                      </TableRow>
+
+                      <TableRow>
+                        <TableCell className="w-[100px] font-medium">
+                          Engineering Price
+                        </TableCell>
+                        <TableCell>
+                          {options.engDuration < 2 ? (
+                            <>$0.00 CAD</>
+                          ) : (
+                            <>${engFee}.00 CAD</>
+                          )}
+                        </TableCell>
+                      </TableRow>
+
+                      <TableRow>
+                        <TableCell className="w-[100px] font-medium">
                           Available Hours
                         </TableCell>
                         <TableCell>
@@ -150,20 +182,59 @@ export const ShowDetails = ({
                             duration}
                         </TableCell>
                       </TableRow>
+                      <TableRow>
+                        <TableCell className="w-[100px] font-medium">
+                          Total
+                        </TableCell>
+                        <TableCell>
+                          {options.engDuration < 2 ? (
+                            <>$0.00 CAD</>
+                          ) : (
+                            <>${engFee}.00 CAD</>
+                          )}
+                        </TableCell>
+                      </TableRow>
                     </>
                   ) : (
                     <>
                       <TableRow>
                         <TableCell className="w-[100px] font-medium">
-                          Rate
+                          Engineering Time
                         </TableCell>
-                        <TableCell>{displayRate}</TableCell>
+                        <TableCell>
+                          {options.engDuration < 2 ? (
+                            <>None</>
+                          ) : (
+                            <>{options.engDuration} Hours</>
+                          )}
+                        </TableCell>
                       </TableRow>
+
                       <TableRow>
                         <TableCell className="w-[100px] font-medium">
-                          Price
+                          Engineering Price
+                        </TableCell>
+                        <TableCell>
+                          {options.engDuration < 2 ? (
+                            <>None</>
+                          ) : (
+                            <>${engFee}.00 CAD</>
+                          )}
+                        </TableCell>
+                      </TableRow>
+
+                      <TableRow>
+                        <TableCell className="w-[100px] font-medium">
+                          Studio Price
                         </TableCell>
                         <TableCell>$ {displayPrice}.00 CAD</TableCell>
+                      </TableRow>
+
+                      <TableRow>
+                        <TableCell className="w-[100px] font-medium">
+                          Total
+                        </TableCell>
+                        <TableCell>$ {total}.00 CAD</TableCell>
                       </TableRow>
                     </>
                   )}

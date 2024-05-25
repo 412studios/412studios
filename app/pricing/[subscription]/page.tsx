@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useState } from "react";
-import { prices } from "@/app/booking/components/variables/prices";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -18,11 +17,12 @@ export default function Page(context: any) {
   const [isLoading, setIsLoading] = useState(true);
   const [isAvailable, setIsAvailable] = useState(false);
   const [userHasSub, setUserHasSub] = useState(false);
-
   const [options, setOptions] = useState({
     room: parseInt(context.params.subscription),
     date: new Date(),
   });
+
+  const prices = context.prices;
 
   const submit = async () => {
     setIsLoading(true);
@@ -30,7 +30,8 @@ export default function Page(context: any) {
       await PostSubscription(
         options,
         parseInt(
-          prices[context.params.subscription].subscription.toString() + "00",
+          prices[context.params.subscription].subscriptionPrice.toString() +
+            "00",
         ),
       );
     } catch (error) {
@@ -86,7 +87,7 @@ export default function Page(context: any) {
             />
             <CardDescription>
               Monthly Membership price:{" "}
-              {prices[context.params.subscription].subscription}.00
+              {prices[context.params.subscription].subscriptionPrice}.00
             </CardDescription>
             <CardDescription>
               Includes four X four sessions every month.

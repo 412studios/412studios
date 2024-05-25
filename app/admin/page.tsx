@@ -48,6 +48,9 @@ export default async function Main() {
             <Link href="/admin/bookings/0" className="w-full">
               <Button className="w-full">View Booking Calendar</Button>
             </Link>
+            <Link href="/admin/pricing" className="w-full">
+              <Button className="w-full mt-4">Update Pricing</Button>
+            </Link>
             <Link href="/admin/users" className="w-full">
               <Button className="w-full mt-4">View All Users</Button>
             </Link>

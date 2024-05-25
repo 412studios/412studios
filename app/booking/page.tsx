@@ -1,9 +1,9 @@
 "use client";
 import { useState, useEffect } from "react";
-import { prices } from "./components/variables/prices";
 import { PickRoom } from "./components/pickRoom";
 import { PickDate } from "./components/pickDate";
 import { PickTime } from "./components/pickTime";
+import { PickEng } from "./components/pickEng";
 import { ShowDetails } from "./components/showDetails";
 import EquipmentList from "./components/equipmentList";
 import Link from "next/link";
@@ -27,6 +27,8 @@ export default function Page(data: any) {
     setUserDetails(data.user);
     setSubDetails(data.sub);
   }, [data]);
+
+  const prices = data.prices;
 
   let subRooms: string[] = [];
   let subRoomHours: string[] = [];
@@ -177,6 +179,16 @@ export default function Page(data: any) {
                           />
                         </div>
                       </div>
+                    </div>
+                  </div>
+
+                  <div className="mx-auto flex max-w-screen-xl flex-col lg:flex-row">
+                    <div className="w-full p-2">
+                      <PickEng
+                        setOptions={setOptions}
+                        options={options}
+                        prices={prices}
+                      />
                     </div>
                   </div>
 

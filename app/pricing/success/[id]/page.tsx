@@ -6,9 +6,6 @@ import prisma from "@/app/lib/db";
 import { getStripeSubId } from "@/app/lib/stripe";
 
 export default async function PageSuccess(context: any) {
-  //GET ID
-  // console.log(context.params.id);
-
   //HANDLE STANDARD BOOKING CONFIMATION
   const successfulBooking = await prisma.bookings.findUnique({
     where: {
@@ -22,6 +19,23 @@ export default async function PageSuccess(context: any) {
       },
       data: {
         status: "success",
+        engineerStatus: "success",
+      },
+    });
+
+    const duration =
+      successfulBooking.endTime + 1 - successfulBooking.startTime;
+
+    //Update subscription details
+    await prisma.subscription.updateMany({
+      where: {
+        userId: successfulBooking.userId,
+        roomId: successfulBooking.roomId,
+      },
+      data: {
+        availableHours: {
+          decrement: duration,
+        },
       },
     });
   }
@@ -32,7 +46,7 @@ export default async function PageSuccess(context: any) {
       subscriptionId: context.params.id,
     },
   });
-
+  //Set subscription as active when sub is purchased
   if (successfulSub?.stripeSessionId) {
     const test = await getStripeSubId(successfulSub?.stripeSessionId);
     await prisma.subscription.update({

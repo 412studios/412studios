@@ -23,6 +23,7 @@ model User {
   socialLinks         String?
   categories          String?
   Bookings            Bookings[]
+  Pricing             Pricing[]
 }
 
 model Bookings {
@@ -37,9 +38,11 @@ model Bookings {
   stripeProductId String
   totalHours      Int
   totalPrice      Float
-
-  // Define the relation to User
-  user User @relation(fields: [userId], references: [id])
+  engineerTotal   Int
+  engineerStart   Int
+  engineerStatus  String
+  addDetails      String
+  user            User   @relation(fields: [userId], references: [id])
 }
 
 model Subscription {
@@ -58,4 +61,16 @@ model Subscription {
   updateHours          DateTime @default(now())
   user                 User     @relation(fields: [userId], references: [id])
   userId               String
+}
+
+model Pricing {
+  id                String  @id @unique
+  room              String
+  dayRate           Int
+  hourlyRate        Int
+  img               String
+  subscriptionPrice Int
+  engineerPrice     Int
+  User              User?   @relation(fields: [userId], references: [id])
+  userId            String?
 }

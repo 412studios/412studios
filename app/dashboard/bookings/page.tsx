@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import prisma from "@/app/lib/db";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { unstable_noStore as noStore } from "next/cache";
-import { prices } from "@/app/booking/components/variables/prices";
 import { timeSlots } from "@/app/booking/components/variables/timeSlots";
 import {
   Table,
@@ -62,6 +61,8 @@ export default async function SettingsPage() {
     return `${hour === 0 ? 12 : hour > 12 ? hour - 12 : hour} ${hour < 12 || hour === 24 ? "AM" : "PM"}`;
   }
 
+  const rooms = ["A", "B", "C"];
+
   return (
     <main className="p-8">
       <div className="mx-auto max-w-screen-lg">
@@ -88,7 +89,7 @@ export default async function SettingsPage() {
               <TableBody>
                 {bookings.map((booking, index) => (
                   <TableRow key={index}>
-                    <TableCell>Studio {prices[booking.roomId].room}</TableCell>
+                    <TableCell>Studio {rooms[booking.roomId]}</TableCell>
                     <TableCell>
                       {numericToDate(booking.date.toString())}
                     </TableCell>

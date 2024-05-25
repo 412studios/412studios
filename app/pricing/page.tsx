@@ -1,24 +1,23 @@
-import { prices } from "../booking/components/variables/prices";
 import EquipmentList from "../booking/components/equipmentList";
 import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
-  CardFooter,
   CardHeader,
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
 import Image from "next/image";
 import Link from "next/link";
-import { ReactNode } from "react";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-import { redirect } from "next/navigation";
+import { getPricing } from "@/app/lib/booking";
 
 export default async function Page() {
   const { getUser } = getKindeServerSession();
   const user = await getUser();
   let loggedIn = !!user;
+  const prices = await getPricing();
+
   return (
     <div>
       <div className="p-2 pt-0">

@@ -1,28 +1,14 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import {
-  Settings,
-  CreditCard,
-  Shield,
-  Book,
-  Plus,
-  Notebook,
-  RefreshCw,
-} from "lucide-react";
 import { unstable_noStore as noStore } from "next/cache";
 import prisma from "@/app/lib/db";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
-
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
-
 import {
   Table,
   TableHeader,
@@ -32,7 +18,6 @@ import {
   TableCell,
 } from "@/components/ui/table";
 
-import { prices } from "../../booking/components/variables/prices";
 import { DeleteSubscription } from "@/app/lib/booking";
 import { redirect } from "next/navigation";
 
@@ -100,6 +85,8 @@ export default async function Main() {
     redirect("/dashboard/subscriptions/cancelled");
   }
 
+  const rooms = ["A", "B", "C"];
+
   return (
     <main className="p-8">
       <div className="mx-auto max-w-screen-lg rounded-lg">
@@ -122,7 +109,7 @@ export default async function Main() {
               <TableBody>
                 {subData.map((sub, index) => (
                   <TableRow key={index}>
-                    <TableCell>Room {prices[sub.roomId].room}</TableCell>
+                    <TableCell>Room {rooms[sub.roomId]}</TableCell>
                     <TableCell>{sub.status}</TableCell>
                     <TableCell>{sub.availableHours}</TableCell>
                     <TableCell>

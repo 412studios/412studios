@@ -4,8 +4,8 @@ import { redirect } from "next/navigation";
 import prisma from "../lib/db";
 import { stripe } from "../lib/stripe";
 import { unstable_noStore as noStore } from "next/cache";
-import { prices } from "./components/variables/prices";
 import Page from "./page";
+import { getPricing } from "@/app/lib/booking";
 
 async function getData({
   email,
@@ -141,7 +141,6 @@ async function getSubscription(userId: string) {
       originalDate.getDate(),
     );
     const numericNewEnd = parseInt(formatDateToNumeric(updatedEnd));
-
     await prisma.subscription.updateMany({
       where: {
         userId: userId,
@@ -154,7 +153,6 @@ async function getSubscription(userId: string) {
       },
     });
   }
-
   return data;
 }
 
@@ -177,14 +175,15 @@ export default async function DashboardLayout({
   });
 
   const subData = await getSubscription(user?.id as string);
-
   const userDetails = await checkVerification(user?.id as string);
   if (userDetails?.isUserVerified != true) {
     return redirect("/");
   }
+
+  const prices = await getPricing();
   return (
     <>
-      <Page user={user} sub={subData} />
+      <Page user={user} sub={subData} prices={prices} />
     </>
   );
 }

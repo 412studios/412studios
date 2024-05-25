@@ -8,13 +8,12 @@ import {
   createStripeSubscription,
   deleteStripeSub,
 } from "@/app/lib/stripe";
-import { prices } from "@/app/booking/components/variables/prices";
 
-export async function getBooking(roomId: number, date: number) {
+export async function getBooking(roomId: string, date: number) {
   noStore();
   const data = await prisma.bookings.findMany({
     where: {
-      roomId: roomId,
+      roomId: parseInt(roomId),
       date: date,
     },
     select: {
@@ -30,7 +29,6 @@ export async function getBooking(roomId: number, date: number) {
 
 export async function PostBooking(input: any, price: number) {
   noStore();
-
   const formatDateToNumeric = (date: Date | undefined): string => {
     if (!date) return "";
     const year = date.getFullYear().toString();
@@ -55,7 +53,7 @@ export async function PostBooking(input: any, price: number) {
   await prisma.bookings.create({
     data: {
       bookingId: bookingId,
-      roomId: roomId,
+      roomId: parseInt(roomId),
       date: parseInt(formatDateToNumeric(date)),
       type: rate,
       startTime: startTime,
@@ -64,7 +62,11 @@ export async function PostBooking(input: any, price: number) {
       status: "pending",
       stripeProductId: priceId,
       totalHours: duration,
+      engineerTotal: input.engDuration,
+      engineerStart: input.engStart,
+      engineerStatus: "pending",
       totalPrice: price,
+      addDetails: "",
     },
   });
 
@@ -174,6 +176,7 @@ export async function PostSubscriptionBooking(
   input: any,
   startTime: number,
   endTime: number,
+  engFee: number,
 ) {
   noStore();
 
@@ -191,42 +194,80 @@ export async function PostSubscriptionBooking(
   const date = input.date;
   const duration = endTime - startTime;
 
+  let status = "success";
+  if (engFee > 0) {
+    status = "pending";
+  }
+
   const bookingId: any = require("crypto").randomBytes(16).toString("hex");
   await prisma.bookings.create({
     data: {
       bookingId: bookingId,
-      roomId: roomId,
+      roomId: parseInt(roomId),
       date: parseInt(formatDateToNumeric(date)),
       type: "hour",
       startTime: startTime,
       endTime: endTime,
       userId: user?.id || "",
-      status: "success",
+      status: status,
       stripeProductId: "none",
       totalHours: duration,
       totalPrice: 0,
+      engineerTotal: input.engDuration,
+      engineerStart: input.engStart,
+      engineerStatus: "pending",
+      addDetails: "",
     },
   });
 
-  await prisma.subscription.updateMany({
-    where: {
-      userId: input.subscription[input.room].userId,
-      roomId: input.room,
-    },
-    data: {
-      availableHours:
-        input.subscription[input.room].availableHours - (duration + 1),
-    },
-  });
-  return redirect("/dashboard/bookings");
+  if (engFee > 0) {
+    //SEND TO STRIPE
+    let priceId = process.env.STRIPE_PRICE_ID_STANDARD_BOOKING as string;
+    const dbUser = await prisma.user.findUnique({
+      where: {
+        id: user?.id,
+      },
+      select: {
+        stripeCustomerId: true,
+      },
+    });
+    if (!dbUser?.stripeCustomerId) {
+      throw new Error("Unable to get customer id");
+    }
+    const formatPrice = parseInt(engFee + "00");
+    const subscriptionUrl = await getStripeSession({
+      customerId: dbUser.stripeCustomerId,
+      domainUrl:
+        process.env.NODE_ENV === "production"
+          ? (process.env.PRODUCTION_URL as string)
+          : "http://localhost:3000",
+      priceId: priceId,
+      bookingId: bookingId,
+      unit_amount: formatPrice,
+    });
+    return redirect(subscriptionUrl);
+  } else {
+    //Update subscription details
+    await prisma.subscription.updateMany({
+      where: {
+        userId: input.subscription[input.room].userId,
+        roomId: parseInt(input.room),
+      },
+      data: {
+        availableHours:
+          input.subscription[input.room].availableHours - (duration + 1),
+      },
+    });
+    return redirect("/dashboard/bookings");
+  }
 }
 
-export async function CheckAvailability(roomId: number) {
+export async function CheckAvailability(roomId: string) {
   const { getUser } = getKindeServerSession();
   const user = await getUser();
   const checkRoom = await prisma.subscription.findMany({
     where: {
-      roomId: roomId,
+      roomId: parseInt(roomId),
     },
     select: {
       roomId: true,
@@ -237,7 +278,7 @@ export async function CheckAvailability(roomId: number) {
   const checkUser = await prisma.subscription.findMany({
     where: {
       userId: user?.id,
-      roomId: roomId,
+      roomId: parseInt(roomId),
     },
     select: {
       roomId: true,
@@ -249,7 +290,6 @@ export async function CheckAvailability(roomId: number) {
 
 export async function DeleteSubscription(id: string) {
   noStore();
-
   try {
     const result = await deleteStripeSub(id);
     if (result == true) {
@@ -274,4 +314,22 @@ export async function DeleteSubscription(id: string) {
   } catch (error) {
     console.log("Error:", error);
   }
+}
+
+export async function getPricing() {
+  noStore();
+  // Fetch pricing data from the database
+  const prices = await prisma.pricing.findMany({
+    select: {
+      id: true,
+      room: true,
+      dayRate: true,
+      hourlyRate: true,
+      img: true,
+      subscriptionPrice: true,
+      engineerPrice: true,
+      userId: true,
+    },
+  });
+  return prices;
 }

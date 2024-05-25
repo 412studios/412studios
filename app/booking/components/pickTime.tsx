@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction } from "react";
+import React from "react";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { unstable_noStore as noStore } from "next/cache";
@@ -15,10 +15,8 @@ export const PickTime = ({
   setOptions: any;
 }) => {
   noStore();
-
   const [isLoading, setIsLoading] = useState(false);
   const [warning, setWarning] = useState(false);
-
   let duration = 0;
 
   function fillArrGaps(arr: number[], min: number, max: number) {
@@ -29,7 +27,7 @@ export const PickTime = ({
   }
 
   let timeArray: any = [];
-  if (options.subRooms.includes(options.room) == true) {
+  if (options.subRooms.includes(parseInt(options.room)) == true) {
     timeArray = subscriptionTimeSlots;
   } else {
     timeArray = timeSlots;
@@ -56,17 +54,15 @@ export const PickTime = ({
 
         let arr: any[] = [];
         bookings.forEach((booking: any) => {
-          //
           let startTime = booking.startTime;
           let endTime = booking.endTime;
-          if (options.subRooms.includes(options.room) == true) {
+          if (options.subRooms.includes(parseInt(options.room)) == true) {
             startTime = Math.floor(booking.startTime / 4);
             endTime = Math.floor((booking.endTime - 2) / 4);
           } else {
             startTime = booking.startTime;
             endTime = booking.endTime;
           }
-
           fillArrGaps(arr, startTime, endTime);
         });
         setExistingBookings(arr);
@@ -122,6 +118,7 @@ export const PickTime = ({
       // End if subscription hours are insufficient
       duration = fullList[fullList.length - 1] - fullList[0] + 1;
       if (options.subscription[options.room]) {
+        //This will return duration as an amount to be subtracted instead of an amount to be charged
         let checkHours =
           options.subscription[options.room].availableHours - duration * 4;
         duration = checkHours;
@@ -132,7 +129,7 @@ export const PickTime = ({
           setWarning(false);
         }
       }
-      console.log(fullList);
+      // console.log(fullList);
       handleTimePick(fullList[0], fullList[fullList.length - 1], duration);
       return fullList;
     });

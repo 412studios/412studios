@@ -10,7 +10,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-
 import {
   Table,
   TableHeader,
@@ -20,7 +19,6 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import { redirect } from "next/navigation";
-import { prices } from "@/app/booking/components/variables/prices";
 import { timeSlots } from "@/app/booking/components/variables/timeSlots";
 
 async function getData() {
@@ -72,6 +70,9 @@ export default async function Main(context: any) {
       date: true,
       startTime: true,
       endTime: true,
+      engineerStart: true,
+      engineerTotal: true,
+      engineerStatus: true,
       userId: true,
       user: {
         select: {
@@ -81,8 +82,6 @@ export default async function Main(context: any) {
       },
     },
   });
-
-  console.log(bookings);
 
   function formatNumericDate(numericDate: number): string {
     const dateStr = numericDate.toString();
@@ -104,11 +103,13 @@ export default async function Main(context: any) {
     return `${standardHour} ${period}`;
   }
 
+  const rooms = ["A", "B", "C"];
+
   return (
     <>
       <Card className="p-4">
         <CardHeader>
-          <CardTitle>Room {prices[context.params.id].room}</CardTitle>
+          <CardTitle>Room {rooms[context.params.id]}</CardTitle>
         </CardHeader>
         <CardContent>
           <Table>
@@ -119,6 +120,9 @@ export default async function Main(context: any) {
                 <TableHead>End Time</TableHead>
                 <TableHead>Name</TableHead>
                 <TableHead>Email</TableHead>
+                <TableHead>Engineer Booked</TableHead>
+                <TableHead>Engineer Start Time</TableHead>
+                <TableHead>Engineer Duration</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -137,6 +141,19 @@ export default async function Main(context: any) {
                   </TableCell>
                   <TableCell>{booking.user.name}</TableCell>
                   <TableCell>{booking.user.email}</TableCell>
+                  {booking.engineerStatus == "success" ? (
+                    <>
+                      <TableCell>{booking.engineerStatus}</TableCell>
+                      <TableCell>{booking.engineerStart}</TableCell>
+                      <TableCell>{booking.engineerTotal}</TableCell>
+                    </>
+                  ) : (
+                    <>
+                      <TableCell>No Engineer</TableCell>
+                      <TableCell>NA</TableCell>
+                      <TableCell>NA</TableCell>
+                    </>
+                  )}
                 </TableRow>
               ))}
             </TableBody>

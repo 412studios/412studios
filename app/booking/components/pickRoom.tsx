@@ -25,6 +25,7 @@ export const PickRoom = ({
       date: new Date(),
       startTime: -1,
       endTime: -1,
+      duration: 0,
     });
   };
   return (
