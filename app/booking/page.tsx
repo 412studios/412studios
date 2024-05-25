@@ -48,6 +48,7 @@ export default function Page(data: any) {
     subscription: data.sub,
     subRooms: subRooms,
     subRoomHours: subRoomHours,
+    user: data.user,
   });
 
   // Accordions On Load

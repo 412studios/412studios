@@ -2,7 +2,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { unstable_noStore as noStore } from "next/cache";
-import { getBooking } from "@/app/lib/booking";
+import { getBooking, getSubWeek } from "@/app/lib/booking";
 import { timeSlots, subscriptionTimeSlots } from "./variables/timeSlots";
 
 export const PickTime = ({
@@ -50,15 +50,33 @@ export const PickTime = ({
       setIsLoading(true);
       setOptions({ ...options, loading: true });
       try {
-        const bookings = await getBooking(options.room, formattedDate);
-
+        const bookings = await getBooking(
+          options.room,
+          formattedDate,
+          options.user,
+        );
+        const checkSubWeek = await getSubWeek(
+          options.room,
+          formattedDate,
+          options.user,
+        );
+        console.log(checkSubWeek);
         let arr: any[] = [];
         bookings.forEach((booking: any) => {
           let startTime = booking.startTime;
           let endTime = booking.endTime;
           if (options.subRooms.includes(parseInt(options.room)) == true) {
+            //Update time selections if user is subscribed
             startTime = Math.floor(booking.startTime / 4);
             endTime = Math.floor((booking.endTime - 2) / 4);
+            if (checkSubWeek == true) {
+              //Block available slots if already booked this week.
+              startTime = 0;
+              endTime = 3;
+            } else {
+              startTime = Math.floor(booking.startTime / 4);
+              endTime = Math.floor((booking.endTime - 2) / 4);
+            }
           } else {
             startTime = booking.startTime;
             endTime = booking.endTime;
@@ -183,7 +201,7 @@ export const PickTime = ({
                   ? `${timeArray[selList[0]].displayName.split("-")[0]} - ${timeArray[selList[selList.length - 1]].displayName.split("-")[1]}`
                   : selList.length === 1
                     ? `${timeArray[selList[0]].displayName}`
-                    : "No selection"}
+                    : "No Selection"}
               </div>
               <div>
                 {warning && (

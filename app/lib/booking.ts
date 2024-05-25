@@ -9,7 +9,7 @@ import {
   deleteStripeSub,
 } from "@/app/lib/stripe";
 
-export async function getBooking(roomId: string, date: number) {
+export async function getBooking(roomId: string, date: number, user: any) {
   noStore();
   const data = await prisma.bookings.findMany({
     where: {
@@ -25,6 +25,63 @@ export async function getBooking(roomId: string, date: number) {
     },
   });
   return data;
+}
+
+export async function getSubWeek(roomId: string, date: number, user: any) {
+  noStore();
+  //CHECK IF A SUBSCRIBED USER HAS ALREADY BOOKED A SESSION THIS WEEK.
+  const getWeekBoundaries = (numericDate: number) => {
+    const year = Math.floor(numericDate / 10000);
+    // Month is zero-based in JavaScript Date
+    const month = Math.floor((numericDate % 10000) / 100) - 1;
+    const day = numericDate % 100;
+    const givenDate = new Date(year, month, day);
+    // 0 (Sunday) to 6 (Saturday)
+    const dayOfWeek = givenDate.getDay();
+    const startOfWeek = new Date(givenDate);
+    const endOfWeek = new Date(givenDate);
+    // Adjust startOfWeek to the previous Monday (or today if it's Monday)
+    startOfWeek.setDate(
+      givenDate.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1),
+    );
+    startOfWeek.setHours(0, 0, 0, 0);
+    // Adjust endOfWeek to the following Sunday
+    endOfWeek.setDate(startOfWeek.getDate() + 6);
+    endOfWeek.setHours(23, 59, 59, 999);
+    // Convert to numeric format YYYYMMDD
+    const startOfWeekNumeric =
+      startOfWeek.getFullYear() * 10000 +
+      (startOfWeek.getMonth() + 1) * 100 +
+      startOfWeek.getDate();
+    const endOfWeekNumeric =
+      endOfWeek.getFullYear() * 10000 +
+      (endOfWeek.getMonth() + 1) * 100 +
+      endOfWeek.getDate();
+    return { startOfWeekNumeric, endOfWeekNumeric };
+  };
+  const { startOfWeekNumeric, endOfWeekNumeric } = getWeekBoundaries(date);
+  const userBooking = await prisma.bookings.findMany({
+    where: {
+      userId: user.id,
+      roomId: parseInt(roomId),
+      date: {
+        gte: startOfWeekNumeric,
+        lte: endOfWeekNumeric,
+      },
+    },
+    select: {
+      roomId: true,
+      date: true,
+      type: true,
+      startTime: true,
+      endTime: true,
+    },
+  });
+  if (userBooking.length > 0) {
+    return true;
+  } else {
+    return false;
+  }
 }
 
 export async function PostBooking(input: any, price: number) {
