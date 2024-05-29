@@ -50,9 +50,11 @@ export const ShowDetails = ({
     displayStart =
       timeArray[options.startTime].displayName.split(" - ")[0] + " - ";
     displayEnd = timeArray[options.endTime].displayName.split(" - ")[1];
+    // setIsLoading(true);
   } else {
     displayStart = "No Time Selected";
     displayEnd = " ";
+    // setIsLoading(false);
   }
   let displayRate = "Hourly Rate";
   if (duration >= 16) {
@@ -66,11 +68,8 @@ export const ShowDetails = ({
   options.subscription[options.room] && (duration *= 4);
 
   let engFee = 0;
-  let total = 0;
-  if (options.engDuration > 0) {
-    engFee = options.engDuration * prices[options.room]?.engineerPrice;
-    total = engFee + parseInt(displayPrice);
-  }
+  engFee = options.engDuration * prices[options.room]?.engineerPrice;
+  let total = engFee + parseInt(displayPrice);
 
   const submit = async () => {
     setIsLoading(true);
