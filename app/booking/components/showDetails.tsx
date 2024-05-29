@@ -66,10 +66,13 @@ export const ShowDetails = ({
   }
 
   options.subscription[options.room] && (duration *= 4);
-
-  let engFee = 0;
-  engFee = options.engDuration * prices[options.room]?.engineerPrice;
-  let total = engFee + parseInt(displayPrice);
+  let engFee = options.engDuration * prices[options.room]?.engineerPrice;
+  let total = 0;
+  if (engFee > 0) {
+    total = engFee + parseInt(displayPrice);
+  } else {
+    total = parseInt(displayPrice);
+  }
 
   const submit = async () => {
     setIsLoading(true);
