@@ -72,6 +72,7 @@ export const ShowDetails = ({
     total = engFee + parseInt(displayPrice);
   } else {
     total = parseInt(displayPrice);
+    engFee = 0;
   }
 
   const submit = async () => {
