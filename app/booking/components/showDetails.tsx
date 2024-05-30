@@ -257,7 +257,7 @@ export const ShowDetails = ({
                 </Link>
               ) : (
                 <>
-                  {duration <= 1 ? (
+                  {duration != 4 ? (
                     <Button className="w-full" disabled={isLoading}>
                       {isLoading ? "Redirecting..." : "Select Time Slot"}
                     </Button>
