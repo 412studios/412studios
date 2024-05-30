@@ -39,10 +39,13 @@ export const ShowDetails = ({
 
   //HANDLE SUBSCRIPTION TIME OPTIONS
   let timeArray: any = [];
-  if (options.subRooms.includes(options.room) == true) {
+  let isSub = true;
+  if (options.subRooms.includes(parseInt(options.room)) == true) {
     timeArray = subscriptionTimeSlots;
+    isSub = true;
   } else {
     timeArray = timeSlots;
+    isSub = false;
   }
 
   if (options.startTime != -1) {
@@ -247,30 +250,20 @@ export const ShowDetails = ({
           )}
         </CardContent>
         <CardFooter>
-          {options.subscription[options.room] ? (
+          {isSub == true ? (
             <>
-              {options.subscription[options.room].availableHours <= 0 ? (
-                <Link href="/dashboard/subscriptions" className="w-full">
-                  <Button className="w-full" disabled={isLoading}>
-                    {isLoading ? "Redirecting..." : "Add additional hours"}
-                  </Button>
-                </Link>
+              {duration != 1 ? (
+                <Button className="w-full" disabled={isLoading}>
+                  {isLoading ? "Redirecting..." : "Select One Time Slot"}
+                </Button>
               ) : (
-                <>
-                  {duration != 4 ? (
-                    <Button className="w-full" disabled={isLoading}>
-                      {isLoading ? "Redirecting..." : "Select Time Slot"}
-                    </Button>
-                  ) : (
-                    <Button
-                      className="w-full"
-                      onClick={submitSubscription}
-                      disabled={isLoading}
-                    >
-                      {isLoading ? "Redirecting..." : "Book Time Slot"}
-                    </Button>
-                  )}
-                </>
+                <Button
+                  className="w-full"
+                  onClick={submitSubscription}
+                  disabled={isLoading}
+                >
+                  {isLoading ? "Redirecting..." : "Book Time Slot"}
+                </Button>
               )}
             </>
           ) : (
