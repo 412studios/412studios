@@ -233,7 +233,7 @@ export async function PostSubscriptionBooking(
   input: any,
   startTime: number,
   endTime: number,
-  engFee: number,
+  duration: number,
 ) {
   noStore();
 
@@ -249,12 +249,6 @@ export async function PostSubscriptionBooking(
   const user = await getUser();
   const roomId = input.room;
   const date = input.date;
-  const duration = endTime - startTime;
-
-  let status = "success";
-  if (engFee > 0) {
-    status = "pending";
-  }
 
   const bookingId: any = require("crypto").randomBytes(16).toString("hex");
   await prisma.bookings.create({
@@ -266,7 +260,7 @@ export async function PostSubscriptionBooking(
       startTime: startTime,
       endTime: endTime,
       userId: user?.id || "",
-      status: status,
+      status: "success",
       stripeProductId: "none",
       totalHours: duration,
       totalPrice: 0,
@@ -277,46 +271,26 @@ export async function PostSubscriptionBooking(
     },
   });
 
-  if (engFee > 0) {
-    //SEND TO STRIPE
-    let priceId = process.env.STRIPE_PRICE_ID_STANDARD_BOOKING as string;
-    const dbUser = await prisma.user.findUnique({
+  // If you want to further decrement availableHours by 4, do it here:
+  const updatedSubscription = await prisma.subscription.findFirst({
+    where: {
+      userId: user?.id,
+      roomId: parseInt(input.room),
+    },
+  });
+
+  if (updatedSubscription) {
+    await prisma.subscription.update({
       where: {
-        id: user?.id,
-      },
-      select: {
-        stripeCustomerId: true,
-      },
-    });
-    if (!dbUser?.stripeCustomerId) {
-      throw new Error("Unable to get customer id");
-    }
-    const formatPrice = parseInt(engFee + "00");
-    const subscriptionUrl = await getStripeSession({
-      customerId: dbUser.stripeCustomerId,
-      domainUrl:
-        process.env.NODE_ENV === "production"
-          ? (process.env.PRODUCTION_URL as string)
-          : "http://localhost:3000",
-      priceId: priceId,
-      bookingId: bookingId,
-      unit_amount: formatPrice,
-    });
-    return redirect(subscriptionUrl);
-  } else {
-    //Update subscription details
-    await prisma.subscription.updateMany({
-      where: {
-        userId: input.subscription[input.room].userId,
-        roomId: parseInt(input.room),
+        subscriptionId: updatedSubscription.subscriptionId,
       },
       data: {
-        availableHours:
-          input.subscription[input.room].availableHours - (duration + 1),
+        availableHours: updatedSubscription.availableHours - duration,
       },
     });
-    return redirect("/dashboard/bookings");
   }
+
+  return redirect("/dashboard/bookings");
 }
 
 export async function CheckAvailability(roomId: string) {

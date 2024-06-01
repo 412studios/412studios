@@ -10,7 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { timeSlots } from "./variables/timeSlots";
+import { timeSlots } from "./timeSlots";
 
 export const PickEng = ({
   prices,
@@ -117,95 +117,88 @@ export const PickEng = ({
   return (
     <div className="rounded border p-4">
       <div className="p-4 text-2xl font-semibold leading-none tracking-tight">
-        Engineering Fee: ${prices[options.room].engineerPrice}.00 per hour
+        Engineering Fee: ${prices[parseInt(options.room)].engineerPrice}.00 per
+        hour
       </div>
       <div className="mx-4 border-b"></div>
-      {options.duration <= 1 ? (
-        <div>
-          <div className="p-4">Please select a minimum of 2 hours</div>
+      <div>
+        <div className="p-4">
+          <div className="flex items-center space-x-2">
+            <Checkbox
+              id="terms"
+              className="rounded"
+              checked={isChecked}
+              onCheckedChange={handleCheckboxChange}
+            />
+            <label
+              htmlFor="terms"
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              Add Engineer
+            </label>
+          </div>
         </div>
-      ) : (
-        <div>
-          <div className="p-4">
-            <div className="flex items-center space-x-2">
-              <Checkbox
-                id="terms"
-                className="rounded"
-                checked={isChecked}
-                onCheckedChange={handleCheckboxChange}
-              />
-              <label
-                htmlFor="terms"
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        <div className="p-4 pt-0">
+          <div className="flex flex-col md:flex-row md:space-x-4">
+            <div className="w-full md:w-1/2">
+              <Select
+                disabled={!isChecked}
+                value={startTime}
+                onValueChange={handleStartTimeChange}
               >
-                Add Engineer
-              </label>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select start time">
+                    {startTime === placeholderStart ? (
+                      <span className="text-gray-400">{placeholderStart}</span>
+                    ) : (
+                      startTime
+                    )}
+                  </SelectValue>
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Start Time</SelectLabel>
+                    {startArr.map((item: any) => (
+                      <SelectItem key={item} value={formatTime(item)}>
+                        {formatTime(item)}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
             </div>
-          </div>
-          <div className="p-4 pt-0">
-            <div className="flex flex-col md:flex-row md:space-x-4">
-              <div className="w-full md:w-1/2">
-                <Select
-                  disabled={!isChecked}
-                  value={startTime}
-                  onValueChange={handleStartTimeChange}
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select start time">
-                      {startTime === placeholderStart ? (
-                        <span className="text-gray-400">
-                          {placeholderStart}
-                        </span>
-                      ) : (
-                        startTime
-                      )}
-                    </SelectValue>
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      <SelectLabel>Start Time</SelectLabel>
-                      {startArr.map((item: any) => (
-                        <SelectItem key={item} value={formatTime(item)}>
-                          {formatTime(item)}
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="w-full md:w-1/2 mt-4 md:mt-0">
-                <Select
-                  disabled={!isChecked}
-                  value={duration}
-                  onValueChange={handleDurationChange}
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select end time">
-                      {duration === placeholderDuration ? (
-                        <span className="text-gray-400">
-                          {placeholderDuration}
-                        </span>
-                      ) : (
-                        duration
-                      )}
-                    </SelectValue>
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      <SelectLabel>Duration</SelectLabel>
-                      {durationArr.map((item: any) => (
-                        <SelectItem key={item} value={item}>
-                          {item}
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-              </div>
+            <div className="w-full md:w-1/2 mt-4 md:mt-0">
+              <Select
+                disabled={!isChecked}
+                value={duration}
+                onValueChange={handleDurationChange}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select end time">
+                    {duration === placeholderDuration ? (
+                      <span className="text-gray-400">
+                        {placeholderDuration}
+                      </span>
+                    ) : (
+                      duration
+                    )}
+                  </SelectValue>
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Duration</SelectLabel>
+                    {durationArr.map((item: any) => (
+                      <SelectItem key={item} value={item}>
+                        {item}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
             </div>
           </div>
         </div>
-      )}
+      </div>
     </div>
   );
 };

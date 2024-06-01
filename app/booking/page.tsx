@@ -1,35 +1,21 @@
 "use client";
 import { useState, useEffect } from "react";
-import { PickRoom } from "./components/pickRoom";
 import { PickDate } from "./components/pickDate";
 import { PickTime } from "./components/pickTime";
 import { PickEng } from "./components/pickEng";
 import { ShowDetails } from "./components/showDetails";
-import EquipmentList from "./components/equipmentList";
-import Link from "next/link";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardHeader,
   CardTitle,
   CardDescription,
+  CardContent,
 } from "@/components/ui/card";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 
 export default function Page(data: any) {
-  const [userDetails, setUserDetails] = useState("");
-  const [subDetails, setSubDetails] = useState("");
-  useEffect(() => {
-    setUserDetails(data.user);
-    setSubDetails(data.sub);
-  }, [data]);
-
-  const prices = data.prices;
-
+  //COLLECT SUBSCRIPTION DETAILS IF AVAILABLE
+  //CREATE ARRAY OF ACTIVE SUBSCRIPTIONS AND ROOM HOURS
   let subRooms: string[] = [];
   let subRoomHours: string[] = [];
   data.sub.forEach((element: any) => {
@@ -37,11 +23,12 @@ export default function Page(data: any) {
     subRoomHours.push(element.availableHours);
   });
 
-  const [options, setOptions] = useState({
-    room: -1,
+  //SET DEFAULT OPTION VALUES ON LOAD
+  const defaultOptions = {
+    room: 0,
     date: new Date(),
-    startTime: 0,
-    endTime: 0,
+    startTime: -1,
+    endTime: -1,
     duration: 0,
     price: 0,
     loading: false,
@@ -49,192 +36,136 @@ export default function Page(data: any) {
     subRooms: subRooms,
     subRoomHours: subRoomHours,
     user: data.user,
-  });
-
-  // Accordions On Load
-  const [activeItems, setActiveItems] = useState(["item-1"]);
-  useEffect(() => {
-    if (options.room > -1) {
-      setActiveItems((currentItems) => {
-        const newActiveItems = new Set(currentItems);
-        newActiveItems.delete("item-1");
-        newActiveItems.delete("item-3");
-        newActiveItems.add("item-2");
-        return Array.from(newActiveItems);
-      });
-    } else {
-      setActiveItems((currentItems) => {
-        const newActiveItems = new Set(currentItems);
-        newActiveItems.add("item-1");
-        newActiveItems.add("item-3");
-        return Array.from(newActiveItems);
-      });
-    }
-  }, [options.room]);
-  // Toggle open/close accordions
-  const toggleItem = (itemValue: any) => {
-    setActiveItems((currentItems) => {
-      const isItemActive = currentItems.includes(itemValue);
-      if (isItemActive) {
-        return currentItems.filter((item) => item !== itemValue);
-      } else {
-        return [...currentItems, itemValue];
-      }
-    });
+    engDuration: -1,
+    engStart: -1,
   };
+  const [options, setOptions] = useState(defaultOptions);
+  useEffect(() => {
+    setOptions(defaultOptions);
+  }, [data]);
+
+  //UPDATE OPTIONS ON ROOM PICK + RESET TIMES
+  function pickRoom(input: number) {
+    setOptions({
+      ...options,
+      room: input,
+      date: new Date(),
+      startTime: -1,
+      endTime: -1,
+    });
+  }
 
   return (
-    <main className="min-h-[100vh] p-2 md:p-8">
-      <div className="mx-auto mb-8 max-w-screen-xl pt-6 md:pt-0">
-        <h1 className="text-4xl font-bold text-gray-900">Book A Time</h1>
-        {data.sub.length >= 1 && (
-          <div className="mt-5">
-            {data.sub.map((sub: any, index: number) => (
-              <div
-                key={index}
-                className="bg-blue-100 text-blue-800 px-4 py-2 rounded flex flex-col mt-2"
-              >
-                <span>Subscribed to Room {prices[sub.roomId].room}</span>
-                <span>Subscription Status {sub.status}</span>
-                <span>
-                  Remaining Hours in Subscription: {sub.availableHours}
-                </span>
-              </div>
-            ))}
-          </div>
+    <main className="m-8">
+      {/* DISPLAY SUB DETAILS IF AVAILABLE */}
+      <>
+        {options.subRooms.length >= 1 ? (
+          <>
+            <Card className="m-2">
+              <CardHeader>
+                <CardTitle>Active Subscriptions</CardTitle>
+              </CardHeader>
+              <CardContent>
+                {options.subscription.map((element: any, index: number) => (
+                  <div
+                    key={index}
+                    className="bg-blue-100 text-blue-800 px-4 py-2 rounded flex flex-col mt-2"
+                  >
+                    <span>Room {data.prices[element.roomId].room}</span>
+                    <span>Subscription Status {element.status}</span>
+                    <span>
+                      Remaining Hours in Subscription: {element.availableHours}
+                    </span>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+          </>
+        ) : (
+          <></>
         )}
-      </div>
-      <div className="mx-auto max-w-screen-xl border-t">
-        <Accordion type="multiple" className="w-full" value={activeItems}>
-          {/* ROOM DETAILS */}
-          <AccordionItem value="item-1">
-            <AccordionTrigger onClick={() => toggleItem("item-1")}>
-              View Rooms
-            </AccordionTrigger>
-            <AccordionContent>
-              <PickRoom
+      </>
+
+      {/* PICK A ROOM SECTION */}
+      <>
+        <Card className="m-2">
+          <CardHeader>
+            <CardTitle>Pick Room</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-wrap">
+              {data.prices.map((element: any) => (
+                <div key={element.id} className="w-full md:w-1/3 p-2">
+                  <CardTitle>Room {element.room}</CardTitle>
+                  <CardDescription>
+                    Hourly rate: {element.hourlyRate}
+                  </CardDescription>
+                  <CardDescription>Day rate: {element.dayRate}</CardDescription>
+                  <Button
+                    className="w-full mt-4"
+                    onClick={() => pickRoom(element.id)}
+                  >
+                    Select Room {element.room}
+                  </Button>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </>
+
+      {/* DATE AND TIME SECTION */}
+      <>
+        <div className="flex flex-col lg:flex-row">
+          <div className="m-2 flex h-[450px] flex-col rounded border md:h-[600px] lg:w-full">
+            <div className="p-4 text-2xl font-semibold leading-none tracking-tight">
+              Date
+            </div>
+            <div className="mx-4 border-b"></div>
+            <div className="flex h-full items-center justify-center p-4">
+              <PickDate
                 setOptions={setOptions}
                 options={options}
-                prices={prices}
+                prices={data.prices}
               />
-            </AccordionContent>
-          </AccordionItem>
-          <AccordionItem value="item-2">
-            <AccordionTrigger onClick={() => toggleItem("item-2")}>
-              View Times
-            </AccordionTrigger>
-            {/* BOOKIGN DETAILS */}
-            <AccordionContent>
-              {options.room != -1 ? (
-                <div>
-                  <div className="mx-auto max-w-screen-xl">
-                    <div className="flex p-2">
-                      <Card className="w-full">
-                        <CardHeader>
-                          <CardTitle>
-                            Room {prices[options.room].room}
-                          </CardTitle>
-                          <CardDescription>
-                            {options.date.toDateString()}
-                          </CardDescription>
-                          <div className="border-b"></div>
-                          <CardDescription className="pt-1">
-                            Daily Rate: {prices[options.room].dayRate} | Hourly
-                            Rate: {prices[options.room].hourlyRate}
-                          </CardDescription>
-                          <div>
-                            {data.sub[options.room] && (
-                              <CardDescription>
-                                <strong>Subscription Hours:</strong>{" "}
-                                {options.subRoomHours[options.room]}
-                              </CardDescription>
-                            )}
-                          </div>
-                        </CardHeader>
-                      </Card>
-                    </div>
-                    <div className="flex flex-col lg:flex-row">
-                      <div className="m-2 flex h-[450px] flex-col rounded border md:h-[600px] lg:w-full">
-                        <div className="p-4 text-2xl font-semibold leading-none tracking-tight">
-                          Date
-                        </div>
-                        <div className="mx-4 border-b"></div>
-                        <div className="flex h-full items-center justify-center p-4">
-                          <PickDate
-                            setOptions={setOptions}
-                            options={options}
-                            prices={prices}
-                          />
-                        </div>
-                      </div>
-                      <div className="m-2 flex h-[450px] flex-col rounded border md:h-[600px] lg:w-full">
-                        <div className="p-4 text-2xl font-semibold leading-none tracking-tight">
-                          Time
-                        </div>
-                        <div className="mx-4 border-b"></div>
-                        <div className="flex h-full items-center justify-center p-4">
-                          <PickTime
-                            setOptions={setOptions}
-                            options={options}
-                            prices={prices}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="mx-auto flex max-w-screen-xl flex-col lg:flex-row">
-                    <div className="w-full p-2">
-                      <PickEng
-                        setOptions={setOptions}
-                        options={options}
-                        prices={prices}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="mx-auto flex max-w-screen-xl flex-col lg:flex-row">
-                    <div className="w-full p-2">
-                      <ShowDetails
-                        setOptions={setOptions}
-                        options={options}
-                        prices={prices}
-                      />
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <div
-                  className="relative rounded border border-red-400 bg-red-100 px-4 py-3 text-red-700"
-                  role="alert"
-                >
-                  <span className="block sm:inline">Please Select A Room</span>
-                </div>
-              )}
-            </AccordionContent>
-          </AccordionItem>
-          {/* EQUIPMENT DETAILS */}
-          <AccordionItem value="item-3">
-            <AccordionTrigger onClick={() => toggleItem("item-3")}>
-              Equipment Details
-            </AccordionTrigger>
-            <AccordionContent>
-              <EquipmentList />
-            </AccordionContent>
-          </AccordionItem>
-        </Accordion>
-      </div>
-      <div className="mx-auto mt-8 max-w-screen-xl pb-6 md:pb-0">
-        <div
-          className="relative w-full rounded border border-blue-400 bg-blue-100 px-4 py-3 text-center text-blue-700"
-          role="alert"
-        >
-          <span className="block sm:inline">
-            For more booking enquiries, please call{" "}
-            <Link href="tel:+16475402321">+1 (647) 540-2321</Link>
-          </span>
+            </div>
+          </div>
+          <div className="m-2 flex h-[450px] flex-col rounded border md:h-[600px] lg:w-full">
+            <div className="p-4 text-2xl font-semibold leading-none tracking-tight">
+              Time
+            </div>
+            <div className="mx-4 border-b"></div>
+            <div className="flex h-full items-center justify-center p-4">
+              <PickTime
+                setOptions={setOptions}
+                options={options}
+                prices={data.prices}
+              />
+            </div>
+          </div>
         </div>
-      </div>
+      </>
+
+      {/* <>
+        <div className="mx-auto flex max-w-screen-xl flex-col lg:flex-row">
+          <div className="w-full p-2">
+            <PickEng
+              setOptions={setOptions}
+              options={options}
+              prices={data.prices}
+            />
+          </div>
+        </div>
+      </> */}
+
+      {/* CHECKOUT DETAILS */}
+      <>
+        <ShowDetails
+          setOptions={setOptions}
+          options={options}
+          prices={data.prices}
+        />
+      </>
     </main>
   );
 }

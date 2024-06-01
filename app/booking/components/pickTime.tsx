@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { unstable_noStore as noStore } from "next/cache";
 import { getBooking, getSubWeek } from "@/app/lib/booking";
-import { timeSlots, subscriptionTimeSlots } from "./variables/timeSlots";
+import { timeSlots, subscriptionTimeSlots } from "./timeSlots";
 
 export const PickTime = ({
   prices,
@@ -15,26 +15,14 @@ export const PickTime = ({
   setOptions: any;
 }) => {
   noStore();
-  const [isLoading, setIsLoading] = useState(false);
-  const [warning, setWarning] = useState(false);
-  let duration = 0;
 
+  // FUNCTIONS
   function fillArrGaps(arr: number[], min: number, max: number) {
     for (let i = min; i <= max; i++) {
       arr.push(i);
     }
     return arr;
   }
-
-  let timeArray: any = [];
-  if (options.subRooms.includes(parseInt(options.room)) == true) {
-    timeArray = subscriptionTimeSlots;
-  } else {
-    timeArray = timeSlots;
-  }
-
-  const [existingBookings, setExistingBookings] = React.useState<number[]>([]);
-
   const formatDateToNumeric = (date: Date | undefined): string => {
     if (!date) return "";
     const year = date.getFullYear().toString();
@@ -43,8 +31,37 @@ export const PickTime = ({
     return year + month + day;
   };
 
-  const formattedDate = parseInt(formatDateToNumeric(options.date));
+  // VARIABLES
+  const [isLoading, setIsLoading] = useState(false);
+  const [warning, setWarning] = useState(false);
+  let duration = 0;
+  let isSubscribed = false;
 
+  const formattedDate = parseInt(formatDateToNumeric(options.date));
+  let timeArray: any = [];
+
+  const [selList, setSelList] = React.useState<number[]>([]);
+  const [bookedTimes, setBookedTimes] = React.useState<number[]>([]);
+  const [existingBookings, setExistingBookings] = React.useState<number[]>([]);
+
+  //Select time options
+  if (options.subRooms.includes(parseInt(options.room)) == true) {
+    timeArray = subscriptionTimeSlots;
+    isSubscribed = true;
+  } else {
+    timeArray = timeSlots;
+    isSubscribed = false;
+  }
+
+  React.useEffect(() => {
+    const initialBookedTimes = Array.isArray(existingBookings)
+      ? existingBookings
+      : [];
+    setBookedTimes(initialBookedTimes);
+    setSelList([]);
+  }, [existingBookings]);
+
+  //Pull details from db
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
@@ -60,12 +77,11 @@ export const PickTime = ({
           formattedDate,
           options.user,
         );
-        console.log(checkSubWeek);
         let arr: any[] = [];
         bookings.forEach((booking: any) => {
           let startTime = booking.startTime;
           let endTime = booking.endTime;
-          if (options.subRooms.includes(parseInt(options.room)) == true) {
+          if (isSubscribed == true) {
             //Update time selections if user is subscribed
             startTime = Math.floor(booking.startTime / 4);
             endTime = Math.floor((booking.endTime - 2) / 4);
@@ -94,17 +110,7 @@ export const PickTime = ({
     fetchData();
   }, [options.room, formattedDate]);
 
-  const [selList, setSelList] = React.useState<number[]>([]);
-  const [bookedTimes, setBookedTimes] = React.useState<number[]>([]);
-
-  React.useEffect(() => {
-    const initialBookedTimes = Array.isArray(existingBookings)
-      ? existingBookings
-      : [];
-    setBookedTimes(initialBookedTimes);
-    setSelList([]);
-  }, [existingBookings]);
-
+  //Update on click event
   const handleClick = (id: number) => {
     setSelList((prevSelList) => {
       // If booked, don't add
@@ -112,47 +118,52 @@ export const PickTime = ({
         return prevSelList;
       }
 
+      // Create a sorted, unique list of selected IDs
       const sortedList = Array.from(new Set([...prevSelList, id])).sort(
         (a, b) => a - b,
       );
+      let [min, max] = [sortedList[0], sortedList[sortedList.length - 1]];
 
-      let min = sortedList[0];
-      let max = sortedList[sortedList.length - 1];
-
+      // Update min and max based on clicked ID
       if (id > min) {
         max = id;
       } else {
         min = id;
       }
 
-      const fullList = [];
+      // Create a full list of IDs between min and max
+      let fullList = [];
       for (let i = min; i <= max; i++) {
         if (bookedTimes.includes(i)) {
-          return [id];
+          return [id]; // If any of these times are booked, return the single ID
         }
         fullList.push(i);
       }
 
-      // End if subscription hours are insufficient
-      duration = fullList[fullList.length - 1] - fullList[0] + 1;
-      if (options.subscription[options.room]) {
-        //This will return duration as an amount to be subtracted instead of an amount to be charged
-        let checkHours =
-          options.subscription[options.room].availableHours - duration * 4;
-        duration = checkHours;
-        if (checkHours <= -1) {
-          setWarning(true);
-          return prevSelList;
-        } else {
-          setWarning(false);
+      // Check subscription hours if applicable
+      if (isSubscribed) {
+        fullList = [];
+        fullList.push(id);
+
+        duration = fullList.length;
+        if (options.subscription[options.room]) {
+          const checkHours =
+            options.subscription[options.room].availableHours - duration * 4;
+          duration = checkHours;
+          if (checkHours <= -1) {
+            setWarning(true);
+            return prevSelList;
+          } else {
+            setWarning(false);
+          }
         }
       }
-      // console.log(fullList);
       handleTimePick(fullList[0], fullList[fullList.length - 1], duration);
       return fullList;
     });
   };
 
+  //Handle Change
   const handleTimePick = (start: any, end: any, duration: number) => {
     setOptions({
       ...options,
@@ -161,7 +172,6 @@ export const PickTime = ({
       duration: duration,
     });
   };
-
   const clearBtn = () => {
     setSelList(() => {
       handleTimePick(-1, -1, 0);
@@ -171,7 +181,7 @@ export const PickTime = ({
   };
 
   return (
-    <div>
+    <>
       {isLoading ? (
         <div className="text-center">Loading...</div>
       ) : (
@@ -193,32 +203,11 @@ export const PickTime = ({
               </div>
             ))}
           </div>
-
-          <div className="mx-auto max-w-screen-md p-2">
-            <div className="text-center">
-              <div>
-                {duration >= 1
-                  ? `${timeArray[selList[0]].displayName.split("-")[0]} - ${timeArray[selList[selList.length - 1]].displayName.split("-")[1]}`
-                  : selList.length === 1
-                    ? `${timeArray[selList[0]].displayName}`
-                    : "No Selection"}
-              </div>
-              <div>
-                {warning && (
-                  <div className="my-2">
-                    <span className="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">
-                      Available Hours Exceeded
-                    </span>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
           <Button className="mb-4 mt-auto w-full" onClick={clearBtn}>
             Clear selection
           </Button>
         </div>
       )}
-    </div>
+    </>
   );
 };

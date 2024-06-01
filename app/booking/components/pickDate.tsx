@@ -1,5 +1,5 @@
 "use client";
-import React, { Dispatch, SetStateAction, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Calendar } from "@/components/ui/calendar";
 export const PickDate = ({
   prices,
@@ -18,7 +18,7 @@ export const PickDate = ({
     setDate(new Date());
   }, [options.room]);
   return (
-    <div className="rounded border p-4">
+    <div className="rounded border p-4 mx-auto max-w-[300px]">
       <Calendar
         mode="single"
         selected={date}

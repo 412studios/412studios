@@ -9,9 +9,8 @@ import {
 } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { timeSlots, subscriptionTimeSlots } from "./variables/timeSlots";
+import { timeSlots, subscriptionTimeSlots } from "./timeSlots";
 import { PostBooking, PostSubscriptionBooking } from "@/app/lib/booking";
-import Link from "next/link";
 
 export const ShowDetails = ({
   prices,
@@ -22,62 +21,74 @@ export const ShowDetails = ({
   options: any;
   setOptions: any;
 }) => {
+  //Updating options
   const [isLoading, setIsLoading] = useState(false);
-  const [isSubscribed, setIsSubscribed] = useState(false);
 
-  useEffect(() => {
-    if (options.subRooms.includes(options.room) == true) {
-      setIsSubscribed(true);
-    }
-  }, [isSubscribed]);
+  let isSubscribed = false;
+  let areSubHoursAvailable = false;
+  let activeSubscription: any = [];
+  if (options.subRooms.includes(parseInt(options.room)) == true) {
+    isSubscribed = true;
+  }
 
   let displayStart = " ";
   let displayEnd = " ";
   let duration = 0;
-
-  let displayPrice = "0";
-
-  //HANDLE SUBSCRIPTION TIME OPTIONS
-  let timeArray: any = [];
-  let isSub = true;
-  if (options.subRooms.includes(parseInt(options.room)) == true) {
-    timeArray = subscriptionTimeSlots;
-    isSub = true;
-  } else {
-    timeArray = timeSlots;
-    isSub = false;
-  }
-
-  if (options.startTime != -1) {
-    duration = options.endTime - options.startTime + 1;
-    displayStart =
-      timeArray[options.startTime].displayName.split(" - ")[0] + " - ";
-    displayEnd = timeArray[options.endTime].displayName.split(" - ")[1];
-    // setIsLoading(true);
-  } else {
-    displayStart = "No Time Selected";
-    displayEnd = " ";
-    // setIsLoading(false);
-  }
-  let displayRate = "Hourly Rate";
-  if (duration >= 16) {
-    displayPrice = prices[options.room]?.dayRate;
-    displayRate = "Day Rate";
-  } else {
-    displayPrice = (prices[options.room]?.hourlyRate * duration).toString();
-    displayRate = "Hourly Rate";
-  }
-
-  options.subscription[options.room] && (duration *= 4);
-  let engFee = options.engDuration * prices[options.room]?.engineerPrice;
   let total = 0;
-  if (engFee > 0) {
-    total = engFee + parseInt(displayPrice);
+
+  // IF USER IS SUBSCRIBED
+  if (isSubscribed == true) {
+    // CHECK IF A TIME HAS BEEN SELECTED
+    if (options.startTime != -1) {
+      // SET DISPLAY TIME FROM TIMESLOTS
+      displayStart = subscriptionTimeSlots[options.startTime].displayStart;
+      displayEnd = subscriptionTimeSlots[options.endTime].displayEnd;
+      //UPDATE DURATION TO MATCH SUB 4 HOUR SLOTS
+      duration = options.endTime - options.startTime + 1 * 4;
+      //CURRENT TOTAL SHOULD BE 0 WITH PREPAID SUBSCRIPTION
+      total = 0;
+      //LOOP THROUGH AVAILABLE THEN IDENTIFY ACTIVE SUBSCRIPTION
+      options.subscription.forEach((sub: any) => {
+        if (sub.roomId === parseInt(options.room)) {
+          activeSubscription = sub;
+        }
+      });
+      //VERIFY IF HOURS ARE AVAILABLE
+      if (activeSubscription.availableHours >= 4) {
+        areSubHoursAvailable = true;
+      } else {
+        areSubHoursAvailable = false;
+      }
+    } else {
+      // RESET IF NO TIME IS SELECTED
+      displayStart = " ";
+      displayEnd = " ";
+      duration = 0;
+      total = 0;
+    }
   } else {
-    total = parseInt(displayPrice);
-    engFee = 0;
+    // IF USER IS NOT SUBSCRIBED
+    if (options.startTime != -1) {
+      // SET DISPLAY TIME FROM TIMESLOTS
+      displayStart = timeSlots[options.startTime].displayStart;
+      displayEnd = timeSlots[options.endTime].displayEnd;
+      // SET DURATION AND TOTAL BASED ON START AND END TIMES FROM pickTime
+      duration = options.endTime - options.startTime + 1;
+      total = duration * prices[options.room].hourlyRate;
+      //CHANGE VALUE IF MATCHING DAY RATE/16HOURS
+      if (duration == 16) {
+        total = prices[options.room].dayRate;
+      }
+    } else {
+      // RESET IF NO TIME IS SELECTED
+      displayStart = " ";
+      displayEnd = " ";
+      duration = 0;
+      total = 0;
+    }
   }
 
+  // //SUBMIT DETAILS
   const submit = async () => {
     setIsLoading(true);
     try {
@@ -92,199 +103,212 @@ export const ShowDetails = ({
     const startTime = options.startTime * 4;
     const endTime = options.endTime * 4 + 3;
     try {
-      await PostSubscriptionBooking(options, startTime, endTime, engFee);
+      await PostSubscriptionBooking(options, startTime, endTime, duration);
     } catch (error) {
       console.error("Failed to post booking:", error);
     }
   };
 
   return (
-    <div>
-      <Card>
-        <CardHeader>
-          <CardTitle>Booking Details</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {options.loading ? (
-            <div className="bg-background flex h-[264px] items-center justify-center text-center">
-              <span>Loading...</span>
-            </div>
-          ) : (
-            <div>
-              <Table>
-                <TableBody>
-                  <TableRow>
-                    <TableCell className="w-[100px] font-medium">
-                      Room
-                    </TableCell>
-                    <TableCell>
-                      Room {prices[options.room]?.room || "Not selected"}
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell className="w-[100px] font-medium">
-                      Date
-                    </TableCell>
-                    <TableCell>
-                      {options.date
-                        ? options.date.toDateString()
-                        : "Not selected"}
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell className="w-[100px] font-medium">
-                      Time
-                    </TableCell>
-                    <TableCell>{displayStart + displayEnd}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell className="w-[100px] font-medium">
-                      Duration
-                    </TableCell>
-                    <TableCell>{duration} Hours</TableCell>
-                  </TableRow>
-                  {options.subscription[options.room] ? (
-                    <>
+    <div className="m-2">
+      {/* GLOBAL LOADING VARIABLE */}
+      {options.loading == true ? (
+        <>
+          <Card>
+            <CardHeader>
+              <CardTitle>Details</CardTitle>
+            </CardHeader>
+            <CardContent>Loading...</CardContent>
+          </Card>
+        </>
+      ) : (
+        <>
+          {/* SHOW SUBSCRIPTION OR STANDARD BOOKING DETAILS */}
+          {/* SUBSCRIPTION DETAILS */}
+          {isSubscribed == true ? (
+            <>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Subscription Details</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <Table>
+                    <TableBody>
                       <TableRow>
-                        <TableCell className="w-[100px] font-medium">
-                          Engineering Time
-                        </TableCell>
                         <TableCell>
-                          {options.engDuration < 2 ? (
-                            <>None</>
-                          ) : (
-                            <>{options.engDuration} Hours</>
-                          )}
+                          <strong>Room</strong>
                         </TableCell>
+                        <TableCell>Room {prices[options.room].room}</TableCell>
                       </TableRow>
-
                       <TableRow>
-                        <TableCell className="w-[100px] font-medium">
-                          Engineering Price
+                        <TableCell>
+                          <strong>Date</strong>
                         </TableCell>
                         <TableCell>
-                          {options.engDuration < 2 ? (
-                            <>$0.00 CAD</>
-                          ) : (
-                            <>${engFee}.00 CAD</>
-                          )}
-                        </TableCell>
-                      </TableRow>
-
-                      <TableRow>
-                        <TableCell className="w-[100px] font-medium">
-                          Available Hours
-                        </TableCell>
-                        <TableCell>
-                          {options.subscription[options.room].availableHours}
+                          {options.date
+                            ? options.date.toDateString()
+                            : "Not selected"}
                         </TableCell>
                       </TableRow>
                       <TableRow>
-                        <TableCell className="w-[100px] font-medium">
-                          Remaining Hours
-                        </TableCell>
                         <TableCell>
-                          {options.subscription[options.room].availableHours -
-                            duration}
+                          <strong>Start Time</strong>
                         </TableCell>
+                        <TableCell>{displayStart}</TableCell>
                       </TableRow>
                       <TableRow>
-                        <TableCell className="w-[100px] font-medium">
-                          Total
-                        </TableCell>
                         <TableCell>
-                          {options.engDuration < 2 ? (
-                            <>$0.00 CAD</>
-                          ) : (
-                            <>${engFee}.00 CAD</>
-                          )}
+                          <strong>End Time</strong>
                         </TableCell>
+                        <TableCell>{displayEnd}</TableCell>
                       </TableRow>
-                    </>
+                      <TableRow>
+                        <TableCell>
+                          <strong>Duration</strong>
+                        </TableCell>
+                        <TableCell>{duration}</TableCell>
+                      </TableRow>
+                      {areSubHoursAvailable ? (
+                        <>
+                          <TableRow>
+                            <TableCell>
+                              <strong>Available Hours</strong>
+                            </TableCell>
+                            <TableCell>
+                              {activeSubscription.availableHours}
+                            </TableCell>
+                          </TableRow>
+                          <TableRow>
+                            <TableCell>
+                              <strong>Remaining Hours</strong>
+                            </TableCell>
+                            <TableCell>
+                              {activeSubscription.availableHours - duration}
+                            </TableCell>
+                          </TableRow>
+                        </>
+                      ) : (
+                        <></>
+                      )}
+                      <TableRow>
+                        <TableCell>
+                          <strong>Total</strong>
+                        </TableCell>
+                        <TableCell>${total}.00 CAD</TableCell>
+                      </TableRow>
+                    </TableBody>
+                  </Table>
+                </CardContent>
+                <CardFooter>
+                  {/* ALLOW BOOKING IF ONE 4 HOUR SESSION IS SELECTED AND SUB HOURS ARE AVAILABLE */}
+                  {duration != 4 ? (
+                    <div className="alert">
+                      <span>Please select one 4 Hour session</span>
+                    </div>
                   ) : (
                     <>
-                      <TableRow>
-                        <TableCell className="w-[100px] font-medium">
-                          Engineering Time
-                        </TableCell>
-                        <TableCell>
-                          {options.engDuration < 2 ? (
-                            <>None</>
-                          ) : (
-                            <>{options.engDuration} Hours</>
-                          )}
-                        </TableCell>
-                      </TableRow>
-
-                      <TableRow>
-                        <TableCell className="w-[100px] font-medium">
-                          Engineering Price
-                        </TableCell>
-                        <TableCell>
-                          {options.engDuration < 2 ? (
-                            <>None</>
-                          ) : (
-                            <>${engFee}.00 CAD</>
-                          )}
-                        </TableCell>
-                      </TableRow>
-
-                      <TableRow>
-                        <TableCell className="w-[100px] font-medium">
-                          Studio Price
-                        </TableCell>
-                        <TableCell>$ {displayPrice}.00 CAD</TableCell>
-                      </TableRow>
-
-                      <TableRow>
-                        <TableCell className="w-[100px] font-medium">
-                          Total
-                        </TableCell>
-                        <TableCell>$ {total}.00 CAD</TableCell>
-                      </TableRow>
+                      {/* ONLY ALLOW BOOKING IF SUBSCRIPTION HOURS ARE AVAILABLE */}
+                      {areSubHoursAvailable ? (
+                        <>
+                          <Button
+                            className="w-full"
+                            onClick={submitSubscription}
+                            disabled={isLoading}
+                          >
+                            {isLoading ? "Redirecting..." : "Book Time"}
+                          </Button>
+                        </>
+                      ) : (
+                        <>
+                          {/* PREVENT BOOKING WITHOUT HOURS */}
+                          <Button
+                            className="w-full"
+                            onClick={submit}
+                            disabled={true}
+                          >
+                            Hours are not available
+                          </Button>
+                        </>
+                      )}
                     </>
                   )}
-                </TableBody>
-              </Table>
-            </div>
-          )}
-        </CardContent>
-        <CardFooter>
-          {isSub == true ? (
-            <>
-              {duration != 1 ? (
-                <Button className="w-full" disabled={isLoading}>
-                  {isLoading ? "Redirecting..." : "Select One Time Slot"}
-                </Button>
-              ) : (
-                <Button
-                  className="w-full"
-                  onClick={submitSubscription}
-                  disabled={isLoading}
-                >
-                  {isLoading ? "Redirecting..." : "Book Time Slot"}
-                </Button>
-              )}
+                </CardFooter>
+              </Card>
             </>
           ) : (
             <>
-              {duration <= 1 ? (
-                <div className="alert">
-                  <span>Please select a minimum of 2 hours</span>
-                </div>
-              ) : (
-                <Button
-                  className="w-full"
-                  onClick={submit}
-                  disabled={isLoading}
-                >
-                  {isLoading ? "Redirecting..." : "Proceed to Payment"}
-                </Button>
-              )}
+              {/* STANDARD BOOKING DETAILS */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Booking Details</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <Table>
+                    <TableBody>
+                      <TableRow>
+                        <TableCell>
+                          <strong>Room</strong>
+                        </TableCell>
+                        <TableCell>Room {prices[options.room].room}</TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell>
+                          <strong>Date</strong>
+                        </TableCell>
+                        <TableCell>
+                          {options.date
+                            ? options.date.toDateString()
+                            : "Not selected"}
+                        </TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell>
+                          <strong>Start Time</strong>
+                        </TableCell>
+                        <TableCell>{displayStart}</TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell>
+                          <strong>End Time</strong>
+                        </TableCell>
+                        <TableCell>{displayEnd}</TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell>
+                          <strong>Duration</strong>
+                        </TableCell>
+                        <TableCell>{duration}</TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell>
+                          <strong>Total</strong>
+                        </TableCell>
+                        <TableCell>${total}.00 CAD</TableCell>
+                      </TableRow>
+                    </TableBody>
+                  </Table>
+                </CardContent>
+                <CardFooter>
+                  {/* ALLOW BOOKING IF LOCAL DURATION IS 2 OR MORE */}
+                  {duration <= 1 ? (
+                    <div className="alert">
+                      <span>Please select a minimum of 2 hours</span>
+                    </div>
+                  ) : (
+                    <Button
+                      className="w-full"
+                      onClick={submit}
+                      disabled={isLoading}
+                    >
+                      {isLoading ? "Redirecting..." : "Proceed to Payment"}
+                    </Button>
+                  )}
+                </CardFooter>
+              </Card>
             </>
           )}
-        </CardFooter>
-      </Card>
+        </>
+      )}
     </div>
   );
 };

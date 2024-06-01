@@ -19,7 +19,7 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import { redirect } from "next/navigation";
-import { timeSlots } from "@/app/booking/components/variables/timeSlots";
+import { timeSlots } from "@/app/booking/components/timeSlots";
 
 async function getData() {
   noStore();
