@@ -10,7 +10,11 @@ import {
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { timeSlots, subscriptionTimeSlots } from "./timeSlots";
-import { PostBooking, PostSubscriptionBooking } from "@/app/lib/booking";
+import {
+  PostBooking,
+  PostSubscriptionBooking,
+  PostSubscriptionBookingWithPurchase,
+} from "@/app/lib/booking";
 
 export const ShowDetails = ({
   prices,
@@ -31,9 +35,13 @@ export const ShowDetails = ({
     isSubscribed = true;
   }
 
-  let displayStart = " ";
-  let displayEnd = " ";
+  let displayStart = "Not Selecetd";
+  let displayEnd = "Not Selecetd";
   let duration = 0;
+
+  let bookingTotal = 0;
+  let engTotal = 0;
+
   let total = 0;
 
   // IF USER IS SUBSCRIBED
@@ -59,10 +67,17 @@ export const ShowDetails = ({
       } else {
         areSubHoursAvailable = false;
       }
+      //UPDATE TOTALS TO INCLUDE ENGINEERING FEE
+      if (options.engDuration != -1) {
+        engTotal = prices[options.room].engineerPrice * duration;
+        total += engTotal;
+      } else {
+        engTotal = 0;
+      }
     } else {
       // RESET IF NO TIME IS SELECTED
-      displayStart = " ";
-      displayEnd = " ";
+      displayStart = "Not Selecetd";
+      displayEnd = "Not Selecetd";
       duration = 0;
       total = 0;
     }
@@ -75,14 +90,22 @@ export const ShowDetails = ({
       // SET DURATION AND TOTAL BASED ON START AND END TIMES FROM pickTime
       duration = options.endTime - options.startTime + 1;
       total = duration * prices[options.room].hourlyRate;
+      bookingTotal = duration * prices[options.room].hourlyRate;
       //CHANGE VALUE IF MATCHING DAY RATE/16HOURS
       if (duration == 16) {
         total = prices[options.room].dayRate;
       }
+      //UPDATE TOTALS TO INCLUDE ENGINEERING FEE
+      if (options.engDuration != -1) {
+        engTotal = prices[options.room].engineerPrice * duration;
+        total += engTotal;
+      } else {
+        engTotal = 0;
+      }
     } else {
       // RESET IF NO TIME IS SELECTED
-      displayStart = " ";
-      displayEnd = " ";
+      displayStart = "Not Selecetd";
+      displayEnd = "Not Selecetd";
       duration = 0;
       total = 0;
     }
@@ -99,11 +122,28 @@ export const ShowDetails = ({
   };
 
   const submitSubscription = async () => {
-    // setIsLoading(true);
+    setIsLoading(true);
     const startTime = options.startTime * 4;
     const endTime = options.endTime * 4 + 3;
     try {
       await PostSubscriptionBooking(options, startTime, endTime, duration);
+    } catch (error) {
+      console.error("Failed to post booking:", error);
+    }
+  };
+
+  const submitSubscriptionPurchase = async () => {
+    // setIsLoading(true);
+    const startTime = options.startTime * 4;
+    const endTime = options.endTime * 4 + 3;
+    try {
+      await PostSubscriptionBookingWithPurchase(
+        options,
+        startTime,
+        endTime,
+        duration,
+        parseInt(total + "00"),
+      );
     } catch (error) {
       console.error("Failed to post booking:", error);
     }
@@ -190,6 +230,35 @@ export const ShowDetails = ({
                       ) : (
                         <></>
                       )}
+
+                      {/* SHOW ENGINEER DETAILS IF AVAILABLE */}
+                      {options.engDuration >= 1 ? (
+                        <>
+                          <TableRow>
+                            <TableCell>
+                              <strong>Engineering Start Time</strong>
+                            </TableCell>
+                            <TableCell>
+                              {timeSlots[options.engStart].displayStart}
+                            </TableCell>
+                          </TableRow>
+                          <TableRow>
+                            <TableCell>
+                              <strong>Engineering Duration</strong>
+                            </TableCell>
+                            <TableCell>{options.engDuration} Hours</TableCell>
+                          </TableRow>
+                          <TableRow>
+                            <TableCell>
+                              <strong>Engineering Total</strong>
+                            </TableCell>
+                            <TableCell>${engTotal}.00 CAD</TableCell>
+                          </TableRow>
+                        </>
+                      ) : (
+                        <></>
+                      )}
+
                       <TableRow>
                         <TableCell>
                           <strong>Total</strong>
@@ -210,13 +279,30 @@ export const ShowDetails = ({
                       {/* ONLY ALLOW BOOKING IF SUBSCRIPTION HOURS ARE AVAILABLE */}
                       {areSubHoursAvailable ? (
                         <>
-                          <Button
-                            className="w-full"
-                            onClick={submitSubscription}
-                            disabled={isLoading}
-                          >
-                            {isLoading ? "Redirecting..." : "Book Time"}
-                          </Button>
+                          {/* SWITCH TO BOOK WITH CHECKOUT IF ENGINEER ADDED */}
+                          {options.engDuration > 0 ? (
+                            <>
+                              <Button
+                                className="w-full"
+                                onClick={submitSubscriptionPurchase}
+                                disabled={isLoading}
+                              >
+                                {isLoading
+                                  ? "Redirecting..."
+                                  : "Proceed to Payment"}
+                              </Button>
+                            </>
+                          ) : (
+                            <>
+                              <Button
+                                className="w-full"
+                                onClick={submitSubscription}
+                                disabled={isLoading}
+                              >
+                                {isLoading ? "Redirecting..." : "Book Time"}
+                              </Button>
+                            </>
+                          )}
                         </>
                       ) : (
                         <>
@@ -275,10 +361,45 @@ export const ShowDetails = ({
                       </TableRow>
                       <TableRow>
                         <TableCell>
-                          <strong>Duration</strong>
+                          <strong>Booking Duration</strong>
                         </TableCell>
-                        <TableCell>{duration}</TableCell>
+                        <TableCell>{duration} Hours</TableCell>
                       </TableRow>
+                      <TableRow>
+                        <TableCell>
+                          <strong>Booking Total</strong>
+                        </TableCell>
+                        <TableCell>${bookingTotal}.00 CAD</TableCell>
+                      </TableRow>
+
+                      {/* SHOW ENGINEER DETAILS IF AVAILABLE */}
+                      {options.engDuration >= 1 ? (
+                        <>
+                          <TableRow>
+                            <TableCell>
+                              <strong>Engineering Start Time</strong>
+                            </TableCell>
+                            <TableCell>
+                              {timeSlots[options.engStart].displayStart}
+                            </TableCell>
+                          </TableRow>
+                          <TableRow>
+                            <TableCell>
+                              <strong>Engineering Duration</strong>
+                            </TableCell>
+                            <TableCell>{options.engDuration} Hours</TableCell>
+                          </TableRow>
+                          <TableRow>
+                            <TableCell>
+                              <strong>Engineering Total</strong>
+                            </TableCell>
+                            <TableCell>${engTotal}.00 CAD</TableCell>
+                          </TableRow>
+                        </>
+                      ) : (
+                        <></>
+                      )}
+
                       <TableRow>
                         <TableCell>
                           <strong>Total</strong>

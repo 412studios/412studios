@@ -125,6 +125,7 @@ async function getSubscription(userId: string) {
     },
   });
 
+  //ADDING HOURS IF ACTIVE SUBSCRIPTION RENEWS
   for (const subscription of subscriptions) {
     //JS AUTO CHANGES DATE TO 01
     const originalDate = new Date(subscription.currentPeriodStart);

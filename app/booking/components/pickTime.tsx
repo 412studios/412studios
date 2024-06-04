@@ -1,7 +1,6 @@
-import React from "react";
-import { useState, useEffect } from "react";
+"use client";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { unstable_noStore as noStore } from "next/cache";
 import { getBooking, getSubWeek } from "@/app/lib/booking";
 import { timeSlots, subscriptionTimeSlots } from "./timeSlots";
 
@@ -14,46 +13,17 @@ export const PickTime = ({
   options: any;
   setOptions: any;
 }) => {
-  noStore();
-
-  // FUNCTIONS
-  function fillArrGaps(arr: number[], min: number, max: number) {
-    for (let i = min; i <= max; i++) {
-      arr.push(i);
-    }
-    return arr;
-  }
-  const formatDateToNumeric = (date: Date | undefined): string => {
-    if (!date) return "";
-    const year = date.getFullYear().toString();
-    const month = (date.getMonth() + 1).toString().padStart(2, "0");
-    const day = date.getDate().toString().padStart(2, "0");
-    return year + month + day;
-  };
-
-  // VARIABLES
   const [isLoading, setIsLoading] = useState(false);
   const [warning, setWarning] = useState(false);
-  let duration = 0;
-  let isSubscribed = false;
+  const [selList, setSelList] = useState<number[]>([]);
+  const [bookedTimes, setBookedTimes] = useState<number[]>([]);
+  const [existingBookings, setExistingBookings] = useState<number[]>([]);
 
+  const isSubscribed = options.subRooms.includes(parseInt(options.room));
   const formattedDate = parseInt(formatDateToNumeric(options.date));
-  let timeArray: any = [];
+  const timeArray = isSubscribed ? subscriptionTimeSlots : timeSlots;
 
-  const [selList, setSelList] = React.useState<number[]>([]);
-  const [bookedTimes, setBookedTimes] = React.useState<number[]>([]);
-  const [existingBookings, setExistingBookings] = React.useState<number[]>([]);
-
-  //Select time options
-  if (options.subRooms.includes(parseInt(options.room)) == true) {
-    timeArray = subscriptionTimeSlots;
-    isSubscribed = true;
-  } else {
-    timeArray = timeSlots;
-    isSubscribed = false;
-  }
-
-  React.useEffect(() => {
+  useEffect(() => {
     const initialBookedTimes = Array.isArray(existingBookings)
       ? existingBookings
       : [];
@@ -61,11 +31,10 @@ export const PickTime = ({
     setSelList([]);
   }, [existingBookings]);
 
-  //Pull details from db
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
-      setOptions({ ...options, loading: true });
+      setOptions((prevOptions: any) => ({ ...prevOptions, loading: true }));
       try {
         const bookings = await getBooking(
           options.room,
@@ -78,78 +47,72 @@ export const PickTime = ({
           options.user,
         );
         let arr: any[] = [];
-        bookings.forEach((booking: any) => {
-          let startTime = booking.startTime;
-          let endTime = booking.endTime;
-          if (isSubscribed == true) {
-            //Update time selections if user is subscribed
-            startTime = Math.floor(booking.startTime / 4);
-            endTime = Math.floor((booking.endTime - 2) / 4);
-            if (checkSubWeek == true) {
-              //Block available slots if already booked this week.
-              startTime = 0;
-              endTime = 3;
+        let setStart = 0;
+        let setEnd = 0;
+
+        if (isSubscribed && checkSubWeek) {
+          setStart = 0;
+          setEnd = 3;
+          fillArrGaps(arr, setStart, setEnd);
+        } else {
+          bookings.forEach((booking: any) => {
+            if (isSubscribed) {
+              setStart = Math.floor(booking.startTime / 4);
+              setEnd = Math.floor((booking.endTime - 2) / 4);
             } else {
-              startTime = Math.floor(booking.startTime / 4);
-              endTime = Math.floor((booking.endTime - 2) / 4);
+              setStart = booking.startTime;
+              setEnd = booking.endTime;
             }
-          } else {
-            startTime = booking.startTime;
-            endTime = booking.endTime;
-          }
-          fillArrGaps(arr, startTime, endTime);
-        });
+            fillArrGaps(arr, setStart, setEnd);
+          });
+        }
         setExistingBookings(arr);
       } catch (error) {
         console.error("Failed to fetch bookings:", error);
         setExistingBookings([]);
       }
       setIsLoading(false);
-      setOptions({ ...options, loading: false });
+      setOptions((prevOptions: any) => ({ ...prevOptions, loading: false }));
     };
-    fetchData();
-  }, [options.room, formattedDate]);
 
-  //Update on click event
+    if (options.date) {
+      fetchData();
+    }
+  }, [options.date, options.room, options.user, setOptions]);
+
   const handleClick = (id: number) => {
     setSelList((prevSelList) => {
-      // If booked, don't add
       if (bookedTimes.includes(id)) {
         return prevSelList;
       }
 
-      // Create a sorted, unique list of selected IDs
       const sortedList = Array.from(new Set([...prevSelList, id])).sort(
         (a, b) => a - b,
       );
       let [min, max] = [sortedList[0], sortedList[sortedList.length - 1]];
 
-      // Update min and max based on clicked ID
       if (id > min) {
         max = id;
       } else {
         min = id;
       }
 
-      // Create a full list of IDs between min and max
       let fullList = [];
       for (let i = min; i <= max; i++) {
         if (bookedTimes.includes(i)) {
-          return [id]; // If any of these times are booked, return the single ID
+          return [id];
         }
         fullList.push(i);
       }
 
-      // Check subscription hours if applicable
       if (isSubscribed) {
-        fullList = [];
-        fullList.push(id);
-
-        duration = fullList.length;
-        if (options.subscription[options.room]) {
+        fullList = [id];
+        const currentSubscription = options.subscription.find(
+          (item: any) => item.roomId === options.room,
+        );
+        if (currentSubscription) {
           const checkHours =
-            options.subscription[options.room].availableHours - duration * 4;
-          duration = checkHours;
+            currentSubscription.availableHours - fullList.length * 4;
           if (checkHours <= -1) {
             setWarning(true);
             return prevSelList;
@@ -158,26 +121,28 @@ export const PickTime = ({
           }
         }
       }
-      handleTimePick(fullList[0], fullList[fullList.length - 1], duration);
+      handleTimePick(
+        fullList[0],
+        fullList[fullList.length - 1],
+        fullList.length,
+      );
       return fullList;
     });
   };
 
-  //Handle Change
   const handleTimePick = (start: any, end: any, duration: number) => {
-    setOptions({
-      ...options,
+    setOptions((prevOptions: any) => ({
+      ...prevOptions,
       startTime: start,
       endTime: end,
       duration: duration,
-    });
+    }));
   };
+
   const clearBtn = () => {
-    setSelList(() => {
-      handleTimePick(-1, -1, 0);
-      setWarning(false);
-      return [];
-    });
+    setSelList([]);
+    handleTimePick(-1, -1, 0);
+    setWarning(false);
   };
 
   return (
@@ -211,3 +176,18 @@ export const PickTime = ({
     </>
   );
 };
+
+function fillArrGaps(arr: number[], min: number, max: number) {
+  for (let i = min; i <= max; i++) {
+    arr.push(i);
+  }
+  return arr;
+}
+
+function formatDateToNumeric(date: Date | undefined): string {
+  if (!date) return "";
+  const year = date.getFullYear().toString();
+  const month = (date.getMonth() + 1).toString().padStart(2, "0");
+  const day = date.getDate().toString().padStart(2, "0");
+  return year + month + day;
+}

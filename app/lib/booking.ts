@@ -29,26 +29,25 @@ export async function getBooking(roomId: string, date: number, user: any) {
 
 export async function getSubWeek(roomId: string, date: number, user: any) {
   noStore();
-  //CHECK IF A SUBSCRIBED USER HAS ALREADY BOOKED A SESSION THIS WEEK.
+
   const getWeekBoundaries = (numericDate: number) => {
     const year = Math.floor(numericDate / 10000);
-    // Month is zero-based in JavaScript Date
     const month = Math.floor((numericDate % 10000) / 100) - 1;
     const day = numericDate % 100;
     const givenDate = new Date(year, month, day);
-    // 0 (Sunday) to 6 (Saturday)
+
     const dayOfWeek = givenDate.getDay();
     const startOfWeek = new Date(givenDate);
     const endOfWeek = new Date(givenDate);
-    // Adjust startOfWeek to the previous Monday (or today if it's Monday)
+
     startOfWeek.setDate(
       givenDate.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1),
     );
     startOfWeek.setHours(0, 0, 0, 0);
-    // Adjust endOfWeek to the following Sunday
+
     endOfWeek.setDate(startOfWeek.getDate() + 6);
     endOfWeek.setHours(23, 59, 59, 999);
-    // Convert to numeric format YYYYMMDD
+
     const startOfWeekNumeric =
       startOfWeek.getFullYear() * 10000 +
       (startOfWeek.getMonth() + 1) * 100 +
@@ -59,7 +58,9 @@ export async function getSubWeek(roomId: string, date: number, user: any) {
       endOfWeek.getDate();
     return { startOfWeekNumeric, endOfWeekNumeric };
   };
+
   const { startOfWeekNumeric, endOfWeekNumeric } = getWeekBoundaries(date);
+
   const userBooking = await prisma.bookings.findMany({
     where: {
       userId: user.id,
@@ -77,11 +78,7 @@ export async function getSubWeek(roomId: string, date: number, user: any) {
       endTime: true,
     },
   });
-  if (userBooking.length > 0) {
-    return true;
-  } else {
-    return false;
-  }
+  return userBooking.length > 0;
 }
 
 export async function PostBooking(input: any, price: number) {
@@ -236,7 +233,7 @@ export async function PostSubscriptionBooking(
   duration: number,
 ) {
   noStore();
-
+  //DATE FORMAT OPTIONS
   const formatDateToNumeric = (date: Date | undefined): string => {
     if (!date) return "";
     const year = date.getFullYear().toString();
@@ -244,12 +241,12 @@ export async function PostSubscriptionBooking(
     const day = date.getDate().toString().padStart(2, "0");
     return year + month + day;
   };
-
+  //GET DETAILS
   const { getUser } = getKindeServerSession();
   const user = await getUser();
   const roomId = input.room;
   const date = input.date;
-
+  //CREATE BOOKING AND AUTO SET TO SUCCESS FOR PREPAID SUBSCRIPTION
   const bookingId: any = require("crypto").randomBytes(16).toString("hex");
   await prisma.bookings.create({
     data: {
@@ -270,27 +267,96 @@ export async function PostSubscriptionBooking(
       addDetails: "",
     },
   });
-
-  // If you want to further decrement availableHours by 4, do it here:
+  //FIND SUBSCRIPTION FOR THIS USER AND THIS ROOM
   const updatedSubscription = await prisma.subscription.findFirst({
     where: {
       userId: user?.id,
       roomId: parseInt(input.room),
     },
   });
-
+  //REMOVE HOURS FROM SUBSCRIPTION
   if (updatedSubscription) {
     await prisma.subscription.update({
       where: {
         subscriptionId: updatedSubscription.subscriptionId,
       },
       data: {
-        availableHours: updatedSubscription.availableHours - duration,
+        availableHours: {
+          decrement: duration,
+        },
       },
     });
   }
-
   return redirect("/dashboard/bookings");
+}
+
+export async function PostSubscriptionBookingWithPurchase(
+  input: any,
+  startTime: number,
+  endTime: number,
+  duration: number,
+  total: number,
+) {
+  noStore();
+  //DATE FORMAT OPTIONS
+  const formatDateToNumeric = (date: Date | undefined): string => {
+    if (!date) return "";
+    const year = date.getFullYear().toString();
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const day = date.getDate().toString().padStart(2, "0");
+    return year + month + day;
+  };
+  //GET DETAILS
+  const { getUser } = getKindeServerSession();
+  const user = await getUser();
+  const roomId = input.room;
+  const date = input.date;
+  //CREATE BOOKING PENDING ENGINEER PAYMENT
+  const bookingId: any = require("crypto").randomBytes(16).toString("hex");
+  await prisma.bookings.create({
+    data: {
+      bookingId: bookingId,
+      roomId: parseInt(roomId),
+      date: parseInt(formatDateToNumeric(date)),
+      type: "hour",
+      startTime: startTime,
+      endTime: endTime,
+      userId: user?.id || "",
+      status: "pending",
+      stripeProductId: "none",
+      totalHours: duration,
+      totalPrice: total,
+      engineerTotal: input.engDuration,
+      engineerStart: input.engStart,
+      engineerStatus: "pending",
+      addDetails: "",
+    },
+  });
+  //SEND TO STRIPE
+  let priceId = process.env.STRIPE_PRICE_ID_STANDARD_BOOKING as string;
+  const dbUser = await prisma.user.findUnique({
+    where: {
+      id: user?.id,
+    },
+    select: {
+      stripeCustomerId: true,
+    },
+  });
+
+  if (!dbUser?.stripeCustomerId) {
+    throw new Error("Unable to get customer id");
+  }
+  const subscriptionUrl = await getStripeSession({
+    customerId: dbUser.stripeCustomerId,
+    domainUrl:
+      process.env.NODE_ENV === "production"
+        ? (process.env.PRODUCTION_URL as string)
+        : "http://localhost:3000",
+    priceId: priceId,
+    bookingId: bookingId,
+    unit_amount: total,
+  });
+  return redirect(subscriptionUrl);
 }
 
 export async function CheckAvailability(roomId: string) {

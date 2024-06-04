@@ -31,3 +31,9 @@ limit subscription to once a week
 
 Auto select room from pricing
 Homepage Design
+
+
+Add value for lasrt login to check active users
+
+- FIX ISSUE - SET DURATION IN PICKTIME INSTEAD OF SHOWDETAILS
+- ENSURE USER CANNOT PURCHASE SUB IF ALREADY EXISTS
