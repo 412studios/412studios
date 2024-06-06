@@ -60,7 +60,6 @@ export async function getSubWeek(roomId: string, date: number, user: any) {
   };
 
   const { startOfWeekNumeric, endOfWeekNumeric } = getWeekBoundaries(date);
-
   const userBooking = await prisma.bookings.findMany({
     where: {
       userId: user.id,
@@ -78,6 +77,29 @@ export async function getSubWeek(roomId: string, date: number, user: any) {
       endTime: true,
     },
   });
+  //GET SUBSCRIPTION DETAILS FOR WEEK MAX EXCEPTION
+  const userSubscription = await prisma.subscription.findMany({
+    where: {
+      userId: user.id,
+      roomId: parseInt(roomId),
+    },
+    select: {
+      weekMax: true,
+      roomId: true,
+    },
+  });
+
+  //CHECK FOR MAX WEEK EXCEPTION
+  const hasWeekMaxException = userSubscription.some(
+    (subscription: any) =>
+      subscription.roomId === parseInt(roomId) &&
+      subscription.weekMax === false,
+  );
+  if (hasWeekMaxException) {
+    return false;
+  }
+
+  //RETURN BOOKING LIMIT DETAILS IF NO EXCEPTION
   return userBooking.length > 0;
 }
 
