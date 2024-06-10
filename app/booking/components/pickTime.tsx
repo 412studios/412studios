@@ -58,7 +58,7 @@ export const PickTime = ({
           bookings.forEach((booking: any) => {
             if (isSubscribed) {
               setStart = Math.floor(booking.startTime / 4);
-              setEnd = Math.floor((booking.endTime - 2) / 4);
+              setEnd = Math.floor((booking.endTime - 1) / 4);
             } else {
               setStart = booking.startTime;
               setEnd = booking.endTime;

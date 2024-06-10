@@ -98,7 +98,6 @@ export async function getSubWeek(roomId: string, date: number, user: any) {
   if (hasWeekMaxException) {
     return false;
   }
-
   //RETURN BOOKING LIMIT DETAILS IF NO EXCEPTION
   return userBooking.length > 0;
 }
