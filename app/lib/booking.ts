@@ -174,6 +174,10 @@ export async function PostBooking(input: any, price: number) {
 export async function PostSubscription(input: any, price: number) {
   noStore();
 
+  // Calculate the final price including Canadian tax
+  const CANADIAN_TAX_RATE = 0.13;
+  const priceWithTax = Math.round(price * (1 + CANADIAN_TAX_RATE));
+
   const formatDateToNumeric = (date: Date | undefined): string => {
     if (!date) return "";
     const year = date.getFullYear().toString();
@@ -234,7 +238,7 @@ export async function PostSubscription(input: any, price: number) {
         : "http://localhost:3000",
     priceId: subscriptionPriceId,
     bookingId: subscriptionId,
-    unitAmount: price,
+    unitAmount: priceWithTax,
   });
   const updatedSubscription = await prisma.subscription.update({
     where: {

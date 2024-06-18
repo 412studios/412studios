@@ -27,11 +27,7 @@ npx prisma studio
 ```
 
 TODO
-limit subscription to once a week
-
 Auto select room from pricing
-Homepage Design
-
 Add value for last login to check active users
 
 - FIX ISSUE - SET DURATION IN PICKTIME INSTEAD OF SHOWDETAILS

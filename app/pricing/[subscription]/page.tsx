@@ -42,8 +42,8 @@ export default function Page(context: any) {
   useEffect(() => {
     const fetchAvailability = async () => {
       const data = await CheckAvailability(context.params.subscription);
+      setUserHasSub(data[1] >= 1);
       setIsAvailable(data[0] <= 25);
-      setUserHasSub(data[1] <= 1);
       setIsLoading(false);
     };
     fetchAvailability();
@@ -92,7 +92,7 @@ export default function Page(context: any) {
             </CardDescription>
           </CardContent>
           <CardFooter>
-            {userHasSub ? (
+            {userHasSub == false ? (
               <div className="w-full">
                 {isAvailable ? (
                   <Button
