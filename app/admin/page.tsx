@@ -5,6 +5,16 @@ import prisma from "@/app/lib/db";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 
 import {
+  Settings,
+  CreditCard,
+  Shield,
+  Book,
+  Plus,
+  Notebook,
+  RefreshCw,
+} from "lucide-react";
+
+import {
   Card,
   CardContent,
   CardDescription,

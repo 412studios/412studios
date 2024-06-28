@@ -7,6 +7,8 @@ import {
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { Logo } from "@/public/icons/logo";
 
+import { CircleUser } from "lucide-react";
+
 export async function Navbar() {
   const { isAuthenticated, getUser } = getKindeServerSession();
   const user = await getUser();
@@ -119,28 +121,51 @@ export async function Navbar() {
             </Link>
           </div>
           <div className="flex-1 text-right">
-            {(await isAuthenticated()) ? (
-              // <UserNav name={user?.given_name as string} />
-              <>
-                <Link href="/booking" className="mr-2">
-                  <Button variant="secondary">Book Now</Button>
-                </Link>
-                <Link href="/dashboard">
-                  <Button>View Profile</Button>
-                </Link>
-              </>
-            ) : (
-              <>
-                <LoginLink className="mr-2">
-                  <Button className="mr-1" variant="secondary">
-                    Sign Up
-                  </Button>
-                </LoginLink>
-                <RegisterLink>
-                  <Button>Log In</Button>
-                </RegisterLink>
-              </>
-            )}
+            <div className="block lg:hidden">
+              {(await isAuthenticated()) ? (
+                // <UserNav name={user?.given_name as string} />
+                <>
+                  <Link href="/dashboard" aria-label="View Profile Button">
+                    <Button variant="ghost">
+                      <CircleUser />
+                    </Button>
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <LoginLink className="">
+                    <Button className="" variant="secondary">
+                      Sign In
+                    </Button>
+                  </LoginLink>
+                </>
+              )}
+            </div>
+
+            <div className="hidden lg:block">
+              {(await isAuthenticated()) ? (
+                // <UserNav name={user?.given_name as string} />
+                <>
+                  <Link href="/booking" className="mr-2">
+                    <Button variant="secondary">Book Now</Button>
+                  </Link>
+                  <Link href="/dashboard">
+                    <Button>View Profile</Button>
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <LoginLink className="mr-2">
+                    <Button className="mr-1" variant="secondary">
+                      Sign Up
+                    </Button>
+                  </LoginLink>
+                  <RegisterLink>
+                    <Button>Log In</Button>
+                  </RegisterLink>
+                </>
+              )}
+            </div>
           </div>
         </div>
         <div className="flex overflow-hidden pt-1 bg-background">
