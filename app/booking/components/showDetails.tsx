@@ -150,7 +150,7 @@ export const ShowDetails = ({
   };
 
   return (
-    <div className="m-2">
+    <div>
       {/* GLOBAL LOADING VARIABLE */}
       {options.loading == true ? (
         <>
@@ -172,7 +172,7 @@ export const ShowDetails = ({
                   <CardTitle>Subscription Details</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <Table>
+                  <Table className="rounded-[8px] overflow-hidden">
                     <TableBody>
                       <TableRow>
                         <TableCell>
@@ -329,7 +329,7 @@ export const ShowDetails = ({
                   <CardTitle>Booking Details</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <Table>
+                  <Table className="rounded-[8px] overflow-hidden">
                     <TableBody>
                       <TableRow>
                         <TableCell>

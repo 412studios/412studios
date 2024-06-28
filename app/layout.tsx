@@ -1,10 +1,14 @@
 import { type Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+
 import { ThemeProvider } from "./components/theme-provider";
 import { Navbar } from "./components/Navbar";
-import { unstable_noStore as noStore } from "next/cache";
+import { UserProvider } from "./components/UserContext";
 import { Footer } from "./components/Footer";
+
+import { unstable_noStore as noStore } from "next/cache";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -28,25 +32,38 @@ export const metadata: Metadata = {
   ],
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   noStore();
+
+  const { isAuthenticated, getUser } = getKindeServerSession();
+  const isUserAuthenticated = await isAuthenticated(); // Await the promise
+
+  const user = await getUser();
   return (
     <html lang="en">
       <body className={inter.className}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <Navbar />
-          {children}
-        </ThemeProvider>
-        <Footer />
+        <div className="flex flex-col min-h-screen p-4 py-0">
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <UserProvider isAuthenticated={isUserAuthenticated} user={user}>
+              <header className="sticky top-0 z-50 bg-none">
+                <Navbar />
+              </header>
+              <div className="flex-grow">{children}</div>
+            </UserProvider>
+          </ThemeProvider>
+          <footer className="w-full flex justify-center items-center mt-auto">
+            <Footer />
+          </footer>
+        </div>
       </body>
     </html>
   );

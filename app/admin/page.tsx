@@ -37,25 +37,33 @@ export default async function Main() {
 
   return (
     <main className="p-8">
-      <div className="mx-auto max-w-screen-lg border">
+      <div className="mx-auto max-w-screen-lg">
         <Card>
           <CardHeader>
             <CardTitle>Admin Dashboard</CardTitle>
-            <CardDescription>{data?.name}</CardDescription>
-            <CardDescription>{data?.email}</CardDescription>
           </CardHeader>
-          <CardContent>
-            <Link href="/admin/bookings/0" className="w-full">
-              <Button className="w-full">View Booking Calendar</Button>
-            </Link>
-            <Link href="/admin/pricing" className="w-full">
-              <Button className="w-full mt-4">Update Pricing</Button>
-            </Link>
-            <Link href="/admin/users" className="w-full">
-              <Button className="w-full mt-4">View All Users</Button>
-            </Link>
+          <CardContent className="p-0">
+            <div className="border-b-4 p-4">
+              <CardDescription>{data?.name}</CardDescription>
+              <CardDescription>{data?.email}</CardDescription>
+            </div>
+            <div className="p-4">
+              <Link href="/admin/bookings/0" className="w-full">
+                <Button className="w-full">View Booking Calendar</Button>
+              </Link>
+              <Link href="/admin/pricing" className="w-full">
+                <Button className="w-full mt-4">Update Pricing</Button>
+              </Link>
+              <Link href="/admin/users" className="w-full">
+                <Button className="w-full mt-4">View All Users</Button>
+              </Link>
+            </div>
           </CardContent>
-          <CardFooter>412 Studio</CardFooter>
+          <CardFooter>
+            <Link href="/dashboard" className="w-full">
+              <Button className="w-full">Back</Button>
+            </Link>
+          </CardFooter>
         </Card>
       </div>
     </main>

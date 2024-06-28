@@ -72,11 +72,13 @@ export default async function Main() {
   const subData = await getSubscription(user?.id as string);
 
   return (
-    <main className="p-8">
-      <div className="mx-auto max-w-screen-lg rounded-lg">
-        <Card className="p-4">
+    <main className="pt-8">
+      <div className="mx-auto max-w-screen-xl rounded-lg">
+        <Card>
           <CardHeader>
             <CardTitle>{data?.name}</CardTitle>
+          </CardHeader>
+          <div className="border-b-4 p-4">
             <CardDescription>{data?.email}</CardDescription>
             {typeof subData[0] !== "undefined" &&
               subData[0].status === "success" && (
@@ -86,9 +88,9 @@ export default async function Main() {
                   </span>
                 </p>
               )}
-          </CardHeader>
+          </div>
 
-          <CardContent>
+          <CardContent className="">
             {data?.isUserVerified && (
               <div>
                 <Link href="/pricing">
@@ -97,12 +99,6 @@ export default async function Main() {
                     <span>Book Now</span>
                   </span>
                 </Link>
-                {/* <Link href="/dashboard/bookings">
-                <span className="hover:bg-accent hover:text-accent-forground group mb-2 flex items-center rounded-md px-3 py-2 text-sm font-medium">
-                  <Notebook className="text-primary mr-2 h-4 w-4" />
-                  <span>View Bookings</span>
-                </span>
-              </Link> */}
               </div>
             )}
 

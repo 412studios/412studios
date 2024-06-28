@@ -18,7 +18,7 @@ export const PickDate = ({
     setDate(new Date());
   }, [options.room]);
   return (
-    <div className="rounded border p-4 mx-auto max-w-[300px]">
+    <div className="border-4 rounded-[8px]">
       <Calendar
         mode="single"
         selected={date}

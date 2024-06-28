@@ -2,14 +2,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function EquipmentList() {
   return (
-    <div className="mx-auto max-w-screen-xl">
+    <div className="">
       {/* <div className="p-2">
         <CardTitle>Equipment</CardTitle>
       </div> */}
 
       <div className="flex flex-col md:flex-row">
-        <div className="m-2 md:w-full">
-          <div className="mb-4 rounded-lg border p-2">
+        <div className="md:w-full mr-0 md:mr-4">
+          <div className="mb-4 rounded-lg border-4 p-2">
             <h2 className="mb-2 text-xl font-bold">PREAMPS</h2>
             <ul className="list-disc pl-5">
               <li>AMS Neve 1073DPA</li>
@@ -17,20 +17,20 @@ export default function EquipmentList() {
               <li>Great River ME-INV</li>
             </ul>
           </div>
-          <div className="mb-4 rounded-lg border p-2">
+          <div className="mb-4 rounded-lg border-4 p-2">
             <h2 className="mb-2 text-xl font-bold">COMPRESSOR</h2>
             <ul className="list-disc pl-5">
               <li>Tube Tech - CL1B</li>
               <li>UA 1176LN</li>
             </ul>
           </div>
-          <div className="mb-4 rounded-lg border p-2">
+          <div className="mb-4 rounded-lg border-4 p-2">
             <h2 className="mb-2 text-xl font-bold">EQ</h2>
             <ul className="list-disc pl-5">
               <li>Pultec EQP-1A</li>
             </ul>
           </div>
-          <div className="mb-4 rounded-lg border p-2">
+          <div className="mb-4 rounded-lg border-4 p-2">
             <h2 className="mb-2 text-xl font-bold">SYNTHS AND KEYBOARDS</h2>
             <ul className="list-disc pl-5">
               <li>Prophet 05</li>
@@ -46,8 +46,8 @@ export default function EquipmentList() {
             </ul>
           </div>
         </div>
-        <div className="m-2 md:w-full">
-          <div className="mb-4 rounded-lg border p-2">
+        <div className=" md:w-full">
+          <div className="mb-4 rounded-lg border-4 p-2">
             <h2 className="mb-2 text-xl font-bold">GUITARS</h2>
             <ul className="list-disc pl-5">
               <li>Fender Vintage Stratocaster</li>
@@ -56,7 +56,7 @@ export default function EquipmentList() {
               <li>Nylon strings</li>
             </ul>
           </div>
-          <div className="mb-4 rounded-lg border p-2">
+          <div className="mb-4 rounded-lg border-4 p-2">
             <h2 className="mb-2 text-xl font-bold">MICS</h2>
             <ul className="list-disc pl-5">
               <li>2 * AKG 414</li>

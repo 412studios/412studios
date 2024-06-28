@@ -19,13 +19,15 @@ export default async function Page() {
   const prices = await getPricing();
 
   return (
-    <div>
-      <div className="p-2 pt-0">
-        <p className="text-4xl font-bold text-gray-900">Pricing Options</p>
+    <div className="pt-8">
+      <div className="pt-0 pb-4">
+        <p className="text-4xl font-semibold leading-none font-forma tracking-wide text-primary">
+          Pricing Options
+        </p>
       </div>
-      <div className="flex flex-col md:flex-row">
+      <div className="flex flex-col md:flex-row gap-4">
         {prices.map((element: any) => (
-          <div className="w-full p-2" key={element.id}>
+          <div className="w-full" key={element.id}>
             <Card>
               <CardHeader>
                 <CardTitle>Studio {element.room}</CardTitle>
@@ -36,7 +38,7 @@ export default async function Page() {
                   alt={`Studio ${element.id}`}
                   width={1000}
                   height={9}
-                  className="mx-auto rounded-sm"
+                  className="mx-auto rounded-xl"
                 />
                 <div className="mt-6">
                   <CardTitle className="mb-4">Hourly Pricing</CardTitle>
@@ -87,8 +89,10 @@ export default async function Page() {
         ))}
       </div>
       <div className="mt-8">
-        <div className="p-2">
-          <p className="text-4xl font-bold text-gray-900">Equipment List</p>
+        <div className="">
+          <p className="text-4xl font-semibold leading-none font-forma tracking-wide text-primary mb-4">
+            Equipment Details
+          </p>
         </div>
         <EquipmentList />
       </div>

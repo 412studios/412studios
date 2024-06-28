@@ -12,6 +12,19 @@ import {
   CardDescription,
   CardContent,
 } from "@/components/ui/card";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function Page(data: any) {
   // COLLECT SUBSCRIPTION DETAILS IF AVAILABLE
@@ -64,11 +77,23 @@ export default function Page(data: any) {
     }));
   };
 
+  function onRoomSelect(id: string) {
+    setOptions((prevOptions) => ({
+      ...prevOptions,
+      room: parseInt(id),
+      date: new Date(),
+      startTime: -1,
+      endTime: -1,
+      engDuration: -1,
+      engStart: -1,
+    }));
+  }
+
   return (
-    <main className="m-8">
+    <main className="max-w-screen-xl mx-auto mt-8">
       {/* DISPLAY SUBSCRIPTION DETAILS IF AVAILABLE */}
       {options.subRooms.length >= 1 && (
-        <Card className="m-2">
+        <Card>
           <CardHeader>
             <CardTitle>Active Subscriptions</CardTitle>
           </CardHeader>
@@ -90,63 +115,92 @@ export default function Page(data: any) {
       )}
 
       {/* PICK A ROOM SECTION */}
-      <Card className="m-2">
+      <Card className="mb-8">
         <CardHeader>
-          <CardTitle>Pick Room</CardTitle>
+          <CardTitle>Booking Options</CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="flex flex-wrap">
-            {data.prices.map((element: any) => (
-              <div key={element.id} className="w-full md:w-1/3 p-2">
-                <CardTitle>Room {element.room}</CardTitle>
-                <CardDescription>
-                  Hourly rate: {element.hourlyRate}
-                </CardDescription>
-                <CardDescription>Day rate: {element.dayRate}</CardDescription>
-                <Button
-                  className="w-full mt-4"
-                  onClick={() => pickRoom(element.id)}
-                >
-                  Select Room {element.room}
-                </Button>
+        <CardContent className="p-0">
+          <Accordion type="single" collapsible>
+            <AccordionItem value="item-1">
+              <AccordionTrigger>Vew Room Details</AccordionTrigger>
+              <AccordionContent>
+                <div className="w-fill p-4">
+                  <div className="flex flex-wrap">
+                    {data.prices.map((element: any) => (
+                      <div key={element.id} className="w-full md:w-1/3 p-2">
+                        <CardTitle>Room {element.room}</CardTitle>
+                        <CardDescription>
+                          Hourly rate: {element.hourlyRate}
+                        </CardDescription>
+                        <CardDescription>
+                          Day rate: {element.dayRate}
+                        </CardDescription>
+                        <Button
+                          className="w-full mt-4"
+                          onClick={() => pickRoom(element.id)}
+                        >
+                          Select Room {element.room}
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+          <div className="w-fill border-b-4 p-4">
+            <h2 className="text-2xl font-semibold leading-none font-forma tracking-wide text-primary mb-4">
+              Select A Room
+            </h2>
+            <Select onValueChange={onRoomSelect}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select a Room" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="0">Room A</SelectItem>
+                <SelectItem value="1">Room B</SelectItem>
+                <SelectItem value="2">Room C</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="w-full">
+            <div className="flex flex-wrap">
+              <div className="w-full md:w-1/2 md:border-r-4 border-r-0 p-6">
+                <h2 className="text-center text-2xl font-semibold leading-none font-forma tracking-wide text-primary mb-4">
+                  Select A Date
+                </h2>
+                <div className="flex items-center justify-center">
+                  <PickDate
+                    setOptions={setOptions}
+                    options={options}
+                    prices={data.prices}
+                  />
+                </div>
               </div>
-            ))}
+              <div className="w-full md:w-1/2 p-6 md:border-t-0 border-t-4">
+                <h2 className="text-center text-2xl font-semibold leading-none font-forma tracking-wide text-primary mb-4">
+                  Select A Time
+                </h2>
+                <div className="flex items-center justify-center">
+                  <PickTime
+                    setOptions={setOptions}
+                    options={options}
+                    prices={data.prices}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="w-fill border-t-4 p-4">
+            <PickEng
+              setOptions={setOptions}
+              options={options}
+              prices={data.prices}
+            />
           </div>
         </CardContent>
       </Card>
-
-      {/* DATE AND TIME SECTION */}
-      <div className="flex flex-col lg:flex-row">
-        <div className="m-2 flex h-[450px] flex-col rounded border md:h-[600px] lg:w-full">
-          <div className="p-4 text-2xl font-semibold leading-none tracking-tight">
-            Date
-          </div>
-          <div className="mx-4 border-b"></div>
-          <div className="flex h-full items-center justify-center p-4">
-            <PickDate
-              setOptions={setOptions}
-              options={options}
-              prices={data.prices}
-            />
-          </div>
-        </div>
-        <div className="m-2 flex h-[450px] flex-col rounded border md:h-[600px] lg:w-full">
-          <div className="p-4 text-2xl font-semibold leading-none tracking-tight">
-            Time
-          </div>
-          <div className="mx-4 border-b"></div>
-          <div className="flex h-full items-center justify-center p-4">
-            <PickTime
-              setOptions={setOptions}
-              options={options}
-              prices={data.prices}
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* ADD ENGINEER SECTION */}
-      <PickEng setOptions={setOptions} options={options} prices={data.prices} />
 
       {/* CHECKOUT DETAILS */}
       <ShowDetails

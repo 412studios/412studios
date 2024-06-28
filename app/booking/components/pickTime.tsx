@@ -150,25 +150,25 @@ export const PickTime = ({
       {isLoading ? (
         <div className="text-center">Loading...</div>
       ) : (
-        <div className="flex h-[340px] w-[80vw] flex-col p-2 md:w-[340px]">
-          <div className="flex flex-col overflow-y-scroll rounded border p-2">
+        <div className="flex h-[355px] w-[80vw] flex-col p-2 md:w-[340px]">
+          <div className="flex flex-col overflow-y-scroll border-4 rounded-[8px] p-2 flex-grow">
             {timeArray.map((slot: any) => (
               <div
                 key={slot.id}
                 onClick={() => handleClick(slot.id)}
-                className={`my-1 rounded border-2 p-2 text-center hover:cursor-pointer ${
+                className={`my-1 rounded border-4 p-2 text-center hover:cursor-pointer ${
                   bookedTimes.includes(slot.id)
-                    ? "bg-rose-600"
+                    ? "bg-red-500"
                     : selList.includes(slot.id)
-                      ? "bg-green-600 text-black"
-                      : "bg-card"
+                      ? "bg-emerald-500 text-black"
+                      : "bg-background hover:bg-accent"
                 }`}
               >
                 <span>{slot.displayName}</span>
               </div>
             ))}
           </div>
-          <Button className="mb-4 mt-auto w-full" onClick={clearBtn}>
+          <Button className="mt-4 w-full" onClick={clearBtn}>
             Clear selection
           </Button>
         </div>

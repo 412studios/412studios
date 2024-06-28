@@ -5,9 +5,5 @@ export default async function PricingLayout({
 }: {
   children: ReactNode;
 }) {
-  return (
-    <main className="mx-auto min-h-[100vh] max-w-screen-xl p-2 md:p-8">
-      {children}
-    </main>
-  );
+  return <main className="mx-auto max-w-screen-xl">{children}</main>;
 }

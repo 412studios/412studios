@@ -50,25 +50,25 @@ export default function Page(context: any) {
   }, [context.params.subscription]);
 
   return (
-    <main className="container">
-      <div className="mx-auto flex max-w-screen-lg">
-        <div className="m-2 w-full">
+    <main className="">
+      <div className="flex gap-4 my-4">
+        <div className="w-full">
           <Link href="/pricing/0" className="w-full">
             <Button className="w-full">Room A</Button>
           </Link>
         </div>
-        <div className="m-2 w-full">
+        <div className="w-full">
           <Link href="/pricing/1" className="w-full">
             <Button className="w-full">Room B</Button>
           </Link>
         </div>
-        <div className="m-2 w-full">
+        <div className="w-full">
           <Link href="/pricing/2" className="w-full">
             <Button className="w-full">Room C</Button>
           </Link>
         </div>
       </div>
-      <div className="mx-auto flex max-w-screen-lg p-2">
+      <div className="flex">
         <Card className="w-full">
           <CardHeader>
             <CardTitle>
@@ -81,17 +81,15 @@ export default function Page(context: any) {
               alt={`Studio ${prices[context.params.subscription].id}`}
               width={1000}
               height={9}
-              className="mx-auto mb-8 w-full max-w-screen-md rounded-lg"
+              className="mx-auto mb-8 w-full max-w-screen-md rounded-xl"
             />
             <CardDescription>
               Monthly Membership price:{" "}
               {prices[context.params.subscription].subscriptionPrice}.00
             </CardDescription>
-            <CardDescription>
+            <CardDescription className="mb-4">
               Includes four X four sessions every month.
             </CardDescription>
-          </CardContent>
-          <CardFooter>
             {userHasSub == false ? (
               <div className="w-full">
                 {isAvailable ? (
@@ -121,6 +119,11 @@ export default function Page(context: any) {
                 </Button>
               </Link>
             )}
+          </CardContent>
+          <CardFooter>
+            <Link href="/pricing">
+              <Button>Back</Button>
+            </Link>
           </CardFooter>
         </Card>
       </div>

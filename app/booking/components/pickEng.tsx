@@ -111,16 +111,17 @@ export const PickEng = ({
   }
 
   return (
-    <div className="rounded border p-4 m-2">
-      <div className="p-4 text-2xl font-semibold leading-none tracking-tight">
+    <div>
+      <h2 className="text-2xl font-semibold leading-none font-forma tracking-wide text-primary mb-4">
         Engineering Fee: ${prices[parseInt(options.room)].engineerPrice}.00 per
         hour
-      </div>
-      <div className="mx-4 border-b"></div>
+      </h2>
+
+      <div className="border-b-4 border-dashed"></div>
 
       {startArr.length >= 1 ? (
-        <div>
-          <div className="p-4">
+        <div className="pt-4">
+          <div>
             <div className="flex items-center space-x-2">
               <Checkbox
                 id="terms"
@@ -136,7 +137,7 @@ export const PickEng = ({
               </label>
             </div>
           </div>
-          <div className="p-4 pt-0">
+          <div className="pt-4">
             <div className="flex flex-col md:flex-row md:space-x-4">
               <div className="w-full md:w-1/2">
                 <Select
@@ -200,7 +201,7 @@ export const PickEng = ({
           </div>
         </div>
       ) : (
-        <div className="p-4">
+        <div className="p-4 pl-0 pb-0">
           <span>No time selected</span>
         </div>
       )}

@@ -48,13 +48,12 @@ export default async function SettingsPage() {
   }
 
   return (
-    <main className="p-8">
-      <Card className="mx-auto mt-4 max-w-screen-lg">
+    <main className="py-4">
+      <Card className="mx-auto mt-4 max-w-screen-xl">
         <form action={postData}>
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle>Profile Details</CardTitle>
-              <ThemeToggle />
             </div>
           </CardHeader>
           <CardContent>
@@ -84,23 +83,6 @@ export default async function SettingsPage() {
                   disabled
                 />
               </div>
-
-              {/* <div className="spac-y-1 mt-2">
-                    <Label className="px-3">Color Scheme</Label>
-                    <Select name="color" defaultValue={data?.colorScheme}>
-                      <SelectTrigger className="mt-2 w-full">
-                        <SelectValue placeholder="select a color" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectGroup>
-                          <SelectLabel>Color</SelectLabel>
-                          <SelectItem value="theme-green">Green</SelectItem>
-                          <SelectItem value="theme-blue">Blue</SelectItem>
-                          <SelectItem value="theme-orange">Orange</SelectItem>
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
-                  </div> */}
             </div>
           </CardContent>
           <CardFooter>
