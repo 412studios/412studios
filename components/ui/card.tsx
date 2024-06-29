@@ -1,5 +1,4 @@
 import * as React from "react";
-
 import { cn } from "@/lib/utils";
 
 const Card = React.forwardRef<
@@ -9,7 +8,7 @@ const Card = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      "rounded-xl border-4 bg-background text-card-foreground shadow-sm",
+      "rounded-xl border-4 bg-background text-primary shadow-sm",
       className,
     )}
     {...props}
@@ -21,31 +20,7 @@ const CardHeader = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, children, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn(
-      "flex p-4 pb-3 border-b-4 card-title text-primary align-middle",
-      className,
-    )}
-    {...props}
-  >
-    <svg
-      width="20"
-      height="20"
-      viewBox="0 0 20 20"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className="mr-2"
-    >
-      <circle
-        cx="10"
-        cy="10"
-        r="8"
-        stroke="black"
-        strokeWidth="2"
-        className="fill-primary stroke-primary"
-      />
-    </svg>
+  <div ref={ref} className={cn("flex p-4 border-b-4", className)} {...props}>
     {children}
   </div>
 ));
@@ -55,14 +30,32 @@ const CardTitle = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLHeadingElement>
 >(({ className, ...props }, ref) => (
-  <h2
-    ref={ref}
-    className={cn(
-      "text-2xl font-semibold leading-none font-forma tracking-wide",
-      className,
-    )}
-    {...props}
-  />
+  <>
+    <span className="flex items-center justify-center">
+      <svg
+        width="18"
+        height="18"
+        viewBox="0 0 22 22"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        className="mr-2"
+      >
+        <circle
+          cx="10"
+          cy="10"
+          r="8"
+          stroke="black"
+          strokeWidth="2"
+          className="fill-primary stroke-primary"
+        />
+      </svg>
+    </span>
+    <h2
+      ref={ref}
+      className={cn("text-2xl font-bold tracking-tight", className)}
+      {...props}
+    />
+  </>
 ));
 CardTitle.displayName = "CardTitle";
 

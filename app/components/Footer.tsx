@@ -65,52 +65,12 @@ export function Footer() {
               </li>
               <li>
                 <a
-                  href="https://www.facebook.com/fouronetwostudios/"
-                  className="text-background hover:underline"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Facebook
-                </a>
-              </li>
-              <li>
-                <a
                   href="https://www.youtube.com/channel/UCiIHqiNLRHtjsaKBVRh0ipQ"
                   className="text-background hover:underline"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
                   YouTube
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://www.tiktok.com/@412.studios"
-                  className="text-background hover:underline"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  TikTok
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://twitter.com/The412Show"
-                  className="text-background hover:underline"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Twitter
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://soundcloud.com/412studios"
-                  className="text-background hover:underline"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Soundcloud
                 </a>
               </li>
             </ul>

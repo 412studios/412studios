@@ -28,7 +28,7 @@ export function Services() {
       description: "High-quality post-production services.",
     },
     {
-      title: "Photography / Videography",
+      title: "Photography Videography",
       description:
         "Creative photography and videography services for various needs.",
     },

@@ -1,5 +1,4 @@
 @import url("https://use.typekit.net/qbv0tch.css");
-/* @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700&display=swap"); */
 
 @tailwind base;
 @tailwind components;
@@ -65,11 +64,11 @@
     }
     html {
         @apply scroll-smooth;
+        font-family: forma-djr-display, sans-serif !important;
+        color: var(--primary) !important;
     }
     body {
         @apply bg-background text-foreground;
-        font-family: "cofo-sans-mono-variable", sans-serif !important;
-        font-variation-settings: "wght" 400 !important;
     }
 }
 
@@ -80,13 +79,4 @@
 
 section {
     scroll-margin-top: 150px !important;
-}
-
-.banner-title {
-    font-family: forma-djr-display, sans-serif;
-    font-weight: 700;
-    font-style: normal;
-}
-.font-forma {
-    font-family: "Forma DJR Display";
 }

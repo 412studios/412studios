@@ -24,43 +24,70 @@ export async function Navbar() {
                   target="_blank"
                   className="hover:underline"
                 >
-                  Instagram - itsfouronetwo
+                  412 Studios
                 </Link>
               </span>
               <span className="mx-4">
                 <Link
-                  href="https://www.facebook.com/fouronetwostudios/"
+                  href="https://www.instagram.com/itsfouronetwo/"
                   target="_blank"
                   className="hover:underline"
                 >
-                  Facebook - fouronetwostudios
+                  412 Studios
                 </Link>
               </span>
               <span className="mx-4">
                 <Link
-                  href="https://www.youtube.com/channel/UCiIHqiNLRHtjsaKBVRh0ipQ"
+                  href="https://www.instagram.com/itsfouronetwo/"
                   target="_blank"
                   className="hover:underline"
                 >
-                  Youtube - The412Show
+                  412 Studios
                 </Link>
               </span>
               <span className="mx-4">
                 <Link
-                  href="https://www.tiktok.com/@412.studios"
+                  href="https://www.instagram.com/itsfouronetwo/"
                   target="_blank"
                   className="hover:underline"
                 >
-                  TikTok - 412.studios
+                  412 Studios
                 </Link>
               </span>
               <span className="mx-4">
                 <Link
-                  href="https://twitter.com/The412Show"
+                  href="https://www.instagram.com/itsfouronetwo/"
                   target="_blank"
                   className="hover:underline"
                 >
-                  Twitter - The412Show
+                  412 Studios
+                </Link>
+              </span>
+              <span className="mx-4">
+                <Link
+                  href="https://www.instagram.com/itsfouronetwo/"
+                  target="_blank"
+                  className="hover:underline"
+                >
+                  412 Studios
+                </Link>
+              </span>
+              <span className="mx-4">
+                <Link
+                  href="https://www.instagram.com/itsfouronetwo/"
+                  target="_blank"
+                  className="hover:underline"
+                >
+                  412 Studios
+                </Link>
+              </span>
+              <span className="mx-4">
+                <Link
+                  href="https://www.instagram.com/itsfouronetwo/"
+                  target="_blank"
+                  className="hover:underline"
+                >
+                  412 Studios
                 </Link>
               </span>
             </div>
@@ -71,43 +98,70 @@ export async function Navbar() {
                   target="_blank"
                   className="hover:underline"
                 >
-                  Instagram - itsfouronetwo
+                  412 Studios
                 </Link>
               </span>
               <span className="mx-4">
                 <Link
-                  href="https://www.facebook.com/fouronetwostudios/"
+                  href="https://www.instagram.com/itsfouronetwo/"
                   target="_blank"
                   className="hover:underline"
                 >
-                  Facebook - fouronetwostudios
+                  412 Studios
                 </Link>
               </span>
               <span className="mx-4">
                 <Link
-                  href="https://www.youtube.com/channel/UCiIHqiNLRHtjsaKBVRh0ipQ"
+                  href="https://www.instagram.com/itsfouronetwo/"
                   target="_blank"
                   className="hover:underline"
                 >
-                  Youtube - The412Show
+                  412 Studios
                 </Link>
               </span>
               <span className="mx-4">
                 <Link
-                  href="https://www.tiktok.com/@412.studios"
+                  href="https://www.instagram.com/itsfouronetwo/"
                   target="_blank"
                   className="hover:underline"
                 >
-                  TikTok - 412.studios
+                  412 Studios
                 </Link>
               </span>
               <span className="mx-4">
                 <Link
-                  href="https://twitter.com/The412Show"
+                  href="https://www.instagram.com/itsfouronetwo/"
                   target="_blank"
                   className="hover:underline"
                 >
-                  Twitter - The412Show
+                  412 Studios
+                </Link>
+              </span>
+              <span className="mx-4">
+                <Link
+                  href="https://www.instagram.com/itsfouronetwo/"
+                  target="_blank"
+                  className="hover:underline"
+                >
+                  412 Studios
+                </Link>
+              </span>
+              <span className="mx-4">
+                <Link
+                  href="https://www.instagram.com/itsfouronetwo/"
+                  target="_blank"
+                  className="hover:underline"
+                >
+                  412 Studios
+                </Link>
+              </span>
+              <span className="mx-4">
+                <Link
+                  href="https://www.instagram.com/itsfouronetwo/"
+                  target="_blank"
+                  className="hover:underline"
+                >
+                  412 Studios
                 </Link>
               </span>
             </div>
@@ -168,7 +222,7 @@ export async function Navbar() {
             </div>
           </div>
         </div>
-        <div className="flex overflow-hidden pt-1 bg-background">
+        <div className="flex overflow-hidden bg-background">
           <Link
             href="/"
             className="hover:text-primary-foreground transition duration-300 px-2"
