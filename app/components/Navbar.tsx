@@ -171,7 +171,7 @@ export async function Navbar() {
         <div className="p-2 border-b-4 flex justify-between bg-background">
           <div className="flex items-center">
             <Link href="/" aria-label="Header Logo">
-              <Logo className="max-h-[40px] text-primary hover:text-secondary transition duration-300 ease-in-out" />
+              <Logo className="h-[40px] text-primary fill-primary hover:text-secondary hover:fill-secondary transition duration-300 ease-in-out" />
             </Link>
           </div>
           <div className="flex-1 text-right">
