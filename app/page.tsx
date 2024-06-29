@@ -1,5 +1,4 @@
 "use client";
-
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { LoginLink } from "@kinde-oss/kinde-auth-nextjs/components";
@@ -10,10 +9,16 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-
 import { Services } from "@/app/components/servicesCarousel";
-
 import { useUser } from "./components/UserContext";
+import { ChevronLast } from "lucide-react";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 export default function Home() {
   const { isAuthenticated, user } = useUser();
@@ -54,65 +59,109 @@ export default function Home() {
                 acoustics.
               </p>
             </div>
+            {/* DESKTOP ONLY */}
+            <div className="hidden lg:block">
+              <div className="grid grid-cols-1 lg:grid-cols-3">
+                <div>
+                  <h3 className="text-2xl font-bold tracking-tight p-4">
+                    Studio A
+                  </h3>
+                  <div className="border-b-4 border-t-4 w-full h-64 bg-[url('/images/studio-a.jpg')] bg-cover bg-center"></div>
+                  <div className="p-4">
+                    <>
+                      {isAuthenticated ? (
+                        <Link href="/booking" className="w-full">
+                          <Button className="w-full">Book Now</Button>
+                        </Link>
+                      ) : (
+                        <LoginLink className="w-full">
+                          <Button className="w-full">Book Now</Button>
+                        </LoginLink>
+                      )}
+                    </>
+                  </div>
+                </div>
+                <div className="border-l-0 border-r-0 border-t-4 border-b-4 lg:border-l-4 lg:border-r-4 lg:border-t-0 lg:border-b-0">
+                  <h3 className="text-2xl font-bold tracking-tight p-4">
+                    Studio B
+                  </h3>
+                  <div className="border-b-4 border-t-4 w-full h-64 bg-[url('/images/studio-b.jpg')] bg-cover bg-center"></div>
+                  <div className="p-4">
+                    <>
+                      {isAuthenticated ? (
+                        <Link href="/booking" className="w-full">
+                          <Button className="w-full">Book Now</Button>
+                        </Link>
+                      ) : (
+                        <LoginLink className="w-full">
+                          <Button className="w-full">Book Now</Button>
+                        </LoginLink>
+                      )}
+                    </>
+                  </div>
+                </div>
+                <div>
+                  <h3 className="text-2xl font-bold tracking-tight p-4">
+                    Studio C
+                  </h3>
+                  <div className="border-b-4 border-t-4 w-full h-64 bg-[url('/images/studio-c.jpg')] bg-cover bg-center"></div>
+                  <div className="p-4">
+                    <>
+                      {isAuthenticated ? (
+                        <Link href="/booking" className="w-full">
+                          <Button className="w-full">Book Now</Button>
+                        </Link>
+                      ) : (
+                        <LoginLink className="w-full">
+                          <Button className="w-full">Book Now</Button>
+                        </LoginLink>
+                      )}
+                    </>
+                  </div>
+                </div>
+              </div>
+            </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3">
-              <div>
-                <h3 className="text-2xl font-bold tracking-tight p-4">
-                  Studio A
-                </h3>
-                <div className="border-b-4 border-t-4 w-full h-64 bg-[url('/images/studio-a.jpg')] bg-cover bg-center"></div>
-                <div className="p-4">
-                  <>
-                    {isAuthenticated ? (
-                      <Link href="/booking" className="w-full">
-                        <Button className="w-full">Book Now</Button>
-                      </Link>
-                    ) : (
-                      <LoginLink className="w-full">
-                        <Button className="w-full">Book Now</Button>
-                      </LoginLink>
-                    )}
-                  </>
-                </div>
-              </div>
-              <div className="border-l-0 border-r-0 border-t-4 border-b-4 lg:border-l-4 lg:border-r-4 lg:border-t-0 lg:border-b-0">
-                <h3 className="text-2xl font-bold tracking-tight p-4">
-                  Studio B
-                </h3>
-                <div className="border-b-4 border-t-4 w-full h-64 bg-[url('/images/studio-b.jpg')] bg-cover bg-center"></div>
-                <div className="p-4">
-                  <>
-                    {isAuthenticated ? (
-                      <Link href="/booking" className="w-full">
-                        <Button className="w-full">Book Now</Button>
-                      </Link>
-                    ) : (
-                      <LoginLink className="w-full">
-                        <Button className="w-full">Book Now</Button>
-                      </LoginLink>
-                    )}
-                  </>
-                </div>
-              </div>
-              <div>
-                <h3 className="text-2xl font-bold tracking-tight p-4">
-                  Studio C
-                </h3>
-                <div className="border-b-4 border-t-4 w-full h-64 bg-[url('/images/studio-c.jpg')] bg-cover bg-center"></div>
-                <div className="p-4">
-                  <>
-                    {isAuthenticated ? (
-                      <Link href="/booking" className="w-full">
-                        <Button className="w-full">Book Now</Button>
-                      </Link>
-                    ) : (
-                      <LoginLink className="w-full">
-                        <Button className="w-full">Book Now</Button>
-                      </LoginLink>
-                    )}
-                  </>
-                </div>
-              </div>
+            {/* MOBILE ONLY */}
+            <div className="block lg:hidden">
+              <Carousel className="w-full p-2 py-4">
+                <CarouselContent className="border-0">
+                  <CarouselItem>
+                    <div>
+                      <Card className="w-full">
+                        <CardContent className="rounded-[8px] flex items-center justify-center p-6 w-full min-h-[300px] bg-[url('/images/studio-a.jpg')] bg-cover bg-center"></CardContent>
+                      </Card>
+                    </div>
+                  </CarouselItem>
+                  <CarouselItem>
+                    <div>
+                      <Card className="w-full">
+                        <CardContent className="rounded-[8px] flex items-center justify-center p-6 w-full min-h-[300px] bg-[url('/images/studio-b.jpg')] bg-cover bg-center"></CardContent>
+                      </Card>
+                    </div>
+                  </CarouselItem>
+                  <CarouselItem>
+                    <div>
+                      <Card className="w-full">
+                        <CardContent className="rounded-[8px] flex items-center justify-center p-6 w-full min-h-[300px] bg-[url('/images/studio-c.jpg')] bg-cover bg-center"></CardContent>
+                      </Card>
+                    </div>
+                  </CarouselItem>
+                </CarouselContent>
+                <CarouselPrevious className="ml-3" />
+                <CarouselNext className="mr-3" />
+              </Carousel>
+            </div>
+            <div className="p-2 pt-0">
+              {isAuthenticated ? (
+                <Link href="/booking" className="w-full">
+                  <Button className="w-full">Book Now</Button>
+                </Link>
+              ) : (
+                <LoginLink className="w-full">
+                  <Button className="w-full">Book Now</Button>
+                </LoginLink>
+              )}
             </div>
           </CardContent>
           <CardFooter className="p-0">
@@ -142,7 +191,7 @@ export default function Home() {
                   className="border-0"
                   loading="lazy"
                 ></iframe>
-                <div className="w-full bg-primary text-background p-4 md:pt-8 pt-6 text-2xl">
+                <div className="w-full bg-primary text-background p-4 text-2xl">
                   412 Richmond St E,
                   <br />
                   Toronto, ON M5A 1P8

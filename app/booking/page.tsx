@@ -99,7 +99,7 @@ export default function Page(data: any) {
         <CardContent className="p-0">
           <Accordion type="single" collapsible>
             <AccordionItem value="item-1">
-              <AccordionTrigger>Vew Room Details</AccordionTrigger>
+              <AccordionTrigger>View Room Details</AccordionTrigger>
               <AccordionContent className="p-0">
                 <div className="w-fill p-4 pt-0">
                   <div className="flex flex-wrap">
