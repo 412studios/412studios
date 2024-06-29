@@ -41,7 +41,9 @@ export default async function Page() {
                   className="mx-auto rounded-xl"
                 />
                 <div className="mt-6">
-                  <CardTitle className="mb-4">Hourly Pricing</CardTitle>
+                  <h3 className="text-2xl font-bold tracking-tight mb-4">
+                    Hourly Pricing
+                  </h3>
                   <CardDescription>
                     Daily Rate: {prices[element.id].dayRate}
                   </CardDescription>
@@ -60,7 +62,9 @@ export default async function Page() {
                     )}
                   </div>
 
-                  <CardTitle className="my-4">Subscription Pricing</CardTitle>
+                  <h3 className="text-2xl font-bold tracking-tight my-4">
+                    Subscription Pricing
+                  </h3>
                   <CardDescription>
                     Monthly subscription price:{" "}
                     {prices[element.id].subscriptionPrice}

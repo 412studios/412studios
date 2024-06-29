@@ -91,29 +91,6 @@ export default function Page(data: any) {
 
   return (
     <main className="max-w-screen-xl mx-auto mt-8">
-      {/* DISPLAY SUBSCRIPTION DETAILS IF AVAILABLE */}
-      {options.subRooms.length >= 1 && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Active Subscriptions</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {options.subscription.map((element: any, index: number) => (
-              <div
-                key={index}
-                className="bg-blue-100 text-blue-800 px-4 py-2 rounded flex flex-col mt-2"
-              >
-                <span>Room {data.prices[element.roomId].room}</span>
-                <span>Subscription Status {element.status}</span>
-                <span>
-                  Remaining Hours in Subscription: {element.availableHours}
-                </span>
-              </div>
-            ))}
-          </CardContent>
-        </Card>
-      )}
-
       {/* PICK A ROOM SECTION */}
       <Card className="mb-8">
         <CardHeader>
@@ -123,24 +100,20 @@ export default function Page(data: any) {
           <Accordion type="single" collapsible>
             <AccordionItem value="item-1">
               <AccordionTrigger>Vew Room Details</AccordionTrigger>
-              <AccordionContent>
-                <div className="w-fill p-4">
+              <AccordionContent className="p-0">
+                <div className="w-fill p-4 pt-0">
                   <div className="flex flex-wrap">
                     {data.prices.map((element: any) => (
                       <div key={element.id} className="w-full md:w-1/3 p-2">
-                        <CardTitle>Room {element.room}</CardTitle>
+                        <h3 className="text-2xl font-bold tracking-tight">
+                          Room {element.room}
+                        </h3>
                         <CardDescription>
                           Hourly rate: {element.hourlyRate}
                         </CardDescription>
                         <CardDescription>
                           Day rate: {element.dayRate}
                         </CardDescription>
-                        <Button
-                          className="w-full mt-4"
-                          onClick={() => pickRoom(element.id)}
-                        >
-                          Select Room {element.room}
-                        </Button>
                       </div>
                     ))}
                   </div>
@@ -148,6 +121,24 @@ export default function Page(data: any) {
               </AccordionContent>
             </AccordionItem>
           </Accordion>
+
+          {/* DISPLAY SUBSCRIPTION DETAILS IF AVAILABLE */}
+          {options.subRooms.length >= 1 && (
+            <div className="border-b-4 p-4 bg-accent">
+              {options.subscription.map((element: any, index: number) => (
+                <div key={index} className="rounded flex flex-col font-bold">
+                  <span>
+                    Membership room: Room {data.prices[element.roomId].room}
+                  </span>
+                  <span>Membership Status: {element.status}</span>
+                  <span>
+                    Remaining Hours in Membership: {element.availableHours}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
+
           <div className="w-fill border-b-4 p-4">
             <h2 className="text-2xl font-semibold leading-none font-forma tracking-wide text-primary mb-4">
               Select A Room
