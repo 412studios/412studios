@@ -63,10 +63,10 @@ export default async function Page() {
                   </div>
 
                   <h3 className="text-2xl font-bold tracking-tight my-4">
-                    Subscription Pricing
+                    Membership Pricing
                   </h3>
                   <CardDescription>
-                    Monthly subscription price:{" "}
+                    Monthly membership price:{" "}
                     {prices[element.id].subscriptionPrice}
                   </CardDescription>
                   <CardDescription>
@@ -76,13 +76,11 @@ export default async function Page() {
                   <div className="mt-4">
                     {loggedIn ? (
                       <Link href={`/pricing/${element.id}`} className="w-full">
-                        <Button className="w-full">
-                          Purchase Subscription
-                        </Button>
+                        <Button className="w-full">Purchase Membership</Button>
                       </Link>
                     ) : (
                       <Link href="/api/auth/login?" className="w-full">
-                        <Button className="w-full">Sign in to Subscribe</Button>
+                        <Button className="w-full">Sign in to Purchase</Button>
                       </Link>
                     )}
                   </div>

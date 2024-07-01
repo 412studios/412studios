@@ -73,6 +73,26 @@ export function Footer() {
                   YouTube
                 </a>
               </li>
+              <li>
+                <a
+                  href="https://www.tiktok.com/@412.studios"
+                  className="text-background hover:underline"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  TikTok
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://soundcloud.com/412studios"
+                  className="text-background hover:underline"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Soundcloud
+                </a>
+              </li>
             </ul>
           </div>
           <div className="pb-4 md:pb-0">

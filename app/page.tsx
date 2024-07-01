@@ -39,7 +39,7 @@ export default function Home() {
             <CardTitle>About 412 Studios</CardTitle>
           </CardHeader>
           <CardContent className="max-w-[900px]">
-            Formerly known as “House of Balloons”, our studio carries a rich
+            Formerly known as the “House of Balloons”, our studio carries a rich
             legacy of musical innovation. Today, we proudly continue that
             tradition as 412 Studios, providing a dynamic space for artists to
             explore, create and collaborate.
@@ -128,23 +128,41 @@ export default function Home() {
                 <CarouselContent className="border-0">
                   <CarouselItem>
                     <div>
+                      <h3 className="text-2xl font-bold tracking-tight p-4 pt-0 text-center">
+                        Studio A
+                      </h3>
                       <Card className="w-full">
                         <CardContent className="rounded-[8px] flex items-center justify-center p-6 w-full min-h-[300px] bg-[url('/images/studio-a.jpg')] bg-cover bg-center"></CardContent>
                       </Card>
+                      <Link href="/booking" className="w-full">
+                        <Button className="mt-4 w-full">Book Now</Button>
+                      </Link>
                     </div>
                   </CarouselItem>
                   <CarouselItem>
                     <div>
+                      <h3 className="text-2xl font-bold tracking-tight p-4 pt-0 text-center">
+                        Studio B
+                      </h3>
                       <Card className="w-full">
                         <CardContent className="rounded-[8px] flex items-center justify-center p-6 w-full min-h-[300px] bg-[url('/images/studio-b.jpg')] bg-cover bg-center"></CardContent>
                       </Card>
+                      <Link href="/booking" className="w-full">
+                        <Button className="mt-4 w-full">Book Now</Button>
+                      </Link>
                     </div>
                   </CarouselItem>
                   <CarouselItem>
                     <div>
+                      <h3 className="text-2xl font-bold tracking-tight p-4 pt-0 text-center">
+                        Studio C
+                      </h3>
                       <Card className="w-full">
                         <CardContent className="rounded-[8px] flex items-center justify-center p-6 w-full min-h-[300px] bg-[url('/images/studio-c.jpg')] bg-cover bg-center"></CardContent>
                       </Card>
+                      <Link href="/booking" className="w-full">
+                        <Button className="mt-4 w-full">Book Now</Button>
+                      </Link>
                     </div>
                   </CarouselItem>
                 </CarouselContent>
@@ -152,22 +170,11 @@ export default function Home() {
                 <CarouselNext className="mr-3" />
               </Carousel>
             </div>
-            <div className="p-2 pt-0">
-              {isAuthenticated ? (
-                <Link href="/booking" className="w-full">
-                  <Button className="w-full">Book Now</Button>
-                </Link>
-              ) : (
-                <LoginLink className="w-full">
-                  <Button className="w-full">Book Now</Button>
-                </LoginLink>
-              )}
-            </div>
           </CardContent>
           <CardFooter className="p-0">
             <Link href="/pricing" className="w-full rounded-none">
               <Button variant="ghost" className="w-full rounded-none">
-                View Memberships
+                Pricing Options
               </Button>
             </Link>
           </CardFooter>
@@ -235,6 +242,8 @@ export default function Home() {
                     <div className="flex flex-col pr-4">
                       <span>Instagram</span>
                       <span>YouTube</span>
+                      <span>TikTok</span>
+                      <span>Soundcloud</span>
                     </div>
                     <div className="w-1/2 flex flex-col">
                       <span>
@@ -249,12 +258,32 @@ export default function Home() {
                       </span>
                       <span>
                         <a
+                          href="https://www.tiktok.com/@412.studios"
+                          className="text-primary hover:underline"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          412.studios
+                        </a>
+                      </span>
+                      <span>
+                        <a
                           href="https://www.youtube.com/channel/UCiIHqiNLRHtjsaKBVRh0ipQ"
                           className="text-primary hover:underline"
                           target="_blank"
                           rel="noopener noreferrer"
                         >
                           The412Show
+                        </a>
+                      </span>
+                      <span>
+                        <a
+                          href="https://soundcloud.com/412studios"
+                          className="text-primary hover:underline"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          412studios
                         </a>
                       </span>
                     </div>

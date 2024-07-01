@@ -72,7 +72,7 @@ export default function Page(context: any) {
         <Card className="w-full">
           <CardHeader>
             <CardTitle>
-              Room {prices[context.params.subscription].room} Subscription
+              Room {prices[context.params.subscription].room} Membership
             </CardTitle>
           </CardHeader>
           <CardContent>

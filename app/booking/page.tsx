@@ -4,7 +4,10 @@ import { PickDate } from "./components/pickDate";
 import { PickTime } from "./components/pickTime";
 import { PickEng } from "./components/pickEng";
 import { ShowDetails } from "./components/showDetails";
+import { RoomDetails } from "./components/roomDetails";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import Image from "next/image";
 import {
   Card,
   CardHeader,
@@ -101,23 +104,7 @@ export default function Page(data: any) {
             <AccordionItem value="item-1">
               <AccordionTrigger>View Room Details</AccordionTrigger>
               <AccordionContent className="p-0">
-                <div className="w-fill p-4 pt-0">
-                  <div className="flex flex-wrap">
-                    {data.prices.map((element: any) => (
-                      <div key={element.id} className="w-full md:w-1/3 p-2">
-                        <h3 className="text-2xl font-bold tracking-tight">
-                          Room {element.room}
-                        </h3>
-                        <CardDescription>
-                          Hourly rate: {element.hourlyRate}
-                        </CardDescription>
-                        <CardDescription>
-                          Day rate: {element.dayRate}
-                        </CardDescription>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+                <RoomDetails data={data.prices} />
               </AccordionContent>
             </AccordionItem>
           </Accordion>

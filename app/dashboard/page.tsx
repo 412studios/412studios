@@ -106,7 +106,7 @@ export default async function Main() {
               <Link href="/dashboard/subscriptions">
                 <span className="hover:bg-accent hover:text-accent-forground group mb-2 flex items-center rounded-md px-3 py-2 text-sm font-medium">
                   <RefreshCw className="text-primary mr-2 h-4 w-4" />
-                  <span>Manage Subscriptions</span>
+                  <span>Manage Memberships</span>
                 </span>
               </Link>
             )}
