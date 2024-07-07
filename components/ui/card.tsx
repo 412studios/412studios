@@ -30,8 +30,8 @@ const CardTitle = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLHeadingElement>
 >(({ className, ...props }, ref) => (
-  <>
-    <span className="flex items-center justify-center">
+  <div className="flex">
+    <span className="flex items-center">
       <svg
         width="18"
         height="18"
@@ -52,10 +52,13 @@ const CardTitle = React.forwardRef<
     </span>
     <h2
       ref={ref}
-      className={cn("text-2xl font-bold tracking-tight", className)}
+      className={cn(
+        "text-2xl font-bold tracking-tight justify-end flex items-center",
+        className,
+      )}
       {...props}
     />
-  </>
+  </div>
 ));
 CardTitle.displayName = "CardTitle";
 

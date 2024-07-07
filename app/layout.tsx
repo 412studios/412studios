@@ -41,7 +41,6 @@ export default async function RootLayout({
 
   const { isAuthenticated, getUser } = getKindeServerSession();
   const isUserAuthenticated = await isAuthenticated(); // Await the promise
-
   const user = await getUser();
   return (
     <html lang="en">

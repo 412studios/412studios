@@ -258,20 +258,24 @@ export async function PostSubscriptionBooking(
   duration: number,
 ) {
   noStore();
-  //DATE FORMAT OPTIONS
+
+  // DATE FORMAT OPTIONS
   const formatDateToNumeric = (date: Date | undefined): string => {
     if (!date) return "";
-    const year = date.getFullYear().toString();
-    const month = (date.getMonth() + 1).toString().padStart(2, "0");
-    const day = date.getDate().toString().padStart(2, "0");
+    date.setUTCHours(0, 0, 0, 0); // Set the time to midnight UTC
+    const year = date.getUTCFullYear().toString();
+    const month = (date.getUTCMonth() + 1).toString().padStart(2, "0");
+    const day = date.getUTCDate().toString().padStart(2, "0");
     return year + month + day;
   };
-  //GET DETAILS
+
+  // GET DETAILS
   const { getUser } = getKindeServerSession();
   const user = await getUser();
   const roomId = input.room;
-  const date = input.date;
-  //CREATE BOOKING AND AUTO SET TO SUCCESS FOR PREPAID SUBSCRIPTION
+  const date = new Date(input.date); // Ensure the input date is a Date object
+
+  // CREATE BOOKING AND AUTO SET TO SUCCESS FOR PREPAID SUBSCRIPTION
   const bookingId: any = require("crypto").randomBytes(16).toString("hex");
   await prisma.bookings.create({
     data: {
@@ -292,14 +296,16 @@ export async function PostSubscriptionBooking(
       addDetails: "",
     },
   });
-  //FIND SUBSCRIPTION FOR THIS USER AND THIS ROOM
+
+  // FIND SUBSCRIPTION FOR THIS USER AND THIS ROOM
   const updatedSubscription = await prisma.subscription.findFirst({
     where: {
       userId: user?.id,
       roomId: parseInt(input.room),
     },
   });
-  //REMOVE HOURS FROM SUBSCRIPTION
+
+  // REMOVE HOURS FROM SUBSCRIPTION
   if (updatedSubscription) {
     await prisma.subscription.update({
       where: {
@@ -454,4 +460,91 @@ export async function getPricing() {
     },
   });
   return prices;
+}
+
+export async function getSubscriptions(id: number) {
+  noStore();
+
+  const data = await prisma.subscription.findMany({
+    where: {
+      roomId: id,
+    },
+    select: {
+      subscriptionId: true,
+      user: true,
+      status: true,
+      currentPeriodStart: true,
+      currentPeriodEnd: true,
+      createdAt: true,
+      updtedAt: true,
+      roomId: true,
+      availableHours: true,
+      userId: true,
+      weekMax: true,
+    },
+  });
+  return data;
+}
+
+export async function getBookingsWithUser() {
+  noStore();
+  const data = await prisma.bookings.findMany({
+    select: {
+      bookingId: true,
+      roomId: true,
+      date: true,
+      type: true,
+      startTime: true,
+      endTime: true,
+      userId: true,
+      status: true,
+      user: {
+        select: {
+          name: true,
+        },
+      },
+    },
+  });
+  return data;
+}
+
+export async function getSubscriptionsWithUser() {
+  const data = await prisma.subscription.findMany({
+    include: {
+      user: {
+        select: {
+          name: true,
+        },
+      },
+    },
+  });
+  return data;
+}
+
+export async function getSubscriptionWithUser(id: string) {
+  const data = await prisma.subscription.findUnique({
+    where: {
+      subscriptionId: id,
+    },
+    include: {
+      user: {
+        select: {
+          name: true,
+        },
+      },
+    },
+  });
+  return data;
+}
+
+export async function updateSubscription(id: string, hours: number) {
+  const updatedSubscription = await prisma.subscription.update({
+    where: {
+      subscriptionId: id,
+    },
+    data: {
+      availableHours: hours,
+    },
+  });
+  return updatedSubscription;
 }

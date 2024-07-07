@@ -46,8 +46,8 @@ export default async function Main() {
   const data = await getData(user?.id as string);
 
   return (
-    <main className="p-8">
-      <div className="mx-auto max-w-screen-lg">
+    <main className="pt-8">
+      <div className="mx-auto max-w-screen-xl">
         <Card>
           <CardHeader>
             <CardTitle>Admin Dashboard</CardTitle>
@@ -58,14 +58,29 @@ export default async function Main() {
               <CardDescription>{data?.email}</CardDescription>
             </div>
             <div className="p-4">
-              <Link href="/admin/bookings/0" className="w-full">
-                <Button className="w-full">View Booking Calendar</Button>
+              <Link href="/admin/users">
+                <span className="hover:bg-accent hover:text-accent-forground group flex items-center rounded-md px-3 py-2 text-sm font-medium">
+                  <Book className="text-primary mr-2 h-4 w-4" />
+                  <span>Users</span>
+                </span>
               </Link>
-              <Link href="/admin/pricing" className="w-full">
-                <Button className="w-full mt-4">Update Pricing</Button>
+              <Link href="/admin/subscriptions">
+                <span className="hover:bg-accent hover:text-accent-forground group flex items-center rounded-md px-3 py-2 text-sm font-medium">
+                  <Book className="text-primary mr-2 h-4 w-4" />
+                  <span>Subscriptions</span>
+                </span>
               </Link>
-              <Link href="/admin/users" className="w-full">
-                <Button className="w-full mt-4">View All Users</Button>
+              <Link href="/admin/bookings/">
+                <span className="hover:bg-accent hover:text-accent-forground group flex items-center rounded-md px-3 py-2 text-sm font-medium">
+                  <Book className="text-primary mr-2 h-4 w-4" />
+                  <span>Bookings</span>
+                </span>
+              </Link>
+              <Link href="/admin/pricing">
+                <span className="hover:bg-accent hover:text-accent-forground group flex items-center rounded-md px-3 py-2 text-sm font-medium">
+                  <Book className="text-primary mr-2 h-4 w-4" />
+                  <span>Update Pricing</span>
+                </span>
               </Link>
             </div>
           </CardContent>

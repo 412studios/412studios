@@ -21,7 +21,7 @@ export const PickTime = ({
 
   const isSubscribed = options.subRooms.includes(parseInt(options.room));
   const formattedDate = parseInt(formatDateToNumeric(options.date));
-  const timeArray = isSubscribed ? subscriptionTimeSlots : timeSlots;
+  const timeArray = timeSlots;
 
   useEffect(() => {
     const initialBookedTimes = Array.isArray(existingBookings)
@@ -41,31 +41,16 @@ export const PickTime = ({
           formattedDate,
           options.user,
         );
-        const checkSubWeek = await getSubWeek(
-          options.room,
-          formattedDate,
-          options.user,
-        );
         let arr: any[] = [];
         let setStart = 0;
         let setEnd = 0;
 
-        if (isSubscribed && checkSubWeek) {
-          setStart = 0;
-          setEnd = 3;
+        bookings.forEach((booking: any) => {
+          setStart = booking.startTime;
+          setEnd = booking.endTime;
           fillArrGaps(arr, setStart, setEnd);
-        } else {
-          bookings.forEach((booking: any) => {
-            if (isSubscribed) {
-              setStart = Math.floor(booking.startTime / 4);
-              setEnd = Math.floor((booking.endTime - 1) / 4);
-            } else {
-              setStart = booking.startTime;
-              setEnd = booking.endTime;
-            }
-            fillArrGaps(arr, setStart, setEnd);
-          });
-        }
+        });
+
         setExistingBookings(arr);
       } catch (error) {
         console.error("Failed to fetch bookings:", error);
@@ -105,22 +90,8 @@ export const PickTime = ({
         fullList.push(i);
       }
 
-      if (isSubscribed) {
-        fullList = [id];
-        const currentSubscription = options.subscription.find(
-          (item: any) => item.roomId === options.room,
-        );
-        if (currentSubscription) {
-          const checkHours =
-            currentSubscription.availableHours - fullList.length * 4;
-          if (checkHours <= -1) {
-            setWarning(true);
-            return prevSelList;
-          } else {
-            setWarning(false);
-          }
-        }
-      }
+      setWarning(false);
+
       handleTimePick(
         fullList[0],
         fullList[fullList.length - 1],
@@ -160,8 +131,7 @@ export const PickTime = ({
               <div
                 key={slot.id}
                 onClick={() => handleClick(slot.id)}
-                className={`my-1 rounded border-4 text-center hover:cursor-pointer
-                  ${isSubscribed ? "p-4" : "p-2"}
+                className={`my-1 rounded border-4 text-center hover:cursor-pointer p-2
                   ${
                     bookedTimes.includes(slot.id)
                       ? "bg-red-500"

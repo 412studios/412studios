@@ -25,10 +25,3 @@ npx prisma db push
 ```bash
 npx prisma studio
 ```
-
-TODO
-Auto select room from pricing
-Add value for last login to check active users
-
-- FIX ISSUE - SET DURATION IN PICKTIME INSTEAD OF SHOWDETAILS
-- ENSURE USER CANNOT PURCHASE SUB IF ALREADY EXISTS

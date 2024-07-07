@@ -9,11 +9,11 @@ import {
   Notebook,
   RefreshCw,
 } from "lucide-react";
+import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
 import { unstable_noStore as noStore } from "next/cache";
 import prisma from "@/app/lib/db";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
-
+import { stripe } from "../lib/stripe";
 import {
   Card,
   CardContent,
@@ -23,11 +23,51 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-async function getData(userId: string) {
+async function getData(user: any) {
   noStore();
+
+  //POPULATE USER DETAILS IF USER IS NEW
+  if (user) {
+    const checkUser = await prisma.user.findUnique({
+      where: {
+        id: user?.id,
+      },
+      select: {
+        id: true,
+        stripeCustomerId: true,
+      },
+    });
+
+    const name = `${user.given_name ?? ""} ${user.family_name ?? ""}`;
+    const email = `${user.email ?? ""}`;
+
+    if (!checkUser) {
+      await prisma.user.create({
+        data: {
+          id: user.id,
+          email: email,
+          name: name,
+        },
+      });
+    }
+
+    const data = await stripe.customers.create({
+      email: email,
+    });
+    await prisma.user.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        stripeCustomerId: data.id,
+      },
+    });
+  }
+
+  //RETURN USER DETAILS
   const data = await prisma.user.findUnique({
     where: {
-      id: userId,
+      id: user.id,
     },
     select: {
       name: true,
@@ -40,11 +80,12 @@ async function getData(userId: string) {
   return data;
 }
 
-async function getSubscription(userId: string) {
+async function getSubscription(user: any) {
   noStore();
+  //RETURN SUBSCRIPTION DETAILS
   const data = await prisma.subscription.findMany({
     where: {
-      userId: userId,
+      userId: user.id,
       OR: [
         {
           AND: [{ availableHours: { gt: 0 } }, { status: "cancelled" }],
@@ -63,13 +104,13 @@ async function getSubscription(userId: string) {
   return data;
 }
 
-export default async function Main() {
+export default async function Page() {
   noStore();
 
   const { getUser } = getKindeServerSession();
   const user = await getUser();
-  const data = await getData(user?.id as string);
-  const subData = await getSubscription(user?.id as string);
+  const data = await getData(user);
+  const subData = await getSubscription(user);
 
   return (
     <main className="pt-8">

@@ -5,8 +5,6 @@ export function LogoV(props: SVGProps<SVGSVGElement>) {
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 72 280.65"
-      width="auto"
-      height="auto"
       fill="currentColor"
       {...props}
     >

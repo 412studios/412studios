@@ -1,48 +1,34 @@
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 import { unstable_noStore as noStore } from "next/cache";
-import prisma from "@/app/lib/db";
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "@/components/ui/card";
-import { redirect } from "next/navigation";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import BookingsTable from "./bookingstable";
+import { getBookingsWithUser } from "@/app/lib/booking";
 
-async function getData() {
+export default async function Page() {
   noStore();
-  const users = await prisma.user.findMany();
-  return users;
-}
+  const bookings = await getBookingsWithUser();
 
-async function verifyUser(formData: FormData) {
-  "use server";
-  const id = formData.get("userId") as string;
-  await prisma.user.update({
-    where: {
-      id: id,
-    },
-    data: {
-      acceptedTerms: true,
-      verifyFormSubmitted: true,
-      isUserVerified: true,
-    },
-  });
-  redirect("/admin/verify");
-}
-
-export default async function Main() {
-  noStore();
-  const { getUser } = getKindeServerSession();
-  const user = await getUser();
-  const data = await getData();
   return (
-    <>
-      <Card className="p-4">
-        <CardHeader></CardHeader>
-        <CardContent>Select a room</CardContent>
-        <CardFooter></CardFooter>
-      </Card>
-    </>
+    <main className="pt-8">
+      <div className="mx-auto max-w-screen-xl">
+        <Card className="">
+          <CardHeader className="flex w-full justify-between">
+            <CardTitle>Bookings</CardTitle>
+            <span className="flex-end">
+              <Link href="/admin/bookings/create" className="mr-2">
+                <Button>Create</Button>
+              </Link>
+              <Link href="/admin/">
+                <Button>Back</Button>
+              </Link>
+            </span>
+          </CardHeader>
+          <CardContent>
+            <BookingsTable bookings={bookings} />
+          </CardContent>
+        </Card>
+      </div>
+    </main>
   );
 }

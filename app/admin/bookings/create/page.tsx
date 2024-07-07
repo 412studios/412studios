@@ -1,4 +1,6 @@
 "use client";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 import { useState, useEffect, useMemo } from "react";
 import { PickDate } from "./components/pickDate";
 import { PickTime } from "./components/pickTime";
@@ -93,36 +95,15 @@ export default function Page(data: any) {
     <main className="max-w-screen-xl mx-auto mt-8">
       {/* PICK A ROOM SECTION */}
       <Card className="mb-8">
-        <CardHeader>
-          <CardTitle>Booking Options</CardTitle>
+        <CardHeader className="flex w-full justify-between">
+          <CardTitle>Bookings</CardTitle>
+          <span className="flex-end">
+            <Link href="/admin/bookings/" className="mr-2">
+              <Button>Back</Button>
+            </Link>
+          </span>
         </CardHeader>
         <CardContent className="p-0">
-          <Accordion type="single" collapsible>
-            <AccordionItem value="item-1">
-              <AccordionTrigger>View Room Details</AccordionTrigger>
-              <AccordionContent className="p-0">
-                <RoomDetails data={data.prices} />
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
-
-          {/* DISPLAY SUBSCRIPTION DETAILS IF AVAILABLE */}
-          {options.subRooms.length >= 1 && (
-            <div className="border-b-4 p-4 bg-accent">
-              {options.subscription.map((element: any, index: number) => (
-                <div key={index} className="rounded flex flex-col font-bold">
-                  <span>
-                    Membership room: Room {data.prices[element.roomId].room}
-                  </span>
-                  <span>Membership Status: {element.status}</span>
-                  <span>
-                    Remaining Hours in Membership: {element.availableHours}
-                  </span>
-                </div>
-              ))}
-            </div>
-          )}
-
           <div className="w-fill border-b-4 p-4">
             <h2 className="text-2xl font-semibold leading-none font-forma tracking-wide text-primary mb-4">
               Select A Room

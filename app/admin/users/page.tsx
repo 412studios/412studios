@@ -2,77 +2,35 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { unstable_noStore as noStore } from "next/cache";
 import prisma from "@/app/lib/db";
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { redirect } from "next/navigation";
-import {
-  Table,
-  TableHeader,
-  TableRow,
-  TableBody,
-  TableHead,
-  TableCell,
-} from "@/components/ui/table";
+import UserTable from "./usertable";
 
-async function getData() {
+export default async function Page() {
   noStore();
+
   const users = await prisma.user.findMany();
-  return users;
-}
 
-async function verifyUser(formData: FormData) {
-  "use server";
-  const id = formData.get("userId") as string;
-  await prisma.user.update({
-    where: {
-      id: id,
-    },
-    data: {
-      acceptedTerms: true,
-      verifyFormSubmitted: true,
-      isUserVerified: true,
-    },
-  });
-  redirect("/admin/verify");
-}
-
-export default async function Main() {
-  noStore();
-
-  const { getUser } = getKindeServerSession();
-  const user = await getUser();
-  const data = await getData();
+  // Map the user data to include id, name, and email
+  const userData = users.map((user) => ({
+    id: user.id,
+    name: user.name ?? "",
+    email: user.email ?? "",
+  }));
 
   return (
-    <main className="p-8">
-      <div className="mx-auto max-w-screen-lg">
-        <div className="pb-8">
-          <Link href="/admin/">
-            <Button>Back</Button>
-          </Link>
-        </div>
-        <Card className="p-4">
-          <CardHeader>
+    <main className="pt-8">
+      <div className="mx-auto max-w-screen-xl">
+        <Card className="">
+          <CardHeader className="flex w-full justify-between">
             <CardTitle>Users</CardTitle>
+            <span className="flex-end">
+              <Link href="/admin/">
+                <Button>Back</Button>
+              </Link>
+            </span>
           </CardHeader>
           <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableCell>Name</TableCell>
-                  <TableCell>Email</TableCell>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {data.map((user, index) => (
-                  <TableRow key={index}>
-                    <TableCell>{user.name}</TableCell>
-                    <TableCell>{user.email}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+            <UserTable users={userData} />
           </CardContent>
         </Card>
       </div>

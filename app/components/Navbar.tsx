@@ -36,11 +36,11 @@ export async function Navbar() {
                 </>
               ) : (
                 <>
-                  <LoginLink className="">
+                  <RegisterLink className="">
                     <Button className="" variant="secondary">
                       Sign In
                     </Button>
-                  </LoginLink>
+                  </RegisterLink>
                 </>
               )}
             </div>
@@ -58,14 +58,14 @@ export async function Navbar() {
                 </>
               ) : (
                 <>
-                  <LoginLink className="mr-2">
+                  <RegisterLink className="mr-2">
                     <Button className="mr-1" variant="secondary">
                       Sign Up
                     </Button>
-                  </LoginLink>
-                  <RegisterLink>
-                    <Button>Log In</Button>
                   </RegisterLink>
+                  <LoginLink>
+                    <Button>Log In</Button>
+                  </LoginLink>
                 </>
               )}
             </div>

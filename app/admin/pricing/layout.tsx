@@ -16,6 +16,7 @@ import {
   TableRow,
   TableBody,
   TableCell,
+  TableHead,
 } from "@/components/ui/table";
 
 async function getPricing() {
@@ -46,21 +47,26 @@ export default async function Main() {
 
   return (
     <main className="p-8">
-      <div className="mx-auto max-w-screen-lg">
-        <Card className="mx-auto mt-4 max-w-screen-lg">
+      <div className="mx-auto max-w-screen-xl">
+        <Card>
           <form action={submit}>
-            <CardHeader>
+            <CardHeader className="flex w-full justify-between">
               <CardTitle>Update Pricing</CardTitle>
+              <span className="flex-end">
+                <Link href="/admin/">
+                  <Button>Back</Button>
+                </Link>
+              </span>
             </CardHeader>
             <CardContent>
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableCell>Room</TableCell>
-                    <TableCell>Day Rate</TableCell>
-                    <TableCell>Hourly Rate</TableCell>
-                    <TableCell>Subscription Rate</TableCell>
-                    <TableCell>Engineer Fee</TableCell>
+                    <TableHead>Room</TableHead>
+                    <TableHead>Day Rate</TableHead>
+                    <TableHead>Hourly Rate</TableHead>
+                    <TableHead>Subscription Rate</TableHead>
+                    <TableHead>Engineer Fee</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
