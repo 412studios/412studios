@@ -21,7 +21,7 @@ export default async function Page() {
   return (
     <div className="pt-8">
       <div className="pt-0 pb-4">
-        <p className="text-4xl font-semibold leading-none font-forma tracking-wide text-primary">
+        <p className="text-4xl font-semibold leading-none tracking-wide text-primary">
           Pricing Options
         </p>
       </div>
@@ -92,7 +92,7 @@ export default async function Page() {
       </div>
       <div className="mt-8">
         <div className="">
-          <p className="text-4xl font-semibold leading-none font-forma tracking-wide text-primary mb-4">
+          <p className="text-4xl font-semibold leading-none tracking-wide text-primary mb-4">
             Equipment Details
           </p>
         </div>

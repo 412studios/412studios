@@ -177,6 +177,7 @@ export async function PostSubscription(input: any, price: number) {
   // Calculate the final price including Canadian tax
   const CANADIAN_TAX_RATE = 0.13;
   const priceWithTax = Math.round(price * (1 + CANADIAN_TAX_RATE));
+  console.log(priceWithTax);
 
   const formatDateToNumeric = (date: Date | undefined): string => {
     if (!date) return "";

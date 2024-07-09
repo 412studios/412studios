@@ -43,7 +43,7 @@ export const getStripeSession = async ({
     },
     success_url: `${domainUrl}/pricing/success/${bookingId}`,
     cancel_url: `${domainUrl}/pricing/cancel/${bookingId}`,
-    automatic_tax: { enabled: true },
+    automatic_tax: { enabled: false },
   });
   return session.url as string;
 };
@@ -74,9 +74,9 @@ export const createStripeSubscription = async ({
             name: "412 Studios Membership",
             metadata: { bookingId },
           },
-          unit_amount: taxedAmount,
-          tax_behavior: "exclusive",
+          unit_amount: unitAmount, // Pass the price with tax included
           recurring: { interval: "month" },
+          tax_behavior: "inclusive",
         },
         quantity: 1,
       },
@@ -86,6 +86,7 @@ export const createStripeSubscription = async ({
       address: "auto",
       name: "auto",
     },
+    automatic_tax: { enabled: false }, // Ensure automatic tax is disabled
     success_url: `${domainUrl}/pricing/success/${bookingId}`,
     cancel_url: `${domainUrl}/pricing/cancel/${bookingId}`,
   });
