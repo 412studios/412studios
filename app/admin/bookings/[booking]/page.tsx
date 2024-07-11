@@ -140,11 +140,23 @@ export default async function Page(id: any) {
                     </TableRow>
                     <TableRow>
                       <TableCell>Engineer Total</TableCell>
-                      <TableCell>{booking?.engineerTotal}</TableCell>
+                      <TableCell>
+                        {booking?.engineerTotal === -1 ? (
+                          <>NA</>
+                        ) : (
+                          <>{booking?.engineerTotal}</>
+                        )}
+                      </TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell>Engineer Start</TableCell>
-                      <TableCell>{booking?.engineerStart}</TableCell>
+                      <TableCell>
+                        {booking?.engineerStart === -1 ? (
+                          <>NA</>
+                        ) : (
+                          <>{booking?.engineerStart}</>
+                        )}
+                      </TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell>Engineer Status</TableCell>

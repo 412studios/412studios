@@ -120,6 +120,13 @@ export async function PostBooking(input: any, price: number) {
   const endTime = input.endTime;
   const duration = input.duration;
 
+  let engineerTotal = input.endTime;
+  let engineerStart = input.duration;
+  if (input.engDuration == -1) {
+    engineerTotal = -1;
+    engineerStart = -1;
+  }
+
   let rate = "hour";
   let priceId = process.env.STRIPE_PRICE_ID_STANDARD_BOOKING as string;
 
@@ -137,8 +144,8 @@ export async function PostBooking(input: any, price: number) {
       status: "pending",
       stripeProductId: priceId,
       totalHours: duration,
-      engineerTotal: input.engDuration,
-      engineerStart: input.engStart,
+      engineerTotal: engineerTotal,
+      engineerStart: engineerStart,
       engineerStatus: "pending",
       totalPrice: price,
       addDetails: "",

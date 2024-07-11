@@ -8,7 +8,6 @@ import { getBookingsWithUser } from "@/app/lib/booking";
 export default async function Page() {
   noStore();
   const bookings = await getBookingsWithUser();
-
   return (
     <main className="pt-8">
       <div className="mx-auto max-w-screen-xl">

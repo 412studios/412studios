@@ -149,6 +149,8 @@ export const ShowDetails = ({
     }
   };
 
+  console.log(options);
+
   return (
     <div>
       {/* GLOBAL LOADING VARIABLE */}
@@ -172,8 +174,8 @@ export const ShowDetails = ({
                   <CardTitle>Subscription Details</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <Table className="rounded-[8px] overflow-hidden">
-                    <TableBody>
+                  <Table className="rounded-[8px] overflow-hidden border-t-0">
+                    <TableBody className="border-t-0">
                       <TableRow>
                         <TableCell>
                           <strong>Room</strong>
@@ -329,8 +331,8 @@ export const ShowDetails = ({
                   <CardTitle>Booking Details</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <Table className="rounded-[8px] overflow-hidden">
-                    <TableBody>
+                  <Table className="rounded-[8px] overflow-hidden border-0">
+                    <TableBody className="border-t-0">
                       <TableRow>
                         <TableCell>
                           <strong>Room</strong>

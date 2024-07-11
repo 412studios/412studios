@@ -13,15 +13,27 @@ export default async function PageSuccess(context: any) {
     },
   });
   if (successfulBooking) {
-    await prisma.bookings.update({
-      where: {
-        bookingId: context.params.id,
-      },
-      data: {
-        status: "success",
-        engineerStatus: "success",
-      },
-    });
+    if (successfulBooking.engineerTotal > -1) {
+      await prisma.bookings.update({
+        where: {
+          bookingId: context.params.id,
+        },
+        data: {
+          status: "success",
+          engineerStatus: "success",
+        },
+      });
+    } else {
+      await prisma.bookings.update({
+        where: {
+          bookingId: context.params.id,
+        },
+        data: {
+          status: "success",
+          engineerStatus: "cancelled",
+        },
+      });
+    }
 
     const duration =
       successfulBooking.endTime + 1 - successfulBooking.startTime;
