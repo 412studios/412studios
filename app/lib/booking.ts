@@ -130,6 +130,10 @@ export async function PostBooking(input: any, price: number) {
   let rate = "hour";
   let priceId = process.env.STRIPE_PRICE_ID_STANDARD_BOOKING as string;
 
+  // Calculate the final price including Canadian tax
+  const CANADIAN_TAX_RATE = 0.13;
+  const priceWithTax = Math.round(price * (1 + CANADIAN_TAX_RATE));
+
   //HANDLE DB UPDATE
   const bookingId: any = require("crypto").randomBytes(16).toString("hex");
   await prisma.bookings.create({
@@ -147,7 +151,7 @@ export async function PostBooking(input: any, price: number) {
       engineerTotal: engineerTotal,
       engineerStart: engineerStart,
       engineerStatus: "pending",
-      totalPrice: price,
+      totalPrice: priceWithTax,
       addDetails: "",
     },
   });
@@ -173,7 +177,7 @@ export async function PostBooking(input: any, price: number) {
         : "http://localhost:3000",
     priceId: priceId,
     bookingId: bookingId,
-    unit_amount: price,
+    unit_amount: priceWithTax,
   });
   return redirect(subscriptionUrl);
 }
@@ -184,7 +188,6 @@ export async function PostSubscription(input: any, price: number) {
   // Calculate the final price including Canadian tax
   const CANADIAN_TAX_RATE = 0.13;
   const priceWithTax = Math.round(price * (1 + CANADIAN_TAX_RATE));
-  console.log(priceWithTax);
 
   const formatDateToNumeric = (date: Date | undefined): string => {
     if (!date) return "";
@@ -334,7 +337,7 @@ export async function PostSubscriptionBookingWithPurchase(
   startTime: number,
   endTime: number,
   duration: number,
-  total: number,
+  price: number,
 ) {
   noStore();
   //DATE FORMAT OPTIONS
@@ -350,6 +353,10 @@ export async function PostSubscriptionBookingWithPurchase(
   const user = await getUser();
   const roomId = input.room;
   const date = input.date;
+
+  const CANADIAN_TAX_RATE = 0.13;
+  const priceWithTax = Math.round(price * (1 + CANADIAN_TAX_RATE));
+
   //CREATE BOOKING PENDING ENGINEER PAYMENT
   const bookingId: any = require("crypto").randomBytes(16).toString("hex");
   await prisma.bookings.create({
@@ -364,7 +371,7 @@ export async function PostSubscriptionBookingWithPurchase(
       status: "pending",
       stripeProductId: "none",
       totalHours: duration,
-      totalPrice: total,
+      totalPrice: priceWithTax,
       engineerTotal: input.engDuration,
       engineerStart: input.engStart,
       engineerStatus: "pending",
@@ -393,7 +400,7 @@ export async function PostSubscriptionBookingWithPurchase(
         : "http://localhost:3000",
     priceId: priceId,
     bookingId: bookingId,
-    unit_amount: total,
+    unit_amount: priceWithTax,
   });
   return redirect(subscriptionUrl);
 }
