@@ -66,11 +66,12 @@ export default async function Page() {
                     Membership Pricing
                   </h3>
                   <CardDescription>
-                    Monthly membership price:{" "}
+                    Monthly membership Price: $
                     {prices[element.id].subscriptionPrice}
                   </CardDescription>
                   <CardDescription>
-                    Includes four four-hour sessions every month.
+                    Includes four X four hour sessions (16 hours total) every
+                    month.
                   </CardDescription>
 
                   <div className="mt-4">

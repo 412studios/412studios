@@ -59,7 +59,7 @@ export function Services() {
                       <Carousel3Item key={index}>
                         <div className="p-4 h-full">
                           <Card>
-                            <div className="flex items-center justify-left p-6 h-64 bg-primary text-background font-forma text-4xl font-semibold leading-none font-forma tracking-wide">
+                            <div className="flex items-center justify-left p-6 h-64 bg-primary text-background font-forma md:text-4xl text-xl font-semibold leading-8 font-forma tracking-wide">
                               {service.title}
                             </div>
                             <div className="flex items-center justify-left p-6 h-32">

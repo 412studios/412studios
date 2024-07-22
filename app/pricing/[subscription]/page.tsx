@@ -84,11 +84,11 @@ export default function Page(context: any) {
               className="mx-auto mb-8 w-full max-w-screen-md rounded-xl"
             />
             <CardDescription>
-              Monthly Membership price:{" "}
+              Monthly Membership Price: $
               {prices[context.params.subscription].subscriptionPrice}.00
             </CardDescription>
             <CardDescription className="mb-4">
-              Includes four X four sessions every month.
+              Includes four X four hour sessions (16 hours total) every month.
             </CardDescription>
             {userHasSub == false ? (
               <div className="w-full">
