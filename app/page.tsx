@@ -1,7 +1,12 @@
 "use client";
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { LoginLink } from "@kinde-oss/kinde-auth-nextjs/components";
+import { Services } from "@/app/components/servicesCarousel";
+import { OurStudios } from "@/app/components/ourStudios";
+import { useUser } from "./components/UserContext";
+import { ChevronLast } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -9,9 +14,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Services } from "@/app/components/servicesCarousel";
-import { useUser } from "./components/UserContext";
-import { ChevronLast } from "lucide-react";
 import {
   Carousel,
   CarouselContent,
@@ -25,12 +27,16 @@ export default function Home() {
 
   return (
     <main className="max-w-screen-xl mx-auto" id="home">
-      {/* BANNER   */}
-      <section
-        className="h-[100vh] w-full mt-[15px] relative pb-[15px] overflow-hidden"
-        style={{ height: "calc(100vh - 140px)" }}
-      >
-        <div className="bg-[url('/images/studio-a.jpg')] bg-cover bg-center h-full w-fill rounded-xl relative"></div>
+      {/* BANNER */}
+      <section className="w-full mt-[15px] relative pb-[15px] overflow-hidden">
+        <div className="w-full rounded-xl relative overflow-hidden aspect-video">
+          <Image
+            src="/images/studio-a.jpg"
+            alt="banner"
+            height="6186"
+            width="9279"
+          />
+        </div>
       </section>
 
       <section className="mt-4" id="about">
@@ -47,139 +53,7 @@ export default function Home() {
         </Card>
       </section>
 
-      <section className="mt-8">
-        <Card>
-          <CardHeader>
-            <CardTitle>Our Studios</CardTitle>
-          </CardHeader>
-          <CardContent className="p-0">
-            <div className="p-4 border-b-4">
-              <p>
-                A state-of-the-art recording space equipped with modern
-                acoustics.
-              </p>
-            </div>
-            {/* DESKTOP ONLY */}
-            <div className="hidden lg:block">
-              <div className="grid grid-cols-1 lg:grid-cols-3">
-                <div>
-                  <h3 className="text-2xl font-bold tracking-tight p-4">
-                    Studio A
-                  </h3>
-                  <div className="border-b-4 border-t-4 w-full h-64 bg-[url('/images/studio-a.jpg')] bg-cover bg-center"></div>
-                  <div className="p-4">
-                    <>
-                      {isAuthenticated ? (
-                        <Link href="/booking" className="w-full">
-                          <Button className="w-full">Book Now</Button>
-                        </Link>
-                      ) : (
-                        <LoginLink className="w-full">
-                          <Button className="w-full">Book Now</Button>
-                        </LoginLink>
-                      )}
-                    </>
-                  </div>
-                </div>
-                <div className="border-l-0 border-r-0 border-t-4 border-b-4 lg:border-l-4 lg:border-r-4 lg:border-t-0 lg:border-b-0">
-                  <h3 className="text-2xl font-bold tracking-tight p-4">
-                    Studio B
-                  </h3>
-                  <div className="border-b-4 border-t-4 w-full h-64 bg-[url('/images/studio-b.jpg')] bg-cover bg-center"></div>
-                  <div className="p-4">
-                    <>
-                      {isAuthenticated ? (
-                        <Link href="/booking" className="w-full">
-                          <Button className="w-full">Book Now</Button>
-                        </Link>
-                      ) : (
-                        <LoginLink className="w-full">
-                          <Button className="w-full">Book Now</Button>
-                        </LoginLink>
-                      )}
-                    </>
-                  </div>
-                </div>
-                <div>
-                  <h3 className="text-2xl font-bold tracking-tight p-4">
-                    Studio C
-                  </h3>
-                  <div className="border-b-4 border-t-4 w-full h-64 bg-[url('/images/studio-c.jpg')] bg-cover bg-center"></div>
-                  <div className="p-4">
-                    <>
-                      {isAuthenticated ? (
-                        <Link href="/booking" className="w-full">
-                          <Button className="w-full">Book Now</Button>
-                        </Link>
-                      ) : (
-                        <LoginLink className="w-full">
-                          <Button className="w-full">Book Now</Button>
-                        </LoginLink>
-                      )}
-                    </>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* MOBILE ONLY */}
-            <div className="block lg:hidden">
-              <Carousel className="w-full p-2 py-4">
-                <CarouselContent className="border-0">
-                  <CarouselItem>
-                    <div>
-                      <h3 className="text-2xl font-bold tracking-tight p-4 pt-0 text-center">
-                        Studio A
-                      </h3>
-                      <Card className="w-full">
-                        <CardContent className="rounded-[8px] flex items-center justify-center p-6 w-full min-h-[300px] bg-[url('/images/studio-a.jpg')] bg-cover bg-center"></CardContent>
-                      </Card>
-                      <Link href="/booking" className="w-full">
-                        <Button className="mt-4 w-full">Book Now</Button>
-                      </Link>
-                    </div>
-                  </CarouselItem>
-                  <CarouselItem>
-                    <div>
-                      <h3 className="text-2xl font-bold tracking-tight p-4 pt-0 text-center">
-                        Studio B
-                      </h3>
-                      <Card className="w-full">
-                        <CardContent className="rounded-[8px] flex items-center justify-center p-6 w-full min-h-[300px] bg-[url('/images/studio-b.jpg')] bg-cover bg-center"></CardContent>
-                      </Card>
-                      <Link href="/booking" className="w-full">
-                        <Button className="mt-4 w-full">Book Now</Button>
-                      </Link>
-                    </div>
-                  </CarouselItem>
-                  <CarouselItem>
-                    <div>
-                      <h3 className="text-2xl font-bold tracking-tight p-4 pt-0 text-center">
-                        Studio C
-                      </h3>
-                      <Card className="w-full">
-                        <CardContent className="rounded-[8px] flex items-center justify-center p-6 w-full min-h-[300px] bg-[url('/images/studio-c.jpg')] bg-cover bg-center"></CardContent>
-                      </Card>
-                      <Link href="/booking" className="w-full">
-                        <Button className="mt-4 w-full">Book Now</Button>
-                      </Link>
-                    </div>
-                  </CarouselItem>
-                </CarouselContent>
-                <CarouselPrevious className="ml-3" />
-                <CarouselNext className="mr-3" />
-              </Carousel>
-            </div>
-          </CardContent>
-          <CardFooter className="p-0">
-            <Link href="/pricing" className="w-full rounded-none">
-              <Button variant="ghost" className="w-full rounded-none">
-                Pricing Options
-              </Button>
-            </Link>
-          </CardFooter>
-        </Card>
-      </section>
+      <OurStudios auth={isAuthenticated} />
 
       <Services />
 
