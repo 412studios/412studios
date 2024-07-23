@@ -45,10 +45,10 @@ export default async function Page() {
                     Hourly Pricing
                   </h3>
                   <CardDescription>
-                    Daily Rate: {prices[element.id].dayRate}
+                    Daily Rate: ${prices[element.id].dayRate}.00
                   </CardDescription>
                   <CardDescription>
-                    Hourly Rate: {prices[element.id].hourlyRate}
+                    Hourly Rate: ${prices[element.id].hourlyRate}.00
                   </CardDescription>
                   <div className="mt-4">
                     {loggedIn ? (
@@ -70,8 +70,7 @@ export default async function Page() {
                     {prices[element.id].subscriptionPrice}
                   </CardDescription>
                   <CardDescription>
-                    Includes four X four hour sessions (16 hours total) every
-                    month.
+                    Includes 4 X 4 hour sessions (16 hours total) every month.
                   </CardDescription>
 
                   <div className="mt-4">
