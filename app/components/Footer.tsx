@@ -3,7 +3,7 @@ import { LogoV } from "@/public/icons/logo-v";
 
 export function Footer() {
   return (
-    <footer className="mt-8 max-w-screen-xl w-full border-0 border-b-0 mx-auto rounded-t-xl bg-primary text-background">
+    <footer className="max-w-screen-xl w-full border-0 border-b-0 mx-auto rounded-t-xl bg-primary text-background">
       {/* FOOTER TITLE */}
       <div className="flex p-4 pb-3 border-b-4 border-background card-title text-background align-middle">
         <svg

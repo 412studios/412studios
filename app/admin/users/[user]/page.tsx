@@ -31,12 +31,12 @@ export default async function Page(props: any) {
   });
 
   return (
-    <main className="pt-8 max-w-screen-xl mx-auto">
+    <>
       <BookingTable
         user={userDetails}
         subs={userSubs}
         bookings={userBookings}
       />
-    </main>
+    </>
   );
 }

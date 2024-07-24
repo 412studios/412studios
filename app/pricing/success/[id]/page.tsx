@@ -73,7 +73,7 @@ export default async function PageSuccess(context: any) {
   }
 
   return (
-    <main className="m-4">
+    <>
       <div className="flex min-h-[80vh] w-full items-center justify-center">
         <Card className="w-[350px]">
           <div className="p-6">
@@ -93,6 +93,6 @@ export default async function PageSuccess(context: any) {
           </div>
         </Card>
       </div>
-    </main>
+    </>
   );
 }

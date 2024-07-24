@@ -50,8 +50,8 @@ export default function Page(context: any) {
   }, [context.params.subscription]);
 
   return (
-    <main className="">
-      <div className="flex gap-4 my-4">
+    <>
+      <div className="flex gap-4 mb-8">
         <div className="w-full">
           <Link href="/pricing/0" className="w-full">
             <Button className="w-full">Room A</Button>
@@ -127,6 +127,6 @@ export default function Page(context: any) {
           </CardFooter>
         </Card>
       </div>
-    </main>
+    </>
   );
 }

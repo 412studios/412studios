@@ -26,9 +26,9 @@ export default function Home() {
   const { isAuthenticated, user } = useUser();
 
   return (
-    <main className="max-w-screen-xl mx-auto" id="home">
+    <main id="home">
       {/* BANNER */}
-      <section className="w-full mt-[15px] relative pb-[15px] overflow-hidden">
+      <section className="w-full relative overflow-hidden">
         <div className="w-full rounded-xl relative overflow-hidden aspect-video">
           <Image
             src="/images/studio-a.jpg"
@@ -39,7 +39,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="mt-4" id="about">
+      <section className="mt-8" id="about">
         <Card>
           <CardHeader>
             <CardTitle>About 412 Studios</CardTitle>

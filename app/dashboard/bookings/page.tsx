@@ -64,53 +64,51 @@ export default async function SettingsPage() {
   const rooms = ["A", "B", "C"];
 
   return (
-    <main className="p-8">
-      <div className="mx-auto max-w-screen-lg">
-        <Link href="/dashboard">
-          <Button className="mb-8">Back</Button>
-        </Link>
-        <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <CardTitle>Upcoming Bookings</CardTitle>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Room</TableHead>
-                  <TableHead>Date</TableHead>
-                  <TableHead>Start Time</TableHead>
-                  <TableHead>End Time</TableHead>
-                  {/* <TableHead>Total</TableHead> */}
+    <>
+      <Link href="/dashboard">
+        <Button className="mb-8">Back</Button>
+      </Link>
+      <Card>
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <CardTitle>Upcoming Bookings</CardTitle>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Room</TableHead>
+                <TableHead>Date</TableHead>
+                <TableHead>Start Time</TableHead>
+                <TableHead>End Time</TableHead>
+                {/* <TableHead>Total</TableHead> */}
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {bookings.map((booking, index) => (
+                <TableRow key={index}>
+                  <TableCell>Studio {rooms[booking.roomId]}</TableCell>
+                  <TableCell>
+                    {numericToDate(booking.date.toString())}
+                  </TableCell>
+                  <TableCell>
+                    {fromatTime(
+                      parseInt(timeSlots[booking.startTime].startTime),
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {fromatTime(
+                      parseInt(timeSlots[booking.endTime].startTime) + 1,
+                    )}
+                  </TableCell>
+                  {/* <TableCell>$ {booking.totalPrice}.00</TableCell> */}
                 </TableRow>
-              </TableHeader>
-              <TableBody>
-                {bookings.map((booking, index) => (
-                  <TableRow key={index}>
-                    <TableCell>Studio {rooms[booking.roomId]}</TableCell>
-                    <TableCell>
-                      {numericToDate(booking.date.toString())}
-                    </TableCell>
-                    <TableCell>
-                      {fromatTime(
-                        parseInt(timeSlots[booking.startTime].startTime),
-                      )}
-                    </TableCell>
-                    <TableCell>
-                      {fromatTime(
-                        parseInt(timeSlots[booking.endTime].startTime) + 1,
-                      )}
-                    </TableCell>
-                    {/* <TableCell>$ {booking.totalPrice}.00</TableCell> */}
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
-      </div>
-    </main>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+    </>
   );
 }

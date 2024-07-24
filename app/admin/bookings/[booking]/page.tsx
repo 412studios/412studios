@@ -70,108 +70,96 @@ export default async function Page(id: any) {
   }
 
   return (
-    <main className="pt-8">
-      <div className="mx-auto max-w-screen-xl">
-        <Card className="">
-          <CardHeader className="flex w-full justify-between">
-            <CardTitle>Bookings</CardTitle>
-            <span className="flex-end">
-              <Link href="/admin/">
-                <Button>Back</Button>
-              </Link>
-            </span>
-          </CardHeader>
-          <CardContent>
-            <form action={submit}>
-              <div className="space-y-4">
-                <Table className="h-[40vh]">
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Field</TableHead>
-                      <TableHead>Value</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    <TableRow>
-                      <TableCell>Room</TableCell>
-                      <TableCell>
-                        {booking ? roomName[booking?.roomId] : <></>}
-                      </TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>Date</TableCell>
-                      <TableCell>
-                        {booking ? (
-                          numericToDate(booking?.date.toString())
-                        ) : (
-                          <></>
-                        )}
-                      </TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>Start Time</TableCell>
-                      <TableCell>
-                        {booking ? (
-                          timeSlots[booking.startTime].displayStart
-                        ) : (
-                          <></>
-                        )}
-                      </TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>End Time</TableCell>
-                      <TableCell>
-                        {booking ? (
-                          timeSlots[booking.endTime].displayEnd
-                        ) : (
-                          <></>
-                        )}
-                      </TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>Status</TableCell>
-                      <TableCell>{booking?.status}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>Total Price</TableCell>
-                      <TableCell>
-                        {booking ? formatPrice(booking?.totalPrice) : <></>}
-                      </TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>Engineer Total</TableCell>
-                      <TableCell>
-                        {booking?.engineerTotal === -1 ? (
-                          <>NA</>
-                        ) : (
-                          <>{booking?.engineerTotal}</>
-                        )}
-                      </TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>Engineer Start</TableCell>
-                      <TableCell>
-                        {booking?.engineerStart === -1 ? (
-                          <>NA</>
-                        ) : (
-                          <>{booking?.engineerStart}</>
-                        )}
-                      </TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>Engineer Status</TableCell>
-                      <TableCell>{booking?.engineerStatus}</TableCell>
-                    </TableRow>
-                  </TableBody>
-                </Table>
-                <Button type="submit" className="mt-4 w-full">
-                  Delete Booking
-                </Button>
-              </div>
-            </form>
-          </CardContent>
-        </Card>
-      </div>
-    </main>
+    <Card>
+      <CardHeader className="flex w-full justify-between">
+        <CardTitle>Bookings</CardTitle>
+        <span className="flex-end">
+          <Link href="/admin/">
+            <Button>Back</Button>
+          </Link>
+        </span>
+      </CardHeader>
+      <CardContent>
+        <form action={submit}>
+          <div className="space-y-4">
+            <Table className="h-[40vh]">
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Field</TableHead>
+                  <TableHead>Value</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                <TableRow>
+                  <TableCell>Room</TableCell>
+                  <TableCell>
+                    {booking ? roomName[booking?.roomId] : <></>}
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Date</TableCell>
+                  <TableCell>
+                    {booking ? numericToDate(booking?.date.toString()) : <></>}
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Start Time</TableCell>
+                  <TableCell>
+                    {booking ? (
+                      timeSlots[booking.startTime].displayStart
+                    ) : (
+                      <></>
+                    )}
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>End Time</TableCell>
+                  <TableCell>
+                    {booking ? timeSlots[booking.endTime].displayEnd : <></>}
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Status</TableCell>
+                  <TableCell>{booking?.status}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Total Price</TableCell>
+                  <TableCell>
+                    {booking ? formatPrice(booking?.totalPrice) : <></>}
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Engineer Total</TableCell>
+                  <TableCell>
+                    {booking?.engineerTotal === -1 ? (
+                      <>NA</>
+                    ) : (
+                      <>{booking?.engineerTotal}</>
+                    )}
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Engineer Start</TableCell>
+                  <TableCell>
+                    {booking?.engineerStart === -1 ? (
+                      <>NA</>
+                    ) : (
+                      <>{booking?.engineerStart}</>
+                    )}
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Engineer Status</TableCell>
+                  <TableCell>{booking?.engineerStatus}</TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+            <Button type="submit" className="mt-4 w-full">
+              Delete Booking
+            </Button>
+          </div>
+        </form>
+      </CardContent>
+    </Card>
   );
 }

@@ -54,14 +54,10 @@ export default async function SettingsPage() {
   }
 
   return (
-    <main className="m-4">
-      <div className="mx-auto grid max-w-4xl items-start gap-2 p-4">
-        <Card className="mt-4">
-          <form action={handleSubmit}>
-            <VerificationForm data={userData} />
-          </form>
-        </Card>
-      </div>
-    </main>
+    <Card>
+      <form action={handleSubmit}>
+        <VerificationForm data={userData} />
+      </form>
+    </Card>
   );
 }

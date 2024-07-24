@@ -92,7 +92,7 @@ export default function Page(data: any) {
   }
 
   return (
-    <main className="max-w-screen-xl mx-auto mt-8">
+    <>
       {/* PICK A ROOM SECTION */}
       <Card className="mb-8">
         <CardHeader className="flex w-full justify-between">
@@ -164,6 +164,6 @@ export default function Page(data: any) {
         options={options}
         prices={data.prices}
       />
-    </main>
+    </>
   );
 }

@@ -9,23 +9,19 @@ export default async function Page() {
 
   return (
     <>
-      <main className="pt-8">
-        <div className="mx-auto max-w-screen-xl">
-          <Card>
-            <CardHeader className="flex w-full justify-between">
-              <CardTitle>Subscriptions</CardTitle>
-              <span className="flex-end">
-                <Link href="/admin/">
-                  <Button>Back</Button>
-                </Link>
-              </span>
-            </CardHeader>
-            <CardContent>
-              <SubTable subscriptions={subscriptions} />
-            </CardContent>
-          </Card>
-        </div>
-      </main>
+      <Card>
+        <CardHeader className="flex w-full justify-between">
+          <CardTitle>Subscriptions</CardTitle>
+          <span className="flex-end">
+            <Link href="/admin/">
+              <Button>Back</Button>
+            </Link>
+          </span>
+        </CardHeader>
+        <CardContent>
+          <SubTable subscriptions={subscriptions} />
+        </CardContent>
+      </Card>
     </>
   );
 }

@@ -18,7 +18,7 @@ export default async function PricingLayout({
     return redirect("/");
   }
   return (
-    <Page prices={prices} params={params} className="mx-auto max-w-screen-xl">
+    <Page prices={prices} params={params}>
       {children}
     </Page>
   );

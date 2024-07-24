@@ -47,53 +47,51 @@ export default async function SettingsPage() {
   }
 
   return (
-    <main className="py-4">
-      <Card className="mx-auto mt-4 max-w-screen-xl">
-        <form action={postData}>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <CardTitle>Profile Details</CardTitle>
+    <Card>
+      <form action={postData}>
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <CardTitle>Profile Details</CardTitle>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="spac-y-2">
+            <div className="spac-y-1">
+              <Label className="px-3">Name</Label>
+              <Input
+                name="name"
+                type="text"
+                id="name"
+                className="mt-2"
+                placeholder="Your Name"
+                defaultValue={data?.name ?? undefined}
+                disabled
+              />
             </div>
-          </CardHeader>
-          <CardContent>
-            <div className="spac-y-2">
-              <div className="spac-y-1">
-                <Label className="px-3">Name</Label>
-                <Input
-                  name="name"
-                  type="text"
-                  id="name"
-                  className="mt-2"
-                  placeholder="Your Name"
-                  defaultValue={data?.name ?? undefined}
-                  disabled
-                />
-              </div>
 
-              <div className="spac-y-1 mt-2">
-                <Label className="px-3">Email</Label>
-                <Input
-                  name="email"
-                  type="text"
-                  id="email"
-                  className="mt-2"
-                  placeholder="Your Email"
-                  defaultValue={data?.email ?? undefined}
-                  disabled
-                />
-              </div>
+            <div className="spac-y-1 mt-2">
+              <Label className="px-3">Email</Label>
+              <Input
+                name="email"
+                type="text"
+                id="email"
+                className="mt-2"
+                placeholder="Your Email"
+                defaultValue={data?.email ?? undefined}
+                disabled
+              />
             </div>
-          </CardContent>
-          <CardFooter>
-            <div className="flex w-full items-center justify-between">
-              <Button>Submit</Button>
-              <Link href="/dashboard">
-                <Button>Back</Button>
-              </Link>
-            </div>
-          </CardFooter>
-        </form>
-      </Card>
-    </main>
+          </div>
+        </CardContent>
+        <CardFooter>
+          <div className="flex w-full items-center justify-between">
+            <Button>Submit</Button>
+            <Link href="/dashboard">
+              <Button>Back</Button>
+            </Link>
+          </div>
+        </CardFooter>
+      </form>
+    </Card>
   );
 }

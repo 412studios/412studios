@@ -74,26 +74,22 @@ async function getSubscription(userId: string) {
 export default async function Main() {
   noStore();
   return (
-    <main className="p-8">
-      <div className="mx-auto max-w-screen-lg rounded-lg">
-        <Card className="w-[350px] mx-auto">
-          <div className="p-6">
-            <div className="flex w-full justify-center">
-              <Check className="h-12 w-12 rounded-full bg-green-500/30 p-2 text-green-500" />
-            </div>
-            <div className="mt-3 w-full text-center sm:mt-5">
-              <h3 className="text-lg font-medium leading-6">
-                Your subscription has been cancelled
-              </h3>
-              <div className="mt-5 w-full sm:mt-6">
-                <Button className="w-full" asChild>
-                  <Link href="/dashboard">Go to dashboard</Link>
-                </Button>
-              </div>
-            </div>
+    <Card className="w-[350px] mx-auto">
+      <div className="p-6">
+        <div className="flex w-full justify-center">
+          <Check className="h-12 w-12 rounded-full bg-green-500/30 p-2 text-green-500" />
+        </div>
+        <div className="mt-3 w-full text-center sm:mt-5">
+          <h3 className="text-lg font-medium leading-6">
+            Your subscription has been cancelled
+          </h3>
+          <div className="mt-5 w-full sm:mt-6">
+            <Button className="w-full" asChild>
+              <Link href="/dashboard">Go to dashboard</Link>
+            </Button>
           </div>
-        </Card>
+        </div>
       </div>
-    </main>
+    </Card>
   );
 }

@@ -46,47 +46,45 @@ export default async function Main() {
   }
 
   return (
-    <main className="p-8">
-      <div className="mx-auto max-w-screen-xl">
-        <Card>
-          <form action={submit}>
-            <CardHeader className="flex w-full justify-between">
-              <CardTitle>Update Pricing</CardTitle>
-              <span className="flex-end">
-                <Link href="/admin/">
-                  <Button>Back</Button>
-                </Link>
-              </span>
-            </CardHeader>
-            <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Room</TableHead>
-                    <TableHead>Day Rate</TableHead>
-                    <TableHead>Hourly Rate</TableHead>
-                    <TableHead>Subscription Rate</TableHead>
-                    <TableHead>Engineer Fee</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  <Page prices={prices} />
-                  <TableRow>
-                    <TableCell className="text-center">
-                      <Button type="submit">Submit</Button>
-                    </TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
-            </CardContent>
-            <CardFooter>
-              <Link href="/admin">
+    <>
+      <Card>
+        <form action={submit}>
+          <CardHeader className="flex w-full justify-between">
+            <CardTitle>Update Pricing</CardTitle>
+            <span className="flex-end">
+              <Link href="/admin/">
                 <Button>Back</Button>
               </Link>
-            </CardFooter>
-          </form>
-        </Card>
-      </div>
-    </main>
+            </span>
+          </CardHeader>
+          <CardContent>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Room</TableHead>
+                  <TableHead>Day Rate</TableHead>
+                  <TableHead>Hourly Rate</TableHead>
+                  <TableHead>Subscription Rate</TableHead>
+                  <TableHead>Engineer Fee</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                <Page prices={prices} />
+                <TableRow>
+                  <TableCell className="text-center">
+                    <Button type="submit">Submit</Button>
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </CardContent>
+          <CardFooter>
+            <Link href="/admin">
+              <Button>Back</Button>
+            </Link>
+          </CardFooter>
+        </form>
+      </Card>
+    </>
   );
 }

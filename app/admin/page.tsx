@@ -46,8 +46,8 @@ export default async function Main() {
   const data = await getData(user?.id as string);
 
   return (
-    <main className="pt-8">
-      <div className="mx-auto max-w-screen-xl">
+    <>
+      <div>
         <Card>
           <CardHeader>
             <CardTitle>Admin Dashboard</CardTitle>
@@ -91,6 +91,6 @@ export default async function Main() {
           </CardFooter>
         </Card>
       </div>
-    </main>
+    </>
   );
 }

@@ -113,8 +113,8 @@ export default async function Page() {
   const subData = await getSubscription(user);
 
   return (
-    <main className="pt-8">
-      <div className="mx-auto max-w-screen-xl rounded-lg">
+    <>
+      <div className="rounded-lg">
         <Card>
           <CardHeader>
             <CardTitle>{data?.name}</CardTitle>
@@ -186,6 +186,6 @@ export default async function Page() {
           </CardFooter>
         </Card>
       </div>
-    </main>
+    </>
   );
 }

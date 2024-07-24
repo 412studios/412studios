@@ -88,57 +88,53 @@ export default async function Main() {
   const rooms = ["A", "B", "C"];
 
   return (
-    <main className="p-8">
-      <div className="mx-auto max-w-screen-lg rounded-lg">
-        <Card className="p-8">
-          <CardHeader>
-            {/* <CardTitle>{data?.name}</CardTitle>
+    <Card className="p-8">
+      <CardHeader>
+        {/* <CardTitle>{data?.name}</CardTitle>
             <CardDescription>{data?.email}</CardDescription> */}
-          </CardHeader>
-          <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableCell>Room</TableCell>
-                  <TableCell>Status</TableCell>
-                  <TableCell>Remaining Hours</TableCell>
-                  <TableCell>Book Time</TableCell>
-                  <TableCell>Cancel Subscription</TableCell>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {subData.map((sub, index) => (
-                  <TableRow key={index}>
-                    <TableCell>Room {rooms[sub.roomId]}</TableCell>
-                    <TableCell>{sub.status}</TableCell>
-                    <TableCell>{sub.availableHours}</TableCell>
-                    <TableCell>
-                      <Link href="/booking">
-                        <Button>Book</Button>
-                      </Link>
-                    </TableCell>
-                    <TableCell>
-                      <form action={submit}>
-                        <input
-                          name="itemId"
-                          className="hidden"
-                          value={sub.stripeSubscriptionId}
-                        />
-                        <Button type="submit">Cancel Subscription</Button>
-                      </form>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </CardContent>
-          <CardFooter>
-            <Link href="/dashboard">
-              <Button>Back</Button>
-            </Link>
-          </CardFooter>
-        </Card>
-      </div>
-    </main>
+      </CardHeader>
+      <CardContent>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableCell>Room</TableCell>
+              <TableCell>Status</TableCell>
+              <TableCell>Remaining Hours</TableCell>
+              <TableCell>Book Time</TableCell>
+              <TableCell>Cancel Subscription</TableCell>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {subData.map((sub, index) => (
+              <TableRow key={index}>
+                <TableCell>Room {rooms[sub.roomId]}</TableCell>
+                <TableCell>{sub.status}</TableCell>
+                <TableCell>{sub.availableHours}</TableCell>
+                <TableCell>
+                  <Link href="/booking">
+                    <Button>Book</Button>
+                  </Link>
+                </TableCell>
+                <TableCell>
+                  <form action={submit}>
+                    <input
+                      name="itemId"
+                      className="hidden"
+                      value={sub.stripeSubscriptionId}
+                    />
+                    <Button type="submit">Cancel Subscription</Button>
+                  </form>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </CardContent>
+      <CardFooter>
+        <Link href="/dashboard">
+          <Button>Back</Button>
+        </Link>
+      </CardFooter>
+    </Card>
   );
 }
