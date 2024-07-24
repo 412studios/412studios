@@ -8,7 +8,6 @@ export function UserNav({ name }: { name: string }) {
   return (
     <Link href="/dashboard">
       <Button variant="ghost" className="relative w-auto border p-6">
-        {/* {name[0]} */}
         Profile
       </Button>
     </Link>

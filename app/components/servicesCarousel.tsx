@@ -67,9 +67,6 @@ export function Services() {
                             <div className="flex items-center justify-left p-6 h-32">
                               {service.description}
                             </div>
-                            {/* <div className="p-6 pt-0">
-                              <Button>Learn more</Button>
-                            </div> */}
                           </Card>
                         </div>
                       </Carousel3Item>

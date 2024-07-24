@@ -16,7 +16,6 @@ export async function Navbar() {
     <nav className="bg-none flex max-h-[130px]">
       <div className="max-w-screen-xl w-full border-4 border-t-0 mx-auto rounded-b-xl overflow-hidden">
         <Marquee />
-
         <div className="p-2 border-b-4 flex justify-between bg-background">
           <div className="flex items-center">
             <Link href="/" aria-label="Header Logo">
