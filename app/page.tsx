@@ -14,19 +14,16 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
+
+import { Gradient } from "@/components/ui/gradient";
 
 export default function Home() {
   const { isAuthenticated, user } = useUser();
 
   return (
     <main id="home">
+      {/* <Gradient /> */}
+
       {/* BANNER */}
       <section className="w-full relative overflow-hidden">
         <div className="w-full rounded-xl relative overflow-hidden aspect-video">

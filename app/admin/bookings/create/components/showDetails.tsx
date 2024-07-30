@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   Card,
   CardContent,
@@ -9,12 +9,8 @@ import {
 } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { timeSlots, subscriptionTimeSlots } from "./timeSlots";
-import {
-  PostBooking,
-  PostSubscriptionBooking,
-  PostSubscriptionBookingWithPurchase,
-} from "@/app/lib/booking";
+import { timeSlots } from "./timeSlots";
+import { PostSubscriptionBooking } from "@/app/lib/booking";
 
 export const ShowDetails = ({
   prices,

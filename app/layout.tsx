@@ -45,7 +45,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <div className="flex flex-col min-h-screen p-4 py-0 border-4 border-rose-500">
+        <div className="flex flex-col min-h-screen p-4 py-0">
           <ThemeProvider
             attribute="class"
             defaultTheme="system"
@@ -64,7 +64,6 @@ export default async function RootLayout({
           <footer className="w-full flex justify-center items-center mt-auto">
             <Footer />
           </footer>
-          d
         </div>
       </body>
     </html>
