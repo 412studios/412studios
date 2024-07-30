@@ -1,8 +1,8 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { getBooking, getSubWeek } from "@/app/lib/booking";
-import { timeSlots, subscriptionTimeSlots } from "./timeSlots";
+import { getBooking } from "@/app/lib/booking";
+import { timeSlots } from "./timeSlots";
 
 export const PickTime = ({
   prices,
@@ -39,8 +39,8 @@ export const PickTime = ({
         const bookings = await getBooking(
           options.room,
           formattedDate,
-          options.user,
         );
+        
         let arr: any[] = [];
         let setStart = 0;
         let setEnd = 0;

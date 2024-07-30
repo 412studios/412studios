@@ -1,19 +1,36 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { getSubscriptionWithUser, updateSubscription } from "@/app/lib/booking";
 import NumberInput from "./numinput";
 import { redirect } from "next/navigation";
+import prisma from "@/app/lib/db";
 
 export default async function Page(id: any) {
-  const subscription = await getSubscriptionWithUser(id.params.subscription);
+
+  const subscription = await prisma.subscription.findUnique({
+    where: {
+      subscriptionId: id.params.subscription,
+    },
+    include: {
+      user: {
+        select: {
+          name: true,
+        },
+      },
+    },
+  });
+
   async function submit(formData: FormData) {
     "use server";
     try {
-      await updateSubscription(
-        id.params.subscription,
-        Number(formData.get("num")),
-      );
+      await prisma.subscription.update({
+        where: {
+          subscriptionId: id.params.subscription,
+        },
+        data: {
+          availableHours: Number(formData.get("num")),
+        },
+      });
     } catch (error) {
       console.error("Failed to post booking:", error);
     }

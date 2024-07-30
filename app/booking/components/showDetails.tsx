@@ -10,11 +10,7 @@ import {
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { timeSlots, subscriptionTimeSlots } from "./timeSlots";
-import {
-  PostBooking,
-  PostSubscriptionBooking,
-  PostSubscriptionBookingWithPurchase,
-} from "@/app/lib/booking";
+import { PostBooking, PostSubscriptionBooking } from "@/app/lib/booking";
 
 export const ShowDetails = ({
   prices,
@@ -111,11 +107,18 @@ export const ShowDetails = ({
     }
   }
 
-  // //SUBMIT DETAILS
+  useEffect(() => {
+    setOptions((prevOptions: any) => ({
+      ...prevOptions,
+      price: total,
+    }));
+  }, [total, setOptions]);
+
+  //SUBMIT DETAILS
   const submit = async () => {
     setIsLoading(true);
     try {
-      await PostBooking(options, parseInt(total + "00"));
+      await PostBooking(options);
     } catch (error) {
       console.error("Failed to post booking:", error);
     }
@@ -131,25 +134,6 @@ export const ShowDetails = ({
       console.error("Failed to post booking:", error);
     }
   };
-
-  const submitSubscriptionPurchase = async () => {
-    // setIsLoading(true);
-    const startTime = options.startTime * 4;
-    const endTime = options.endTime * 4 + 3;
-    try {
-      await PostSubscriptionBookingWithPurchase(
-        options,
-        startTime,
-        endTime,
-        duration,
-        parseInt(total + "00"),
-      );
-    } catch (error) {
-      console.error("Failed to post booking:", error);
-    }
-  };
-
-  console.log(options);
 
   return (
     <div>
@@ -281,30 +265,13 @@ export const ShowDetails = ({
                       {/* ONLY ALLOW BOOKING IF SUBSCRIPTION HOURS ARE AVAILABLE */}
                       {areSubHoursAvailable ? (
                         <>
-                          {/* SWITCH TO BOOK WITH CHECKOUT IF ENGINEER ADDED */}
-                          {options.engDuration > 0 ? (
-                            <>
-                              <Button
-                                className="w-full"
-                                onClick={submitSubscriptionPurchase}
-                                disabled={isLoading}
-                              >
-                                {isLoading
-                                  ? "Redirecting..."
-                                  : "Proceed to Payment"}
-                              </Button>
-                            </>
-                          ) : (
-                            <>
-                              <Button
-                                className="w-full"
-                                onClick={submitSubscription}
-                                disabled={isLoading}
-                              >
-                                {isLoading ? "Redirecting..." : "Book Time"}
-                              </Button>
-                            </>
-                          )}
+                          <Button
+                            className="w-full"
+                            onClick={submitSubscription}
+                            disabled={isLoading}
+                          >
+                            {isLoading ? "Redirecting..." : "Book Time"}
+                          </Button>
                         </>
                       ) : (
                         <>

@@ -3,11 +3,28 @@ import { Button } from "@/components/ui/button";
 import { unstable_noStore as noStore } from "next/cache";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import BookingsTable from "./bookingstable";
-import { getBookingsWithUser } from "@/app/lib/booking";
+import prisma from "@/app/lib/db";
 
 export default async function Page() {
   noStore();
-  const bookings = await getBookingsWithUser();
+  const bookings = await prisma.bookings.findMany({
+    select: {
+      bookingId: true,
+      roomId: true,
+      date: true,
+      type: true,
+      startTime: true,
+      endTime: true,
+      userId: true,
+      status: true,
+      user: {
+        select: {
+          name: true,
+        },
+      },
+    },
+  });
+  
   return (
     <Card>
       <CardHeader className="flex w-full justify-between">

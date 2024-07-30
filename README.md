@@ -2,21 +2,11 @@
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000)
 
-## More
-
-```bash
-npm run dev
-```
+## Prisma
 
 ```bash
 npx prisma db push

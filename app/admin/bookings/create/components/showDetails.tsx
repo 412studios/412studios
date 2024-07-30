@@ -68,12 +68,6 @@ export const ShowDetails = ({
   // //SUBMIT DETAILS
   const submit = async () => {
     setIsLoading(true);
-    // try {
-    //   await PostBooking(options, parseInt(total + "00"));
-    // } catch (error) {
-    //   console.error("Failed to post booking:", error);
-    // }
-    //
     const startTime = options.startTime;
     const endTime = options.endTime;
     try {

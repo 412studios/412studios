@@ -33,8 +33,6 @@ import {
   TableCell,
 } from "@/components/ui/table";
 
-import { DeleteSubscription } from "@/app/lib/booking";
-
 async function getData(userId: string) {
   noStore();
   const data = await prisma.user.findUnique({

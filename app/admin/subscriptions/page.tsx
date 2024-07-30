@@ -2,11 +2,18 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import SubTable from "./subtable";
-import { getSubscriptionsWithUser } from "@/app/lib/booking";
+import prisma from "@/app/lib/db";
 
 export default async function Page() {
-  const subscriptions = await getSubscriptionsWithUser();
-
+  const subscriptions = await prisma.subscription.findMany({
+    include: {
+      user: {
+        select: {
+          name: true,
+        },
+      },
+    },
+  });
   return (
     <>
       <Card>

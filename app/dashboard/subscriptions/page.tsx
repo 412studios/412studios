@@ -18,9 +18,6 @@ import {
   TableCell,
 } from "@/components/ui/table";
 
-import { DeleteSubscription } from "@/app/lib/booking";
-import { redirect } from "next/navigation";
-
 async function getData(userId: string) {
   noStore();
   const data = await prisma.user.findUnique({
@@ -73,18 +70,6 @@ export default async function Main() {
   const data = await getData(user?.id as string);
   const subData = await getSubscription(user?.id as string);
 
-  async function submit(formData: FormData) {
-    "use server";
-    const itemId = formData.get("itemId") as string;
-    try {
-      await DeleteSubscription(itemId);
-      redirect("/dashboard/subscriptions/cancelled");
-    } catch (error) {
-      console.error("Failed to post booking:", error);
-    }
-    redirect("/dashboard/subscriptions/cancelled");
-  }
-
   const rooms = ["A", "B", "C"];
 
   return (
@@ -101,7 +86,6 @@ export default async function Main() {
               <TableCell>Status</TableCell>
               <TableCell>Remaining Hours</TableCell>
               <TableCell>Book Time</TableCell>
-              <TableCell>Cancel Subscription</TableCell>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -114,16 +98,6 @@ export default async function Main() {
                   <Link href="/booking">
                     <Button>Book</Button>
                   </Link>
-                </TableCell>
-                <TableCell>
-                  <form action={submit}>
-                    <input
-                      name="itemId"
-                      className="hidden"
-                      value={sub.stripeSubscriptionId}
-                    />
-                    <Button type="submit">Cancel Subscription</Button>
-                  </form>
                 </TableCell>
               </TableRow>
             ))}

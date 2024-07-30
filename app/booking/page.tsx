@@ -65,18 +65,6 @@ export default function Page(data: any) {
   }, [defaultOptions]);
 
   // UPDATE OPTIONS ON ROOM PICK + RESET TIMES
-  const pickRoom = (input: number) => {
-    setOptions((prevOptions) => ({
-      ...prevOptions,
-      room: input,
-      date: new Date(),
-      startTime: -1,
-      endTime: -1,
-      engDuration: -1,
-      engStart: -1,
-    }));
-  };
-
   function onRoomSelect(id: string) {
     setOptions((prevOptions) => ({
       ...prevOptions,
@@ -84,8 +72,8 @@ export default function Page(data: any) {
       date: new Date(),
       startTime: -1,
       endTime: -1,
-      engDuration: -1,
       engStart: -1,
+      engDuration: -1,
     }));
   }
 

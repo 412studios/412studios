@@ -1,5 +1,4 @@
 import Stripe from "stripe";
-type StripeMode = "payment" | "setup" | "subscription";
 
 export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
   apiVersion: "2023-10-16",
@@ -48,62 +47,7 @@ export const getStripeSession = async ({
   return session.url as string;
 };
 
-export const createStripeSubscription = async ({
-  priceId,
-  domainUrl,
-  customerId,
-  bookingId,
-  unitAmount,
-}: {
-  priceId: string;
-  domainUrl: string;
-  customerId: string;
-  bookingId: string;
-  unitAmount: number;
-}) => {
-  const taxedAmount = Math.round(unitAmount * 1.13);
-  const session = await stripe.checkout.sessions.create({
-    customer: customerId,
-    mode: "subscription",
-    billing_address_collection: "auto",
-    line_items: [
-      {
-        price_data: {
-          currency: "cad",
-          product_data: {
-            name: "412 Studios Membership",
-            metadata: { bookingId },
-          },
-          unit_amount: unitAmount, // Pass the price with tax included
-          recurring: { interval: "month" },
-          tax_behavior: "inclusive",
-        },
-        quantity: 1,
-      },
-    ],
-    payment_method_types: ["card"],
-    customer_update: {
-      address: "auto",
-      name: "auto",
-    },
-    automatic_tax: { enabled: false }, // Ensure automatic tax is disabled
-    success_url: `${domainUrl}/pricing/success/${bookingId}`,
-    cancel_url: `${domainUrl}/pricing/cancel/${bookingId}`,
-  });
-  // return session.url as string;
-  return { url: session.url as any, id: session.id as any };
-};
-
 export const getStripeSubId = async (subId: string) => {
   const session = await stripe.checkout.sessions.retrieve(subId);
   return session;
-};
-
-export const deleteStripeSub = async (subId: string) => {
-  try {
-    const subscription = await stripe.subscriptions.cancel(subId);
-    return true;
-  } catch (error) {
-    return false;
-  }
 };

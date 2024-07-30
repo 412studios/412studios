@@ -39,7 +39,6 @@ export const PickTime = ({
         const bookings = await getBooking(
           options.room,
           formattedDate,
-          options.user,
         );
         const checkSubWeek = await getSubWeek(
           options.room,
