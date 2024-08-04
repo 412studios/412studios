@@ -95,7 +95,7 @@ export function Footer() {
               </li>
             </ul>
           </div>
-          <div className="pb-4 md:pb-0">
+          <div>
             <LogoV className="max-h-48 w-[60px] float-right md:block hidden" />
             <Logo className="w-full max-w-[300px] mt-4 md:hidden block " />
           </div>

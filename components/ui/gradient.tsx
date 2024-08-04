@@ -8,12 +8,12 @@ const Gradient = React.forwardRef<HTMLInputElement, GradientProps>(
     return (
       <div
         className={cn(
-          "fixed top-0 left-0 w-full h-[100vh] z-[-10] bg-background",
+          "gradients-container fixed top-0 left-0 w-full h-[100vh] z-[-10]",
           className,
         )}
         ref={ref}
         {...props}
-      />
+      ></div>
     );
   },
 );

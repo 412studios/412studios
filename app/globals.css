@@ -29,6 +29,9 @@
 
         --prm: 210 20.8% 18.6%;
         --sec: 200.7 16.7% 62%;
+
+        --circle-size: 40vw;
+        --blending: hard-light;
     }
 
     .dark {
@@ -62,11 +65,13 @@
     * {
         @apply border-border;
     }
+
     html {
         @apply scroll-smooth;
         font-family: forma-djr-display, sans-serif !important;
-        color: var(--primary) !important;
+        color: hsl(var(--primary)) !important;
     }
+
     body {
         @apply bg-background text-foreground;
     }
@@ -79,4 +84,21 @@
 
 section {
     scroll-margin-top: 150px !important;
+}
+.gradients-container {
+    /* background-color: hsl(var(--primary)); */
+    background-color: #eceff1;
+}
+.gradients-container:before {
+    content: "";
+    position: fixed;
+    inset: -50px;
+    background:
+        repeating-radial-gradient(#000 0 0.0001%, #fff 0 0.0002%) 60% 60%/3000px
+            3000px,
+        repeating-conic-gradient(#000 0 0.0001%, #fff 0 0.0002%) 40% 40%/4000px
+            3000px;
+    background-blend-mode: difference;
+    filter: blur(1px) contrast(100) brightness(20);
+    mix-blend-mode: lighten;
 }
