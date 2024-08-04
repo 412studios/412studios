@@ -31,8 +31,8 @@ export const ShowDetails = ({
     isSubscribed = true;
   }
 
-  let displayStart = "Not Selecetd";
-  let displayEnd = "Not Selecetd";
+  let displayStart = "Not Selected";
+  let displayEnd = "Not Selected";
   let duration = 0;
 
   let bookingTotal = 0;
@@ -72,8 +72,8 @@ export const ShowDetails = ({
       }
     } else {
       // RESET IF NO TIME IS SELECTED
-      displayStart = "Not Selecetd";
-      displayEnd = "Not Selecetd";
+      displayStart = "Not Selected";
+      displayEnd = "Not Selected";
       duration = 0;
       total = 0;
     }
@@ -100,8 +100,8 @@ export const ShowDetails = ({
       }
     } else {
       // RESET IF NO TIME IS SELECTED
-      displayStart = "Not Selecetd";
-      displayEnd = "Not Selecetd";
+      displayStart = "Not Selected";
+      displayEnd = "Not Selected";
       duration = 0;
       total = 0;
     }
