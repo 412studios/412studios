@@ -85,8 +85,7 @@
 section {
     scroll-margin-top: 150px !important;
 }
-.gradients-container {
-    /* background-color: hsl(var(--primary)); */
+/* .gradients-container {
     background-color: #eceff1;
 }
 .gradients-container:before {
@@ -101,4 +100,4 @@ section {
     background-blend-mode: difference;
     filter: blur(1px) contrast(100) brightness(20);
     mix-blend-mode: lighten;
-}
+} */
