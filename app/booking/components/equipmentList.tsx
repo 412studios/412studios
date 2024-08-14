@@ -54,7 +54,6 @@ export default function EquipmentList() {
               <li>Fender P Bass</li>
               <li>Acoustic Steel String Guitar</li>
               <li>Acoustic Nylon String Guitar</li>
-              <li>Nylon strings</li>
             </ul>
           </div>
           <div className="mb-4 rounded-lg border-4 p-2">
