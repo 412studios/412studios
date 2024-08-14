@@ -3,7 +3,6 @@ import { Card } from "@/components/ui/card";
 import { Check } from "lucide-react";
 import Link from "next/link";
 import prisma from "@/app/lib/db";
-import { getStripeSubId } from "@/app/lib/stripe";
 
 export default async function PageSuccess(context: any) {
   //HANDLE STANDARD BOOKING CONFIMATION
@@ -59,15 +58,26 @@ export default async function PageSuccess(context: any) {
     },
   });
   //Set subscription as active when sub is purchased
-  if (successfulSub?.stripeSessionId) {
-    const test = await getStripeSubId(successfulSub?.stripeSessionId);
+  if (successfulSub) {
+    const now = new Date();
+    // First day of the current month
+    const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    const formattedFirstDayOfMonth = `${firstDayOfMonth.getFullYear()}${String(firstDayOfMonth.getMonth() + 1).padStart(2, "0")}01`;
+    // First day of the next month
+    const firstDayOfNextMonth = new Date(
+      now.getFullYear(),
+      now.getMonth() + 1,
+      1,
+    );
+    const formattedFirstDayOfNextMonth = `${firstDayOfNextMonth.getFullYear()}${String(firstDayOfNextMonth.getMonth() + 1).padStart(2, "0")}01`;
     await prisma.subscription.update({
       where: {
         subscriptionId: context.params.id,
       },
       data: {
-        stripeSubscriptionId: test.subscription?.toString(),
         status: "active",
+        currentPeriodStart: parseInt(formattedFirstDayOfMonth),
+        currentPeriodEnd: parseInt(formattedFirstDayOfNextMonth),
       },
     });
   }
