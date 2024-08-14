@@ -52,7 +52,8 @@ export default function EquipmentList() {
             <ul className="list-disc pl-5">
               <li>Fender Vintage Stratocaster</li>
               <li>Fender P Bass</li>
-              <li>Acoustic guitar</li>
+              <li>Acoustic Steel String Guitar</li>
+              <li>Acoustic Nylon String Guitar</li>
               <li>Nylon strings</li>
             </ul>
           </div>
