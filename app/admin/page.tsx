@@ -23,7 +23,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-async function getData(userId: string) {
+async function getUserDetails(userId: string) {
   noStore();
   const data = await prisma.user.findUnique({
     where: {
@@ -38,12 +38,36 @@ async function getData(userId: string) {
   return data;
 }
 
+async function deletePendingSubscriptions() {
+  noStore();
+  try {
+    const today = new Date();
+    // Delete subscriptions where status is 'pending' and createdAt is before today
+    const deletedSubscriptions = await prisma.subscription.deleteMany({
+      where: {
+        status: "pending",
+        createdAt: {
+          lt: today,
+        },
+      },
+    });
+    // Log the number of deleted subscriptions
+    console.log("Deleted Subscriptions:", deletedSubscriptions.count);
+    return deletedSubscriptions;
+  } catch (error) {
+    console.error("Error deleting pending subscriptions:", error);
+    throw error; // Rethrow the error if needed for further handling
+  }
+}
+
 export default async function Main() {
   noStore();
 
   const { getUser } = getKindeServerSession();
   const user = await getUser();
-  const data = await getData(user?.id as string);
+  const userDetails = await getUserDetails(user?.id as string);
+
+  deletePendingSubscriptions();
 
   return (
     <>
@@ -54,8 +78,8 @@ export default async function Main() {
           </CardHeader>
           <CardContent className="p-0">
             <div className="border-b-4 p-4">
-              <CardDescription>{data?.name}</CardDescription>
-              <CardDescription>{data?.email}</CardDescription>
+              <CardDescription>{userDetails?.name}</CardDescription>
+              <CardDescription>{userDetails?.email}</CardDescription>
             </div>
             <div className="p-4">
               <Link href="/admin/users">

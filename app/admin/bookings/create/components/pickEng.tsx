@@ -45,17 +45,9 @@ export const PickEng = ({
   }, [options.startTime, options.endTime, setOptions]);
 
   let startArr: any = [];
-  let min = 0;
-  let max = 0;
-  if (options.subRooms.includes(parseInt(options.room))) {
-    if (options.startTime > -1) {
-      min = options.startTime * 4;
-      max = options.endTime * 4 + 4 - 1;
-    }
-  } else {
-    min = options.startTime;
-    max = options.endTime;
-  }
+  let min = options.startTime;
+  let max = options.endTime;
+
   for (let i = min; i < max; i++) {
     startArr.push(i);
   }

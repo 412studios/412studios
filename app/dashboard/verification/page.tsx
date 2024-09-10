@@ -52,7 +52,7 @@ export default async function SettingsPage() {
       redirect("/dashboard");
     }
   }
-
+  
   return (
     <Card>
       <form action={handleSubmit}>
