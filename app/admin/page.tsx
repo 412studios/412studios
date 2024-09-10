@@ -38,27 +38,27 @@ async function getUserDetails(userId: string) {
   return data;
 }
 
-async function deletePendingSubscriptions() {
-  noStore();
-  try {
-    const today = new Date();
-    // Delete subscriptions where status is 'pending' and createdAt is before today
-    const deletedSubscriptions = await prisma.subscription.deleteMany({
-      where: {
-        status: "pending",
-        createdAt: {
-          lt: today,
-        },
-      },
-    });
-    // Log the number of deleted subscriptions
-    console.log("Deleted Subscriptions:", deletedSubscriptions.count);
-    return deletedSubscriptions;
-  } catch (error) {
-    console.error("Error deleting pending subscriptions:", error);
-    throw error; // Rethrow the error if needed for further handling
-  }
-}
+// async function deletePendingSubscriptions() {
+//   noStore();
+//   try {
+//     const today = new Date();
+//     // Delete subscriptions where status is 'pending' and createdAt is before today
+//     const deletedSubscriptions = await prisma.subscription.deleteMany({
+//       where: {
+//         status: "pending",
+//         createdAt: {
+//           lt: today,
+//         },
+//       },
+//     });
+//     // Log the number of deleted subscriptions
+//     console.log("Deleted Subscriptions:", deletedSubscriptions.count);
+//     return deletedSubscriptions;
+//   } catch (error) {
+//     console.error("Error deleting pending subscriptions:", error);
+//     throw error; // Rethrow the error if needed for further handling
+//   }
+// }
 
 export default async function Main() {
   noStore();
@@ -67,7 +67,7 @@ export default async function Main() {
   const user = await getUser();
   const userDetails = await getUserDetails(user?.id as string);
 
-  deletePendingSubscriptions();
+  // deletePendingSubscriptions();
 
   return (
     <>
