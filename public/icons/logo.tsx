@@ -1,5 +1,10 @@
 import React, { SVGProps } from "react";
 
+/**
+ * Logo component that renders an SVG logo
+ * @param {SVGProps<SVGSVGElement>} props - SVG properties passed to the component
+ * @returns {JSX.Element} An SVG element representing the logo
+ */
 export function Logo(props: SVGProps<SVGSVGElement>) {
   return (
     <svg
