@@ -1,5 +1,10 @@
 import React, { SVGProps } from "react";
 
+/**
+ * Renders the LogoV component, which displays a logo as an SVG.
+ * @param {SVGProps<SVGSVGElement>} props - The props for the SVG element.
+ * @returns {JSX.Element} An SVG element representing the logo.
+ */
 export function LogoV(props: SVGProps<SVGSVGElement>) {
   return (
     <svg

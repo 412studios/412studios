@@ -175,6 +175,13 @@ CarouselContent.displayName = "CarouselContent";
 const CarouselItem = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
+/**
+ * A React component representing a carousel slide.
+ * @param {Object} props - The component props.
+ * @param {string} [props.className] - Additional CSS class names to apply to the slide.
+ * @param {React.Ref} ref - A ref to be attached to the slide's div element.
+ * @returns {React.ReactElement} A div element representing the carousel slide.
+ */
 >(({ className, ...props }, ref) => {
   const { orientation } = useCarousel();
 
@@ -190,6 +197,15 @@ const CarouselItem = React.forwardRef<
       )}
       {...props}
     />
+  /**
+   * Renders a previous navigation button for a carousel component.
+   * @param {Object} props - The component props.
+   * @param {string} [props.className] - Additional CSS class name for the button.
+   * @param {string} [props.variant="outline"] - The visual variant of the button.
+   * @param {string} [props.size="icon"] - The size of the button.
+   * @param {React.Ref} ref - The ref object for the button element.
+   * @returns {React.ReactElement} A Button component styled as a previous navigation control.
+   */
   );
 });
 CarouselItem.displayName = "CarouselItem";
@@ -219,6 +235,15 @@ const CarouselPrevious = React.forwardRef<
       <ArrowLeft className="h-4 w-4" />
       <span className="sr-only">Previous slide</span>
     </Button>
+  /**
+   * Renders a carousel navigation button for scrolling to the next slide.
+   * @param {Object} props - The component props.
+   * @param {string} props.className - Additional CSS classes for the button.
+   * @param {string} [props.variant="outline"] - The button variant.
+   * @param {string} [props.size="icon"] - The button size.
+   * @param {React.Ref} ref - The forwarded ref for the button element.
+   * @returns {React.ReactElement} A Button component for navigating to the next slide.
+   */
   );
 });
 CarouselPrevious.displayName = "CarouselPrevious";

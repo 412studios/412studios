@@ -32,6 +32,11 @@ const Carousel3Context = React.createContext<Carousel3ContextProps | null>(
   null,
 );
 
+/**
+ * A custom React hook that provides access to the Carousel3 context
+ * @returns {Object} The Carousel3 context object
+ * @throws {Error} If used outside of a Carousel3 component
+ */
 function useCarousel3() {
   const context = React.useContext(Carousel3Context);
 
@@ -41,6 +46,18 @@ function useCarousel3() {
 
   return context;
 }
+/**
+ * Creates a customizable carousel component with horizontal or vertical orientation.
+ * @param {Object} props - The component props.
+ * @param {string} [props.orientation='horizontal'] - The orientation of the carousel ('horizontal' or 'vertical').
+ * @param {Object} [props.opts] - Additional options for the Embla Carousel.
+ * @param {Function} [props.setApi] - Function to set the Carousel API externally.
+ * @param {Array} [props.plugins] - Array of plugins for the Embla Carousel.
+ * @param {string} [props.className] - Additional CSS class names for the carousel container.
+ * @param {React.ReactNode} props.children - The content to be rendered inside the carousel.
+ * @param {React.Ref} ref - Ref object for the carousel container.
+ * @returns {JSX.Element} A carousel component with context provider and event handlers.
+ */
 
 const Carousel3 = React.forwardRef<
   HTMLDivElement,
@@ -65,6 +82,11 @@ const Carousel3 = React.forwardRef<
         slidesToScroll: 1,
         containScroll: "trimSnaps",
       },
+      /**
+       * Callback function to handle carousel selection and update scroll states
+       * @param {CarouselApi | null} api - The Carousel API object or null
+       * @returns {void} This function doesn't return a value
+       */
       plugins,
     );
     const [canScrollPrev, setCanScrollPrev] = React.useState(false);
@@ -79,15 +101,30 @@ const Carousel3 = React.forwardRef<
       setCanScrollNext(api.canScrollNext());
     }, []);
 
+    /**
+     * Scrolls to the previous item in the carousel
+     * @param {void} - This function doesn't accept any parameters
+     * @returns {void} This function doesn't return a value
+     */
     const scrollPrev = React.useCallback(() => {
       api?.scrollPrev();
     }, [api]);
 
+    /**
+     * Scrolls to the next item using the API's scrollNext method.
+     * @param {void} - This function doesn't accept any parameters.
+     * @returns {void} This function doesn't return a value.
+     */
     const scrollNext = React.useCallback(() => {
       api?.scrollNext();
     }, [api]);
 
     const handleKeyDown = React.useCallback(
+      /**
+       * Handles keyboard events for scrolling through a carousel or similar component.
+       * @param {React.KeyboardEvent<HTMLDivElement>} event - The keyboard event object.
+       * @returns {void} This function does not return a value.
+       */
       (event: React.KeyboardEvent<HTMLDivElement>) => {
         if (event.key === "ArrowLeft") {
           event.preventDefault();
@@ -95,6 +132,12 @@ const Carousel3 = React.forwardRef<
         } else if (event.key === "ArrowRight") {
           event.preventDefault();
           scrollNext();
+        /**
+         * Updates the API state when the api prop changes
+         * @param {function} api - The API function to be set
+         * @param {function} setApi - The state setter function for updating the API
+         * @returns {void} This effect does not return anything
+         */
         }
       },
       [scrollPrev, scrollNext],
@@ -108,6 +151,12 @@ const Carousel3 = React.forwardRef<
       setApi(api);
     }, [api, setApi]);
 
+    /**
+     * Sets up effect hooks for API selection and reinitialization
+     * @param {Object} api - The API object to interact with
+     * @param {Function} onSelect - Callback function to handle selection events
+     * @returns {Function} Cleanup function to remove event listeners
+     */
     React.useEffect(() => {
       if (!api) {
         return;
@@ -117,6 +166,10 @@ const Carousel3 = React.forwardRef<
       api.on("reInit", onSelect);
       api.on("select", onSelect);
 
+      /**
+       * Cleanup function that removes the 'select' event listener from the API
+       * @returns {Function} A function that, when called, removes the 'select' event listener
+       */
       return () => {
         api?.off("select", onSelect);
       };
@@ -151,6 +204,13 @@ const Carousel3 = React.forwardRef<
   },
 );
 Carousel3.displayName = "Carousel3";
+/**
+ * A component that renders a carousel with customizable orientation.
+ * @param {Object} props - The component props.
+ * @param {string} [props.className] - Additional CSS class for styling.
+ * @param {React.Ref} ref - Ref object for the inner div element.
+ * @returns {JSX.Element} A div containing the carousel structure.
+ */
 
 const Carousel3Content = React.forwardRef<
   HTMLDivElement,
@@ -160,7 +220,16 @@ const Carousel3Content = React.forwardRef<
 
   return (
     <div ref={carouselRef} className="overflow-hidden">
-      <div
+      ```
+      /**
+       * A carousel slide component that adapts its width/height based on orientation.
+       * @param {Object} props - The component props.
+       * @param {string} [props.className] - Additional CSS classes to apply to the slide.
+       * @param {React.Ref} ref - React ref object for the slide container.
+       * @returns {React.ReactElement} A div element representing a carousel slide.
+       */
+      
+      ```      <div
         ref={ref}
         className={cn(
           "flex",
@@ -174,6 +243,15 @@ const Carousel3Content = React.forwardRef<
 });
 Carousel3Content.displayName = "Carousel3Content";
 
+/**
+ * Renders a customizable button component for scrolling to the previous item in a carousel.
+ * @param {Object} props - The component props.
+ * @param {string} [props.className] - Additional CSS classes to apply to the button.
+ * @param {string} [props.variant="outline"] - The visual variant of the button.
+ * @param {string} [props.size="icon"] - The size of the button.
+ * @param {React.Ref} ref - A ref object to access the underlying button element.
+ * @returns {React.ReactElement} A Button component for scrolling to the previous item.
+ */
 const Carousel3Item = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
@@ -230,6 +308,15 @@ Carousel3Previous.displayName = "Carousel3Previous";
 const Carousel3Next = React.forwardRef<
   HTMLButtonElement,
   React.ComponentProps<typeof Button>
+/**
+ * Renders a next button component for a carousel.
+ * @param {Object} props - The component props.
+ * @param {string} [props.className] - Additional CSS classes to apply to the button.
+ * @param {string} [props.variant="outline"] - The button variant.
+ * @param {string} [props.size="icon"] - The size of the button.
+ * @param {React.Ref} ref - The ref to be forwarded to the Button component.
+ * @returns {React.ReactElement} A Button component styled as a next button for the carousel.
+ */
 >(({ className, variant = "outline", size = "icon", ...props }, ref) => {
   const { orientation, scrollNext, canScrollNext } = useCarousel3();
 

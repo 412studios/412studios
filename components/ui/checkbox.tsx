@@ -9,7 +9,16 @@ import { cn } from "@/lib/utils";
 const Checkbox = React.forwardRef<
   React.ElementRef<typeof CheckboxPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root>
->(({ className, ...props }, ref) => (
+```
+/**
+ * Renders a custom checkbox component using CheckboxPrimitive.Root
+ * @param {Object} props - The properties passed to the component
+ * @param {string} [props.className] - Additional CSS class names for styling
+ * @param {React.Ref} ref - Ref object for the checkbox
+ * @returns {JSX.Element} A styled checkbox component with an indicator
+ */
+
+```>(({ className, ...props }, ref) => (
   <CheckboxPrimitive.Root
     ref={ref}
     aria-label="check engineer"
