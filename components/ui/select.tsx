@@ -15,6 +15,14 @@ const SelectValue = SelectPrimitive.Value;
 const SelectTrigger = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Trigger>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger>
+/**
+ * A custom React component that renders a SelectPrimitive.Trigger with additional styling and functionality.
+ * @param {Object} props - The component props
+ * @param {string} [props.className] - Additional CSS class names to apply to the trigger
+ * @param {React.ReactNode} props.children - The content to be rendered inside the trigger
+ * @param {React.Ref} ref - A ref object to be forwarded to the underlying SelectPrimitive.Trigger
+ * @returns {React.ReactElement} A styled SelectPrimitive.Trigger component with a chevron icon
+ */
 >(({ className, children, ...props }, ref) => (
   <SelectPrimitive.Trigger
     ref={ref}
@@ -35,8 +43,22 @@ SelectTrigger.displayName = SelectPrimitive.Trigger.displayName;
 const SelectScrollUpButton = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.ScrollUpButton>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.ScrollUpButton>
+/**
+ * Renders a scroll up button component for a Select primitive
+ * @param {Object} props - The component props
+ * @param {string} [props.className] - Additional CSS class names
+ * @param {React.Ref} ref - The forwarded ref for the component
+ * @returns {React.Component} A ScrollUpButton component for Select
+ */
 >(({ className, ...props }, ref) => (
   <SelectPrimitive.ScrollUpButton
+    /**
+     * Renders a scroll down button component for a Select primitive
+     * @param {Object} props - The component props
+     * @param {string} [props.className] - Additional CSS class names
+     * @param {React.Ref} ref - The ref to be forwarded to the underlying button element
+     * @returns {React.ReactElement} A ScrollDownButton component for the Select primitive
+     */
     ref={ref}
     className={cn(
       "flex cursor-default items-center justify-center py-1",
@@ -55,6 +77,15 @@ const SelectScrollDownButton = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <SelectPrimitive.ScrollDownButton
     ref={ref}
+    /**
+     * Renders a customizable Select component with portal, content, and viewport.
+     * @param {Object} props - The component props
+     * @param {string} props.className - Additional CSS classes for the content
+     * @param {React.ReactNode} props.children - Child elements to render inside the viewport
+     * @param {string} [props.position="popper"] - Position of the select content
+     * @param {React.Ref} ref - Ref object for the content element
+     * @returns {JSX.Element} A Select component with customizable content and positioning
+     */
     className={cn(
       "flex cursor-default items-center justify-center py-1",
       className,
@@ -102,11 +133,26 @@ SelectContent.displayName = SelectPrimitive.Content.displayName;
 const SelectLabel = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Label>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Label>
+/**
+ * A functional component that renders a label for a select element using SelectPrimitive.Label
+ * @param {Object} props - The props object
+ * @param {string} [props.className] - Additional CSS classes to apply to the label
+ * @param {React.Ref} ref - A ref object to attach to the label element
+ * @returns {JSX.Element} A styled SelectPrimitive.Label component
+ */
 >(({ className, ...props }, ref) => (
   <SelectPrimitive.Label
     ref={ref}
     className={cn("py-1.5 pl-8 pr-2 text-sm font-semibold", className)}
     {...props}
+  /**
+   * Renders a custom Select Item component using SelectPrimitive.Item
+   * @param {Object} props - The component props
+   * @param {string} props.className - Additional CSS classes for the item
+   * @param {React.ReactNode} props.children - The content to be rendered inside the item
+   * @param {React.Ref} ref - Ref object for the SelectPrimitive.Item
+   * @returns {JSX.Element} A styled Select Item component with checkbox functionality
+   */
   />
 ));
 SelectLabel.displayName = SelectPrimitive.Label.displayName;
@@ -137,6 +183,15 @@ SelectItem.displayName = SelectPrimitive.Item.displayName;
 const SelectSeparator = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Separator>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Separator>
+```
+/**
+ * Renders a separator component for use within a Select.
+ * @param {Object} props - The component props.
+ * @param {string} [props.className] - Additional CSS class names to apply to the separator.
+ * @param {React.Ref} ref - React ref to be forwarded to the underlying element.
+ * @returns {React.ReactElement} A Select separator component.
+ */
+```
 >(({ className, ...props }, ref) => (
   <SelectPrimitive.Separator
     ref={ref}
