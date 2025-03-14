@@ -40,8 +40,8 @@ export const getStripeSession = async ({
       address: "auto",
       name: "auto",
     },
-    success_url: `${domainUrl}/pricing/success/${bookingId}`,
-    cancel_url: `${domainUrl}/pricing/cancel/${bookingId}`,
+    success_url: `${domainUrl}/user/success/${bookingId}`,
+    cancel_url: `${domainUrl}/user/cancel/${bookingId}`,
     automatic_tax: { enabled: false },
   });
   return session.url as string;

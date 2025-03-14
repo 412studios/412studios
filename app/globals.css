@@ -1,103 +1,109 @@
-@import url("https://use.typekit.net/qbv0tch.css");
-
+/* @import url("https://use.typekit.net/qbv0tch.css"); */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
-    :root {
-        --background: 0 0% 93.7%;
-        --foreground: 0 0% 12.2%;
-        --card: 0 0% 100%;
-        --card-foreground: 222.2 84% 4.9%;
-        --popover: 0 0% 100%;
-        --popover-foreground: 222.2 84% 4.9%;
-        --primary: 210 20.8% 18.6%;
-        --primary-foreground: 204 18% 33%;
-        --secondary: 200 16% 62%;
-        --secondary-foreground: 200 18% 84%;
-        --muted: 210 40% 96.1%;
-        --muted-foreground: 215.4 16.3% 46.9%;
-        --accent: 198 34.3% 83.7%;
-        --accent-foreground: 222.2 47.4% 11.2%;
-        --destructive: 0 84.2% 60.2%;
-        --destructive-foreground: 210 40% 98%;
-        --border: 214.3 31.8% 91.4%;
-        --input: 214.3 31.8% 91.4%;
-        --ring: 222.2 84% 4.9%;
-        --radius: 0.3rem;
+  :root {
+    --background: 0 0% 93.7%;
+    --foreground: 0 0% 12.2%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
 
-        --prm: 210 20.8% 18.6%;
-        --sec: 200.7 16.7% 62%;
+    /* --primary: 0 5% 8%; */
+    --primary: 0 5% 12.7%;
+    --primary-foreground: 0 5% 12.7%;
 
-        --circle-size: 40vw;
-        --blending: hard-light;
-    }
+    --secondary: 0 0% 37.3%;
+    --secondary-foreground: 0 0% 37.3%;
 
-    .dark {
-        --background: 0 0% 93.7%;
-        --foreground: 0 0% 12.2%;
-        --card: 0 0% 100%;
-        --card-foreground: 222.2 84% 4.9%;
-        --popover: 0 0% 100%;
-        --popover-foreground: 222.2 84% 4.9%;
-        --primary: 210 20.8% 18.6%;
-        --primary-foreground: 204 18% 33%;
-        --secondary: 200 16% 62%;
-        --secondary-foreground: 200 18% 84%;
-        --muted: 210 40% 96.1%;
-        --muted-foreground: 215.4 16.3% 46.9%;
-        --accent: 198 34.3% 83.7%;
-        --accent-foreground: 222.2 47.4% 11.2%;
-        --destructive: 0 84.2% 60.2%;
-        --destructive-foreground: 210 40% 98%;
-        --border: 214.3 31.8% 91.4%;
-        --input: 214.3 31.8% 91.4%;
-        --ring: 222.2 84% 4.9%;
-        --radius: 0.3rem;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 198 34.3% 83.7%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+    --radius: 0.3rem;
 
-        --prm: 210 20.8% 18.6%;
-        --sec: 200.7 16.7% 62%;
-    }
+    --circle-size: 40vw;
+    --blending: hard-light;
+  }
 }
 
 @layer base {
-    * {
-        @apply border-border;
-    }
-
-    html {
-        @apply scroll-smooth;
-        font-family: forma-djr-display, sans-serif !important;
-        color: hsl(var(--primary)) !important;
-    }
-
-    body {
-        @apply bg-background text-foreground;
-    }
+  * {
+    @apply border-border;
+  }
+  html {
+    @apply scroll-smooth;
+    font-family: "Arial", sans-serif !important;
+    font-weight: 100 !important;
+    /* letter-spacing: 0.1em; */
+    color: hsl(var(--primary)) !important;
+  }
+  body {
+    @apply bg-background text-foreground;
+    overflow-x: hidden;
+  }
+  .hl::selection {
+    @apply bg-orange-400 text-black;
+  }
 }
 
+/* Pause marquee animation on hover */
 .marquee-container:hover .marquee-item {
-    animation-play-state: paused;
-    cursor: pointer;
+  animation-play-state: paused;
+  cursor: pointer;
 }
 
-section {
-    scroll-margin-top: 150px !important;
-}
-/* .gradients-container {
-    background-color: #eceff1;
-}
-.gradients-container:before {
-    content: "";
-    position: fixed;
-    inset: -50px;
-    background:
-        repeating-radial-gradient(#000 0 0.0001%, #fff 0 0.0002%) 60% 60%/3000px
-            3000px,
-        repeating-conic-gradient(#000 0 0.0001%, #fff 0 0.0002%) 40% 40%/4000px
-            3000px;
-    background-blend-mode: difference;
-    filter: blur(1px) contrast(100) brightness(20);
-    mix-blend-mode: lighten;
+/* Fix section scroll margin - old design */
+/* section {
+  scroll-margin-top: 150px !important;
 } */
+
+a:hover {
+  text-decoration: underline;
+}
+
+.title {
+  font-family: "Arial", sans-serif !important;
+  font-weight: 900 !important;
+}
+@media only screen and (max-width: 640px) {
+  .title {
+    font-size: 10vw !important;
+    width: 100% !important;
+  }
+}
+@media only screen and (max-width: 330px) {
+  .title-mob {
+    font-size: 100% !important;
+    width: 100% !important;
+  }
+}
+
+@media only screen and (max-width: 640px) {
+  .desk-only {
+    display: none !important;
+  }
+}
+
+#sub-nav {
+  transition: all 0.1s ease-in-out;
+  overflow: hidden;
+  max-height: 120px;
+  padding: 0.25rem;
+  border-bottom: 1px solid black;
+}
+@media only screen and (max-width: 640px) {
+  #sub-nav {
+    max-height: 0;
+    border: 0px;
+    padding: 0px;
+  }
+}

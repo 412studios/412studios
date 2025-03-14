@@ -84,6 +84,7 @@ const config = {
       },
       fontFamily: {
         sans: ["Roboto", "sans-serif"],
+        xenon: ["XenonNue", "sans-serif"],
       },
     },
   },

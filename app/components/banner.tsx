@@ -1,24 +1,25 @@
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import Image from "next/image";
+import { Logo } from "@/public/icons/logo";
 
 export function Banner() {
   return (
-    <section className="w-full overflow-hidden rounded-xl">
-      <div className="w-full relative overflow-hidden aspect-video">
-        <Image
-          src="/images/studio-a.jpg"
-          alt="banner"
-          height="6186"
-          width="9279"
-        />
+    <section
+      id="home"
+      className="block top-0 w-full h-screen flex flex-col justify-center items-center text-center overflow-hidden transition-transform duration-500 ease-in-out"
+    >
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="absolute inset-0 w-full h-full object-cover"
+      >
+        <source src="/videos/412-vid.mp4" type="video/mp4" />
+      </video>
+      {/* Semi-transparent overlay */}
+      <div className="absolute inset-0 bg-black/05"></div>
+      <div className="relative z-10">
+        <Logo className="h-12 rounded-full bg-stone-50 bg-opacity-5 text-primary hover:text-secondary hover:fill-secondary transition duration-700 ease-in-out cursor-pointer" />
       </div>
     </section>
-    // <section className="w-full border-4"></section>
   );
 }

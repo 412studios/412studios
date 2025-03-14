@@ -1,12 +1,9 @@
-import {
-  Carousel3,
-  Carousel3Content,
-  Carousel3Item,
-  Carousel3Previous,
-  Carousel3Next,
-} from "@/components/ui/carousel3";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+"use client";
+import { H2, H3, H4, Subtitle } from "@/components/ui/copy";
+
+import { useState, useEffect } from "react";
+import { ChevronDown, ChevronUp } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export function Services() {
   const services = [
@@ -28,58 +25,108 @@ export function Services() {
       description: "High-quality post-production services.",
     },
     {
-      title: "Photography Videography",
+      title: "Photography and Videography",
       description:
         "Creative photography and videography services for various needs.",
     },
   ];
 
+  const [selectedService, setSelectedService] = useState(0);
+  const [openMobileItem, setOpenMobileItem] = useState<number | null>(null);
+  const [isContentVisible, setIsContentVisible] = useState(true);
+  const [displayedService, setDisplayedService] = useState(services[0]);
+
+  useEffect(() => {
+    // Start fade out
+    setIsContentVisible(false);
+
+    // After fade out completes, update the content
+    const timer = setTimeout(() => {
+      setDisplayedService(services[selectedService]);
+      // Start fade in
+      setIsContentVisible(true);
+    }, 300); // This should match the fade-out duration
+
+    return () => clearTimeout(timer);
+  }, [selectedService]); // Removed unnecessary dependency: services
+
+  const handleServiceClick = (index: number) => {
+    setSelectedService(index);
+  };
+
+  const toggleMobileItem = (index: number) => {
+    setOpenMobileItem(openMobileItem === index ? null : index);
+  };
+
   return (
-    <>
-      <section className="mt-8">
-        <Card>
-          <CardHeader>
-            <CardTitle>Our Services</CardTitle>
-          </CardHeader>
-          <CardContent className="p-0">
+    <div className="w-full">
+      <H2>SERVICES</H2>
+      {/* Desktop layout - visible on lg and above */}
+      <div className="hidden lg:grid lg:grid-cols-[1fr,2fr] rounded-xl overflow-hidden mt-8 bg-background/30 backdrop-blur-sm">
+        {/* Left side - scrollable service titles */}
+        <div className="overflow-y-auto">
+          {services.map((service, index) => (
             <div
-              className="
-            h-full
-            bg-background
-            bg-[linear-gradient(to_right,#263238_4px,transparent_4px),linear-gradient(to_bottom,#263238_4px,transparent_1px)]
-            bg-[position:-4px_0,0_-4px]
-            bg-[size:20px_100px]
-            rounded-bl-[8px] rounded-br-[8px]
-            "
+              key={index}
+              className={cn(
+                "p-4 cursor-pointer transition-all duration-700 ease-in-out",
+                selectedService === index
+                  ? "bg-primary/10"
+                  : "hover:bg-primary/10"
+              )}
+              onClick={() => handleServiceClick(index)}
             >
-              <div className="h-full">
-                <Carousel3 className="h-full mx-8">
-                  <Carousel3Content>
-                    {services.map((service, index) => (
-                      <Carousel3Item key={index}>
-                        <div className="p-4 h-full">
-                          <Card>
-                            <div className="flex items-center justify-left p-6 h-64 bg-primary text-background font-forma md:text-4xl text-xl font-semibold leading-8 font-forma tracking-wide">
-                              <h2 className="text-center lg:text-left w-full">
-                                {service.title}
-                              </h2>
-                            </div>
-                            <div className="flex items-center justify-left p-6 h-32">
-                              {service.description}
-                            </div>
-                          </Card>
-                        </div>
-                      </Carousel3Item>
-                    ))}
-                  </Carousel3Content>
-                  <Carousel3Previous />
-                  <Carousel3Next />
-                </Carousel3>
+              <H4>{service.title}</H4>
+            </div>
+          ))}
+        </div>
+        {/* Right side - service description */}
+        <div className="p-8 flex flex-col justify-center duration-700 ease-in-out hover:bg-primary/10 cursor-pointer">
+          <div
+            className={cn(
+              "transition-opacity duration-700 ease-in-out",
+              isContentVisible ? "opacity-100" : "opacity-0"
+            )}
+          >
+            <H3>{displayedService.title}</H3>
+            <Subtitle>{displayedService.description}</Subtitle>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile layout - visible on sm and below */}
+      <div className="lg:hidden space-y-2 mt-4">
+        {services.map((service, index) => (
+          <div key={index} className="border rounded-xl overflow-hidden">
+            <div
+              className="flex justify-between items-center p-4 cursor-pointer duration-700 ease-in-out hover:bg-primary/10 cursor-pointer"
+              onClick={() => toggleMobileItem(index)}
+            >
+              <H4>{service.title}</H4>
+              {openMobileItem === index ? (
+                <ChevronUp className="h-5 w-5 transition-transform duration-200" />
+              ) : (
+                <ChevronDown className="h-5 w-5 transition-transform duration-200" />
+              )}
+            </div>
+
+            <div
+              className={`
+              overflow-hidden transition-all duration-300 ease-in-out
+              ${
+                openMobileItem === index
+                  ? "max-h-40 opacity-100"
+                  : "max-h-0 opacity-0"
+              }
+            `}
+            >
+              <div className="p-4 border-t">
+                <Subtitle>{service.description}</Subtitle>
               </div>
             </div>
-          </CardContent>
-        </Card>
-      </section>
-    </>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }

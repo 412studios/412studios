@@ -38,14 +38,13 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   noStore();
-
   const { isAuthenticated, getUser } = getKindeServerSession();
-  const isUserAuthenticated = await isAuthenticated(); // Await the promise
+  const isUserAuthenticated = await isAuthenticated();
   const user = await getUser();
   return (
     <html lang="en">
       <body className={inter.className}>
-        <div className="flex flex-col min-h-screen p-4 py-0">
+        <div className="flex flex-col min-h-screen py-0">
           <ThemeProvider
             attribute="class"
             defaultTheme="system"
@@ -53,15 +52,11 @@ export default async function RootLayout({
             disableTransitionOnChange
           >
             <UserProvider isAuthenticated={isUserAuthenticated} user={user}>
-              <header className="sticky top-0 z-50 bg-none">
-                <Navbar />
-              </header>
-              <main className="flex-grow max-w-screen-xl mx-auto w-full py-8">
-                {children}
-              </main>
+              <Navbar />
+              <main>{children}</main>
             </UserProvider>
           </ThemeProvider>
-          <footer className="w-full flex justify-center items-center mt-auto">
+          <footer>
             <Footer />
           </footer>
         </div>

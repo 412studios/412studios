@@ -1,104 +1,82 @@
+import Link from "next/link";
 import { Logo } from "@/public/icons/logo";
-import { LogoV } from "@/public/icons/logo-v";
+import { FaTiktok, FaInstagram, FaYoutube, FaSoundcloud } from "react-icons/fa";
 
 export function Footer() {
   return (
-    <footer className="max-w-screen-xl w-full border-0 border-b-0 mx-auto rounded-t-xl bg-primary text-background">
-      {/* FOOTER TITLE */}
-      <div className="flex p-4 pb-3 border-b-4 border-background card-title text-background align-middle">
-        <svg
-          width="20"
-          height="20"
-          viewBox="0 0 20 20"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          className="mr-2"
-        >
-          <circle
-            cx="10"
-            cy="10"
-            r="8"
-            stroke="black"
-            strokeWidth="2"
-            className="fill-background stroke-background"
-          />
-        </svg>
-        <h3 className="text-2xl font-semibold leading-none font-forma tracking-wide">
-          412 Studios
-        </h3>
-      </div>
-      {/* FOOTER DETAILS */}
-      <div className="p-4">
-        <div className="grid grid-cols-1 md:grid-cols-3">
+    <footer className="bg-foreground text-white">
+      <div>
+        {/* Logo Section */}
+        <div className="p-2">
+          <Link href="#home" aria-label="Header Logo">
+            <Logo className="rounded-full bg-white bg-opacity-5 h-6 text-background hover:text-secondary hover:fill-secondary transition-all duration-700 ease-in-out" />
+          </Link>
+        </div>
+
+        <div className="h-[1px] w-full bg-white"></div>
+
+        {/* Grid Layout */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-[12px] p-2">
+          {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-[12px] p-2 max-w-[1400px]"> */}
+          {/* Column 2: Contact Info */}
           <div>
-            <h4 className="text-2xl mb-4">Toronto</h4>
-            <p>
-              <a href="mailto:Info@412studios.ca" className="hover:underline">
+            <h3 className="font-semibold mb-2">Contact</h3>
+            <div className="space-y-2">
+              <Link
+                href="mailto:Info@412studios.ca"
+                className="hover:underline flex items-center cursor-pointer"
+              >
                 Info@412studios.ca
-              </a>
-            </p>
-            <p>
-              <a href="tel:647-540-2321" className="hover:underline">
+              </Link>
+              <Link
+                href="tel:647-540-2321"
+                className="hover:underline flex items-center cursor-pointer"
+              >
                 647-540-2321
-              </a>
-            </p>
-            <p>
-              <b>
-                412 Richmond St E,
-                <br />
-                Toronto, ON M5A 1P8
-              </b>
-            </p>
+              </Link>
+            </div>
           </div>
+          {/* Column 3: Social Media */}
           <div>
-            <h4 className="text-2xl mb-4 md:mt-0 mt-4">Follow Us</h4>
-            <ul>
-              <li>
-                <a
-                  href="https://www.instagram.com/itsfouronetwo/"
-                  className="text-background hover:underline"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Instagram
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://www.youtube.com/channel/UCiIHqiNLRHtjsaKBVRh0ipQ"
-                  className="text-background hover:underline"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  YouTube
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://www.tiktok.com/@412.studios"
-                  className="text-background hover:underline"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  TikTok
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://soundcloud.com/412studios"
-                  className="text-background hover:underline"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Soundcloud
-                </a>
-              </li>
-            </ul>
+            <h3 className="font-semibold mb-2">Follow Us</h3>
+            <div className="space-y-2">
+              <Link
+                href="https://www.instagram.com/itsfouronetwo/"
+                className="text-background hover:underline flex items-center gap-2"
+              >
+                <FaInstagram className="text-background" /> itsfouronetwo
+              </Link>
+              <Link
+                href="https://www.tiktok.com/@412.studios"
+                className="text-background hover:underline flex items-center gap-2"
+              >
+                <FaTiktok className="text-background" /> 412.studios
+              </Link>
+              <Link
+                href="https://www.youtube.com/channel/UCiIHqiNLRHtjsaKBVRh0ipQ"
+                className="text-background hover:underline flex items-center gap-2"
+              >
+                <FaYoutube className="text-background" /> The412Show
+              </Link>
+              <Link
+                href="https://soundcloud.com/412studios"
+                className="text-background hover:underline flex items-center gap-2"
+              >
+                <FaSoundcloud className="text-background" /> 412studios
+              </Link>
+            </div>
           </div>
+
+          {/* Column 1: Address */}
           <div>
-            <LogoV className="max-h-48 w-[60px] float-right md:block hidden" />
-            <Logo className="w-full max-w-[300px] mt-4 md:hidden block " />
+            <h3 className="font-semibold mb-2">Location</h3>
+            <p>412 Richmond St E, Toronto, ON M5A 1P8</p>
           </div>
+        </div>
+
+        {/* Copyright */}
+        <div className="text-center text-[10px] border p-1">
+          © {new Date().getFullYear()} 412 Studios. All rights reserved.
         </div>
       </div>
     </footer>

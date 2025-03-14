@@ -47,7 +47,7 @@ export async function getSubWeek(roomId: string, date: number, user: any) {
     const endOfWeek = new Date(givenDate);
 
     startOfWeek.setDate(
-      givenDate.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1),
+      givenDate.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1)
     );
     startOfWeek.setHours(0, 0, 0, 0);
 
@@ -97,8 +97,7 @@ export async function getSubWeek(roomId: string, date: number, user: any) {
   //CHECK FOR MAX WEEK EXCEPTION
   const hasWeekMaxException = userSubscription.some(
     (subscription: any) =>
-      subscription.roomId === parseInt(roomId) &&
-      subscription.weekMax === false,
+      subscription.roomId === parseInt(roomId) && subscription.weekMax === false
   );
   if (hasWeekMaxException) {
     return false;
@@ -187,7 +186,7 @@ export async function PostSubscriptionBooking(
   input: any,
   startTime: any,
   endTime: any,
-  duration: any,
+  duration: any
 ) {
   noStore();
   //GET DETAILS
@@ -248,7 +247,7 @@ export async function PostSubscriptionBooking(
         },
       });
     }
-    return redirect("/dashboard/bookings");
+    return redirect("/user/profile/");
   }
 }
 
@@ -256,7 +255,7 @@ export async function HandlePayment(
   user: any,
   bookingId: string,
   priceId: string,
-  price: number,
+  price: number
 ) {
   // Calculate the final price including Canadian tax
   const formatPrice = parseInt(price + "00");
