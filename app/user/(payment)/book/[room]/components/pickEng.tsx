@@ -10,7 +10,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { timeSlots } from "@/app/user/book/components/timeSlots";
+import {
+  timeSlots,
+  subscriptionTimeSlots,
+} from "@/app/user/(payment)/book/components/timeSlots";
 
 export const PickEng = ({
   prices,
