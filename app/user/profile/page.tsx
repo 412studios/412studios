@@ -1,20 +1,11 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import {
-  Settings,
-  CreditCard,
-  Shield,
-  Book,
-  Plus,
-  Notebook,
-  RefreshCw,
-} from "lucide-react";
 import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
 import { unstable_noStore as noStore } from "next/cache";
 import prisma from "@/app/lib/db";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { stripe } from "@/app/lib/stripe";
-import { H2, H4, Subtitle, Section, Divider } from "@/components/ui/copy";
+import { H4 } from "@/components/ui/copy";
 
 async function getData(user: any) {
   noStore();
