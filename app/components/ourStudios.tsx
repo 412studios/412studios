@@ -1,7 +1,7 @@
 "use client";
-
 import type React from "react";
 import { LoginLink } from "@kinde-oss/kinde-auth-nextjs/components";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { useState, useEffect, useCallback } from "react";
@@ -115,7 +115,6 @@ export function OurStudios() {
               />
             ))}
           </div>
-
           <Button
             onClick={nextStudio}
             aria-label="Next"
@@ -128,7 +127,9 @@ export function OurStudios() {
         </div>
       </div>
 
-      <Button className="mt-2">PRICING</Button>
+      <Link href="/studios">
+        <Button className="mt-2">PRICING</Button>
+      </Link>
     </>
   );
 }
@@ -138,21 +139,23 @@ const StudioCard = ({
 }: {
   studio: { name: string; image: string };
 }) => (
-  <div className="flex-grow">
-    <H3 className="mb-2">STUDIO {studio.name}</H3>
-    <div className="relative rounded-xl overflow-hidden">
-      <Image
-        src={studio.image || "/placeholder.svg"}
-        alt={`Studio ${studio.name}`}
-        height={6186}
-        width={9279}
-        className="w-full h-auto"
-      />
-      <div className="absolute bottom-0 h-full w-full transition-all duration-500 opacity-0 hover:opacity-100 cursor-pointer bg-background/30">
-        <div className="absolute bottom-0 left-0 w-full p-4">
-          <LoginLink className="w-full">BOOK NOW</LoginLink>
+  <Link href="/studios">
+    <div className="flex-grow">
+      <H3 className="mb-2">STUDIO {studio.name}</H3>
+      <div className="relative rounded-xl overflow-hidden">
+        <Image
+          src={studio.image || "/placeholder.svg"}
+          alt={`Studio ${studio.name}`}
+          height={6186}
+          width={9279}
+          className="w-full h-auto"
+        />
+        <div className="absolute bottom-0 h-full w-full transition-all duration-500 opacity-0 hover:opacity-100 cursor-pointer bg-background/30">
+          <div className="absolute bottom-0 left-0 w-full p-4">
+            <LoginLink className="w-full">BOOK NOW</LoginLink>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  </Link>
 );
