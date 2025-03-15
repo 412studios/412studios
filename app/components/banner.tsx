@@ -17,9 +17,9 @@ export function Banner() {
       </video>
       {/* Semi-transparent overlay */}
       <div className="absolute inset-0 bg-black/05"></div>
-      <div className="relative z-10">
+      {/* <div className="relative z-10">
         <Logo className="h-12 rounded-full bg-stone-50 bg-opacity-5 text-primary hover:text-secondary hover:fill-secondary transition duration-700 ease-in-out cursor-pointer" />
-      </div>
+      </div> */}
     </section>
   );
 }
