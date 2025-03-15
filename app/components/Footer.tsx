@@ -75,7 +75,7 @@ export function Footer() {
         </div>
 
         {/* Copyright */}
-        <div className="text-center text-[10px] border p-1">
+        <div className="text-center text-[10px] border-t p-1">
           © {new Date().getFullYear()} 412 Studios. All rights reserved.
         </div>
       </div>
