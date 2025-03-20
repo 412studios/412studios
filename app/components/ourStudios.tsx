@@ -140,7 +140,7 @@ const StudioCard = ({
   studio: { name: string; image: string };
 }) => (
   <Link href="/studios">
-    <div className="flex-grow">
+    <div className="flex-grow block">
       <H3 className="mb-2">STUDIO {studio.name}</H3>
       <div className="relative rounded-xl overflow-hidden">
         <Image
@@ -150,10 +150,9 @@ const StudioCard = ({
           width={9279}
           className="w-full h-auto"
         />
+
         <div className="absolute bottom-0 h-full w-full transition-all duration-500 opacity-0 hover:opacity-100 cursor-pointer bg-background/30">
-          <div className="absolute bottom-0 left-0 w-full p-4">
-            <LoginLink className="w-full">BOOK NOW</LoginLink>
-          </div>
+          <div className="absolute bottom-0 left-0 w-full p-4">BOOK NOW</div>
         </div>
       </div>
     </div>
