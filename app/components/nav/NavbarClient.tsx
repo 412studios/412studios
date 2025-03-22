@@ -1,11 +1,11 @@
 "use client";
+import NavCollapse from "./NavCollapse";
+
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { Logo } from "@/public/icons/logo";
 import { Button } from "@/components/ui/button";
 import { usePathname } from "next/navigation";
-
-import NavCollapse from "@/app/components/NavCollapse";
 
 import {
   RegisterLink,
@@ -191,87 +191,6 @@ export default function NavbarClient({
           ) : (
             <></>
           )}
-
-          {/* COLLAPSIBLE MENU */}
-          {/* <div
-            className={`fixed right-0 bg-background/30 backdrop-blur-md transition-all duration-300 ease-in-out overflow-hidden ${
-              isOpen ? "w-full sm:w-72 border-l" : "w-0"
-            }`}
-            style={{
-              top: `${navHeight}px`,
-              height: `calc(100vh - ${navHeight}px)`,
-              transitionDelay: isTransitioning ? "0.1s" : "0s",
-            }}
-          >
-            <div className="flex flex-col p-2 gap-1 relative">
-              {isAuthenticated ? (
-                <>
-                  <Link href="/user/book">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="w-full text-left justify-start px-2 border-[1px]"
-                    >
-                      BOOK NOW
-                    </Button>
-                  </Link>
-                  <Link href="/user/profile">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="w-full text-left justify-start px-2 border-[1px]"
-                    >
-                      PROFILE
-                    </Button>
-                  </Link>
-                  <LogoutLink>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="w-full text-left justify-start px-2 border-[1px]"
-                    >
-                      LOG OUT
-                    </Button>
-                  </LogoutLink>
-                </>
-              ) : (
-                <>
-                  <RegisterLink>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="w-full text-left justify-start px-2 border-[1px]"
-                    >
-                      SIGN UP
-                    </Button>
-                  </RegisterLink>
-                  <LoginLink>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="w-full text-left justify-start px-2 border-[1px]"
-                    >
-                      LOG IN
-                    </Button>
-                  </LoginLink>
-                </>
-              )}
-              <div className="flex sm:hidden flex-col">
-                {links.map((link) => (
-                  <Link key={link.href} href={link.href}>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="w-full text-left justify-start px-2"
-                      onClick={handleMenuClick}
-                    >
-                      {link.label}
-                    </Button>
-                  </Link>
-                ))}
-              </div>
-            </div>
-          </div> */}
         </div>
       </nav>
       <NavCollapse
