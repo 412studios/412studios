@@ -9,6 +9,7 @@ const config = {
     "./src/**/*.{ts,tsx}",
   ],
   prefix: "",
+  safelist: ["backdrop-blur-md"], // Add this line
   theme: {
     container: {
       center: true,

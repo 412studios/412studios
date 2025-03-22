@@ -5,6 +5,8 @@ import { Logo } from "@/public/icons/logo";
 import { Button } from "@/components/ui/button";
 import { usePathname } from "next/navigation";
 
+import NavCollapse from "@/app/components/NavCollapse";
+
 import {
   RegisterLink,
   LoginLink,
@@ -191,9 +193,8 @@ export default function NavbarClient({
           )}
 
           {/* COLLAPSIBLE MENU */}
-          <div
-            id="nav-collapse-desk"
-            className={`bg-background/50 backdrop-blur-md fixed right-0 transition-all duration-300 ease-in-out overflow-hidden ${
+          {/* <div
+            className={`fixed right-0 bg-background/30 backdrop-blur-md transition-all duration-300 ease-in-out overflow-hidden ${
               isOpen ? "w-full sm:w-72 border-l" : "w-0"
             }`}
             style={{
@@ -202,7 +203,7 @@ export default function NavbarClient({
               transitionDelay: isTransitioning ? "0.1s" : "0s",
             }}
           >
-            <div className="flex flex-col p-2 gap-1">
+            <div className="flex flex-col p-2 gap-1 relative">
               {isAuthenticated ? (
                 <>
                   <Link href="/user/book">
@@ -270,9 +271,17 @@ export default function NavbarClient({
                 ))}
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
       </nav>
+      <NavCollapse
+        isAuthenticated={isAuthenticated}
+        isOpen={isOpen}
+        navHeight={navHeight}
+        isTransitioning={isTransitioning}
+        handleMenuClick={handleMenuClick}
+        links={links}
+      />
     </header>
   );
 }
