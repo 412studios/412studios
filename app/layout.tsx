@@ -5,7 +5,7 @@ import "./globals.css";
 import { ThemeProvider } from "./components/theme-provider";
 import { Navbar } from "./components/nav/Navbar";
 import { UserProvider } from "./components/UserContext";
-import { Footer } from "./components/Footer";
+import { Footer } from "./components/footer";
 
 import { unstable_noStore as noStore } from "next/cache";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
@@ -41,25 +41,24 @@ export default async function RootLayout({
   const { isAuthenticated, getUser } = getKindeServerSession();
   const isUserAuthenticated = await isAuthenticated();
   const user = await getUser();
+
   return (
     <html lang="en">
-      <body className={inter.className}>
-        <div className="flex flex-col min-h-screen py-0">
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <UserProvider isAuthenticated={isUserAuthenticated} user={user}>
-              <Navbar />
-              <main>{children}</main>
-            </UserProvider>
-          </ThemeProvider>
-          <footer>
-            <Footer />
-          </footer>
-        </div>
+      <body className="flex flex-col min-h-screen max-w-[2000px] mx-auto">
+        <Navbar />
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <UserProvider isAuthenticated={isUserAuthenticated} user={user}>
+            <main>{children}</main>
+          </UserProvider>
+        </ThemeProvider>
+        <footer>
+          <Footer />
+        </footer>
       </body>
     </html>
   );

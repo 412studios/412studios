@@ -106,15 +106,15 @@ export default function NavbarClient({
   }, []);
 
   return (
-    <header className="fixed top-0 z-50 w-full">
+    <header className="sticky top-0 z-50 w-full border-b">
       <nav
         id="main-nav"
         ref={navRef}
-        className="bg-background/30 backdrop-blur-md relative"
+        className="bg-background/30 backdrop-blur-md"
       >
         <div className="flex flex-col">
           {/* MAIN NAV */}
-          <div className="p-1 border-b flex justify-between items-center">
+          <div className="p-2 border-b-0 md:border-b flex justify-between items-center">
             <Link href="/" aria-label="Header Logo">
               <Logo className="rounded-full bg-stone-50 bg-opacity-5 h-6 text-primary hover:text-secondary hover:fill-secondary transition-all duration-300 ease-in-out" />
             </Link>
@@ -177,9 +177,8 @@ export default function NavbarClient({
           {isHomepage ? (
             <>
               <div
-                id="sub-nav"
                 ref={subNavRef}
-                className="flex items-start gap-2 text-[12px] font-normal overflow-hidden p-1 border-b"
+                className="hidden md:flex items-start gap-2 text-[12px] font-normal overflow-hidden p-2"
               >
                 {links.map((link) => (
                   <Link key={link.href} href={link.href} onClick={closeMenu}>

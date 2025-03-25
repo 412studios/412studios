@@ -1,5 +1,3 @@
-"use client";
-import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
@@ -27,7 +25,7 @@ export default function NavCollapse({
 }: NavCollapseProps) {
   return (
     <div
-      className={`z-50 fixed right-0 transition-all duration-300 ease-in-out bg-background/30 backdrop-blur-md ${
+      className={`z-50 absolute right-0 transition-all duration-300 ease-in-out overflow-hidden border-t bg-background/30 backdrop-blur-md ${
         isOpen ? "w-full sm:w-72 border-l" : "w-0"
       }`}
       style={{
