@@ -51,9 +51,7 @@ export default async function RootLayout({
             <main>{children}</main>
           </UserProvider>
         </ThemeProvider>
-        <footer>
-          <Footer />
-        </footer>
+        <Footer />
       </body>
     </html>
   );
