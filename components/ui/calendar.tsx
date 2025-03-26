@@ -1,4 +1,6 @@
-import * as React from "react";
+"use client";
+import React, { useState, useEffect } from "react";
+import * as ReactDOM from "react-dom"; // Try adding this
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { DayPicker } from "react-day-picker";
 

@@ -4,9 +4,19 @@ import { XIcon } from "lucide-react";
 import Link from "next/link";
 import prisma from "@/app/lib/db";
 
-export default async function PageCancel(context: any) {
-  async function postData(id: any) {
-    "use server";
+// Using a separate API route pattern for Next.js 15.2+
+export default async function PageCancel({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  // Await the params promise explicitly
+  const resolvedParams = await params;
+  const id = resolvedParams.id;
+
+  // Process the cancellation with the resolved ID
+  try {
+    // Handle booking cancellation
     const bookingToDelete = await prisma.bookings.findUnique({
       where: {
         bookingId: id,
@@ -25,21 +35,24 @@ export default async function PageCancel(context: any) {
       });
     }
 
-    // HANDLE CONFIRMING SUBSCRIPTION + RETRIEVING ID FOR CANCELLING
+    // Handle subscription cancellation
     const successfulSub = await prisma.subscription.findUnique({
       where: {
-        subscriptionId: context.params.id,
+        subscriptionId: id,
       },
     });
+
     if (successfulSub?.stripeSessionId) {
       await prisma.subscription.deleteMany({
         where: {
-          subscriptionId: context.params.id,
+          subscriptionId: id,
         },
       });
     }
+  } catch (error) {
+    console.error("Error in cancellation process:", error);
+    // Continue to show the cancellation page even if there's an error
   }
-  await postData(context.params.id);
 
   return (
     <>

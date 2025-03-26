@@ -4,18 +4,27 @@ import { Check } from "lucide-react";
 import Link from "next/link";
 import prisma from "@/app/lib/db";
 
-export default async function PageSuccess(context: any) {
+export default async function PageSuccess({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  // Await the params promise explicitly
+  const resolvedParams = await params;
+  const id = resolvedParams.id;
+
   //HANDLE STANDARD BOOKING CONFIMATION
   const successfulBooking = await prisma.bookings.findUnique({
     where: {
-      bookingId: context.params.id,
+      bookingId: id,
     },
   });
+
   if (successfulBooking) {
     if (successfulBooking.engineerTotal > -1) {
       await prisma.bookings.update({
         where: {
-          bookingId: context.params.id,
+          bookingId: id,
         },
         data: {
           status: "success",
@@ -25,7 +34,7 @@ export default async function PageSuccess(context: any) {
     } else {
       await prisma.bookings.update({
         where: {
-          bookingId: context.params.id,
+          bookingId: id,
         },
         data: {
           status: "success",
@@ -54,9 +63,10 @@ export default async function PageSuccess(context: any) {
   // HANDLE CONFIRMING SUBSCRIPTION + RETRIEVING ID FOR CANCELLING
   const successfulSub = await prisma.subscription.findUnique({
     where: {
-      subscriptionId: context.params.id,
+      subscriptionId: id,
     },
   });
+
   //Set subscription as active when sub is purchased
   if (successfulSub) {
     const now = new Date();
@@ -74,9 +84,10 @@ export default async function PageSuccess(context: any) {
     const formattedFirstDayOfNextMonth = `${firstDayOfNextMonth.getFullYear()}${String(
       firstDayOfNextMonth.getMonth() + 1
     ).padStart(2, "0")}01`;
+
     await prisma.subscription.update({
       where: {
-        subscriptionId: context.params.id,
+        subscriptionId: id,
       },
       data: {
         status: "active",

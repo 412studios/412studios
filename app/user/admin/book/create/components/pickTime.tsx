@@ -1,8 +1,11 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { getBooking } from "@/app/lib/booking";
-import { timeSlots } from "@/app/user/(payment)/book/components/timeSlots";
+import { getBooking, getSubWeek } from "@/app/lib/booking";
+import {
+  timeSlots,
+  subscriptionTimeSlots,
+} from "@/app/user/(payment)/book/components/timeSlots";
 
 export const PickTime = ({
   prices,
@@ -21,7 +24,7 @@ export const PickTime = ({
 
   const isSubscribed = options.subRooms.includes(parseInt(options.room));
   const formattedDate = parseInt(formatDateToNumeric(options.date));
-  const timeArray = timeSlots;
+  const timeArray = isSubscribed ? subscriptionTimeSlots : timeSlots;
 
   useEffect(() => {
     const initialBookedTimes = Array.isArray(existingBookings)
@@ -37,17 +40,31 @@ export const PickTime = ({
       setOptions((prevOptions: any) => ({ ...prevOptions, loading: true }));
       try {
         const bookings = await getBooking(options.room, formattedDate);
-
+        const checkSubWeek = await getSubWeek(
+          options.room,
+          formattedDate,
+          options.user
+        );
         let arr: any[] = [];
         let setStart = 0;
         let setEnd = 0;
 
-        bookings.forEach((booking: any) => {
-          setStart = booking.startTime;
-          setEnd = booking.endTime;
+        if (isSubscribed && checkSubWeek) {
+          setStart = 0;
+          setEnd = 3;
           fillArrGaps(arr, setStart, setEnd);
-        });
-
+        } else {
+          bookings.forEach((booking: any) => {
+            if (isSubscribed) {
+              setStart = Math.floor(booking.startTime / 4);
+              setEnd = Math.floor((booking.endTime - 1) / 4);
+            } else {
+              setStart = booking.startTime;
+              setEnd = booking.endTime;
+            }
+            fillArrGaps(arr, setStart, setEnd);
+          });
+        }
         setExistingBookings(arr);
       } catch (error) {
         console.error("Failed to fetch bookings:", error);
@@ -62,12 +79,21 @@ export const PickTime = ({
     }
   }, [options.date, options.room, options.user, setOptions]);
 
-  const handleClick = (id: number) => {
-    setSelList((prevSelList) => {
-      if (bookedTimes.includes(id)) {
-        return prevSelList;
-      }
+  const handleTimePick = (start: any, end: any, duration: number) => {
+    setOptions((prevOptions: any) => ({
+      ...prevOptions,
+      startTime: start,
+      endTime: end,
+      duration: duration,
+    }));
+  };
 
+  const handleClick = (id: number) => {
+    if (bookedTimes.includes(id)) {
+      return;
+    }
+
+    setSelList((prevSelList) => {
       const sortedList = Array.from(new Set([...prevSelList, id])).sort(
         (a, b) => a - b
       );
@@ -87,24 +113,34 @@ export const PickTime = ({
         fullList.push(i);
       }
 
-      setWarning(false);
+      if (isSubscribed) {
+        fullList = [id];
+        const currentSubscription = options.subscription.find(
+          (item: any) => item.roomId === options.room
+        );
+        if (currentSubscription) {
+          const checkHours =
+            currentSubscription.availableHours - fullList.length * 4;
+          if (checkHours <= -1) {
+            setWarning(true);
+            return prevSelList;
+          } else {
+            setWarning(false);
+          }
+        }
+      }
 
-      handleTimePick(
-        fullList[0],
-        fullList[fullList.length - 1],
-        fullList.length
-      );
+      // This is now outside of the state update function
+      setTimeout(() => {
+        handleTimePick(
+          fullList[0],
+          fullList[fullList.length - 1],
+          fullList.length
+        );
+      }, 0);
+
       return fullList;
     });
-  };
-
-  const handleTimePick = (start: any, end: any, duration: number) => {
-    setOptions((prevOptions: any) => ({
-      ...prevOptions,
-      startTime: start,
-      endTime: end,
-      duration: duration,
-    }));
   };
 
   const clearBtn = () => {
@@ -116,19 +152,26 @@ export const PickTime = ({
   return (
     <>
       {isLoading ? (
-        <div className="flex h-[355px] w-[80vw] flex-col p-2 md:w-[340px]">
-          <div className="flex flex-col rounded-[8px] p-2 flex-grow">
-            <div className="text-center">Loading...</div>
-          </div>
+        <div className="flex grow rounded-lg items-center justify-center">
+          <div className="text-center">Loading...</div>
         </div>
       ) : (
-        <div className="flex h-[355px] w-[80vw] flex-col p-2 md:w-[340px]">
-          <div className="flex flex-col overflow-y-scroll rounded-[8px] p-2 flex-grow">
-            {timeArray.map((slot: any) => (
-              <div
-                key={slot.id}
-                onClick={() => handleClick(slot.id)}
-                className={`my-1 rounded text-center hover:cursor-pointer p-2
+        <div className="flex flex-col gap-2 grow rounded-lg">
+          <div className="flex flex-grow w-full rounded-lg items-start">
+            <div
+              className={`border w-full h-[310px] rounded-lg overflow-y-scroll p-2
+                  ${
+                    isSubscribed
+                      ? "flex justify-center flex-col grow w-full"
+                      : ""
+                  }`}
+            >
+              {timeArray.map((slot: any) => (
+                <div
+                  key={slot.id}
+                  onClick={() => handleClick(slot.id)}
+                  className={`flex items-center justify-center text-center hover:cursor-pointer rounded-full
+                  ${isSubscribed ? "h-[25%] rounded-lg" : "p-1 my-1"}
                   ${
                     bookedTimes.includes(slot.id)
                       ? "bg-red-500"
@@ -136,13 +179,14 @@ export const PickTime = ({
                       ? "bg-emerald-500 text-black"
                       : "bg-background hover:bg-accent"
                   }`}
-              >
-                <span>{slot.displayName}</span>
-              </div>
-            ))}
+                >
+                  <span>{slot.displayName}</span>
+                </div>
+              ))}
+            </div>
           </div>
-          <Button className="mt-4 w-full" onClick={clearBtn}>
-            Clear selection
+          <Button className="w-full" onClick={clearBtn}>
+            CLEAR SELECTION
           </Button>
         </div>
       )}

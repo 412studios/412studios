@@ -4,8 +4,14 @@ import { redirect } from "next/navigation";
 import prisma from "@/app/lib/db";
 import { stripe } from "@/app/lib/stripe";
 import { unstable_noStore as noStore } from "next/cache";
-import Page from "./page";
 import { getPricing } from "@/app/lib/booking";
+import { DashboardProvider } from "./context";
+import { Pricing, Subscription, User } from "@prisma/client";
+
+// Define the type for prices
+type PricesMap = {
+  [key: number]: Pricing;
+};
 
 async function getData({
   email,
@@ -168,6 +174,7 @@ export default async function DashboardLayout({
   if (!user) {
     return redirect("/");
   }
+
   await getData({
     email: user.email as string,
     firstName: user.given_name as string,
@@ -181,10 +188,20 @@ export default async function DashboardLayout({
     return redirect("/");
   }
 
-  const prices = await getPricing();
+  // Convert user to full Prisma User object
+  const fullUser = (await prisma.user.findUnique({
+    where: { id: user.id as string },
+  })) as User;
+
+  const prices = (await getPricing()) as PricesMap;
+
   return (
-    <>
-      <Page user={user} sub={subData} prices={prices} />
-    </>
+    <DashboardProvider
+      userData={fullUser}
+      subscriptionData={subData as Subscription[]}
+      pricingData={prices}
+    >
+      {children}
+    </DashboardProvider>
   );
 }

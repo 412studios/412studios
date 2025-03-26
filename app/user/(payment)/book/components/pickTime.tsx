@@ -79,12 +79,21 @@ export const PickTime = ({
     }
   }, [options.date, options.room, options.user, setOptions]);
 
-  const handleClick = (id: number) => {
-    setSelList((prevSelList) => {
-      if (bookedTimes.includes(id)) {
-        return prevSelList;
-      }
+  const handleTimePick = (start: any, end: any, duration: number) => {
+    setOptions((prevOptions: any) => ({
+      ...prevOptions,
+      startTime: start,
+      endTime: end,
+      duration: duration,
+    }));
+  };
 
+  const handleClick = (id: number) => {
+    if (bookedTimes.includes(id)) {
+      return;
+    }
+
+    setSelList((prevSelList) => {
       const sortedList = Array.from(new Set([...prevSelList, id])).sort(
         (a, b) => a - b
       );
@@ -120,22 +129,18 @@ export const PickTime = ({
           }
         }
       }
-      handleTimePick(
-        fullList[0],
-        fullList[fullList.length - 1],
-        fullList.length
-      );
+
+      // This is now outside of the state update function
+      setTimeout(() => {
+        handleTimePick(
+          fullList[0],
+          fullList[fullList.length - 1],
+          fullList.length
+        );
+      }, 0);
+
       return fullList;
     });
-  };
-
-  const handleTimePick = (start: any, end: any, duration: number) => {
-    setOptions((prevOptions: any) => ({
-      ...prevOptions,
-      startTime: start,
-      endTime: end,
-      duration: duration,
-    }));
   };
 
   const clearBtn = () => {

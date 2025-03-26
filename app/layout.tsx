@@ -23,12 +23,6 @@ export const metadata: Metadata = {
       url: "/icon.png",
       media: "(prefers-color-scheme: light)",
     },
-    {
-      rel: "icon",
-      type: "image/png",
-      url: "/icon.png",
-      media: "(prefers-color-scheme: dark)",
-    },
   ],
 };
 
@@ -43,8 +37,9 @@ export default async function RootLayout({
   const user = await getUser();
 
   return (
-    <html lang="en">
-      <body className="flex flex-col min-h-screen max-w-[2000px] mx-auto">
+    <html lang="en" className="dark" style={{ colorScheme: "dark" }}>
+      <body className="flex flex-col min-h-screen">
+        {/* <body className="flex flex-col min-h-screen max-w-[2000px] mx-auto"> */}
         <Navbar />
         <ThemeProvider
           attribute="class"

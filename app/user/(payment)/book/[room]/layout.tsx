@@ -162,7 +162,6 @@ export default async function Dashboard(
   context: any,
   { children }: { children?: ReactNode } = {}
 ) {
-  console.log(context.params.room);
   //redirect user of not logged in
   const { getUser } = getKindeServerSession();
   const user = await getUser();
