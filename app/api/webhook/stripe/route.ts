@@ -1,12 +1,15 @@
-import { stripe } from "@/app/lib/stripe";
 import { headers } from "next/headers";
 import Stripe from "stripe";
-import prisma from "@/app/lib/db";
 
-//ADD MORE EVENTS TO CHECK FOR OTHER OPTIONS EX IF CARD GETS ABANDONED
+// Initialize Stripe with your secret key
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  apiVersion: "2023-10-16", // Use the latest API version available
+});
+
 export async function POST(req: Request) {
   const body = await req.text();
-  const signature = headers().get("Stripe-Signature") as string;
+  const headersList = await headers();
+  const signature = headersList.get("Stripe-Signature") as string;
 
   let event: Stripe.Event;
 
@@ -14,61 +17,35 @@ export async function POST(req: Request) {
     event = stripe.webhooks.constructEvent(
       body,
       signature,
-      process.env.STRIPE_WEBHOOK_SECRET as string
+      process.env.STRIPE_WEBHOOK_SECRET!
     );
-  } catch (error: unknown) {
-    return new Response("Webhook Error");
+  } catch (error: any) {
+    console.error(`Webhook error: ${error.message}`);
+    return new Response(`Webhook Error: ${error.message}`, { status: 400 });
   }
 
-  const session = event.data.object as Stripe.Checkout.Session;
-
-  if (event.type === "checkout.session.completed") {
-    const subscription = await stripe.subscriptions.retrieve(
-      session.subscription as string
-    );
-    const customerId = String(session.customer);
-
-    const user = await prisma.user.findUnique({
-      where: {
-        stripeCustomerId: customerId,
-      },
-    });
-
-    if (!user) throw new Error("User not found...");
-
-    await prisma.subscription.create({
-      data: {
-        subscriptionId: subscription.id,
-        stripeSessionId: "",
-        stripeSubscriptionId: "",
-        userId: user.id,
-        currentPeriodStart: subscription.current_period_start,
-        currentPeriodEnd: subscription.current_period_end,
-        status: subscription.status,
-        planId: subscription.items.data[0].plan.id,
-        interval: "month",
-        roomId: 0,
-        availableHours: 100,
-      },
-    });
+  // Handle the event
+  switch (event.type) {
+    case "checkout.session.completed":
+      const session = event.data.object as Stripe.Checkout.Session;
+      // Handle completed checkout session
+      console.log("Checkout completed:", session.id);
+      // Process the order here
+      break;
+    case "payment_intent.succeeded":
+      const paymentIntent = event.data.object as Stripe.PaymentIntent;
+      console.log("Payment succeeded:", paymentIntent.id);
+      // Process successful payment
+      break;
+    // Add other event types as needed
+    default:
+      console.log(`Unhandled event type: ${event.type}`);
   }
 
-  if (event.type === "invoice.payment_succeeded") {
-    const subscription = await stripe.subscriptions.retrieve(
-      session.subscription as string
-    );
-
-    await prisma.subscription.update({
-      where: {
-        subscriptionId: subscription.id,
-      },
-      data: {
-        planId: subscription.items.data[0].price.id,
-        currentPeriodStart: subscription.current_period_start,
-        currentPeriodEnd: subscription.current_period_end,
-        status: subscription.status,
-      },
-    });
-  }
-  return new Response(null, { status: 200 });
+  return new Response(JSON.stringify({ received: true }), {
+    status: 200,
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
 }
