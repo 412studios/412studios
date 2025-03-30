@@ -6,16 +6,10 @@ import {
   timeSlots,
   subscriptionTimeSlots,
 } from "@/app/user/(payment)/book/components/timeSlots";
+import { useDashboard } from "../context";
 
-export const PickTime = ({
-  prices,
-  options,
-  setOptions,
-}: {
-  prices: any;
-  options: any;
-  setOptions: any;
-}) => {
+export const PickTime = () => {
+  const { prices, options, setOptions } = useDashboard();
   const [isLoading, setIsLoading] = useState(false);
   const [warning, setWarning] = useState(false);
   const [selList, setSelList] = useState<number[]>([]);

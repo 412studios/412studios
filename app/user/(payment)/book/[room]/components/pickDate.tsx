@@ -1,15 +1,10 @@
 "use client";
 import React, { useEffect } from "react";
 import { Calendar } from "@/components/ui/calendar";
-export const PickDate = ({
-  prices,
-  options,
-  setOptions,
-}: {
-  prices: any;
-  options: any;
-  setOptions: any;
-}) => {
+import { useDashboard } from "@/app/user/(payment)/book/context";
+
+export const PickDate = () => {
+  const { prices, options, setOptions } = useDashboard();
   const handleDatePick = (newDate: any) => {
     setOptions({ ...options, date: newDate, startTime: -1, endTime: -1 });
   };

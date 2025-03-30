@@ -14,16 +14,10 @@ import {
   subscriptionTimeSlots,
 } from "@/app/user/(payment)/book/components/timeSlots";
 import { PostBooking, PostSubscriptionBooking } from "@/app/lib/booking";
+import { useDashboard } from "@/app/user/(payment)/book/context";
 
-export const ShowDetails = ({
-  prices,
-  options,
-  setOptions,
-}: {
-  prices: any;
-  options: any;
-  setOptions: any;
-}) => {
+export const ShowDetails = () => {
+  const { prices, options, setOptions } = useDashboard();
   //Updating options
   const [isLoading, setIsLoading] = useState(false);
 

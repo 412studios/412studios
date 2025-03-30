@@ -1,6 +1,4 @@
 "use client";
-import { useState, useEffect, useMemo } from "react";
-import { useDashboard } from "./context";
 import { PickDate } from "./components/pickDate";
 import { PickTime } from "./components/pickTime";
 import { PickEng } from "./components/pickEng";
@@ -20,38 +18,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useDashboard } from "./context";
 
 export default function DashboardPage() {
-  // Get context data
-  const { user, subscriptions: sub, prices } = useDashboard();
-
-  const subRooms = useMemo(() => sub.map((s) => s.roomId), [sub]);
-  const subRoomHours = useMemo(() => sub.map((s) => s.availableHours), [sub]);
-
-  const defaultOptions = useMemo(
-    () => ({
-      room: 0,
-      date: new Date(),
-      startTime: -1,
-      endTime: -1,
-      duration: 0,
-      price: 0,
-      loading: false,
-      subscription: sub,
-      subRooms,
-      subRoomHours,
-      user,
-      engDuration: -1,
-      engStart: -1,
-    }),
-    [sub, subRooms, subRoomHours, user]
-  );
-
-  const [options, setOptions] = useState(defaultOptions);
-
-  useEffect(() => {
-    setOptions(defaultOptions);
-  }, [defaultOptions]);
+  const { options, setOptions } = useDashboard();
 
   const onRoomSelect = (id: string) => {
     setOptions((prev) => ({
@@ -91,7 +61,7 @@ export default function DashboardPage() {
             <AccordionItem value="item-1">
               <AccordionTrigger>Studio Details</AccordionTrigger>
               <AccordionContent>
-                <RoomDetails data={prices} />
+                <RoomDetails />
               </AccordionContent>
             </AccordionItem>
           </Accordion>

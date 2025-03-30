@@ -4,8 +4,9 @@ import { redirect } from "next/navigation";
 import prisma from "@/app/lib/db";
 import { stripe } from "@/app/lib/stripe";
 import { unstable_noStore as noStore } from "next/cache";
-import Page from "./page";
 import { getPricing } from "@/app/lib/booking";
+import { DashboardProvider } from "../context";
+import { Pricing, Subscription, User } from "@prisma/client";
 
 async function getData({
   email,
@@ -158,10 +159,11 @@ async function getSubscription(userId: string) {
   return data;
 }
 
-export default async function Dashboard(
-  context: any,
-  { children }: { children?: ReactNode } = {}
-) {
+export default async function Dashboard({
+  children,
+}: {
+  children: ReactNode;
+}) {
   //redirect user of not logged in
   const { getUser } = getKindeServerSession();
   const user = await getUser();
@@ -181,13 +183,20 @@ export default async function Dashboard(
     return redirect("/");
   }
 
+  // Convert user to full Prisma User object
+  const fullUser = (await prisma.user.findUnique({
+    where: { id: user.id as string },
+  })) as User;
+
   const prices = await getPricing();
 
-  return redirect("/");
-
   return (
-    <>
-      <Page user={user} sub={subData} prices={prices} />
-    </>
+    <DashboardProvider
+      userData={fullUser}
+      subscriptionData={subData as Subscription[]}
+      pricingData={prices}
+    >
+      {children}
+    </DashboardProvider>
   );
 }

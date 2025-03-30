@@ -14,16 +14,10 @@ import {
   timeSlots,
   subscriptionTimeSlots,
 } from "@/app/user/(payment)/book/components/timeSlots";
+import { useDashboard } from "@/app/user/(payment)/book/context";
 
-export const PickEng = ({
-  prices,
-  options,
-  setOptions,
-}: {
-  prices: any;
-  options: any;
-  setOptions: any;
-}) => {
+export const PickEng = () => {
+  const { prices, options, setOptions } = useDashboard();
   const placeholderStart = "Start Time";
   const placeholderDuration = "Duration";
   const [isChecked, setIsChecked] = useState(false);

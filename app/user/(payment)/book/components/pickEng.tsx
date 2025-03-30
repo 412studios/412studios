@@ -11,18 +11,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { timeSlots } from "@/app/user/(payment)/book/components/timeSlots";
-
 import { H2, H4, Subtitle, Section, Divider } from "@/components/ui/copy";
+import { useDashboard } from "../context";
 
-export const PickEng = ({
-  prices,
-  options,
-  setOptions,
-}: {
-  prices: any;
-  options: any;
-  setOptions: any;
-}) => {
+export const PickEng = () => {
+  const { prices, options, setOptions } = useDashboard();
   const placeholderStart = "Start Time";
   const placeholderDuration = "Duration";
   const [isChecked, setIsChecked] = useState(false);

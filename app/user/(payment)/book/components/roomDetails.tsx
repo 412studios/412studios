@@ -16,8 +16,10 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import { useDashboard } from "../context";
 
-export const RoomDetails = ({ data }: { data: any }) => {
+export const RoomDetails = () => {
+  const { prices: data } = useDashboard();
   return (
     <>
       <div className="w-fill">

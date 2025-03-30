@@ -1,12 +1,5 @@
 "use client";
 import { useState, useEffect } from "react";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,16 +8,10 @@ import {
 } from "@/app/user/(payment)/book/components/timeSlots";
 import { PostBooking, PostSubscriptionBooking } from "@/app/lib/booking";
 import { H2, H4, Subtitle, Section, Divider } from "@/components/ui/copy";
+import { useDashboard } from "../context";
 
-export const ShowDetails = ({
-  prices,
-  options,
-  setOptions,
-}: {
-  prices: any;
-  options: any;
-  setOptions: any;
-}) => {
+export const ShowDetails = () => {
+  const { prices, options, setOptions } = useDashboard();
   //Updating options
   const [isLoading, setIsLoading] = useState(false);
 

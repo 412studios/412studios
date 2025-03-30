@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { PickDate } from "./components/pickDate";
 import { PickTime } from "./components/pickTime";
 import { PickEng } from "./components/pickEng";
@@ -25,44 +25,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useDashboard } from "../context";
 
-export default function Page(data: any) {
-  // COLLECT SUBSCRIPTION DETAILS IF AVAILABLE
-  // CREATE ARRAY OF ACTIVE SUBSCRIPTIONS AND ROOM HOURS
-  const subRooms = useMemo(
-    () => data.sub.map((element: any) => element.roomId),
-    [data.sub]
-  );
-  const subRoomHours = useMemo(
-    () => data.sub.map((element: any) => element.availableHours),
-    [data.sub]
-  );
-
-  // SET DEFAULT OPTION VALUES ON LOAD
-  const defaultOptions = useMemo(
-    () => ({
-      room: 0,
-      date: new Date(),
-      startTime: -1,
-      endTime: -1,
-      duration: 0,
-      price: 0,
-      loading: false,
-      subscription: data.sub,
-      subRooms: subRooms,
-      subRoomHours: subRoomHours,
-      user: data.user,
-      engDuration: -1,
-      engStart: -1,
-    }),
-    [data.sub, subRooms, subRoomHours, data.user]
-  );
-
-  const [options, setOptions] = useState(defaultOptions);
-
-  useEffect(() => {
-    setOptions(defaultOptions);
-  }, [defaultOptions]);
+export default function Page() {
+  const { options, setOptions } = useDashboard();
 
   // UPDATE OPTIONS ON ROOM PICK + RESET TIMES
   function onRoomSelect(id: string) {
@@ -89,7 +55,7 @@ export default function Page(data: any) {
             <AccordionItem value="item-1">
               <AccordionTrigger>View Room Details</AccordionTrigger>
               <AccordionContent className="p-0">
-                <RoomDetails data={data.prices} />
+                <RoomDetails />
               </AccordionContent>
             </AccordionItem>
           </Accordion>
@@ -133,11 +99,7 @@ export default function Page(data: any) {
                   Select A Date
                 </h2>
                 <div className="flex items-center justify-center">
-                  <PickDate
-                    setOptions={setOptions}
-                    options={options}
-                    prices={data.prices}
-                  />
+                  <PickDate />
                 </div>
               </div>
               <div className="w-full md:w-1/2 p-6 md:border-t-0 border-t-4">
@@ -145,32 +107,20 @@ export default function Page(data: any) {
                   Select A Time
                 </h2>
                 <div className="flex items-center justify-center">
-                  <PickTime
-                    setOptions={setOptions}
-                    options={options}
-                    prices={data.prices}
-                  />
+                  <PickTime />
                 </div>
               </div>
             </div>
           </div>
 
           <div className="w-fill border-t-4 p-4">
-            <PickEng
-              setOptions={setOptions}
-              options={options}
-              prices={data.prices}
-            />
+            <PickEng />
           </div>
         </CardContent>
       </Card>
 
       {/* CHECKOUT DETAILS */}
-      <ShowDetails
-        setOptions={setOptions}
-        options={options}
-        prices={data.prices}
-      />
+      <ShowDetails />
     </>
   );
 }
