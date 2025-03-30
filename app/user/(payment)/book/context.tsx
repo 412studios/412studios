@@ -67,6 +67,17 @@ export const DashboardContext = createContext<DashboardContextType>({
     engStart: -1,
   },
   setOptions: () => {},
+  // Add missing derived state properties
+  isSubscribed: false,
+  activeSubscription: null,
+  areSubHoursAvailable: false,
+  
+  // Add missing helper functions
+  onRoomSelect: () => {},
+  handleTimePick: () => {},
+  clearTimeSelection: () => {},
+  submitBooking: async () => {},
+  submitSubscriptionBooking: async () => {},
 });
 
 // Provider component
