@@ -27,7 +27,7 @@ export const RoomDetails = () => {
         {/* Desktop only */}
         <div className="hidden lg:block">
           <div className="flex flex-wrap">
-            {data.map((element: any) => (
+            {Object.values(data).map((element: any) => (
               <div key={element.id} className="w-full md:w-1/3 p-2">
                 <Image
                   src={`/images/${element.img}`}
@@ -62,7 +62,7 @@ export const RoomDetails = () => {
         <div className="block lg:hidden">
           <Carousel className="w-full p-2 py-4">
             <CarouselContent className="border-0">
-              {data.map((element: any) => (
+              {Object.values(data).map((element: any) => (
                 <CarouselItem key={element.id}>
                   <div>
                     <h3 className="text-2xl ront-primary font-bold tracking-tight mb-6">

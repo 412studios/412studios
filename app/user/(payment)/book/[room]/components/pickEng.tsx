@@ -44,7 +44,7 @@ export const PickEng = () => {
   let startArr: any = [];
   let min = 0;
   let max = 0;
-  if (options.subRooms.includes(parseInt(options.room))) {
+  if (options.subRooms.includes(options.room)) {
     if (options.startTime > -1) {
       min = options.startTime * 4;
       max = options.endTime * 4 + 4 - 1;
@@ -110,8 +110,7 @@ export const PickEng = () => {
   return (
     <div>
       <h2 className="text-2xl font-semibold leading-none  tracking-wide text-primary mb-4">
-        Engineering Fee: ${prices[parseInt(options.room)].engineerPrice}.00 per
-        hour
+        Engineering Fee: ${prices[options.room].engineerPrice}.00 per hour
       </h2>
 
       <div className="border-b-4 border-dashed"></div>
