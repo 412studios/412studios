@@ -114,7 +114,11 @@ export default function NavbarClient({
       >
         <div className="flex flex-col">
           {/* MAIN NAV */}
-          <div className="p-2 border-b-0 md:border-b flex justify-between items-center">
+          <div
+            className={`p-2 border-b-0 flex justify-between items-center ${
+              isHomepage ? "md:border-b" : "md:border-b-0"
+            }`}
+          >
             <Link href="/" aria-label="Header Logo">
               <Logo className="rounded-full bg-stone-50 bg-opacity-5 h-6 text-primary hover:text-secondary hover:fill-secondary transition-all duration-300 ease-in-out" />
             </Link>
