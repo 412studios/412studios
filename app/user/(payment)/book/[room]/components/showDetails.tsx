@@ -19,7 +19,8 @@ import { useDashboard } from "@/app/user/(payment)/book/context";
 export const ShowDetails = () => {
   const { prices, options, setOptions } = useDashboard();
   // Use context values instead of recalculating
-  const { isSubscribed, areSubHoursAvailable, activeSubscription } = useDashboard();
+  let { isSubscribed, areSubHoursAvailable, activeSubscription } =
+    useDashboard();
   const [isLoading, setIsLoading] = useState(false);
 
   let displayStart = "Not Selected";
@@ -49,8 +50,12 @@ export const ShowDetails = () => {
         }
       });
       //VERIFY IF HOURS ARE AVAILABLE
-      if (activeSubscription.availableHours >= 4) {
-        areSubHoursAvailable = true;
+      if (activeSubscription) {
+        if (activeSubscription.availableHours >= 4) {
+          areSubHoursAvailable = true;
+        } else {
+          areSubHoursAvailable = false;
+        }
       } else {
         areSubHoursAvailable = false;
       }
@@ -167,7 +172,7 @@ export const ShowDetails = () => {
                         </TableCell>
                         <TableCell>{duration}</TableCell>
                       </TableRow>
-                      {areSubHoursAvailable ? (
+                      {areSubHoursAvailable && activeSubscription ? (
                         <>
                           <TableRow>
                             <TableCell>
@@ -246,19 +251,17 @@ export const ShowDetails = () => {
                             }}
                             disabled={isLoading || options.loading}
                           >
-                            {isLoading || options.loading ? "Redirecting..." : "Book Time"}
+                            {isLoading || options.loading
+                              ? "Redirecting..."
+                              : "Book Time"}
                           </Button>
                         </>
                       ) : (
                         <>
                           {/* PREVENT BOOKING WITHOUT HOURS */}
-                          <Button
-                            className="w-full"
-                            onClick={submit}
-                            disabled={true}
-                          >
-                            Hours are not available
-                          </Button>
+                          <div className="alert">
+                            <span>Hours are not available</span>
+                          </div>
                         </>
                       )}
                     </>
@@ -369,7 +372,9 @@ export const ShowDetails = () => {
                       }}
                       disabled={isLoading || options.loading}
                     >
-                      {isLoading || options.loading ? "Redirecting..." : "Proceed to Payment"}
+                      {isLoading || options.loading
+                        ? "Redirecting..."
+                        : "Proceed to Payment"}
                     </Button>
                   )}
                 </CardFooter>
