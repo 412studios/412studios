@@ -73,14 +73,8 @@ export const PickTime = () => {
     }
   }, [options.date, options.room, options.user, setOptions]);
 
-  const handleTimePick = (start: any, end: any, duration: number) => {
-    setOptions((prevOptions: any) => ({
-      ...prevOptions,
-      startTime: start,
-      endTime: end,
-      duration: duration,
-    }));
-  };
+  // Use context function
+  const { handleTimePick, clearTimeSelection } = useDashboard();
 
   const handleClick = (id: number) => {
     if (bookedTimes.includes(id)) {
@@ -140,7 +134,7 @@ export const PickTime = () => {
 
   const clearBtn = () => {
     setSelList([]);
-    handleTimePick(-1, -1, 0);
+    clearTimeSelection();
     setWarning(false);
   };
 

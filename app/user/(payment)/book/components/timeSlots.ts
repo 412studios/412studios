@@ -1,4 +1,3 @@
-"use client";
 export const timeSlots: {
   id: number;
   startTime: string;
