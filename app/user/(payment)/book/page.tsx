@@ -85,32 +85,20 @@ export default function DashboardPage() {
             <div className="shrink-1">
               <H4 className="mb-2">SELECT DATE</H4>
               <div className="rounded-lg flex-shrink flex justify-center">
-                <PickDate
-                  setOptions={setOptions}
-                  options={options}
-                  prices={prices}
-                />
+                <PickDate />
               </div>
             </div>
 
             <div className="flex flex-col grow">
               <H4 className="mb-2">SELECT TIME</H4>
-              <PickTime
-                setOptions={setOptions}
-                options={options}
-                prices={prices}
-              />
+              <PickTime />
             </div>
           </div>
         </div>
 
-        <PickEng setOptions={setOptions} options={options} prices={prices} />
+        <PickEng />
 
-        <ShowDetails
-          setOptions={setOptions}
-          options={options}
-          prices={prices}
-        />
+        <ShowDetails />
       </div>
     </section>
   );
