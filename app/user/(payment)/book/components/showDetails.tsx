@@ -11,15 +11,15 @@ import { H2, H4, Subtitle, Section, Divider } from "@/components/ui/copy";
 import { useDashboard } from "../context";
 
 export const ShowDetails = () => {
-  const { 
-    prices, 
-    options, 
-    setOptions, 
-    isSubscribed, 
-    areSubHoursAvailable, 
-    activeSubscription 
+  let {
+    prices,
+    options,
+    setOptions,
+    isSubscribed,
+    areSubHoursAvailable,
+    activeSubscription,
   } = useDashboard();
-  
+
   // Local loading state for UI feedback
   const [isLoading, setIsLoading] = useState(false);
 
@@ -45,13 +45,17 @@ export const ShowDetails = () => {
       total = 0;
       //LOOP THROUGH AVAILABLE THEN IDENTIFY ACTIVE SUBSCRIPTION
       options.subscription.forEach((sub: any) => {
-        if (sub.roomId === parseInt(options.room)) {
+        if (sub.roomId === options.room) {
           activeSubscription = sub;
         }
       });
       //VERIFY IF HOURS ARE AVAILABLE
-      if (activeSubscription.availableHours >= 4) {
-        areSubHoursAvailable = true;
+      if (activeSubscription) {
+        if (activeSubscription.availableHours >= 4) {
+          areSubHoursAvailable = true;
+        } else {
+          areSubHoursAvailable = false;
+        }
       } else {
         areSubHoursAvailable = false;
       }
@@ -161,7 +165,7 @@ export const ShowDetails = () => {
                       </TableCell>
                       <TableCell>{duration}</TableCell>
                     </TableRow>
-                    {areSubHoursAvailable ? (
+                    {areSubHoursAvailable && activeSubscription ? (
                       <>
                         <TableRow>
                           <TableCell>
@@ -239,19 +243,17 @@ export const ShowDetails = () => {
                             }}
                             disabled={isLoading || options.loading}
                           >
-                            {isLoading || options.loading ? "Redirecting..." : "Book Time"}
+                            {isLoading || options.loading
+                              ? "Redirecting..."
+                              : "Book Time"}
                           </Button>
                         </>
                       ) : (
                         <>
                           {/* PREVENT BOOKING WITHOUT HOURS */}
-                          <Button
-                            className="w-full"
-                            onClick={submit}
-                            disabled={true}
-                          >
-                            Hours are not available
-                          </Button>
+                          <div className="alert">
+                            <span>Hours are not available</span>
+                          </div>
                         </>
                       )}
                     </>
@@ -264,7 +266,7 @@ export const ShowDetails = () => {
               {/* STANDARD BOOKING DETAILS */}
               <div className="border rounded-lg mt-4 p-4">
                 <H4>Booking Details</H4>
-                <CardContent>
+                <>
                   <Table className="rounded-[8px] overflow-hidden border-0">
                     <TableBody className="border-t-0">
                       <TableRow>
@@ -344,7 +346,7 @@ export const ShowDetails = () => {
                       </TableRow>
                     </TableBody>
                   </Table>
-                </CardContent>
+                </>
                 <div className="p-4 pt-0">
                   {/* ALLOW BOOKING IF LOCAL DURATION IS 2 OR MORE */}
                   {duration <= 1 ? (
@@ -360,7 +362,9 @@ export const ShowDetails = () => {
                       }}
                       disabled={isLoading || options.loading}
                     >
-                      {isLoading || options.loading ? "Redirecting..." : "Proceed to Payment"}
+                      {isLoading || options.loading
+                        ? "Redirecting..."
+                        : "Proceed to Payment"}
                     </Button>
                   )}
                 </div>
