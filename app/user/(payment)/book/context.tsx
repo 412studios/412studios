@@ -32,6 +32,18 @@ type DashboardContextType = {
   prices: PricesMap;
   options: BookingOptions;
   setOptions: React.Dispatch<React.SetStateAction<BookingOptions>>;
+  
+  // Derived state
+  isSubscribed: boolean;
+  activeSubscription: Subscription | null;
+  areSubHoursAvailable: boolean;
+  
+  // Helper functions
+  onRoomSelect: (id: string) => void;
+  handleTimePick: (start: number, end: number, duration: number) => void;
+  clearTimeSelection: () => void;
+  submitBooking: () => Promise<void>;
+  submitSubscriptionBooking: () => Promise<void>;
 };
 
 // Create and export context with default values
@@ -106,6 +118,97 @@ export function DashboardProvider({
   useEffect(() => {
     setOptions(defaultOptions);
   }, [defaultOptions]);
+  
+  // Derived state
+  const isSubscribed = useMemo(() => 
+    options.subRooms.includes(parseInt(options.room.toString())), 
+    [options.subRooms, options.room]
+  );
+  
+  const activeSubscription = useMemo(() => {
+    if (!isSubscribed) return null;
+    return options.subscription.find(
+      (sub) => sub.roomId === parseInt(options.room.toString())
+    ) || null;
+  }, [isSubscribed, options.subscription, options.room]);
+  
+  const areSubHoursAvailable = useMemo(() => {
+    if (!activeSubscription) return false;
+    return activeSubscription.availableHours >= 4;
+  }, [activeSubscription]);
+  
+  // Helper functions
+  const onRoomSelect = (id: string) => {
+    setOptions((prevOptions) => ({
+      ...prevOptions,
+      room: parseInt(id),
+      date: new Date(),
+      startTime: -1,
+      endTime: -1,
+      engStart: -1,
+      engDuration: -1,
+    }));
+  };
+  
+  const handleTimePick = (start: number, end: number, duration: number) => {
+    setOptions((prevOptions) => ({
+      ...prevOptions,
+      startTime: start,
+      endTime: end,
+      duration: duration,
+    }));
+  };
+  
+  const clearTimeSelection = () => {
+    setOptions((prevOptions) => ({
+      ...prevOptions,
+      startTime: -1,
+      endTime: -1,
+      duration: 0,
+    }));
+  };
+  
+  const submitBooking = async () => {
+    setOptions((prevOptions) => ({
+      ...prevOptions,
+      loading: true,
+    }));
+    
+    try {
+      // Import dynamically to avoid circular dependencies
+      const { PostBooking } = await import('@/app/lib/booking');
+      await PostBooking(options);
+    } catch (error) {
+      console.error("Failed to post booking:", error);
+      setOptions((prevOptions) => ({
+        ...prevOptions,
+        loading: false,
+      }));
+    }
+  };
+  
+  const submitSubscriptionBooking = async () => {
+    setOptions((prevOptions) => ({
+      ...prevOptions,
+      loading: true,
+    }));
+    
+    const startTime = options.startTime * 4;
+    const endTime = options.endTime * 4 + 3;
+    const duration = options.endTime - options.startTime + 1 * 4;
+    
+    try {
+      // Import dynamically to avoid circular dependencies
+      const { PostSubscriptionBooking } = await import('@/app/lib/booking');
+      await PostSubscriptionBooking(options, startTime, endTime, duration);
+    } catch (error) {
+      console.error("Failed to post subscription booking:", error);
+      setOptions((prevOptions) => ({
+        ...prevOptions,
+        loading: false,
+      }));
+    }
+  };
 
   return (
     <DashboardContext.Provider
@@ -115,6 +218,14 @@ export function DashboardProvider({
         prices: pricingData,
         options,
         setOptions,
+        isSubscribed,
+        activeSubscription,
+        areSubHoursAvailable,
+        onRoomSelect,
+        handleTimePick,
+        clearTimeSelection,
+        submitBooking,
+        submitSubscriptionBooking
       }}
     >
       {children}

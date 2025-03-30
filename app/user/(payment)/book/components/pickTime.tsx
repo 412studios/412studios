@@ -126,6 +126,7 @@ export const PickTime = () => {
 
       // This is now outside of the state update function
       setTimeout(() => {
+        // Use context function
         handleTimePick(
           fullList[0],
           fullList[fullList.length - 1],

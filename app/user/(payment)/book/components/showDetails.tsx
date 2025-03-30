@@ -11,16 +11,17 @@ import { H2, H4, Subtitle, Section, Divider } from "@/components/ui/copy";
 import { useDashboard } from "../context";
 
 export const ShowDetails = () => {
-  const { prices, options, setOptions } = useDashboard();
-  //Updating options
+  const { 
+    prices, 
+    options, 
+    setOptions, 
+    isSubscribed, 
+    areSubHoursAvailable, 
+    activeSubscription 
+  } = useDashboard();
+  
+  // Local loading state for UI feedback
   const [isLoading, setIsLoading] = useState(false);
-
-  let isSubscribed = false;
-  let areSubHoursAvailable = false;
-  let activeSubscription: any = [];
-  if (options.subRooms.includes(parseInt(options.room)) == true) {
-    isSubscribed = true;
-  }
 
   let displayStart = "Not Selected";
   let displayEnd = "Not Selected";
@@ -105,26 +106,8 @@ export const ShowDetails = () => {
     }));
   }, [total, setOptions]);
 
-  //SUBMIT DETAILS
-  const submit = async () => {
-    setIsLoading(true);
-    try {
-      await PostBooking(options);
-    } catch (error) {
-      console.error("Failed to post booking:", error);
-    }
-  };
-
-  const submitSubscription = async () => {
-    setIsLoading(true);
-    const startTime = options.startTime * 4;
-    const endTime = options.endTime * 4 + 3;
-    try {
-      await PostSubscriptionBooking(options, startTime, endTime, duration);
-    } catch (error) {
-      console.error("Failed to post booking:", error);
-    }
-  };
+  // Use context functions for submission
+  const { submitBooking, submitSubscriptionBooking } = useDashboard();
 
   return (
     <div>
@@ -250,10 +233,13 @@ export const ShowDetails = () => {
                         <>
                           <Button
                             className="w-full"
-                            onClick={submitSubscription}
-                            disabled={isLoading}
+                            onClick={() => {
+                              setIsLoading(true);
+                              submitSubscriptionBooking();
+                            }}
+                            disabled={isLoading || options.loading}
                           >
-                            {isLoading ? "Redirecting..." : "Book Time"}
+                            {isLoading || options.loading ? "Redirecting..." : "Book Time"}
                           </Button>
                         </>
                       ) : (
@@ -368,10 +354,13 @@ export const ShowDetails = () => {
                   ) : (
                     <Button
                       className="w-full"
-                      onClick={submit}
-                      disabled={isLoading}
+                      onClick={() => {
+                        setIsLoading(true);
+                        submitBooking();
+                      }}
+                      disabled={isLoading || options.loading}
                     >
-                      {isLoading ? "Redirecting..." : "Proceed to Payment"}
+                      {isLoading || options.loading ? "Redirecting..." : "Proceed to Payment"}
                     </Button>
                   )}
                 </div>

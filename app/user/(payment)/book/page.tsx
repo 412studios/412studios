@@ -21,19 +21,7 @@ import {
 import { useDashboard } from "./context";
 
 export default function DashboardPage() {
-  const { options, setOptions } = useDashboard();
-
-  const onRoomSelect = (id: string) => {
-    setOptions((prev) => ({
-      ...prev,
-      room: parseInt(id),
-      date: new Date(),
-      startTime: -1,
-      endTime: -1,
-      engStart: -1,
-      engDuration: -1,
-    }));
-  };
+  const { options, onRoomSelect } = useDashboard();
 
   return (
     <section className="block mt-[34px] min-h-[calc(100vh-34px)] p-8">

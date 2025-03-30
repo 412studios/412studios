@@ -28,20 +28,7 @@ import {
 import { useDashboard } from "../context";
 
 export default function Page() {
-  const { options, setOptions } = useDashboard();
-
-  // UPDATE OPTIONS ON ROOM PICK + RESET TIMES
-  function onRoomSelect(id: string) {
-    setOptions((prevOptions) => ({
-      ...prevOptions,
-      room: parseInt(id),
-      date: new Date(),
-      startTime: -1,
-      endTime: -1,
-      engStart: -1,
-      engDuration: -1,
-    }));
-  }
+  const { options, onRoomSelect } = useDashboard();
 
   return (
     <>

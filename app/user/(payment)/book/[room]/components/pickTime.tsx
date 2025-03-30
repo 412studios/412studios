@@ -123,18 +123,11 @@ export const PickTime = () => {
     });
   };
 
-  const handleTimePick = (start: any, end: any, duration: number) => {
-    setOptions((prevOptions: any) => ({
-      ...prevOptions,
-      startTime: start,
-      endTime: end,
-      duration: duration,
-    }));
-  };
+  const { handleTimePick, clearTimeSelection } = useDashboard();
 
   const clearBtn = () => {
     setSelList([]);
-    handleTimePick(-1, -1, 0);
+    clearTimeSelection();
     setWarning(false);
   };
 
