@@ -2,13 +2,7 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-} from "@/components/ui/card";
+import { CardDescription } from "@/components/ui/card";
 import {
   Carousel,
   CarouselContent,
@@ -104,3 +98,4 @@ export const RoomDetails = () => {
     </>
   );
 };
+3;

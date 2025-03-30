@@ -16,11 +16,11 @@ const formatDate = (date: Date | undefined): number => {
 };
 
 //GET DB DETAILS
-export async function getBooking(roomId: string, date: number) {
+export async function getBooking(roomId: number, date: number) {
   noStore();
   const data = await prisma.bookings.findMany({
     where: {
-      roomId: parseInt(roomId),
+      roomId: roomId,
       date: date,
     },
     select: {
@@ -34,7 +34,7 @@ export async function getBooking(roomId: string, date: number) {
   return data;
 }
 
-export async function getSubWeek(roomId: string, date: number, user: any) {
+export async function getSubWeek(roomId: number, date: number, user: any) {
   noStore();
   const getWeekBoundaries = (numericDate: number) => {
     const year = Math.floor(numericDate / 10000);
@@ -69,7 +69,7 @@ export async function getSubWeek(roomId: string, date: number, user: any) {
   const userBooking = await prisma.bookings.findMany({
     where: {
       userId: user.id,
-      roomId: parseInt(roomId),
+      roomId: roomId,
       date: {
         gte: startOfWeekNumeric,
         lte: endOfWeekNumeric,
@@ -87,7 +87,7 @@ export async function getSubWeek(roomId: string, date: number, user: any) {
   const userSubscription = await prisma.subscription.findMany({
     where: {
       userId: user.id,
-      roomId: parseInt(roomId),
+      roomId: roomId,
     },
     select: {
       weekMax: true,
@@ -97,7 +97,7 @@ export async function getSubWeek(roomId: string, date: number, user: any) {
   //CHECK FOR MAX WEEK EXCEPTION
   const hasWeekMaxException = userSubscription.some(
     (subscription: any) =>
-      subscription.roomId === parseInt(roomId) && subscription.weekMax === false
+      subscription.roomId === roomId && subscription.weekMax === false
   );
   if (hasWeekMaxException) {
     return false;

@@ -24,7 +24,7 @@ export const ShowDetails = () => {
   let isSubscribed = false;
   let areSubHoursAvailable = false;
   let activeSubscription: any = [];
-  if (options.subRooms.includes(parseInt(options.room)) == true) {
+  if (options.subRooms.includes(options.room) == true) {
     isSubscribed = true;
   }
 
@@ -50,7 +50,7 @@ export const ShowDetails = () => {
       total = 0;
       //LOOP THROUGH AVAILABLE THEN IDENTIFY ACTIVE SUBSCRIPTION
       options.subscription.forEach((sub: any) => {
-        if (sub.roomId === parseInt(options.room)) {
+        if (sub.roomId === options.room) {
           activeSubscription = sub;
         }
       });

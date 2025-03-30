@@ -16,7 +16,7 @@ export const PickTime = () => {
   const [bookedTimes, setBookedTimes] = useState<number[]>([]);
   const [existingBookings, setExistingBookings] = useState<number[]>([]);
 
-  const isSubscribed = options.subRooms.includes(parseInt(options.room));
+  const isSubscribed = options.subRooms.includes(options.room);
   const formattedDate = parseInt(formatDateToNumeric(options.date));
   const timeArray = isSubscribed ? subscriptionTimeSlots : timeSlots;
 
