@@ -10,7 +10,7 @@ import { PostBooking, PostSubscriptionBooking } from "@/app/lib/booking";
 import { H2, H4, Subtitle, Section, Divider } from "@/components/ui/copy";
 import { useDashboard } from "../context";
 
-export const ShowDetails = () => {
+export let ShowDetails = () => {
   let {
     prices,
     options,
