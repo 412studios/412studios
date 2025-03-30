@@ -1,4 +1,3 @@
-/* @import url("https://use.typekit.net/qbv0tch.css"); */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -54,17 +53,6 @@
     @apply bg-orange-400 text-black;
   }
 }
-
-/* Pause marquee animation on hover */
-.marquee-container:hover .marquee-item {
-  animation-play-state: paused;
-  cursor: pointer;
-}
-
-/* Fix section scroll margin - old design */
-/* section {
-  scroll-margin-top: 150px !important;
-} */
 
 a:hover {
   text-decoration: underline;
