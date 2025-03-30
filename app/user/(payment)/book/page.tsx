@@ -34,7 +34,7 @@ export default function DashboardPage() {
               <div key={index} className="rounded flex flex-col">
                 <p>
                   Membership In Studio{" "}
-                  {prices[element.roomId]?.room ?? "Unknown"}
+                  {element.roomId}
                 </p>
                 <p>Membership Status: {element.status.toUpperCase()}</p>
                 <p>Remaining Hours in Membership: {element.availableHours}</p>

@@ -53,7 +53,7 @@ export default function Page() {
               {options.subscription.map((element: any, index: number) => (
                 <div key={index} className="rounded flex flex-col font-bold">
                   <span>
-                    Membership Studio: Studio {data.prices[element.roomId].room}
+                    Membership Studio: Studio {element.roomId}
                   </span>
                   <span>Membership Status: {element.status.toUpperCase()}</span>
                   <span>
