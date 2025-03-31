@@ -13,73 +13,58 @@ import {
 import { timeSlots } from "@/app/user/(payment)/book/components/timeSlots";
 import { H2, H4, Subtitle, Section, Divider } from "@/components/ui/copy";
 import { useDashboard } from "../context";
-import { TimeSlot } from "@/types/booking";
 
-interface DurationOption {
-  value: string;
-  label: string;
-}
-
-export const PickEng: React.FC = () => {
+export const PickEng = () => {
   const { prices, options, setOptions } = useDashboard();
   const placeholderStart = "Start Time";
   const placeholderDuration = "Duration";
-  const [isChecked, setIsChecked] = useState<boolean>(false);
+  const [isChecked, setIsChecked] = useState(false);
   const [startTime, setStartTime] = useState<string>(placeholderStart);
   const [startTimeID, setStartTimeID] = useState<number>(-1);
   const [duration, setDuration] = useState<string>(placeholderDuration);
-  const [durationArr, setDurationArr] = useState<DurationOption[]>([
-    { value: "select a start time", label: "Select a start time" },
+  const [durationArr, setDurationArr] = useState<any[]>([
+    "select a start time",
   ]);
 
   useEffect(() => {
     setStartTime(placeholderStart);
     setStartTimeID(-1);
     setDuration(placeholderDuration);
-    setDurationArr([{ value: "select a start time", label: "Select a start time" }]);
+    setDurationArr(["select a start time"]);
     setIsChecked(false);
-    setOptions((prevOptions) => ({
+    setOptions((prevOptions: any) => ({
       ...prevOptions,
       engStart: -1,
       engDuration: -1,
     }));
   }, [options.startTime, options.endTime, setOptions]);
 
-  const getStartTimeArray = (): number[] => {
-    let startArr: number[] = [];
-    let min = 0;
-    let max = 0;
-
-    if (options.subRooms.includes(options.room)) {
-      if (options.startTime > -1) {
-        min = options.startTime * 4;
-        max = options.endTime * 4 + 4 - 1;
-      }
-    } else {
-      min = options.startTime;
-      max = options.endTime;
+  let startArr: any = [];
+  let min = 0;
+  let max = 0;
+  if (options.subRooms.includes(options.room)) {
+    if (options.startTime > -1) {
+      min = options.startTime * 4;
+      max = options.endTime * 4 + 4 - 1;
     }
+  } else {
+    min = options.startTime;
+    max = options.endTime;
+  }
+  for (let i = min; i < max; i++) {
+    startArr.push(i);
+  }
+  if (options.startTime === -1 || options.endTime === -1) {
+    startArr = [];
+  }
 
-    for (let i = min; i < max; i++) {
-      startArr.push(i);
-    }
-
-    if (options.startTime === -1 || options.endTime === -1) {
-      startArr = [];
-    }
-
-    return startArr;
-  };
-
-  const startArr = getStartTimeArray();
-
-  const handleCheckboxChange = (): void => {
+  const handleCheckboxChange = () => {
     if (isChecked) {
       setStartTime(placeholderStart);
       setStartTimeID(-1);
       setDuration(placeholderDuration);
-      setDurationArr([{ value: "select a start time", label: "Select a start time" }]);
-      setOptions((prevOptions) => ({
+      setDurationArr(["select a start time"]);
+      setOptions((prevOptions: any) => ({
         ...prevOptions,
         engStart: -1,
         engDuration: -1,
@@ -88,40 +73,37 @@ export const PickEng: React.FC = () => {
     setIsChecked((prev) => !prev);
   };
 
-  const handleStartTimeChange = (value: string): void => {
+  const handleStartTimeChange = (value: string) => {
     setStartTime(value);
-    const index = startArr.findIndex((item) => formatTime(item) === value);
+    const index = startArr.findIndex((item: any) => formatTime(item) === value);
     setStartTimeID(startArr[index]);
     setDuration(placeholderDuration);
-
     let count = 2;
-    const newDurationArr: DurationOption[] = [{ value: count.toString(), label: `${count} hours` }];
-
+    const newDurationArr = [count];
     for (let i = index; i <= startArr.length - 2; i++) {
       count++;
-      newDurationArr.push({ value: count.toString(), label: `${count} hours` });
+      newDurationArr.push(count);
     }
-
     setDurationArr(newDurationArr);
-    setOptions((prevOptions) => ({
+    setOptions((prevOptions: any) => ({
       ...prevOptions,
       engStart: index,
       engDuration: -1,
     }));
   };
 
-  const handleDurationChange = (value: string): void => {
+  const handleDurationChange = (value: string) => {
     setDuration(value);
-    setOptions((prevOptions) => ({
+    setOptions((prevOptions: any) => ({
       ...prevOptions,
-      engDuration: parseInt(value),
+      engDuration: value,
     }));
   };
 
-  const formatTime = (index: number): string => {
+  function formatTime(index: number) {
     const time = timeSlots[index].displayName.split(" - ")[0];
     return time;
-  };
+  }
 
   return (
     <div className="border rounded-lg mt-4 p-4">
@@ -169,7 +151,7 @@ export const PickEng: React.FC = () => {
                   <SelectContent>
                     <SelectGroup>
                       <SelectLabel>Start Time</SelectLabel>
-                      {startArr.map((item) => (
+                      {startArr.map((item: any) => (
                         <SelectItem key={item} value={formatTime(item)}>
                           {formatTime(item)}
                         </SelectItem>
@@ -178,14 +160,14 @@ export const PickEng: React.FC = () => {
                   </SelectContent>
                 </Select>
               </div>
-              <div className="w-full md:w-1/2">
+              <div className="w-full md:w-1/2 mt-4 md:mt-0">
                 <Select
-                  disabled={!isChecked || startTime === placeholderStart}
+                  disabled={!isChecked}
                   value={duration}
                   onValueChange={handleDurationChange}
                 >
                   <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select duration">
+                    <SelectValue placeholder="Select end time">
                       {duration === placeholderDuration ? (
                         <span className="text-gray-400">
                           {placeholderDuration}
@@ -198,9 +180,9 @@ export const PickEng: React.FC = () => {
                   <SelectContent>
                     <SelectGroup>
                       <SelectLabel>Duration</SelectLabel>
-                      {durationArr.map((option) => (
-                        <SelectItem key={option.value} value={option.value}>
-                          {option.label}
+                      {durationArr.map((item: any) => (
+                        <SelectItem key={item} value={item}>
+                          {item}
                         </SelectItem>
                       ))}
                     </SelectGroup>
@@ -211,22 +193,8 @@ export const PickEng: React.FC = () => {
           </div>
         </div>
       ) : (
-        <div className="pt-4">
-          <div className="flex items-center space-x-2">
-            <Checkbox
-              id="terms"
-              className="rounded"
-              checked={isChecked}
-              onCheckedChange={handleCheckboxChange}
-              disabled
-            />
-            <label
-              htmlFor="terms"
-              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            >
-              Add Engineer
-            </label>
-          </div>
+        <div className="p-4 pl-0 pb-0">
+          <span>No time selected</span>
         </div>
       )}
     </div>

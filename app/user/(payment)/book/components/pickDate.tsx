@@ -3,19 +3,12 @@ import React from "react";
 import { Calendar } from "@/components/ui/calendar";
 import { useDashboard } from "../context";
 
-export const PickDate: React.FC = () => {
-  const { options, setOptions } = useDashboard();
-  const [date, setDate] = React.useState<Date | undefined>(new Date());
-
-  const handleDatePick = (newDate: Date): void => {
-    setOptions((prevOptions) => ({
-      ...prevOptions,
-      date: newDate,
-      startTime: -1,
-      endTime: -1,
-    }));
+export const PickDate = () => {
+  const { prices, options, setOptions } = useDashboard();
+  const handleDatePick = (newDate: Date) => {
+    setOptions({ ...options, date: newDate, startTime: -1, endTime: -1 });
   };
-
+  const [date, setDate] = React.useState<Date | undefined>(new Date());
   return (
     <Calendar
       mode="single"

@@ -1,22 +1,43 @@
 "use client";
 
 import { createContext, useContext, ReactNode, useState, useEffect, useMemo } from "react";
-import { User, Subscription } from "@prisma/client";
-import { BookingOptions, PricesMap } from "@/types/booking";
+import { User, Subscription, Pricing } from "@prisma/client";
 
-// Context type with proper typing
+// Define a type for pricing data format
+export type PricesMap = {
+  [key: number]: Pricing;
+};
+
+// Define options type
+export type BookingOptions = {
+  room: number;
+  date: Date;
+  startTime: number;
+  endTime: number;
+  duration: number;
+  price: number;
+  loading: boolean;
+  subscription: Subscription[];
+  subRooms: number[];
+  subRoomHours: number[];
+  user: User | null;
+  engDuration: number;
+  engStart: number;
+};
+
+// Context type with Prisma-generated types
 type DashboardContextType = {
   user: User | null;
   subscriptions: Subscription[];
   prices: PricesMap;
   options: BookingOptions;
   setOptions: React.Dispatch<React.SetStateAction<BookingOptions>>;
-
+  
   // Derived state
   isSubscribed: boolean;
   activeSubscription: Subscription | null;
   areSubHoursAvailable: boolean;
-
+  
   // Helper functions
   onRoomSelect: (id: string) => void;
   handleTimePick: (start: number, end: number, duration: number) => void;
@@ -45,18 +66,21 @@ export const DashboardContext = createContext<DashboardContextType>({
     engDuration: -1,
     engStart: -1,
   },
-  setOptions: () => { },
+  setOptions: () => {},
+  // Add missing derived state properties
   isSubscribed: false,
   activeSubscription: null,
   areSubHoursAvailable: false,
-  onRoomSelect: () => { },
-  handleTimePick: () => { },
-  clearTimeSelection: () => { },
-  submitBooking: async () => { },
-  submitSubscriptionBooking: async () => { },
+  
+  // Add missing helper functions
+  onRoomSelect: () => {},
+  handleTimePick: () => {},
+  clearTimeSelection: () => {},
+  submitBooking: async () => {},
+  submitSubscriptionBooking: async () => {},
 });
 
-// Provider component with proper typing
+// Provider component
 export function DashboardProvider({
   children,
   userData,
@@ -68,18 +92,18 @@ export function DashboardProvider({
   subscriptionData: Subscription[];
   pricingData: PricesMap;
 }) {
-  // Create arrays of subscription room IDs and hours with proper typing
+  // Create arrays of subscription room IDs and hours
   const subRooms = useMemo(
     () => subscriptionData.map((element) => element.roomId),
     [subscriptionData]
   );
-
+  
   const subRoomHours = useMemo(
     () => subscriptionData.map((element) => element.availableHours),
     [subscriptionData]
   );
 
-  // Set default option values with proper typing
+  // Set default option values
   const defaultOptions = useMemo(
     () => ({
       room: 0,
@@ -105,27 +129,27 @@ export function DashboardProvider({
   useEffect(() => {
     setOptions(defaultOptions);
   }, [defaultOptions]);
-
-  // Derived state with proper typing
-  const isSubscribed = useMemo(() =>
-    options.subRooms.includes(parseInt(options.room.toString())),
+  
+  // Derived state
+  const isSubscribed = useMemo(() => 
+    options.subRooms.includes(parseInt(options.room.toString())), 
     [options.subRooms, options.room]
   );
-
+  
   const activeSubscription = useMemo(() => {
     if (!isSubscribed) return null;
     return options.subscription.find(
       (sub) => sub.roomId === parseInt(options.room.toString())
     ) || null;
   }, [isSubscribed, options.subscription, options.room]);
-
+  
   const areSubHoursAvailable = useMemo(() => {
     if (!activeSubscription) return false;
     return activeSubscription.availableHours >= 4;
   }, [activeSubscription]);
-
-  // Helper functions with proper typing
-  const onRoomSelect = (id: string): void => {
+  
+  // Helper functions
+  const onRoomSelect = (id: string) => {
     setOptions((prevOptions) => ({
       ...prevOptions,
       room: parseInt(id),
@@ -136,8 +160,8 @@ export function DashboardProvider({
       engDuration: -1,
     }));
   };
-
-  const handleTimePick = (start: number, end: number, duration: number): void => {
+  
+  const handleTimePick = (start: number, end: number, duration: number) => {
     setOptions((prevOptions) => ({
       ...prevOptions,
       startTime: start,
@@ -145,8 +169,8 @@ export function DashboardProvider({
       duration: duration,
     }));
   };
-
-  const clearTimeSelection = (): void => {
+  
+  const clearTimeSelection = () => {
     setOptions((prevOptions) => ({
       ...prevOptions,
       startTime: -1,
@@ -154,14 +178,15 @@ export function DashboardProvider({
       duration: 0,
     }));
   };
-
-  const submitBooking = async (): Promise<void> => {
+  
+  const submitBooking = async () => {
     setOptions((prevOptions) => ({
       ...prevOptions,
       loading: true,
     }));
-
+    
     try {
+      // Import dynamically to avoid circular dependencies
       const { PostBooking } = await import('@/app/lib/booking');
       await PostBooking(options);
     } catch (error) {
@@ -172,18 +197,19 @@ export function DashboardProvider({
       }));
     }
   };
-
-  const submitSubscriptionBooking = async (): Promise<void> => {
+  
+  const submitSubscriptionBooking = async () => {
     setOptions((prevOptions) => ({
       ...prevOptions,
       loading: true,
     }));
-
+    
     const startTime = options.startTime * 4;
     const endTime = options.endTime * 4 + 3;
     const duration = options.endTime - options.startTime + 1 * 4;
-
+    
     try {
+      // Import dynamically to avoid circular dependencies
       const { PostSubscriptionBooking } = await import('@/app/lib/booking');
       await PostSubscriptionBooking(options, startTime, endTime, duration);
     } catch (error) {
@@ -218,8 +244,8 @@ export function DashboardProvider({
   );
 }
 
-// Hook for consuming context with proper error handling
-export function useDashboard(): DashboardContextType {
+// Hook for consuming context
+export function useDashboard() {
   const context = useContext(DashboardContext);
   if (!context.user) {
     throw new Error("useDashboard must be used within a DashboardProvider");
