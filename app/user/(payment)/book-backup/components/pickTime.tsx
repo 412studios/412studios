@@ -7,24 +7,18 @@ import {
   subscriptionTimeSlots,
 } from "@/app/user/(payment)/book/components/timeSlots";
 import { useDashboard } from "../context";
-import { TimeSlot } from "@/types/booking";
 
-interface Booking {
-  startTime: number;
-  endTime: number;
-}
-
-export const PickTime: React.FC = () => {
+export const PickTime = () => {
   const { prices, options, setOptions } = useDashboard();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [warning, setWarning] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [warning, setWarning] = useState(false);
   const [selList, setSelList] = useState<number[]>([]);
   const [bookedTimes, setBookedTimes] = useState<number[]>([]);
   const [existingBookings, setExistingBookings] = useState<number[]>([]);
 
   const isSubscribed = options.subRooms.includes(options.room);
   const formattedDate = parseInt(formatDateToNumeric(options.date));
-  const timeArray: TimeSlot[] = isSubscribed ? subscriptionTimeSlots : timeSlots;
+  const timeArray = isSubscribed ? subscriptionTimeSlots : timeSlots;
 
   useEffect(() => {
     const initialBookedTimes = Array.isArray(existingBookings)
@@ -35,9 +29,9 @@ export const PickTime: React.FC = () => {
   }, [existingBookings]);
 
   useEffect(() => {
-    const fetchData = async (): Promise<void> => {
+    const fetchData = async () => {
       setIsLoading(true);
-      setOptions((prevOptions) => ({ ...prevOptions, loading: true }));
+      setOptions((prevOptions: any) => ({ ...prevOptions, loading: true }));
       try {
         const bookings = await getBooking(options.room, formattedDate);
         const checkSubWeek = await getSubWeek(
@@ -45,7 +39,7 @@ export const PickTime: React.FC = () => {
           formattedDate,
           options.user
         );
-        let arr: number[] = [];
+        let arr: any[] = [];
         let setStart = 0;
         let setEnd = 0;
 
@@ -54,7 +48,7 @@ export const PickTime: React.FC = () => {
           setEnd = 3;
           fillArrGaps(arr, setStart, setEnd);
         } else {
-          bookings.forEach((booking: Booking) => {
+          bookings.forEach((booking: any) => {
             if (isSubscribed) {
               setStart = Math.floor(booking.startTime / 4);
               setEnd = Math.floor((booking.endTime - 1) / 4);
@@ -71,7 +65,7 @@ export const PickTime: React.FC = () => {
         setExistingBookings([]);
       }
       setIsLoading(false);
-      setOptions((prevOptions) => ({ ...prevOptions, loading: false }));
+      setOptions((prevOptions: any) => ({ ...prevOptions, loading: false }));
     };
 
     if (options.date) {
@@ -79,9 +73,10 @@ export const PickTime: React.FC = () => {
     }
   }, [options.date, options.room, options.user, setOptions]);
 
+  // Use context function
   const { handleTimePick, clearTimeSelection } = useDashboard();
 
-  const handleClick = (id: number): void => {
+  const handleClick = (id: number) => {
     if (bookedTimes.includes(id)) {
       return;
     }
@@ -98,7 +93,7 @@ export const PickTime: React.FC = () => {
         min = id;
       }
 
-      let fullList: number[] = [];
+      let fullList = [];
       for (let i = min; i <= max; i++) {
         if (bookedTimes.includes(i)) {
           return [id];
@@ -109,7 +104,7 @@ export const PickTime: React.FC = () => {
       if (isSubscribed) {
         fullList = [id];
         const currentSubscription = options.subscription.find(
-          (item) => item.roomId === options.room
+          (item: any) => item.roomId === options.room
         );
         if (currentSubscription) {
           const checkHours =
@@ -123,7 +118,9 @@ export const PickTime: React.FC = () => {
         }
       }
 
+      // This is now outside of the state update function
       setTimeout(() => {
+        // Use context function
         handleTimePick(
           fullList[0],
           fullList[fullList.length - 1],
@@ -135,7 +132,7 @@ export const PickTime: React.FC = () => {
     });
   };
 
-  const clearBtn = (): void => {
+  const clearBtn = () => {
     setSelList([]);
     clearTimeSelection();
     setWarning(false);
@@ -152,23 +149,25 @@ export const PickTime: React.FC = () => {
           <div className="flex flex-grow w-full rounded-lg items-start">
             <div
               className={`border w-full h-[310px] rounded-lg overflow-y-scroll p-2
-                  ${isSubscribed
-                  ? "flex justify-center flex-col grow w-full"
-                  : ""
-                }`}
+                  ${
+                    isSubscribed
+                      ? "flex justify-center flex-col grow w-full"
+                      : ""
+                  }`}
             >
-              {timeArray.map((slot: TimeSlot) => (
+              {timeArray.map((slot: any) => (
                 <div
                   key={slot.id}
                   onClick={() => handleClick(slot.id)}
                   className={`flex items-center justify-center text-center hover:cursor-pointer rounded-full
                   ${isSubscribed ? "h-[25%] rounded-lg" : "p-1 my-1"}
-                  ${bookedTimes.includes(slot.id)
+                  ${
+                    bookedTimes.includes(slot.id)
                       ? "bg-red-500"
                       : selList.includes(slot.id)
-                        ? "bg-emerald-500 text-black"
-                        : "bg-background hover:bg-accent"
-                    }`}
+                      ? "bg-emerald-500 text-black"
+                      : "bg-background hover:bg-accent"
+                  }`}
                 >
                   <span>{slot.displayName}</span>
                 </div>
@@ -184,7 +183,7 @@ export const PickTime: React.FC = () => {
   );
 };
 
-function fillArrGaps(arr: number[], min: number, max: number): number[] {
+function fillArrGaps(arr: number[], min: number, max: number) {
   for (let i = min; i <= max; i++) {
     arr.push(i);
   }
