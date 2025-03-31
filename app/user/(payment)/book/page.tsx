@@ -32,10 +32,7 @@ export default function DashboardPage() {
           <div className="border p-2 bg-sky-200">
             {options.subscription.map((element, index) => (
               <div key={index} className="rounded flex flex-col">
-                <p>
-                  Membership In Studio{" "}
-                  {element.roomId}
-                </p>
+                <p>Membership In Studio {element.roomId}</p>
                 <p>Membership Status: {element.status.toUpperCase()}</p>
                 <p>Remaining Hours in Membership: {element.availableHours}</p>
               </div>

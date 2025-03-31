@@ -11,10 +11,8 @@ export default function Submit(input: any) {
     }
   };
   return (
-    <>
-      <Button className="w-full mt-4" onClick={submit}>
-        Proceed to Purchase
-      </Button>
-    </>
+    <Button className="w-full mt-4" onClick={submit}>
+      Proceed to Purchase
+    </Button>
   );
 }
