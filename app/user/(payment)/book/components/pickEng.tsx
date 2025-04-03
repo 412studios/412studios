@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   Select,
@@ -22,88 +22,123 @@ export const PickEng = () => {
   const [startTime, setStartTime] = useState<string>(placeholderStart);
   const [startTimeID, setStartTimeID] = useState<number>(-1);
   const [duration, setDuration] = useState<string>(placeholderDuration);
-  const [durationArr, setDurationArr] = useState<any[]>([
-    "select a start time",
-  ]);
+  const [durationArr, setDurationArr] = useState<number[]>([]);
 
+  // Calculate startArr only when dependencies change
+  const startArr = useMemo(() => {
+    let arr: number[] = [];
+    let min = 0;
+    let max = 0;
+
+    // Skip calculation if no time is selected
+    if (options.startTime === -1 || options.endTime === -1) {
+      return arr;
+    }
+
+    if (options.subRooms.includes(options.room)) {
+      if (options.startTime > -1) {
+        min = options.startTime * 4;
+        max = options.endTime * 4 + 3;
+      }
+    } else {
+      min = options.startTime;
+      max = options.endTime;
+    }
+
+    for (let i = min; i < max; i++) {
+      arr.push(i);
+    }
+
+    return arr;
+  }, [options.startTime, options.endTime, options.room, options.subRooms]);
+
+  // Reset form when time selection changes
   useEffect(() => {
+    const resetForm = () => ({
+      engStart: -1,
+      engDuration: -1,
+    });
+
     setStartTime(placeholderStart);
     setStartTimeID(-1);
     setDuration(placeholderDuration);
-    setDurationArr(["select a start time"]);
+    setDurationArr([]);
     setIsChecked(false);
-    setOptions((prevOptions: any) => ({
+    setOptions((prevOptions) => ({
       ...prevOptions,
-      engStart: -1,
-      engDuration: -1,
+      ...resetForm(),
     }));
   }, [options.startTime, options.endTime, setOptions]);
 
-  let startArr: any = [];
-  let min = 0;
-  let max = 0;
-  if (options.subRooms.includes(options.room)) {
-    if (options.startTime > -1) {
-      min = options.startTime * 4;
-      max = options.endTime * 4 + 3;
-    }
-  } else {
-    min = options.startTime;
-    max = options.endTime;
-  }
-  for (let i = min; i < max; i++) {
-    startArr.push(i);
-  }
-  if (options.startTime === -1 || options.endTime === -1) {
-    startArr = [];
-  }
-
-  const handleCheckboxChange = () => {
-    if (isChecked) {
-      setStartTime(placeholderStart);
-      setStartTimeID(-1);
-      setDuration(placeholderDuration);
-      setDurationArr(["select a start time"]);
-      setOptions((prevOptions: any) => ({
-        ...prevOptions,
-        engStart: -1,
-        engDuration: -1,
-      }));
-    }
-    setIsChecked((prev) => !prev);
-  };
-
-  const handleStartTimeChange = (value: string) => {
-    setStartTime(value);
-    const index = startArr.findIndex((item: any) => formatTime(item) === value);
-    setStartTimeID(startArr[index]);
-    setDuration(placeholderDuration);
-    let count = 2;
-    const newDurationArr = [count];
-    for (let i = index; i <= startArr.length - 2; i++) {
-      count++;
-      newDurationArr.push(count);
-    }
-    setDurationArr(newDurationArr);
-    setOptions((prevOptions: any) => ({
-      ...prevOptions,
-      engStart: startArr[index],
-      engDuration: -1,
-    }));
-  };
-
-  const handleDurationChange = (value: string) => {
-    setDuration(value);
-    setOptions((prevOptions: any) => ({
-      ...prevOptions,
-      engDuration: parseInt(value),
-    }));
-  };
-
-  function formatTime(index: number) {
+  // Memoize format time function
+  const formatTime = useCallback((index: number) => {
     const time = timeSlots[index].displayName.split(" - ")[0];
     return time;
-  }
+  }, []);
+
+  // Handle checkbox change with batched state updates
+  const handleCheckboxChange = useCallback(() => {
+    setIsChecked((prev) => {
+      const newIsChecked = !prev;
+
+      // Only reset if unchecking
+      if (!newIsChecked) {
+        setStartTime(placeholderStart);
+        setStartTimeID(-1);
+        setDuration(placeholderDuration);
+        setDurationArr([]);
+        setOptions((prevOptions) => ({
+          ...prevOptions,
+          engStart: -1,
+          engDuration: -1,
+        }));
+      }
+
+      return newIsChecked;
+    });
+  }, [placeholderStart, placeholderDuration, setOptions]);
+
+  // Handle start time change with batched state updates
+  const handleStartTimeChange = useCallback(
+    (value: string) => {
+      const index = startArr.findIndex((item) => formatTime(item) === value);
+      if (index === -1) return;
+
+      const selectedStartTime = startArr[index];
+      const availableDurations = [];
+      let count = 2;
+
+      // Calculate available durations
+      for (let i = index; i <= startArr.length - 1; i++) {
+        availableDurations.push(count);
+        count++;
+      }
+
+      // Batch all updates
+      setStartTime(value);
+      setStartTimeID(selectedStartTime);
+      setDuration(placeholderDuration);
+      setDurationArr(availableDurations);
+      setOptions((prevOptions) => ({
+        ...prevOptions,
+        engStart: selectedStartTime,
+        engDuration: -1,
+      }));
+    },
+    [startArr, formatTime, placeholderDuration, setOptions]
+  );
+
+  // Handle duration change
+  const handleDurationChange = useCallback(
+    (value: string) => {
+      setDuration(value);
+      setOptions((prevOptions) => ({
+        ...prevOptions,
+        engDuration: parseInt(value),
+      }));
+    },
+    [setOptions]
+  );
 
   return (
     <div className="border rounded-lg mt-4 p-4">
@@ -151,7 +186,7 @@ export const PickEng = () => {
                   <SelectContent>
                     <SelectGroup>
                       <SelectLabel>Start Time</SelectLabel>
-                      {startArr.map((item: any) => (
+                      {startArr.map((item) => (
                         <SelectItem key={item} value={formatTime(item)}>
                           {formatTime(item)}
                         </SelectItem>
@@ -180,8 +215,8 @@ export const PickEng = () => {
                   <SelectContent>
                     <SelectGroup>
                       <SelectLabel>Duration</SelectLabel>
-                      {durationArr.map((item: any) => (
-                        <SelectItem key={item} value={item}>
+                      {durationArr.map((item) => (
+                        <SelectItem key={item} value={item.toString()}>
                           {item}
                         </SelectItem>
                       ))}
