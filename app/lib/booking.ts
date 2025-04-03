@@ -309,13 +309,3 @@ export async function HandlePayment(
 
   return redirect(subscriptionUrl);
 }
-
-// export async function HandlePayment(
-//   user: any,
-//   bookingId: string,
-//   priceId: string,
-//   price: number
-// ) {
-//   const paymentUrl = await processPayment(user, bookingId, priceId, price);
-//   return redirect(paymentUrl);
-// }
