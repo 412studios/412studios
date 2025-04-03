@@ -11,6 +11,7 @@ import {
 } from "react";
 import { User, Subscription } from "@prisma/client";
 import { PricesMap, BookingOptions } from "./types/booking";
+import { createPrerenderSearchParamsForClientPage } from "next/dist/server/request/search-params";
 
 // Context type with Prisma-generated types
 type DashboardContextType = {
@@ -216,11 +217,16 @@ export function DashboardProvider({
     }
   }, [options, setOptions]);
 
+  let isAdmin = false;
+  if (userData.role === "admin") {
+    isAdmin = true;
+  }
+
   return (
     <DashboardContext.Provider
       value={{
         user: userData,
-        isAdmin: false,
+        isAdmin: isAdmin,
         subscriptions: subscriptionData,
         prices: pricingData,
         options,

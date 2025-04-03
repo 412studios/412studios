@@ -11,11 +11,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { timeSlots } from "@/app/user/(payment)/book/components/timeSlots";
-import { H2, H4, Subtitle, Section, Divider } from "@/components/ui/copy";
+import { H4 } from "@/components/ui/copy";
 import { useDashboard } from "../context";
 
 export const PickEng = () => {
-  const { prices, options, setOptions } = useDashboard();
+  const { prices, options, isAdmin, setOptions } = useDashboard();
   const placeholderStart = "Start Time";
   const placeholderDuration = "Duration";
   const [isChecked, setIsChecked] = useState(false);
@@ -23,6 +23,18 @@ export const PickEng = () => {
   const [startTimeID, setStartTimeID] = useState<number>(-1);
   const [duration, setDuration] = useState<string>(placeholderDuration);
   const [durationArr, setDurationArr] = useState<number[]>([]);
+
+  // Check if subscribed
+  const isSubscribed = useMemo(
+    () => options.subRooms.includes(options.room),
+    [options.subRooms, options.room]
+  );
+
+  // New: Check if we should use subscription-specific logic - only when subscribed AND not admin
+  const useSubscriptionSlots = useMemo(
+    () => isSubscribed && !isAdmin,
+    [isSubscribed, isAdmin]
+  );
 
   // Calculate startArr only when dependencies change
   const startArr = useMemo(() => {
@@ -35,7 +47,8 @@ export const PickEng = () => {
       return arr;
     }
 
-    if (options.subRooms.includes(options.room)) {
+    // Changed: Use useSubscriptionSlots instead of just checking subRooms
+    if (useSubscriptionSlots) {
       if (options.startTime > -1) {
         min = options.startTime * 4;
         max = options.endTime * 4 + 3;
@@ -50,7 +63,7 @@ export const PickEng = () => {
     }
 
     return arr;
-  }, [options.startTime, options.endTime, options.room, options.subRooms]);
+  }, [options.startTime, options.endTime, options.room, useSubscriptionSlots]);
 
   // Reset form when time selection changes
   useEffect(() => {

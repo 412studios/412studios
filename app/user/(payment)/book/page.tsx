@@ -21,16 +21,18 @@ import {
 import { useDashboard } from "./context";
 
 export default function DashboardPage() {
-  const { options, onRoomSelect } = useDashboard();
-
+  const { options, isAdmin, onRoomSelect } = useDashboard();
   const studioName = ["A", "B", "C"];
-
-  console.log(options);
-
   return (
     <section className="block mt-[34px] min-h-[calc(100vh-34px)] p-8">
       <div className="p-2 rounded-lg max-w-screen-lg mx-auto">
         <H4 className="mb-2">BOOKING OPTIONS</H4>
+
+        {isAdmin && (
+          <div className="border p-2 bg-sky-200 mb-4">
+            <p>IS ADMIN</p>
+          </div>
+        )}
 
         {options.subRooms.length >= 1 && (
           <div className="border p-2 bg-sky-200">

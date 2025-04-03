@@ -8,7 +8,10 @@ import {
 } from "@/app/user/(payment)/book/components/timeSlots";
 import { H4 } from "@/components/ui/copy";
 import { useDashboard } from "../context";
-import { validateStandardBooking, validateSubscriptionBooking } from "../utils/bookingValidation";
+import {
+  validateStandardBooking,
+  validateSubscriptionBooking,
+} from "../utils/bookingValidation";
 
 export const ShowDetails: React.FC = () => {
   const {
@@ -16,9 +19,16 @@ export const ShowDetails: React.FC = () => {
     options,
     setOptions,
     isSubscribed,
+    isAdmin,
     submitBooking,
     submitSubscriptionBooking,
   } = useDashboard();
+
+  // Determine if we should use subscription behavior
+  const useSubscriptionSlots = useMemo(
+    () => isSubscribed && !isAdmin,
+    [isSubscribed, isAdmin]
+  );
 
   // Use useMemo to calculate derived values that depend on options
   const {
@@ -29,7 +39,7 @@ export const ShowDetails: React.FC = () => {
     engTotal,
     total,
     foundSub,
-    subHasHours
+    subHasHours,
   } = useMemo(() => {
     let displayStart = "Not Selected";
     let displayEnd = "Not Selected";
@@ -39,12 +49,12 @@ export const ShowDetails: React.FC = () => {
     let total = 0;
 
     // Find subscription for current room with proper type safety
-    const foundSub = options.subscription.find(
-      (sub) => sub.roomId === options.room
-    ) || null;
+    const foundSub =
+      options.subscription.find((sub) => sub.roomId === options.room) || null;
     const subHasHours = (foundSub?.availableHours ?? 0) >= 4;
 
-    if (isSubscribed) {
+    // Changed: Use useSubscriptionSlots instead of just isSubscribed
+    if (useSubscriptionSlots) {
       if (options.startTime !== -1) {
         displayStart = subscriptionTimeSlots[options.startTime].displayStart;
         displayEnd = subscriptionTimeSlots[options.endTime].displayEnd;
@@ -65,7 +75,10 @@ export const ShowDetails: React.FC = () => {
         bookingTotal = total;
 
         if (duration === 16) {
-          total = Math.min(prices[options.room].dayRate, duration * prices[options.room].hourlyRate);
+          total = Math.min(
+            prices[options.room].dayRate,
+            duration * prices[options.room].hourlyRate
+          );
         }
 
         if (options.engDuration !== -1) {
@@ -83,13 +96,21 @@ export const ShowDetails: React.FC = () => {
       engTotal,
       total,
       foundSub,
-      subHasHours
+      subHasHours,
     };
-  }, [options.startTime, options.endTime, options.engDuration, options.room, options.subscription, isSubscribed, prices]);
+  }, [
+    options.startTime,
+    options.endTime,
+    options.engDuration,
+    options.room,
+    options.subscription,
+    useSubscriptionSlots,
+    prices,
+  ]);
 
   // Update total price in global state when it changes
   useEffect(() => {
-    setOptions(prevOptions => ({
+    setOptions((prevOptions) => ({
       ...prevOptions,
       price: total,
     }));
@@ -113,7 +134,8 @@ export const ShowDetails: React.FC = () => {
         </div>
       ) : (
         <>
-          {isSubscribed ? (
+          {/* Changed: Use useSubscriptionSlots instead of just isSubscribed for conditional rendering */}
+          {useSubscriptionSlots ? (
             <div className="border rounded-lg mt-4 p-4">
               <H4 className="pb-4">Subscription Details</H4>
               <Table className="rounded-[8px] overflow-hidden border-t-0">
@@ -179,7 +201,9 @@ export const ShowDetails: React.FC = () => {
                           <strong>Engineering Start Time</strong>
                         </TableCell>
                         <TableCell>
-                          {options.engStart < timeSlots.length ? timeSlots[options.engStart].displayStart : "Invalid time"}
+                          {options.engStart < timeSlots.length
+                            ? timeSlots[options.engStart].displayStart
+                            : "Invalid time"}
                         </TableCell>
                       </TableRow>
                       <TableRow>
@@ -216,16 +240,14 @@ export const ShowDetails: React.FC = () => {
                       </div>
                     );
                   }
-                  
+
                   return (
                     <Button
                       className="w-full"
                       onClick={handleSubscriptionSubmit}
                       disabled={options.loading}
                     >
-                      {options.loading
-                        ? "Redirecting..."
-                        : "Book Time"}
+                      {options.loading ? "Redirecting..." : "Book Time"}
                     </Button>
                   );
                 })()}
@@ -284,7 +306,9 @@ export const ShowDetails: React.FC = () => {
                           <strong>Engineering Start Time</strong>
                         </TableCell>
                         <TableCell>
-                          {options.engStart < timeSlots.length ? timeSlots[options.engStart].displayStart : "Invalid time"}
+                          {options.engStart < timeSlots.length
+                            ? timeSlots[options.engStart].displayStart
+                            : "Invalid time"}
                         </TableCell>
                       </TableRow>
                       <TableRow>
@@ -321,7 +345,7 @@ export const ShowDetails: React.FC = () => {
                       </div>
                     );
                   }
-                  
+
                   return (
                     <Button
                       className="w-full"

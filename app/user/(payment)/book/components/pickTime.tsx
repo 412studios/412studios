@@ -11,7 +11,7 @@ import { BookingApiRecord } from "../types/booking";
 import { formatDateToNumeric, fillArrGaps } from "../utils/dateUtils";
 
 export const PickTime = () => {
-  const { options, setOptions, handleTimePick, clearTimeSelection } =
+  const { options, isAdmin, setOptions, handleTimePick, clearTimeSelection } =
     useDashboard();
   const [isLoading, setIsLoading] = useState(false);
   const [selList, setSelList] = useState<number[]>([]);
@@ -23,21 +23,28 @@ export const PickTime = () => {
     [options.subRooms, options.room]
   );
 
+  // New: Check if we should use subscription time slots - only when subscribed AND not admin
+  const useSubscriptionSlots = useMemo(
+    () => isSubscribed && !isAdmin,
+    [isSubscribed, isAdmin]
+  );
+
   const formattedDate = useMemo(
     () => formatDateToNumeric(options.date),
     [options.date]
   );
 
+  // Changed: Use time slots based on useSubscriptionSlots rather than just isSubscribed
   const timeArray = useMemo(
-    () => (isSubscribed ? subscriptionTimeSlots : timeSlots),
-    [isSubscribed]
+    () => (useSubscriptionSlots ? subscriptionTimeSlots : timeSlots),
+    [useSubscriptionSlots]
   );
 
   // Function to process single or range time selection
   const processTimeSelection = useCallback(
     (id: number, selList: number[]) => {
-      // For subscription bookings, select only one slot
-      if (isSubscribed) {
+      // Changed: For subscription bookings when not admin, select only one slot
+      if (useSubscriptionSlots) {
         const currentSubscription = options.subscription.find(
           (item) => item.roomId === options.room
         );
@@ -54,7 +61,7 @@ export const PickTime = () => {
         };
       }
 
-      // For standard bookings, handle range selection
+      // For standard bookings or admin, handle range selection
       const sortedList = Array.from(new Set([...selList, id])).sort(
         (a, b) => a - b
       );
@@ -84,7 +91,7 @@ export const PickTime = () => {
         },
       };
     },
-    [bookedTimes, isSubscribed, options.subscription, options.room]
+    [bookedTimes, useSubscriptionSlots, options.subscription, options.room]
   );
 
   // Handle time slot selection
@@ -132,17 +139,17 @@ export const PickTime = () => {
       // Process booking data
       let bookedSlots: number[] = [];
 
-      if (isSubscribed && checkSubWeek) {
+      if (useSubscriptionSlots && checkSubWeek) {
         // Weekly limit reached, block all slots
         fillArrGaps(bookedSlots, 0, 3);
       } else if (Array.isArray(bookings)) {
         // Process individual bookings
         bookings.forEach((booking: BookingApiRecord) => {
-          const start = isSubscribed
+          const start = useSubscriptionSlots
             ? Math.floor(booking.startTime / 4)
             : booking.startTime;
 
-          const end = isSubscribed
+          const end = useSubscriptionSlots
             ? Math.floor(booking.endTime / 4)
             : booking.endTime;
 
@@ -166,7 +173,7 @@ export const PickTime = () => {
     options.date,
     options.user,
     formattedDate,
-    isSubscribed,
+    useSubscriptionSlots,
     setOptions,
   ]);
 
@@ -189,7 +196,7 @@ export const PickTime = () => {
         key={slot.id}
         onClick={() => !isBooked && handleClick(slot.id)}
         className={`flex items-center justify-center text-center hover:cursor-pointer rounded-full
-      ${isSubscribed ? "h-[25%] rounded-lg" : "p-1 my-1"}
+      ${useSubscriptionSlots ? "h-[25%] rounded-lg" : "p-1 my-1"}
       ${
         isBooked
           ? "bg-red-500 text-white"
@@ -205,7 +212,7 @@ export const PickTime = () => {
         <span>{slot.displayName}</span>
       </div>
     ),
-    [isSubscribed, handleClick]
+    [useSubscriptionSlots, handleClick]
   );
 
   // Render the time slots list
@@ -242,7 +249,7 @@ export const PickTime = () => {
             <div
               className={`border w-full h-[310px] rounded-lg overflow-y-scroll p-2
                   ${
-                    isSubscribed
+                    useSubscriptionSlots
                       ? "flex justify-center flex-col grow w-full"
                       : ""
                   }`}
