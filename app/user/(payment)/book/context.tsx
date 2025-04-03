@@ -1,22 +1,31 @@
 "use client";
 
-import { createContext, useContext, ReactNode, useState, useEffect, useMemo, useCallback } from "react";
+import {
+  createContext,
+  useContext,
+  ReactNode,
+  useState,
+  useEffect,
+  useMemo,
+  useCallback,
+} from "react";
 import { User, Subscription } from "@prisma/client";
 import { PricesMap, BookingOptions } from "./types/booking";
 
 // Context type with Prisma-generated types
 type DashboardContextType = {
   user: User | null;
+  isAdmin: Boolean | null;
   subscriptions: Subscription[];
   prices: PricesMap;
   options: BookingOptions;
   setOptions: React.Dispatch<React.SetStateAction<BookingOptions>>;
-  
+
   // Derived state
   isSubscribed: boolean;
   activeSubscription: Subscription | null;
   areSubHoursAvailable: boolean;
-  
+
   // Helper functions
   onRoomSelect: (id: string) => void;
   handleTimePick: (start: number, end: number, duration: number) => void;
@@ -28,6 +37,7 @@ type DashboardContextType = {
 // Create and export context with default values
 export const DashboardContext = createContext<DashboardContextType>({
   user: null,
+  isAdmin: false,
   subscriptions: [],
   prices: {},
   options: {
@@ -50,7 +60,7 @@ export const DashboardContext = createContext<DashboardContextType>({
   isSubscribed: false,
   activeSubscription: null,
   areSubHoursAvailable: false,
-  
+
   // Add missing helper functions
   onRoomSelect: () => {},
   handleTimePick: () => {},
@@ -76,7 +86,7 @@ export function DashboardProvider({
     () => subscriptionData.map((element) => element.roomId),
     [subscriptionData]
   );
-  
+
   const subRoomHours = useMemo(
     () => subscriptionData.map((element) => element.availableHours),
     [subscriptionData]
@@ -108,47 +118,53 @@ export function DashboardProvider({
   useEffect(() => {
     setOptions(defaultOptions);
   }, [defaultOptions]);
-  
+
   // Derived state
-  const isSubscribed = useMemo(() => 
-    options.subRooms.includes(options.room), 
+  const isSubscribed = useMemo(
+    () => options.subRooms.includes(options.room),
     [options.subRooms, options.room]
   );
-  
+
   const activeSubscription = useMemo(() => {
     if (!isSubscribed) return null;
-    return options.subscription.find(
-      (sub) => sub.roomId === options.room
-    ) || null;
+    return (
+      options.subscription.find((sub) => sub.roomId === options.room) || null
+    );
   }, [isSubscribed, options.subscription, options.room]);
-  
+
   const areSubHoursAvailable = useMemo(() => {
     if (!activeSubscription) return false;
     return activeSubscription.availableHours >= 4;
   }, [activeSubscription]);
-  
+
   // Helper functions - memoized to prevent unnecessary re-renders
-  const onRoomSelect = useCallback((id: string) => {
-    setOptions((prevOptions) => ({
-      ...prevOptions,
-      room: parseInt(id),
-      date: new Date(),
-      startTime: -1,
-      endTime: -1,
-      engStart: -1,
-      engDuration: -1,
-    }));
-  }, [setOptions]);
-  
-  const handleTimePick = useCallback((start: number, end: number, duration: number) => {
-    setOptions((prevOptions) => ({
-      ...prevOptions,
-      startTime: start,
-      endTime: end,
-      duration: duration,
-    }));
-  }, [setOptions]);
-  
+  const onRoomSelect = useCallback(
+    (id: string) => {
+      setOptions((prevOptions) => ({
+        ...prevOptions,
+        room: parseInt(id),
+        date: new Date(),
+        startTime: -1,
+        endTime: -1,
+        engStart: -1,
+        engDuration: -1,
+      }));
+    },
+    [setOptions]
+  );
+
+  const handleTimePick = useCallback(
+    (start: number, end: number, duration: number) => {
+      setOptions((prevOptions) => ({
+        ...prevOptions,
+        startTime: start,
+        endTime: end,
+        duration: duration,
+      }));
+    },
+    [setOptions]
+  );
+
   const clearTimeSelection = useCallback(() => {
     setOptions((prevOptions) => ({
       ...prevOptions,
@@ -157,16 +173,16 @@ export function DashboardProvider({
       duration: 0,
     }));
   }, [setOptions]);
-  
+
   const submitBooking = useCallback(async () => {
     setOptions((prevOptions) => ({
       ...prevOptions,
       loading: true,
     }));
-    
+
     try {
       // Import dynamically to avoid circular dependencies
-      const { PostBooking } = await import('@/app/lib/booking');
+      const { PostBooking } = await import("@/app/lib/booking");
       await PostBooking(options);
     } catch (error) {
       console.error("Failed to post booking:", error);
@@ -176,20 +192,20 @@ export function DashboardProvider({
       }));
     }
   }, [options, setOptions]);
-  
+
   const submitSubscriptionBooking = useCallback(async () => {
     setOptions((prevOptions) => ({
       ...prevOptions,
       loading: true,
     }));
-    
+
     const startTime = options.startTime * 4;
     const endTime = options.endTime * 4 + 3;
     const duration = (options.endTime - options.startTime + 1) * 4;
-    
+
     try {
       // Import dynamically to avoid circular dependencies
-      const { PostSubscriptionBooking } = await import('@/app/lib/booking');
+      const { PostSubscriptionBooking } = await import("@/app/lib/booking");
       await PostSubscriptionBooking(options, startTime, endTime, duration);
     } catch (error) {
       console.error("Failed to post subscription booking:", error);
@@ -204,6 +220,7 @@ export function DashboardProvider({
     <DashboardContext.Provider
       value={{
         user: userData,
+        isAdmin: false,
         subscriptions: subscriptionData,
         prices: pricingData,
         options,
@@ -215,7 +232,7 @@ export function DashboardProvider({
         handleTimePick,
         clearTimeSelection,
         submitBooking,
-        submitSubscriptionBooking
+        submitSubscriptionBooking,
       }}
     >
       {children}

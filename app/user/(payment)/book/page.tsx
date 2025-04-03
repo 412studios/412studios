@@ -23,6 +23,10 @@ import { useDashboard } from "./context";
 export default function DashboardPage() {
   const { options, onRoomSelect } = useDashboard();
 
+  const studioName = ["A", "B", "C"];
+
+  console.log(options);
+
   return (
     <section className="block mt-[34px] min-h-[calc(100vh-34px)] p-8">
       <div className="p-2 rounded-lg max-w-screen-lg mx-auto">
@@ -32,7 +36,7 @@ export default function DashboardPage() {
           <div className="border p-2 bg-sky-200">
             {options.subscription.map((element, index) => (
               <div key={index} className="rounded flex flex-col">
-                <p>Membership In Studio {element.roomId}</p>
+                <p>Membership In Studio {studioName[element.roomId]}</p>
                 <p>Membership Status: {element.status.toUpperCase()}</p>
                 <p>Remaining Hours in Membership: {element.availableHours}</p>
               </div>
