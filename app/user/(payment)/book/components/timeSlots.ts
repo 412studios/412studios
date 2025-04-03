@@ -1,10 +1,6 @@
-export const timeSlots: {
-  id: number;
-  startTime: string;
-  displayStart: string;
-  displayEnd: string;
-  displayName: string;
-}[] = [
+import { TimeSlot } from "../types/booking";
+
+export const timeSlots: TimeSlot[] = [
   {
     id: 0,
     startTime: "08",
@@ -119,13 +115,7 @@ export const timeSlots: {
   },
 ];
 
-export const subscriptionTimeSlots: {
-  id: number;
-  startTime: string;
-  displayStart: string;
-  displayEnd: string;
-  displayName: string;
-}[] = [
+export const subscriptionTimeSlots: TimeSlot[] = [
   {
     id: 0,
     startTime: "08",

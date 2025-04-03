@@ -1,29 +1,8 @@
 "use client";
 
-import { createContext, useContext, ReactNode, useState, useEffect, useMemo } from "react";
-import { User, Subscription, Pricing } from "@prisma/client";
-
-// Define a type for pricing data format
-export type PricesMap = {
-  [key: number]: Pricing;
-};
-
-// Define options type
-export type BookingOptions = {
-  room: number;
-  date: Date;
-  startTime: number;
-  endTime: number;
-  duration: number;
-  price: number;
-  loading: boolean;
-  subscription: Subscription[];
-  subRooms: number[];
-  subRoomHours: number[];
-  user: User | null;
-  engDuration: number;
-  engStart: number;
-};
+import { createContext, useContext, ReactNode, useState, useEffect, useMemo, useCallback } from "react";
+import { User, Subscription } from "@prisma/client";
+import { PricesMap, BookingOptions } from "./types/booking";
 
 // Context type with Prisma-generated types
 type DashboardContextType = {
@@ -132,14 +111,14 @@ export function DashboardProvider({
   
   // Derived state
   const isSubscribed = useMemo(() => 
-    options.subRooms.includes(parseInt(options.room.toString())), 
+    options.subRooms.includes(options.room), 
     [options.subRooms, options.room]
   );
   
   const activeSubscription = useMemo(() => {
     if (!isSubscribed) return null;
     return options.subscription.find(
-      (sub) => sub.roomId === parseInt(options.room.toString())
+      (sub) => sub.roomId === options.room
     ) || null;
   }, [isSubscribed, options.subscription, options.room]);
   
@@ -148,8 +127,8 @@ export function DashboardProvider({
     return activeSubscription.availableHours >= 4;
   }, [activeSubscription]);
   
-  // Helper functions
-  const onRoomSelect = (id: string) => {
+  // Helper functions - memoized to prevent unnecessary re-renders
+  const onRoomSelect = useCallback((id: string) => {
     setOptions((prevOptions) => ({
       ...prevOptions,
       room: parseInt(id),
@@ -159,27 +138,27 @@ export function DashboardProvider({
       engStart: -1,
       engDuration: -1,
     }));
-  };
+  }, [setOptions]);
   
-  const handleTimePick = (start: number, end: number, duration: number) => {
+  const handleTimePick = useCallback((start: number, end: number, duration: number) => {
     setOptions((prevOptions) => ({
       ...prevOptions,
       startTime: start,
       endTime: end,
       duration: duration,
     }));
-  };
+  }, [setOptions]);
   
-  const clearTimeSelection = () => {
+  const clearTimeSelection = useCallback(() => {
     setOptions((prevOptions) => ({
       ...prevOptions,
       startTime: -1,
       endTime: -1,
       duration: 0,
     }));
-  };
+  }, [setOptions]);
   
-  const submitBooking = async () => {
+  const submitBooking = useCallback(async () => {
     setOptions((prevOptions) => ({
       ...prevOptions,
       loading: true,
@@ -196,9 +175,9 @@ export function DashboardProvider({
         loading: false,
       }));
     }
-  };
+  }, [options, setOptions]);
   
-  const submitSubscriptionBooking = async () => {
+  const submitSubscriptionBooking = useCallback(async () => {
     setOptions((prevOptions) => ({
       ...prevOptions,
       loading: true,
@@ -206,7 +185,7 @@ export function DashboardProvider({
     
     const startTime = options.startTime * 4;
     const endTime = options.endTime * 4 + 3;
-    const duration = options.endTime - options.startTime + 1 * 4;
+    const duration = (options.endTime - options.startTime + 1) * 4;
     
     try {
       // Import dynamically to avoid circular dependencies
@@ -219,7 +198,7 @@ export function DashboardProvider({
         loading: false,
       }));
     }
-  };
+  }, [options, setOptions]);
 
   return (
     <DashboardContext.Provider

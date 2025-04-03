@@ -1,5 +1,6 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
+import { TimeSlot } from "../types/booking";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import {
@@ -8,6 +9,7 @@ import {
 } from "@/app/user/(payment)/book/components/timeSlots";
 import { H4 } from "@/components/ui/copy";
 import { useDashboard } from "../context";
+import { validateStandardBooking, validateSubscriptionBooking } from "../utils/bookingValidation";
 
 export let ShowDetails = () => {
   let {
@@ -21,66 +23,74 @@ export let ShowDetails = () => {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  let displayStart = "Not Selected";
-  let displayEnd = "Not Selected";
-  let duration = 0;
+  // Use useMemo to calculate derived values that depend on options
+  const {
+    displayStart,
+    displayEnd,
+    duration,
+    bookingTotal,
+    engTotal,
+    total,
+    foundSub,
+    subHasHours
+  } = useMemo(() => {
+    let displayStart = "Not Selected";
+    let displayEnd = "Not Selected";
+    let duration = 0;
+    let bookingTotal = 0;
+    let engTotal = 0;
+    let total = 0;
 
-  let bookingTotal = 0;
-  let engTotal = 0;
-  let total = 0;
+    const foundSub = options.subscription.find(
+      (sub) => sub.roomId === options.room
+    );
+    const subHasHours = (foundSub?.availableHours ?? 0) >= 4;
 
-  const foundSub = options.subscription.find(
-    (sub: any) => sub.roomId === options.room
-  );
-  const subHasHours = (foundSub?.availableHours ?? 0) >= 4;
+    if (isSubscribed) {
+      if (options.startTime !== -1) {
+        displayStart = subscriptionTimeSlots[options.startTime].displayStart;
+        displayEnd = subscriptionTimeSlots[options.endTime].displayEnd;
+        duration = (options.endTime - options.startTime + 1) * 4;
+        total = 0;
 
-  if (isSubscribed) {
-    if (options.startTime !== -1) {
-      displayStart = subscriptionTimeSlots[options.startTime].displayStart;
-      displayEnd = subscriptionTimeSlots[options.endTime].displayEnd;
-      duration = (options.endTime - options.startTime + 1) * 4;
-      total = 0;
-
-      if (options.engDuration !== -1) {
-        engTotal = prices[options.room].engineerPrice * duration;
-        total += engTotal;
-      } else {
-        engTotal = 0;
+        if (options.engDuration !== -1) {
+          engTotal = prices[options.room].engineerPrice * duration;
+          total += engTotal;
+        }
       }
     } else {
-      displayStart = "Not Selected";
-      displayEnd = "Not Selected";
-      duration = 0;
-      total = 0;
-    }
-  } else {
-    if (options.startTime !== -1) {
-      displayStart = timeSlots[options.startTime].displayStart;
-      displayEnd = timeSlots[options.endTime].displayEnd;
-      duration = options.endTime - options.startTime + 1;
-      total = duration * prices[options.room].hourlyRate;
-      bookingTotal = total;
+      if (options.startTime !== -1) {
+        displayStart = timeSlots[options.startTime].displayStart;
+        displayEnd = timeSlots[options.endTime].displayEnd;
+        duration = options.endTime - options.startTime + 1;
+        total = duration * prices[options.room].hourlyRate;
+        bookingTotal = total;
 
-      if (duration === 16) {
-        total = prices[options.room].dayRate;
-      }
+        if (duration === 16) {
+          total = Math.min(prices[options.room].dayRate, duration * prices[options.room].hourlyRate);
+        }
 
-      if (options.engDuration !== -1) {
-        engTotal = prices[options.room].engineerPrice * duration;
-        total += engTotal;
-      } else {
-        engTotal = 0;
+        if (options.engDuration !== -1) {
+          engTotal = prices[options.room].engineerPrice * duration;
+          total += engTotal;
+        }
       }
-    } else {
-      displayStart = "Not Selected";
-      displayEnd = "Not Selected";
-      duration = 0;
-      total = 0;
     }
-  }
+
+    return {
+      displayStart,
+      displayEnd,
+      duration,
+      bookingTotal,
+      engTotal,
+      total,
+      foundSub,
+      subHasHours
+    };
+  }, [options.startTime, options.endTime, options.engDuration, options.room, options.subscription, isSubscribed, prices]);
 
   useEffect(() => {
-    setOptions((prevOptions: any) => ({
+    setOptions((prevOptions) => ({
       ...prevOptions,
       price: total,
     }));
@@ -148,7 +158,7 @@ export let ShowDetails = () => {
                           <strong>Remaining Hours</strong>
                         </TableCell>
                         <TableCell>
-                          {foundSub.availableHours - duration}
+                          {Math.max(0, foundSub.availableHours - duration)}
                         </TableCell>
                       </TableRow>
                     </>
@@ -189,7 +199,7 @@ export let ShowDetails = () => {
               </Table>
 
               <div className="mt-4">
-                {duration !== 4 ? (
+                {duration > 4 ? (
                   <div className="alert">
                     <span>Please select one 4 Hour session</span>
                   </div>

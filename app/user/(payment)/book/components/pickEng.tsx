@@ -45,7 +45,7 @@ export const PickEng = () => {
   if (options.subRooms.includes(options.room)) {
     if (options.startTime > -1) {
       min = options.startTime * 4;
-      max = options.endTime * 4 + 4 - 1;
+      max = options.endTime * 4 + 3;
     }
   } else {
     min = options.startTime;
@@ -87,7 +87,7 @@ export const PickEng = () => {
     setDurationArr(newDurationArr);
     setOptions((prevOptions: any) => ({
       ...prevOptions,
-      engStart: index,
+      engStart: startArr[index],
       engDuration: -1,
     }));
   };
@@ -96,7 +96,7 @@ export const PickEng = () => {
     setDuration(value);
     setOptions((prevOptions: any) => ({
       ...prevOptions,
-      engDuration: value,
+      engDuration: parseInt(value),
     }));
   };
 
