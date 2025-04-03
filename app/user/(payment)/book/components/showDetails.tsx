@@ -199,28 +199,31 @@ export let ShowDetails = () => {
               </Table>
 
               <div className="mt-4">
-                {duration > 4 ? (
-                  <div className="alert">
-                    <span>Please select one 4 Hour session</span>
-                  </div>
-                ) : subHasHours ? (
-                  <Button
-                    className="w-full"
-                    onClick={() => {
-                      setIsLoading(true);
-                      submitSubscriptionBooking();
-                    }}
-                    disabled={isLoading || options.loading}
-                  >
-                    {isLoading || options.loading
-                      ? "Redirecting..."
-                      : "Book Time"}
-                  </Button>
-                ) : (
-                  <div className="alert">
-                    <span>Hours are not available</span>
-                  </div>
-                )}
+                {(() => {
+                  const validation = validateSubscriptionBooking(options);
+                  if (!validation.isValid) {
+                    return (
+                      <div className="alert">
+                        <span>{validation.message}</span>
+                      </div>
+                    );
+                  }
+                  
+                  return (
+                    <Button
+                      className="w-full"
+                      onClick={() => {
+                        setIsLoading(true);
+                        submitSubscriptionBooking();
+                      }}
+                      disabled={isLoading || options.loading}
+                    >
+                      {isLoading || options.loading
+                        ? "Redirecting..."
+                        : "Book Time"}
+                    </Button>
+                  );
+                })()}
               </div>
             </div>
           ) : (
@@ -230,9 +233,9 @@ export let ShowDetails = () => {
                 <TableBody className="border-t-0">
                   <TableRow>
                     <TableCell>
-                      <strong>Room</strong>
+                      <strong>Studio</strong>
                     </TableCell>
-                    <TableCell>Room {prices[options.room].room}</TableCell>
+                    <TableCell>Studio {prices[options.room].room}</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell>
@@ -304,24 +307,31 @@ export let ShowDetails = () => {
               </Table>
 
               <div className="p-4 pt-0">
-                {duration <= 1 ? (
-                  <div className="alert">
-                    <span>Please select a minimum of 2 hours</span>
-                  </div>
-                ) : (
-                  <Button
-                    className="w-full"
-                    onClick={() => {
-                      setIsLoading(true);
-                      submitBooking();
-                    }}
-                    disabled={isLoading || options.loading}
-                  >
-                    {isLoading || options.loading
-                      ? "Redirecting..."
-                      : "Proceed to Payment"}
-                  </Button>
-                )}
+                {(() => {
+                  const validation = validateStandardBooking(options);
+                  if (!validation.isValid) {
+                    return (
+                      <div className="alert">
+                        <span>{validation.message}</span>
+                      </div>
+                    );
+                  }
+                  
+                  return (
+                    <Button
+                      className="w-full"
+                      onClick={() => {
+                        setIsLoading(true);
+                        submitBooking();
+                      }}
+                      disabled={isLoading || options.loading}
+                    >
+                      {isLoading || options.loading
+                        ? "Redirecting..."
+                        : "Proceed to Payment"}
+                    </Button>
+                  );
+                })()}
               </div>
             </div>
           )}

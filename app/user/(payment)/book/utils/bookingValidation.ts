@@ -1,6 +1,22 @@
 import { BookingOptions, BookingValidation } from "../types/booking";
 
 /**
+ * Common validation for all booking types
+ * @param options - The booking options to validate
+ * @returns Validation result with base validation or errors
+ */
+function validateBaseBooking(options: BookingOptions): BookingValidation {
+  if (options.startTime === -1 || options.endTime === -1) {
+    return {
+      isValid: false,
+      message: "Please select a time slot",
+    };
+  }
+  
+  return { isValid: true };
+}
+
+/**
  * Validates a standard (non-subscription) booking
  * @param options - The booking options to validate
  * @returns Validation result with success status and optional error message
@@ -8,11 +24,9 @@ import { BookingOptions, BookingValidation } from "../types/booking";
 export function validateStandardBooking(
   options: BookingOptions
 ): BookingValidation {
-  if (options.startTime === -1 || options.endTime === -1) {
-    return {
-      isValid: false,
-      message: "Please select a time slot",
-    };
+  const baseValidation = validateBaseBooking(options);
+  if (!baseValidation.isValid) {
+    return baseValidation;
   }
 
   const duration = options.endTime - options.startTime + 1;
@@ -35,11 +49,9 @@ export function validateStandardBooking(
 export function validateSubscriptionBooking(
   options: BookingOptions
 ): BookingValidation {
-  if (options.startTime === -1 || options.endTime === -1) {
-    return {
-      isValid: false,
-      message: "Please select a time slot",
-    };
+  const baseValidation = validateBaseBooking(options);
+  if (!baseValidation.isValid) {
+    return baseValidation;
   }
 
   const duration = (options.endTime - options.startTime + 1) * 4;

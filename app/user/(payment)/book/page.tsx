@@ -3,7 +3,7 @@ import { PickDate } from "./components/pickDate";
 import { PickTime } from "./components/pickTime";
 import { PickEng } from "./components/pickEng";
 import { ShowDetails } from "./components/showDetails";
-import { RoomDetails } from "./components/roomDetails";
+import { StudioDetails } from "./components/roomDetails";
 import { H4 } from "@/components/ui/copy";
 import {
   Accordion,
@@ -46,7 +46,7 @@ export default function DashboardPage() {
             <AccordionItem value="item-1">
               <AccordionTrigger>Studio Details</AccordionTrigger>
               <AccordionContent>
-                <RoomDetails />
+                <StudioDetails />
               </AccordionContent>
             </AccordionItem>
           </Accordion>

@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/carousel";
 import { useDashboard } from "../context";
 
-export const RoomDetails = () => {
+export const StudioDetails = () => {
   const { prices: data } = useDashboard();
   return (
     <>
@@ -30,7 +30,7 @@ export const RoomDetails = () => {
                   className="mx-auto w-full max-w-screen-md rounded-xl"
                 />
                 <h3 className="text-2xl font-bold tracking-tight mt-4">
-                  Room {element.room}
+                  Studio {element.room}
                 </h3>
                 <CardDescription>
                   <span className="whitespace-nowrap">
@@ -59,7 +59,7 @@ export const RoomDetails = () => {
                 <CarouselItem key={element.id}>
                   <div>
                     <h3 className="text-2xl ront-primary font-bold tracking-tight mb-6">
-                      Room {element.room}
+                      Studio {element.room}
                     </h3>
                     <Image
                       src={`/images/${element.img}`}

@@ -6,7 +6,6 @@ import prisma from "@/app/lib/db";
 import { getStripeSession } from "@/app/lib/stripe";
 const priceId = process.env.STRIPE_PRICE_ID_STANDARD_BOOKING as string;
 
-//FUNCTIONS
 const formatDate = (date: Date | undefined): number => {
   if (!date) return 0;
   const year = date.getFullYear().toString();
@@ -36,6 +35,7 @@ export async function getBooking(roomId: number, date: number) {
 
 export async function getSubWeek(roomId: number, date: number, user: any) {
   noStore();
+
   const getWeekBoundaries = (numericDate: number) => {
     const year = Math.floor(numericDate / 10000);
     const month = Math.floor((numericDate % 10000) / 100) - 1;
@@ -66,6 +66,7 @@ export async function getSubWeek(roomId: number, date: number, user: any) {
   };
 
   const { startOfWeekNumeric, endOfWeekNumeric } = getWeekBoundaries(date);
+
   const userBooking = await prisma.bookings.findMany({
     where: {
       userId: user.id,
@@ -83,6 +84,7 @@ export async function getSubWeek(roomId: number, date: number, user: any) {
       endTime: true,
     },
   });
+
   //GET SUBSCRIPTION DETAILS FOR WEEK MAX EXCEPTION
   const userSubscription = await prisma.subscription.findMany({
     where: {
@@ -94,15 +96,18 @@ export async function getSubWeek(roomId: number, date: number, user: any) {
       roomId: true,
     },
   });
-  //CHECK FOR MAX WEEK EXCEPTION
+
+  // CHECK FOR MAX WEEK EXCEPTION
   const hasWeekMaxException = userSubscription.some(
     (subscription: any) =>
       subscription.roomId === roomId && subscription.weekMax === false
   );
+
   if (hasWeekMaxException) {
     return false;
   }
-  //RETURN BOOKING LIMIT DETAILS IF NO EXCEPTION
+
+  // RETURN BOOKING LIMIT DETAILS IF NO EXCEPTION
   return userBooking.length > 0;
 }
 
@@ -124,13 +129,15 @@ export async function getPricing() {
   return prices;
 }
 
-//BOOKING TYPES
+// BOOKING TYPES
 export async function PostBooking(input: any) {
   noStore();
   const { getUser } = getKindeServerSession();
   const user = await getUser();
-  //HANDLE DB UPDATE
+
+  // HANDLE DB UPDATE
   const bookingId: string = require("crypto").randomBytes(16).toString("hex");
+
   await prisma.bookings.create({
     data: {
       bookingId: bookingId,
@@ -150,7 +157,8 @@ export async function PostBooking(input: any) {
       addDetails: "",
     },
   });
-  //SEND TO STRIPE
+
+  // Process payment
   return HandlePayment(user, bookingId, priceId, input.price);
 }
 
@@ -158,7 +166,9 @@ export async function PostSubscription(input: any) {
   noStore();
   const { getUser } = getKindeServerSession();
   const user = await getUser();
+
   const subscriptionId: any = require("crypto").randomBytes(16).toString("hex");
+
   //HANDLE DB UPDATE
   await prisma.subscription.create({
     data: {
@@ -178,6 +188,7 @@ export async function PostSubscription(input: any) {
       userId: user?.id || "",
     },
   });
+
   //SEND TO STRIPE
   return HandlePayment(user, subscriptionId, priceId, input.price);
 }
@@ -192,8 +203,10 @@ export async function PostSubscriptionBooking(
   //GET DETAILS
   const { getUser } = getKindeServerSession();
   const user = await getUser();
+
   //CREATE BOOKING AND AUTO SET TO SUCCESS FOR PREPAID SUBSCRIPTION
   const bookingId: any = require("crypto").randomBytes(16).toString("hex");
+
   await prisma.bookings.create({
     data: {
       bookingId: bookingId,
@@ -213,9 +226,16 @@ export async function PostSubscriptionBooking(
       addDetails: "",
     },
   });
+
   //CHECK IF PAYMENT IS NEEDED
   if (input.price > 0) {
-    return HandlePayment(user, bookingId, priceId, input.price);
+    const paymentUrl = await HandlePayment(
+      user,
+      bookingId,
+      priceId,
+      input.price
+    );
+    return { success: true, bookingId, paymentUrl };
   } else {
     //DO THIS IF SUCCESSFUL
     //MARK COMPLETE BOOKING IS SUCCESFUL
@@ -261,6 +281,7 @@ export async function HandlePayment(
   const formatPrice = parseInt(price + "00");
   const CANADIAN_TAX_RATE = 0.13;
   const priceWithTax = Math.round(formatPrice * (1 + CANADIAN_TAX_RATE));
+
   //SEND TO STRIPE
   const dbUser = await prisma.user.findUnique({
     where: {
@@ -270,9 +291,11 @@ export async function HandlePayment(
       stripeCustomerId: true,
     },
   });
+
   if (!dbUser?.stripeCustomerId) {
     throw new Error("Unable to get customer id");
   }
+
   const subscriptionUrl = await getStripeSession({
     customerId: dbUser.stripeCustomerId,
     domainUrl:
@@ -283,5 +306,16 @@ export async function HandlePayment(
     bookingId: bookingId,
     unit_amount: priceWithTax,
   });
+
   return redirect(subscriptionUrl);
 }
+
+// export async function HandlePayment(
+//   user: any,
+//   bookingId: string,
+//   priceId: string,
+//   price: number
+// ) {
+//   const paymentUrl = await processPayment(user, bookingId, priceId, price);
+//   return redirect(paymentUrl);
+// }
