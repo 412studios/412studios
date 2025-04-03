@@ -55,6 +55,18 @@ export interface BookingRecord {
   engineerDuration?: number;
   price: number;
   subscriptionId?: number;
+  type?: string;
+}
+
+/**
+ * Represents a booking record specifically as returned by the getBooking API
+ */
+export interface BookingApiRecord {
+  roomId: number;
+  date: number;
+  type: string;
+  startTime: number;
+  endTime: number;
 }
 
 /**

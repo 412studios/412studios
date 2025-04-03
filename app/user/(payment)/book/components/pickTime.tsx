@@ -7,7 +7,7 @@ import {
   subscriptionTimeSlots,
 } from "@/app/user/(payment)/book/components/timeSlots";
 import { useDashboard } from "../context";
-import { BookingRecord } from "../types/booking";
+import { BookingApiRecord } from "../types/booking";
 import { formatDateToNumeric, fillArrGaps } from "../utils/dateUtils";
 
 export const PickTime = () => {
@@ -137,7 +137,7 @@ export const PickTime = () => {
         fillArrGaps(bookedSlots, 0, 3);
       } else if (Array.isArray(bookings)) {
         // Process individual bookings
-        bookings.forEach((booking: any) => {
+        bookings.forEach((booking: BookingApiRecord) => {
           const start = isSubscribed
             ? Math.floor(booking.startTime / 4)
             : booking.startTime;
