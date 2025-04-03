@@ -1,6 +1,5 @@
 "use client";
-import { useState, useEffect, useMemo } from "react";
-import { TimeSlot } from "../types/booking";
+import { useCallback, useEffect, useMemo } from "react";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,8 +10,8 @@ import { H4 } from "@/components/ui/copy";
 import { useDashboard } from "../context";
 import { validateStandardBooking, validateSubscriptionBooking } from "../utils/bookingValidation";
 
-export let ShowDetails = () => {
-  let {
+export const ShowDetails: React.FC = () => {
+  const {
     prices,
     options,
     setOptions,
@@ -20,8 +19,6 @@ export let ShowDetails = () => {
     submitBooking,
     submitSubscriptionBooking,
   } = useDashboard();
-
-  const [isLoading, setIsLoading] = useState(false);
 
   // Use useMemo to calculate derived values that depend on options
   const {
@@ -41,9 +38,10 @@ export let ShowDetails = () => {
     let engTotal = 0;
     let total = 0;
 
+    // Find subscription for current room with proper type safety
     const foundSub = options.subscription.find(
       (sub) => sub.roomId === options.room
-    );
+    ) || null;
     const subHasHours = (foundSub?.availableHours ?? 0) >= 4;
 
     if (isSubscribed) {
@@ -89,12 +87,22 @@ export let ShowDetails = () => {
     };
   }, [options.startTime, options.endTime, options.engDuration, options.room, options.subscription, isSubscribed, prices]);
 
+  // Update total price in global state when it changes
   useEffect(() => {
-    setOptions((prevOptions) => ({
+    setOptions(prevOptions => ({
       ...prevOptions,
       price: total,
     }));
   }, [total, setOptions]);
+
+  // Safely handle button clicks with loading state managed in context
+  const handleBookingSubmit = useCallback(() => {
+    submitBooking();
+  }, [submitBooking]);
+
+  const handleSubscriptionSubmit = useCallback(() => {
+    submitSubscriptionBooking();
+  }, [submitSubscriptionBooking]);
 
   return (
     <div>
@@ -164,14 +172,14 @@ export let ShowDetails = () => {
                     </>
                   )}
 
-                  {options.engDuration >= 1 && (
+                  {options.engDuration >= 1 && options.engStart >= 0 && (
                     <>
                       <TableRow>
                         <TableCell>
                           <strong>Engineering Start Time</strong>
                         </TableCell>
                         <TableCell>
-                          {timeSlots[options.engStart].displayStart}
+                          {options.engStart < timeSlots.length ? timeSlots[options.engStart].displayStart : "Invalid time"}
                         </TableCell>
                       </TableRow>
                       <TableRow>
@@ -212,13 +220,10 @@ export let ShowDetails = () => {
                   return (
                     <Button
                       className="w-full"
-                      onClick={() => {
-                        setIsLoading(true);
-                        submitSubscriptionBooking();
-                      }}
-                      disabled={isLoading || options.loading}
+                      onClick={handleSubscriptionSubmit}
+                      disabled={options.loading}
                     >
-                      {isLoading || options.loading
+                      {options.loading
                         ? "Redirecting..."
                         : "Book Time"}
                     </Button>
@@ -272,14 +277,14 @@ export let ShowDetails = () => {
                     <TableCell>${bookingTotal}.00 CAD</TableCell>
                   </TableRow>
 
-                  {options.engDuration >= 1 && (
+                  {options.engDuration >= 1 && options.engStart >= 0 && (
                     <>
                       <TableRow>
                         <TableCell>
                           <strong>Engineering Start Time</strong>
                         </TableCell>
                         <TableCell>
-                          {timeSlots[options.engStart].displayStart}
+                          {options.engStart < timeSlots.length ? timeSlots[options.engStart].displayStart : "Invalid time"}
                         </TableCell>
                       </TableRow>
                       <TableRow>
@@ -320,13 +325,10 @@ export let ShowDetails = () => {
                   return (
                     <Button
                       className="w-full"
-                      onClick={() => {
-                        setIsLoading(true);
-                        submitBooking();
-                      }}
-                      disabled={isLoading || options.loading}
+                      onClick={handleBookingSubmit}
+                      disabled={options.loading}
                     >
-                      {isLoading || options.loading
+                      {options.loading
                         ? "Redirecting..."
                         : "Proceed to Payment"}
                     </Button>
