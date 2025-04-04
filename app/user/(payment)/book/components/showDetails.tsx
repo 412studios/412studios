@@ -22,6 +22,7 @@ export const ShowDetails: React.FC = () => {
     isAdmin,
     submitBooking,
     submitSubscriptionBooking,
+    submitAdminBooking,
   } = useDashboard();
 
   // Determine if we should use subscription behavior
@@ -124,6 +125,10 @@ export const ShowDetails: React.FC = () => {
   const handleSubscriptionSubmit = useCallback(() => {
     submitSubscriptionBooking();
   }, [submitSubscriptionBooking]);
+
+  const handleAdminSubmit = useCallback(() => {
+    submitAdminBooking();
+  }, [submitAdminBooking]);
 
   return (
     <div>
@@ -255,7 +260,7 @@ export const ShowDetails: React.FC = () => {
             </div>
           ) : (
             <div className="border rounded-lg mt-4 p-4">
-              <H4>Booking Details</H4>
+              <H4>Booking Details (non sub)</H4>
               <Table className="rounded-[8px] overflow-hidden border-0">
                 <TableBody className="border-t-0">
                   <TableRow>
@@ -346,17 +351,29 @@ export const ShowDetails: React.FC = () => {
                     );
                   }
 
-                  return (
-                    <Button
-                      className="w-full"
-                      onClick={handleBookingSubmit}
-                      disabled={options.loading}
-                    >
-                      {options.loading
-                        ? "Redirecting..."
-                        : "Proceed to Payment"}
-                    </Button>
-                  );
+                  if (isAdmin) {
+                    return (
+                      <Button
+                        className="w-full"
+                        onClick={handleAdminSubmit}
+                        disabled={options.loading}
+                      >
+                        {options.loading ? "Redirecting..." : "ADMIN BOOK"}
+                      </Button>
+                    );
+                  } else {
+                    return (
+                      <Button
+                        className="w-full"
+                        onClick={handleBookingSubmit}
+                        disabled={options.loading}
+                      >
+                        {options.loading
+                          ? "Redirecting..."
+                          : "Proceed to Payment"}
+                      </Button>
+                    );
+                  }
                 })()}
               </div>
             </div>

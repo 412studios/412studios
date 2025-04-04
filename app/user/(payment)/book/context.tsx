@@ -32,6 +32,7 @@ type DashboardContextType = {
   clearTimeSelection: () => void;
   submitBooking: () => Promise<void>;
   submitSubscriptionBooking: () => Promise<void>;
+  submitAdminBooking: () => Promise<void>;
 };
 
 // Create and export context with default values
@@ -67,6 +68,7 @@ export const DashboardContext = createContext<DashboardContextType>({
   clearTimeSelection: () => {},
   submitBooking: async () => {},
   submitSubscriptionBooking: async () => {},
+  submitAdminBooking: async () => {},
 });
 
 // Provider component
@@ -221,6 +223,25 @@ export function DashboardProvider({
     isAdmin = true;
   }
 
+  const submitAdminBooking = useCallback(async () => {
+    setOptions((prevOptions) => ({
+      ...prevOptions,
+      loading: true,
+    }));
+
+    try {
+      // Import dynamically to avoid circular dependencies
+      const { PostAdminBooking } = await import("@/app/lib/booking");
+      await PostAdminBooking(options);
+    } catch (error) {
+      console.error("Failed to post booking:", error);
+      setOptions((prevOptions) => ({
+        ...prevOptions,
+        loading: false,
+      }));
+    }
+  }, [options, setOptions]);
+
   return (
     <DashboardContext.Provider
       value={{
@@ -238,6 +259,7 @@ export function DashboardProvider({
         clearTimeSelection,
         submitBooking,
         submitSubscriptionBooking,
+        submitAdminBooking,
       }}
     >
       {children}

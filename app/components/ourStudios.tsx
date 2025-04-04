@@ -1,6 +1,5 @@
 "use client";
 import type React from "react";
-import { LoginLink } from "@kinde-oss/kinde-auth-nextjs/components";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";

@@ -162,6 +162,38 @@ export async function PostBooking(input: any) {
   return HandlePayment(user, bookingId, priceId, input.price);
 }
 
+// BOOKING TYPES
+export async function PostAdminBooking(input: any) {
+  noStore();
+  const { getUser } = getKindeServerSession();
+  const user = await getUser();
+
+  // HANDLE DB UPDATE
+  const bookingId: string = require("crypto").randomBytes(16).toString("hex");
+
+  await prisma.bookings.create({
+    data: {
+      bookingId: bookingId,
+      roomId: parseInt(input.room),
+      date: formatDate(input.date),
+      type: "hour",
+      startTime: input.startTime,
+      endTime: input.endTime,
+      status: "success",
+      userId: user?.id || "",
+      stripeProductId: priceId,
+      totalHours: input.duration,
+      engineerTotal: input.engDuration,
+      engineerStart: input.engStart,
+      engineerStatus: "pending",
+      totalPrice: input.price,
+      addDetails: "",
+    },
+  });
+
+  return redirect("/user/book");
+}
+
 export async function PostSubscription(input: any) {
   noStore();
   const { getUser } = getKindeServerSession();
