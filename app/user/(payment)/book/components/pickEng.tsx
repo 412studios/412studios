@@ -91,25 +91,26 @@ export const PickEng = () => {
 
   // Handle checkbox change with batched state updates
   const handleCheckboxChange = useCallback(() => {
-    setIsChecked((prev) => {
-      const newIsChecked = !prev;
+    const newIsChecked = !isChecked;
+    setIsChecked(newIsChecked);
 
-      // Only reset if unchecking
-      if (!newIsChecked) {
-        setStartTime(placeholderStart);
-        setStartTimeID(-1);
-        setDuration(placeholderDuration);
-        setDurationArr([]);
+    // Only reset if unchecking
+    if (!newIsChecked) {
+      setStartTime(placeholderStart);
+      setStartTimeID(-1);
+      setDuration(placeholderDuration);
+      setDurationArr([]);
+
+      // Schedule context update for the next tick to avoid render conflicts
+      setTimeout(() => {
         setOptions((prevOptions) => ({
           ...prevOptions,
           engStart: -1,
           engDuration: -1,
         }));
-      }
-
-      return newIsChecked;
-    });
-  }, [placeholderStart, placeholderDuration, setOptions]);
+      }, 0);
+    }
+  }, [isChecked, placeholderStart, placeholderDuration, setOptions]);
 
   // Handle start time change with batched state updates
   const handleStartTimeChange = useCallback(

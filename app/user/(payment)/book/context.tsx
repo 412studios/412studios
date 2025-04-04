@@ -11,7 +11,6 @@ import {
 } from "react";
 import { User, Subscription } from "@prisma/client";
 import { PricesMap, BookingOptions } from "./types/booking";
-import { createPrerenderSearchParamsForClientPage } from "next/dist/server/request/search-params";
 
 // Context type with Prisma-generated types
 type DashboardContextType = {
