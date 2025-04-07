@@ -11,7 +11,6 @@ export default function Home() {
   return (
     <>
       <Banner />
-
       <Section id="about">
         <H2>
           ABOUT <span className="desk-only hl">THE STUDIO</span>
@@ -24,21 +23,15 @@ export default function Home() {
           explore, create and collaborate.
         </Subtitle>
       </Section>
-
       <Divider />
-
       <Section id="studios">
         <OurStudios />
       </Section>
-
       <Divider />
-
       <Section id="services">
         <Services />
       </Section>
-
       <Divider />
-
       <Section id="contact">
         <H2>CONTACT</H2>
         <Contact />
