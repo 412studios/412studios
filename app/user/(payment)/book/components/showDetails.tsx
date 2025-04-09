@@ -260,7 +260,7 @@ export const ShowDetails: React.FC = () => {
             </div>
           ) : (
             <div className="border rounded-lg mt-4 p-4">
-              <H4>Booking Details (non sub)</H4>
+              <H4>Booking Details</H4>
               <Table className="rounded-[8px] overflow-hidden border-0">
                 <TableBody className="border-t-0">
                   <TableRow>
