@@ -6,6 +6,8 @@ import { ShowDetails } from "./components/showDetails";
 import { StudioDetails } from "./components/studioDetails";
 import { H4 } from "@/components/ui/copy";
 import { useDashboard } from "./context";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export default function DashboardPage() {
   const { options, isAdmin } = useDashboard();
@@ -18,6 +20,11 @@ export default function DashboardPage() {
         {isAdmin && (
           <div className="border p-2 bg-sky-200 mb-2">
             <p>Admin Boooking Dashboard</p>
+            <Link href="/user/admin/">
+              <Button variant="ghost" className="border-[1px] mt-2">
+                More Admin Options
+              </Button>
+            </Link>
           </div>
         )}
         {/* Subscription Details */}

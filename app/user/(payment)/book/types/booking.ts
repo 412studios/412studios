@@ -76,4 +76,3 @@ export interface BookingValidation {
   isValid: boolean;
   message?: string;
 }
-

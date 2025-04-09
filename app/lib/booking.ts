@@ -124,6 +124,7 @@ export async function getPricing() {
       subscriptionPrice: true,
       engineerPrice: true,
       userId: true,
+      blocked: true,
     },
   });
   return prices;

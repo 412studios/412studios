@@ -32,13 +32,22 @@ export const StudioDetails = () => {
       <div className="hidden md:flex flex-col md:flex-row p-4 gap-4 border rounded-lg">
         {Object.values(data).map((element: any) => (
           <div key={element.id} className="w-full md:w-1/3 flex flex-col gap-2">
-            <Image
-              src={`/images/${element.img}`}
-              alt={`Studio ${element.id}`}
-              width={1000}
-              height={9}
-              className="mx-auto w-full max-w-screen-md rounded-xl"
-            />
+            <div className="relative">
+              <Image
+                src={`/images/${element.img}`}
+                alt={`Studio ${element.id}`}
+                width={1000}
+                height={9}
+                className="mx-auto w-full max-w-screen-md rounded-xl"
+              />
+              {data[element.id].blocked ? (
+                <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-xl w-full max-w-[600px] mx-auto">
+                  <div className="text-white text-2xl font-bold">
+                    Currently Unavailable
+                  </div>
+                </div>
+              ) : null}
+            </div>
             <Button
               onClick={handleButtonClick}
               value={element.id}
@@ -59,7 +68,7 @@ export const StudioDetails = () => {
             </CardDescription>
             <CardDescription>
               <Link href={`/user/membership/${element.id}`} className="w-full">
-                Purchase Membership
+                Purchase Membership: {element.subscriptionPrice}
               </Link>
             </CardDescription>
           </div>
@@ -72,13 +81,22 @@ export const StudioDetails = () => {
             {Object.values(data).map((element: any) => (
               <CarouselItem key={element.id}>
                 <div className="flex flex-col gap-2">
-                  <Image
-                    src={`/images/${element.img}`}
-                    alt={`Studio ${element.id}`}
-                    width={1000}
-                    height={9}
-                    className="mx-auto w-full max-w-screen-md rounded-xl"
-                  />
+                  <div className="relative">
+                    <Image
+                      src={`/images/${element.img}`}
+                      alt={`Studio ${element.id}`}
+                      width={1000}
+                      height={9}
+                      className="mx-auto w-full max-w-screen-md rounded-xl"
+                    />
+                    {data[element.id].blocked ? (
+                      <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-xl w-full max-w-[600px] mx-auto">
+                        <div className="text-white text-2xl font-bold">
+                          Currently Unavailable
+                        </div>
+                      </div>
+                    ) : null}
+                  </div>
                   <Button
                     onClick={handleButtonClick}
                     value={element.id}
@@ -102,7 +120,7 @@ export const StudioDetails = () => {
                       href={`/user/membership/${element.id}`}
                       className="w-full"
                     >
-                      Purchase Membership
+                      Purchase Membership: {element.subscriptionPrice}
                     </Link>
                   </CardDescription>
                 </div>

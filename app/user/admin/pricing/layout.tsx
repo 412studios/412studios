@@ -19,6 +19,8 @@ import {
   TableHead,
 } from "@/components/ui/table";
 
+import { H2, H4, Subtitle, Section, Divider } from "@/components/ui/copy";
+
 async function getPricing() {
   const prices = await prisma.pricing.findMany();
   return prices;
@@ -30,16 +32,18 @@ export default async function Main() {
   async function submit(formData: FormData) {
     "use server";
     for (let i = 0; i < prices.length; i++) {
+      const data: any = {
+        dayRate: parseInt(formData.get(i + "day") as string),
+        hourlyRate: parseInt(formData.get(i + "hour") as string),
+        subscriptionPrice: parseInt(formData.get(i + "sub") as string),
+        engineerPrice: parseInt(formData.get(i + "eng") as string),
+        blocked: formData.get(i + "blocked") === "true",
+      };
       await prisma.pricing.update({
         where: {
           id: i.toString(),
         },
-        data: {
-          dayRate: parseInt(formData.get(i + "day") as string),
-          hourlyRate: parseInt(formData.get(i + "hour") as string),
-          subscriptionPrice: parseInt(formData.get(i + "sub") as string),
-          engineerPrice: parseInt(formData.get(i + "eng") as string),
-        },
+        data,
       });
     }
     return redirect("/user/admin");
@@ -47,21 +51,15 @@ export default async function Main() {
 
   return (
     <>
-      <Card>
+      <Section>
         <form action={submit}>
-          <CardHeader className="flex w-full justify-between">
-            <CardTitle>Update Pricing</CardTitle>
-            <span className="flex-end">
-              <Link href="/user/admin/">
-                <Button>Back</Button>
-              </Link>
-            </span>
-          </CardHeader>
+          <H4>Update Pricing</H4>
           <CardContent>
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Room</TableHead>
+                  <TableHead>Studio</TableHead>
+                  <TableHead>Blocked</TableHead>
                   <TableHead>Day Rate</TableHead>
                   <TableHead>Hourly Rate</TableHead>
                   <TableHead>Subscription Rate</TableHead>
@@ -84,7 +82,7 @@ export default async function Main() {
             </Link>
           </CardFooter>
         </form>
-      </Card>
+      </Section>
     </>
   );
 }

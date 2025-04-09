@@ -8,12 +8,14 @@ import {
   TableBody,
   TableCell,
 } from "@/components/ui/table";
+import { Checkbox } from "@/components/ui/checkbox";
 interface Price {
   room: string;
   dayRate: number;
   hourlyRate: number;
   subscriptionPrice: number;
   engineerPrice: number;
+  blocked: boolean;
 }
 interface PageProps {
   prices: Price[];
@@ -21,6 +23,7 @@ interface PageProps {
 
 export default function Page(data: any) {
   const [prices, setPrices] = useState<Price[]>(data.prices);
+
   const handleChange = (index: number, field: string, value: string) => {
     if (!isNaN(Number(value)) && value !== "") {
       const newPrices = prices.map((price, i) => {
@@ -33,11 +36,31 @@ export default function Page(data: any) {
     }
   };
 
+  const handleCheckboxChange = (index: number, checked: boolean) => {
+    const newPrices = prices.map((price, i) => {
+      if (i === index) {
+        return { ...price, blocked: checked };
+      }
+      return price;
+    });
+    setPrices(newPrices);
+  };
+
   return (
     <>
       {prices.map((val, index) => (
         <TableRow key={index}>
           <TableCell>{val.room}</TableCell>
+          <TableCell>
+            <Checkbox
+              name={index + "blocked"}
+              checked={val.blocked}
+              value="true"
+              onCheckedChange={(checked) =>
+                handleCheckboxChange(index, checked as boolean)
+              }
+            />
+          </TableCell>
           <TableCell>
             <Input
               name={index + "day"}

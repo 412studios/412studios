@@ -11,8 +11,14 @@ import { BookingApiRecord } from "../types/booking";
 import { formatDateToNumeric, fillArrGaps } from "../utils/dateUtils";
 
 export const PickTime = () => {
-  const { options, isAdmin, setOptions, handleTimePick, clearTimeSelection } =
-    useDashboard();
+  const {
+    options,
+    prices,
+    isAdmin,
+    setOptions,
+    handleTimePick,
+    clearTimeSelection,
+  } = useDashboard();
   const [isLoading, setIsLoading] = useState(false);
   const [selList, setSelList] = useState<number[]>([]);
   const [bookedTimes, setBookedTimes] = useState<number[]>([]);
@@ -98,10 +104,8 @@ export const PickTime = () => {
   const handleClick = useCallback(
     (id: number) => {
       if (bookedTimes.includes(id)) return;
-
       setSelList((prevSelList) => {
         const { newList, update } = processTimeSelection(id, prevSelList);
-
         // Only update context state if we have a valid selection
         if (update) {
           // Execute in the next event cycle to avoid React batching issues
@@ -109,7 +113,6 @@ export const PickTime = () => {
             handleTimePick(update.start, update.end, update.duration);
           }, 0);
         }
-
         return newList;
       });
     },
@@ -138,23 +141,28 @@ export const PickTime = () => {
 
       // Process booking data
       let bookedSlots: number[] = [];
-
-      if (useSubscriptionSlots && checkSubWeek) {
+      // Check blocked value
+      const isRoomBlocked = prices[options.room]?.blocked || false;
+      // Catch subscription acceptions
+      if (useSubscriptionSlots && checkSubWeek && isRoomBlocked) {
         // Weekly limit reached, block all slots
         fillArrGaps(bookedSlots, 0, 3);
       } else if (Array.isArray(bookings)) {
-        // Process individual bookings
-        bookings.forEach((booking: BookingApiRecord) => {
-          const start = useSubscriptionSlots
-            ? Math.floor(booking.startTime / 4)
-            : booking.startTime;
-
-          const end = useSubscriptionSlots
-            ? Math.floor(booking.endTime / 4)
-            : booking.endTime;
-
-          fillArrGaps(bookedSlots, start, end);
-        });
+        // Catch if room is blocked
+        if (isRoomBlocked) {
+          fillArrGaps(bookedSlots, 0, 15);
+        } else {
+          // Process individual bookings
+          bookings.forEach((booking: BookingApiRecord) => {
+            const start = useSubscriptionSlots
+              ? Math.floor(booking.startTime / 4)
+              : booking.startTime;
+            const end = useSubscriptionSlots
+              ? Math.floor(booking.endTime / 4)
+              : booking.endTime;
+            fillArrGaps(bookedSlots, start, end);
+          });
+        }
       }
 
       // Update state once with all changes

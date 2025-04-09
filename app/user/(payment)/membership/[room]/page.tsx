@@ -29,13 +29,22 @@ export default async function Page(context: any) {
               ))}
             </div>
             <div className="mt-4">
-              <Image
-                src={`/images/${prices[context.params.room].img}`}
-                alt="banner"
-                height="6186"
-                width="9279"
-                className="rounded-xl w-full max-w-[600px] mx-auto"
-              />
+              <div className="relative">
+                <Image
+                  src={`/images/${prices[context.params.room].img}`}
+                  alt="banner"
+                  height="6186"
+                  width="9279"
+                  className="rounded-xl w-full max-w-[600px] mx-auto"
+                />
+                {prices[context.params.room].blocked ? (
+                  <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-xl w-full max-w-[600px] mx-auto">
+                    <div className="text-white text-2xl font-bold">
+                      Currently Unavailable
+                    </div>
+                  </div>
+                ) : null}
+              </div>
               <h1 className="text-2xl font-bold tracking-tight mt-4">
                 Room {prices[context.params.room].room} Membership
               </h1>
@@ -44,10 +53,16 @@ export default async function Page(context: any) {
                 {prices[context.params.room].subscriptionPrice}.00
               </p>
               <p>Includes 4 X 4 hour sessions</p>
-              <Submit
-                id={context.params.room}
-                price={prices[context.params.room].subscriptionPrice}
-              />
+              {prices[context.params.room].blocked ? (
+                <Link href="/user/book">
+                  <Button className="w-full mt-4">Return to Booking</Button>
+                </Link>
+              ) : (
+                <Submit
+                  id={context.params.room}
+                  price={prices[context.params.room].subscriptionPrice}
+                />
+              )}
             </div>
           </>
         ) : (
