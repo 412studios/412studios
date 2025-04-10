@@ -38,7 +38,6 @@ export default async function RootLayout({
   const { isAuthenticated, getUser } = getKindeServerSession();
   const isUserAuthenticated = await isAuthenticated();
   const user = await getUser();
-
   return (
     <html lang="en" className="dark" style={{ colorScheme: "dark" }}>
       <body className="flex flex-col min-h-screen">
