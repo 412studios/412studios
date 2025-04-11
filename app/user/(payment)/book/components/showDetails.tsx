@@ -24,13 +24,11 @@ export const ShowDetails: React.FC = () => {
     submitSubscriptionBooking,
     submitAdminBooking,
   } = useDashboard();
-
   // Determine if we should use subscription behavior
   const useSubscriptionSlots = useMemo(
     () => isSubscribed && !isAdmin,
     [isSubscribed, isAdmin]
   );
-
   // Use useMemo to calculate derived values that depend on options
   const {
     displayStart,
