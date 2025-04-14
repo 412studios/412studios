@@ -13,6 +13,8 @@ import Link from "next/link";
 import { Logo } from "@/public/icons/logo";
 import { FaTiktok, FaInstagram, FaYoutube, FaSoundcloud } from "react-icons/fa";
 
+import FacebookPixel from "./components/FacebookPixel";
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -38,6 +40,9 @@ export default async function RootLayout({
   const { isAuthenticated, getUser } = getKindeServerSession();
   const isUserAuthenticated = await isAuthenticated();
   const user = await getUser();
+
+  const FACEBOOK_PIXEL_ID = "1699908830923677";
+
   return (
     <html lang="en" className="dark" style={{ colorScheme: "dark" }}>
       <body className="flex flex-col min-h-screen">
@@ -131,6 +136,7 @@ export default async function RootLayout({
           </div>
         </footer>
         {/* FOOTER END */}
+        <FacebookPixel pixelId={FACEBOOK_PIXEL_ID} />
       </body>
     </html>
   );
