@@ -7,13 +7,11 @@ import { useEffect } from "react";
 export default function FacebookPixel({ pixelId }: { pixelId: string }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
-
   useEffect(() => {
     if (pathname && window.fbq) {
       window.fbq("track", "PageView");
     }
   }, [pathname, searchParams]);
-
   return (
     <>
       <Script id="facebook-pixel" strategy="afterInteractive">
