@@ -98,7 +98,7 @@ export default async function Page() {
 
   return (
     <>
-      <section className="block mt-[34px] h-[calc(100vh-34px)] p-8">
+      <section className="block h-[calc(100vh-34px)] p-8">
         <div className="p-2 rounded-lg font-medium">
           {/* TITLE SECTION */}
           <div className="p-2">

@@ -13,8 +13,8 @@ export default function DashboardPage() {
   const { options, isAdmin } = useDashboard();
   const studioName = ["A", "B", "C"];
   return (
-    <section className="block mt-[34px] min-h-[calc(100vh-34px)] p-8">
-      <div className="p-2 rounded-lg max-w-screen-lg mx-auto">
+    <section className="block min-h-[calc(100vh-34px)] p-8">
+      <div className="rounded-lg max-w-screen-lg mx-auto">
         <H4>BOOK TIME</H4>
         {/* Admin Details */}
         {isAdmin && (

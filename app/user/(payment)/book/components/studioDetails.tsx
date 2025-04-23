@@ -42,7 +42,7 @@ export const StudioDetails = () => {
               />
               {data[element.id].blocked ? (
                 <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-xl w-full max-w-[600px] mx-auto">
-                  <div className="text-white text-2xl font-bold">
+                  <div className="text-white text-2xl font-bold text-center">
                     Currently Unavailable
                   </div>
                 </div>
@@ -91,7 +91,7 @@ export const StudioDetails = () => {
                     />
                     {data[element.id].blocked ? (
                       <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-xl w-full max-w-[600px] mx-auto">
-                        <div className="text-white text-2xl font-bold">
+                        <div className="text-white text-2xl font-bold text-center">
                           Currently Unavailable
                         </div>
                       </div>

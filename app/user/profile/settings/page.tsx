@@ -41,7 +41,7 @@ export default async function SettingsPage() {
   }
 
   return (
-    <section className="block mt-[34px] h-[calc(100vh-34px)] p-8">
+    <section className="block h-[calc(100vh-34px)] p-8">
       <form action={postData} className="p-2 rounded-lg font-medium">
         <Link href="/user/profile">
           <Button>Back</Button>
