@@ -9,9 +9,9 @@ export const PickDate = () => {
 
   // Disable past dates for selection
   const disabledDates = useMemo(() => {
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-    return { before: yesterday };
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);  // Set to beginning of today
+    return { before: today };
   }, []);
 
   // Memoize the date selection handler

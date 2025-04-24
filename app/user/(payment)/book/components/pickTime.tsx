@@ -8,7 +8,7 @@ import {
 } from "@/app/user/(payment)/book/components/timeSlots";
 import { useDashboard } from "../context";
 import { BookingApiRecord } from "../types/booking";
-import { formatDateToNumeric, fillArrGaps } from "../utils/dateUtils";
+import { formatDateToNumeric, fillArrGaps, isTimeSlotAvailable } from "../utils/dateUtils";
 
 export const PickTime = () => {
   const {
@@ -161,6 +161,23 @@ export const PickTime = () => {
               ? Math.floor(booking.endTime / 4)
               : booking.endTime;
             fillArrGaps(bookedSlots, start, end);
+          });
+        }
+      }
+
+      // Add slots that are less than 2 hours in advance to bookedSlots
+      if (options.date) {
+        const isToday = new Date(options.date).toDateString() === new Date().toDateString();
+        
+        if (isToday) {
+          // If booking is for today, check which slots are less than 2 hours away
+          const slots = useSubscriptionSlots ? subscriptionTimeSlots : timeSlots;
+          
+          slots.forEach(slot => {
+            const hourValue = parseInt(slot.startTime);
+            if (!isTimeSlotAvailable(options.date, hourValue)) {
+              bookedSlots.push(slot.id);
+            }
           });
         }
       }

@@ -19,7 +19,7 @@ export default function DashboardPage() {
         {/* Admin Details */}
         {isAdmin && (
           <div className="border p-2 bg-sky-200 mb-2">
-            <p>Admin Boooking Dashboard</p>
+            <p>Admin Booking Dashboard</p>
             <Link href="/user/admin/">
               <Button variant="ghost" className="border-[1px] mt-2">
                 More Admin Options
