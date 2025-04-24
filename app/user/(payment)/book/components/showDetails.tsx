@@ -13,6 +13,8 @@ import {
   validateSubscriptionBooking,
 } from "../utils/bookingValidation";
 
+// No need to redeclare fbq as it's already declared in FacebookPixel.tsx
+
 export const ShowDetails: React.FC = () => {
   const {
     prices,
@@ -117,16 +119,82 @@ export const ShowDetails: React.FC = () => {
 
   // Safely handle button clicks with loading state managed in context
   const handleBookingSubmit = useCallback(() => {
+    // Track Facebook Pixel event for booking checkout
+    if (typeof window !== "undefined" && typeof window.fbq === "function") {
+      window.fbq("track", "InitiateCheckout", {
+        content_type: "studio_booking",
+        content_ids: [options.room],
+        content_name: `Studio ${prices[options.room].room}`,
+        value: total,
+        currency: "CAD",
+        user_email: options.user?.email || "",
+        booking_date: options.date?.toISOString().split("T")[0],
+        booking_hours: duration,
+      });
+    }
+
     submitBooking();
-  }, [submitBooking]);
+  }, [
+    submitBooking,
+    options.room,
+    options.date,
+    options.user,
+    prices,
+    total,
+    duration,
+  ]);
 
   const handleSubscriptionSubmit = useCallback(() => {
+    // Track Facebook Pixel event for subscription booking checkout
+    if (typeof window !== "undefined" && typeof window.fbq === "function") {
+      window.fbq("track", "InitiateCheckout", {
+        content_type: "subscription_booking",
+        content_ids: [options.room],
+        content_name: `Studio ${prices[options.room].room}`,
+        value: total,
+        currency: "CAD",
+        user_email: options.user?.email || "",
+        booking_date: options.date?.toISOString().split("T")[0],
+        booking_hours: duration,
+      });
+    }
+
     submitSubscriptionBooking();
-  }, [submitSubscriptionBooking]);
+  }, [
+    submitSubscriptionBooking,
+    options.room,
+    options.date,
+    options.user,
+    prices,
+    total,
+    duration,
+  ]);
 
   const handleAdminSubmit = useCallback(() => {
+    // Track Facebook Pixel event for admin booking
+    if (typeof window !== "undefined" && typeof window.fbq === "function") {
+      window.fbq("track", "InitiateCheckout", {
+        content_type: "admin_booking",
+        content_ids: [options.room],
+        content_name: `Studio ${prices[options.room].room}`,
+        value: total,
+        currency: "CAD",
+        admin_user: options.user?.email || "",
+        booking_date: options.date?.toISOString().split("T")[0],
+        booking_hours: duration,
+      });
+    }
+
     submitAdminBooking();
-  }, [submitAdminBooking]);
+  }, [
+    submitAdminBooking,
+    options.room,
+    options.date,
+    options.user,
+    prices,
+    total,
+    duration,
+  ]);
 
   return (
     <div>
