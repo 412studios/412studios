@@ -45,7 +45,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en" className="dark" style={{ colorScheme: "dark" }}>
-      <body className="flex flex-col min-h-screen">
+      <body className="flex flex-col min-h-screen max-w-[2000px] mx-auto border-x overflow-x-hidden">
         {/* <body className="flex flex-col min-h-screen max-w-[2000px] mx-auto"> */}
         <Navbar />
         <ThemeProvider
