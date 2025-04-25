@@ -5,6 +5,7 @@ import { OurStudios } from "@/app/components/ourStudios";
 import { Banner } from "@/app/components/banner";
 import { useUser } from "./components/UserContext";
 import { H2, Subtitle, Section, Divider } from "@/components/ui/copy";
+
 export default function Home() {
   const { isAuthenticated, user } = useUser();
   return (
