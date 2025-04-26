@@ -8,7 +8,7 @@ async function setupCron() {
   const cron = (await import("node-cron")).default;
 
   // Run every 30 minutes - cleanup pending bookings older than 15 minutes
-  cron.schedule("*/30 * * * *", async () => {
+  cron.schedule("* * * * *", async () => {
     try {
       const fifteenMinutesAgo = new Date(Date.now() - 15 * 60 * 1000);
 
