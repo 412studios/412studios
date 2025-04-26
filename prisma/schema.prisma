@@ -27,13 +27,13 @@ model User {
 }
 
 model Bookings {
-  bookingId       String @id
+  bookingId       String   @id
   roomId          Int
   date            Int
-  type            String @default("hour")
+  type            String   @default("hour")
   startTime       Int
   endTime         Int
-  status          String @default("pending")
+  status          String   @default("pending")
   userId          String
   stripeProductId String
   totalHours      Int
@@ -42,7 +42,8 @@ model Bookings {
   engineerStart   Int
   engineerStatus  String
   addDetails      String
-  user            User   @relation(fields: [userId], references: [id])
+  createdAt       DateTime @default(now())
+  user            User     @relation(fields: [userId], references: [id])
 }
 
 model Subscription {
