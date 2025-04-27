@@ -152,7 +152,7 @@ export default async function DashboardLayout({
     lastName: user.family_name as string,
   });
 
-  const subData = await getSubscription(user?.id as string);
+  const subscriptionData = await getSubscription(user?.id as string);
   const userDetails = await checkVerification(user?.id as string);
   if (userDetails?.isUserVerified != true) {
     return redirect("/");
@@ -168,7 +168,7 @@ export default async function DashboardLayout({
   return (
     <DashboardProvider
       userData={fullUser}
-      subscriptionData={subData as Subscription[]}
+      subscriptionData={subscriptionData as Subscription[]}
       pricingData={prices}
     >
       {children}

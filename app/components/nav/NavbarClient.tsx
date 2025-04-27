@@ -177,7 +177,7 @@ export default function NavbarClient({
               )}
             </div>
           </div>
-          {/* SUB NAV */}
+          {/* Subscription NAV */}
           {isHomepage ? (
             <>
               <div

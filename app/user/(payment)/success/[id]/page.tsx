@@ -61,14 +61,14 @@ export default async function PageSuccess({
   }
 
   // HANDLE CONFIRMING SUBSCRIPTION + RETRIEVING ID FOR CANCELLING
-  const successfulSub = await prisma.subscription.findUnique({
+  const successfulSubscription = await prisma.subscription.findUnique({
     where: {
       subscriptionId: id,
     },
   });
 
-  //Set subscription as active when sub is purchased
-  if (successfulSub) {
+  //Set subscription as active when subscription is purchased
+  if (successfulSubscription) {
     const now = new Date();
     // First day of the current month
     const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);

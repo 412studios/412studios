@@ -33,7 +33,11 @@ export async function getBooking(roomId: number, date: number) {
   return data;
 }
 
-export async function getSubWeek(roomId: number, date: number, user: any) {
+export async function getSubscriptionWeek(
+  roomId: number,
+  date: number,
+  user: any
+) {
   noStore();
 
   const getWeekBoundaries = (numericDate: number) => {

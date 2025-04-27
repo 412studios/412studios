@@ -46,8 +46,3 @@ export const getStripeSession = async ({
   });
   return session.url as string;
 };
-
-export const getStripeSubId = async (subId: string) => {
-  const session = await stripe.checkout.sessions.retrieve(subId);
-  return session;
-};

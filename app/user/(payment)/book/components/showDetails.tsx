@@ -20,7 +20,7 @@ export const ShowDetails: React.FC = () => {
     prices,
     options,
     setOptions,
-    isSubscribed,
+    isSubscription,
     isAdmin,
     submitBooking,
     submitSubscriptionBooking,
@@ -28,8 +28,8 @@ export const ShowDetails: React.FC = () => {
   } = useDashboard();
   // Determine if we should use subscription behavior
   const useSubscriptionSlots = useMemo(
-    () => isSubscribed && !isAdmin,
-    [isSubscribed, isAdmin]
+    () => isSubscription && !isAdmin,
+    [isSubscription, isAdmin]
   );
   // Use useMemo to calculate derived values that depend on options
   const {
@@ -39,8 +39,8 @@ export const ShowDetails: React.FC = () => {
     bookingTotal,
     engTotal,
     total,
-    foundSub,
-    subHasHours,
+    foundSubscription,
+    subscriptionHasHours,
   } = useMemo(() => {
     let displayStart = "Not Selected";
     let displayEnd = "Not Selected";
@@ -50,11 +50,13 @@ export const ShowDetails: React.FC = () => {
     let total = 0;
 
     // Find subscription for current room with proper type safety
-    const foundSub =
-      options.subscription.find((sub) => sub.roomId === options.room) || null;
-    const subHasHours = (foundSub?.availableHours ?? 0) >= 4;
+    const foundSubscription =
+      options.subscription.find(
+        (subscription) => subscription.roomId === options.room
+      ) || null;
+    const subscriptionHasHours = (foundSubscription?.availableHours ?? 0) >= 4;
 
-    // Changed: Use useSubscriptionSlots instead of just isSubscribed
+    // Changed: Use useSubscriptionSlots instead of just isSubscription
     if (useSubscriptionSlots) {
       if (options.startTime !== -1) {
         displayStart = subscriptionTimeSlots[options.startTime].displayStart;
@@ -96,8 +98,8 @@ export const ShowDetails: React.FC = () => {
       bookingTotal,
       engTotal,
       total,
-      foundSub,
-      subHasHours,
+      foundSubscription,
+      subscriptionHasHours,
     };
   }, [
     options.startTime,
@@ -205,7 +207,7 @@ export const ShowDetails: React.FC = () => {
         </div>
       ) : (
         <>
-          {/* Changed: Use useSubscriptionSlots instead of just isSubscribed for conditional rendering */}
+          {/* Changed: Use useSubscriptionSlots instead of just isSubscription for conditional rendering */}
           {useSubscriptionSlots ? (
             <div className="border rounded-lg mt-4 p-4">
               <H4 className="pb-4">Subscription Details</H4>
@@ -246,20 +248,25 @@ export const ShowDetails: React.FC = () => {
                     <TableCell>{duration}</TableCell>
                   </TableRow>
 
-                  {subHasHours && foundSub && (
+                  {subscriptionHasHours && foundSubscription && (
                     <>
                       <TableRow>
                         <TableCell>
                           <strong>Available Hours</strong>
                         </TableCell>
-                        <TableCell>{foundSub.availableHours}</TableCell>
+                        <TableCell>
+                          {foundSubscription.availableHours}
+                        </TableCell>
                       </TableRow>
                       <TableRow>
                         <TableCell>
                           <strong>Remaining Hours</strong>
                         </TableCell>
                         <TableCell>
-                          {Math.max(0, foundSub.availableHours - duration)}
+                          {Math.max(
+                            0,
+                            foundSubscription.availableHours - duration
+                          )}
                         </TableCell>
                       </TableRow>
                     </>

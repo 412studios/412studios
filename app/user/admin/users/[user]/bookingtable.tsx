@@ -27,7 +27,7 @@ interface BookingTableProps {
     email: string;
     role: string;
   } | null;
-  subs: Array<{
+  subscriptions: Array<{
     subscriptionId: string;
     roomId: number;
     status: string;
@@ -45,7 +45,7 @@ interface BookingTableProps {
 
 export default function BookingTable({
   user,
-  subs,
+  subscriptions,
   bookings,
 }: BookingTableProps) {
   const [isChecked, setIsChecked] = useState(true);
@@ -125,7 +125,7 @@ export default function BookingTable({
             <p className="text-sm text-muted-foreground">{user?.email}</p>
           </div>
 
-          {subs && subs.length > 0 && (
+          {subscriptions && subscriptions.length > 0 && (
             <div className="border-t-4 p-4">
               <h2 className="text-xl font-bold mb-4">Subscriptions</h2>
               <Table>
@@ -138,14 +138,14 @@ export default function BookingTable({
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {subs.map((sub, index) => (
+                  {subscriptions.map((subscription, index) => (
                     <TableRow key={index}>
-                      <TableCell>{roomName[sub.roomId]}</TableCell>
-                      <TableCell>{sub.status}</TableCell>
-                      <TableCell>{sub.availableHours}</TableCell>
+                      <TableCell>{roomName[subscription.roomId]}</TableCell>
+                      <TableCell>{subscription.status}</TableCell>
+                      <TableCell>{subscription.availableHours}</TableCell>
                       <TableCell>
                         <Link
-                          href={`/admin/subscriptions/${sub.subscriptionId}`}
+                          href={`/admin/subscriptions/${subscription.subscriptionId}`}
                           className="hover:underline"
                         >
                           Edit

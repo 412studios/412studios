@@ -36,13 +36,13 @@ export default async function PageCancel({
     }
 
     // Handle subscription cancellation
-    const successfulSub = await prisma.subscription.findUnique({
+    const successfulSubscription = await prisma.subscription.findUnique({
       where: {
         subscriptionId: id,
       },
     });
 
-    if (successfulSub) {
+    if (successfulSubscription) {
       await prisma.subscription.deleteMany({
         where: {
           subscriptionId: id,

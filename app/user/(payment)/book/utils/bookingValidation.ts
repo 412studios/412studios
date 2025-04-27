@@ -12,7 +12,7 @@ function validateBaseBooking(options: BookingOptions): BookingValidation {
       message: "Please select a time slot",
     };
   }
-  
+
   return { isValid: true };
 }
 
@@ -63,10 +63,10 @@ export function validateSubscriptionBooking(
     };
   }
 
-  const foundSub = options.subscription.find(
-    (sub) => sub.roomId === options.room
+  const foundSubscription = options.subscription.find(
+    (subscription) => subscription.roomId === options.room
   );
-  if (!foundSub || foundSub.availableHours < 4) {
+  if (!foundSubscription || foundSubscription.availableHours < 4) {
     return {
       isValid: false,
       message: "Hours are not available",

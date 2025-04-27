@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { getBooking, getSubWeek } from "@/app/lib/booking";
+import { getBooking, getSubscriptionWeek } from "@/app/lib/booking";
 import {
   timeSlots,
   subscriptionTimeSlots,
@@ -22,9 +22,11 @@ export const PickTime = ({
   const [bookedTimes, setBookedTimes] = useState<number[]>([]);
   const [existingBookings, setExistingBookings] = useState<number[]>([]);
 
-  const isSubscribed = options.subRooms.includes(parseInt(options.room));
+  const isSubscription = options.subscriptionRooms.includes(
+    parseInt(options.room)
+  );
   const formattedDate = parseInt(formatDateToNumeric(options.date));
-  const timeArray = isSubscribed ? subscriptionTimeSlots : timeSlots;
+  const timeArray = isSubscription ? subscriptionTimeSlots : timeSlots;
 
   useEffect(() => {
     const initialBookedTimes = Array.isArray(existingBookings)
@@ -40,7 +42,7 @@ export const PickTime = ({
       setOptions((prevOptions: any) => ({ ...prevOptions, loading: true }));
       try {
         const bookings = await getBooking(options.room, formattedDate);
-        const checkSubWeek = await getSubWeek(
+        const checkSubscriptionWeek = await getSubscriptionWeek(
           options.room,
           formattedDate,
           options.user
@@ -49,13 +51,13 @@ export const PickTime = ({
         let setStart = 0;
         let setEnd = 0;
 
-        if (isSubscribed && checkSubWeek) {
+        if (isSubscription && checkSubscriptionWeek) {
           setStart = 0;
           setEnd = 3;
           fillArrGaps(arr, setStart, setEnd);
         } else {
           bookings.forEach((booking: any) => {
-            if (isSubscribed) {
+            if (isSubscription) {
               setStart = Math.floor(booking.startTime / 4);
               setEnd = Math.floor((booking.endTime - 1) / 4);
             } else {
@@ -113,7 +115,7 @@ export const PickTime = ({
         fullList.push(i);
       }
 
-      if (isSubscribed) {
+      if (isSubscription) {
         fullList = [id];
         const currentSubscription = options.subscription.find(
           (item: any) => item.roomId === options.room
@@ -161,7 +163,7 @@ export const PickTime = ({
             <div
               className={`border w-full h-[310px] rounded-lg overflow-y-scroll p-2
                   ${
-                    isSubscribed
+                    isSubscription
                       ? "flex justify-center flex-col grow w-full"
                       : ""
                   }`}
@@ -171,7 +173,7 @@ export const PickTime = ({
                   key={slot.id}
                   onClick={() => handleClick(slot.id)}
                   className={`flex items-center justify-center text-center hover:cursor-pointer rounded-full
-                  ${isSubscribed ? "h-[25%] rounded-lg" : "p-1 my-1"}
+                  ${isSubscription ? "h-[25%] rounded-lg" : "p-1 my-1"}
                   ${
                     bookedTimes.includes(slot.id)
                       ? "bg-red-500"

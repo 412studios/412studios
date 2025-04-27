@@ -35,7 +35,7 @@ export default async function Main() {
       const data: any = {
         dayRate: parseInt(formData.get(i + "day") as string),
         hourlyRate: parseInt(formData.get(i + "hour") as string),
-        subscriptionPrice: parseInt(formData.get(i + "sub") as string),
+        subscriptionPrice: parseInt(formData.get(i + "subscription") as string),
         engineerPrice: parseInt(formData.get(i + "eng") as string),
         blocked: formData.get(i + "blocked") === "true",
       };

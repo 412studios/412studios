@@ -91,6 +91,6 @@ export default async function DashboardLayout({
     id: user.id as string,
     lastName: user.family_name as string,
   });
-  // const subData = await getSubscription(user.id as string);
+  // const subscriptionData = await getSubscription(user.id as string);
   return <>{children}</>;
 }

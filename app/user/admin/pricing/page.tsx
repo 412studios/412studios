@@ -79,7 +79,7 @@ export default function Page(data: any) {
           </TableCell>
           <TableCell>
             <Input
-              name={index + "sub"}
+              name={index + "subscription"}
               value={val.subscriptionPrice}
               onChange={(e) =>
                 handleChange(index, "subscriptionPrice", e.target.value)

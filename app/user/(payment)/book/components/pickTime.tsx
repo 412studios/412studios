@@ -1,14 +1,18 @@
 "use client";
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { Button } from "@/components/ui/button";
-import { getBooking, getSubWeek } from "@/app/lib/booking";
+import { getBooking, getSubscriptionWeek } from "@/app/lib/booking";
 import {
   timeSlots,
   subscriptionTimeSlots,
 } from "@/app/user/(payment)/book/components/timeSlots";
 import { useDashboard } from "../context";
 import { BookingApiRecord } from "../types/booking";
-import { formatDateToNumeric, fillArrGaps, isTimeSlotAvailable } from "../utils/dateUtils";
+import {
+  formatDateToNumeric,
+  fillArrGaps,
+  isTimeSlotAvailable,
+} from "../utils/dateUtils";
 
 export const PickTime = () => {
   const {
@@ -24,15 +28,15 @@ export const PickTime = () => {
   const [bookedTimes, setBookedTimes] = useState<number[]>([]);
 
   // Memoize derived values
-  const isSubscribed = useMemo(
-    () => options.subRooms.includes(options.room),
-    [options.subRooms, options.room]
+  const isSubscription = useMemo(
+    () => options.subscriptionRooms.includes(options.room),
+    [options.subscriptionRooms, options.room]
   );
 
-  // New: Check if we should use subscription time slots - only when subscribed AND not admin
+  // New: Check if we should use subscription time slots - only when Subscription AND not admin
   const useSubscriptionSlots = useMemo(
-    () => isSubscribed && !isAdmin,
-    [isSubscribed, isAdmin]
+    () => isSubscription && !isAdmin,
+    [isSubscription, isAdmin]
   );
 
   const formattedDate = useMemo(
@@ -40,7 +44,7 @@ export const PickTime = () => {
     [options.date]
   );
 
-  // Changed: Use time slots based on useSubscriptionSlots rather than just isSubscribed
+  // Changed: Use time slots based on useSubscriptionSlots rather than just isSubscription
   const timeArray = useMemo(
     () => (useSubscriptionSlots ? subscriptionTimeSlots : timeSlots),
     [useSubscriptionSlots]
@@ -134,9 +138,13 @@ export const PickTime = () => {
 
     try {
       // Fetch booking data in parallel
-      const [bookings, checkSubWeek] = await Promise.all([
+      const [bookings, checkSubscriptionWeek] = await Promise.all([
         getBooking(options.room, parseInt(formattedDate)),
-        getSubWeek(options.room, parseInt(formattedDate), options.user),
+        getSubscriptionWeek(
+          options.room,
+          parseInt(formattedDate),
+          options.user
+        ),
       ]);
 
       // Process booking data
@@ -144,7 +152,7 @@ export const PickTime = () => {
       // Check blocked value
       const isRoomBlocked = prices[options.room]?.blocked || false;
       // Catch subscription acceptions
-      if (useSubscriptionSlots && checkSubWeek && isRoomBlocked) {
+      if (useSubscriptionSlots && checkSubscriptionWeek && isRoomBlocked) {
         // Weekly limit reached, block all slots
         fillArrGaps(bookedSlots, 0, 3);
       } else if (Array.isArray(bookings)) {
@@ -167,13 +175,16 @@ export const PickTime = () => {
 
       // Add slots that are less than 2 hours in advance to bookedSlots
       if (options.date) {
-        const isToday = new Date(options.date).toDateString() === new Date().toDateString();
-        
+        const isToday =
+          new Date(options.date).toDateString() === new Date().toDateString();
+
         if (isToday) {
           // If booking is for today, check which slots are less than 2 hours away
-          const slots = useSubscriptionSlots ? subscriptionTimeSlots : timeSlots;
-          
-          slots.forEach(slot => {
+          const slots = useSubscriptionSlots
+            ? subscriptionTimeSlots
+            : timeSlots;
+
+          slots.forEach((slot) => {
             const hourValue = parseInt(slot.startTime);
             if (!isTimeSlotAvailable(options.date, hourValue)) {
               bookedSlots.push(slot.id);

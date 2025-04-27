@@ -19,13 +19,13 @@ import { H2, H4, Subtitle, Section, Divider } from "@/components/ui/copy";
 export default function Page(data: any) {
   // COLLECT SUBSCRIPTION DETAILS IF AVAILABLE
   // CREATE ARRAY OF ACTIVE SUBSCRIPTIONS AND ROOM HOURS
-  const subRooms = useMemo(
-    () => data.sub.map((element: any) => element.roomId),
-    [data.sub]
+  const subscriptionRooms = useMemo(
+    () => data.subscription.map((element: any) => element.roomId),
+    [data.subscription]
   );
-  const subRoomHours = useMemo(
-    () => data.sub.map((element: any) => element.availableHours),
-    [data.sub]
+  const subscriptionRoomHours = useMemo(
+    () => data.subscription.map((element: any) => element.availableHours),
+    [data.subscription]
   );
 
   // SET DEFAULT OPTION VALUES ON LOAD
@@ -38,14 +38,14 @@ export default function Page(data: any) {
       duration: 0,
       price: 0,
       loading: false,
-      subscription: data.sub,
-      subRooms: subRooms,
-      subRoomHours: subRoomHours,
+      subscription: data.subscription,
+      subscriptionRooms: subscriptionRooms,
+      subscriptionRoomHours: subscriptionRoomHours,
       user: data.user,
       engDuration: -1,
       engStart: -1,
     }),
-    [data.sub, subRooms, subRoomHours, data.user]
+    [data.subscription, subscriptionRooms, subscriptionRoomHours, data.user]
   );
 
   const [options, setOptions] = useState(defaultOptions);

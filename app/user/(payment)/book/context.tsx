@@ -22,9 +22,9 @@ type DashboardContextType = {
   setOptions: React.Dispatch<React.SetStateAction<BookingOptions>>;
 
   // Derived state
-  isSubscribed: boolean;
+  isSubscription: boolean;
   activeSubscription: Subscription | null;
-  areSubHoursAvailable: boolean;
+  areSubscriptionHoursAvailable: boolean;
 
   // Helper functions
   onRoomSelect: (id: string) => void;
@@ -50,17 +50,17 @@ export const DashboardContext = createContext<DashboardContextType>({
     price: 0,
     loading: false,
     subscription: [],
-    subRooms: [],
-    subRoomHours: [],
+    subscriptionRooms: [],
+    subscriptionRoomHours: [],
     user: null,
     engDuration: -1,
     engStart: -1,
   },
   setOptions: () => {},
   // Add missing derived state properties
-  isSubscribed: false,
+  isSubscription: false,
   activeSubscription: null,
-  areSubHoursAvailable: false,
+  areSubscriptionHoursAvailable: false,
 
   // Add missing helper functions
   onRoomSelect: () => {},
@@ -84,12 +84,12 @@ export function DashboardProvider({
   pricingData: PricesMap;
 }) {
   // Create arrays of subscription room IDs and hours
-  const subRooms = useMemo(
+  const subscriptionRooms = useMemo(
     () => subscriptionData.map((element) => element.roomId),
     [subscriptionData]
   );
 
-  const subRoomHours = useMemo(
+  const subscriptionRoomHours = useMemo(
     () => subscriptionData.map((element) => element.availableHours),
     [subscriptionData]
   );
@@ -105,13 +105,13 @@ export function DashboardProvider({
       price: 0,
       loading: false,
       subscription: subscriptionData,
-      subRooms,
-      subRoomHours,
+      subscriptionRooms,
+      subscriptionRoomHours,
       user: userData,
       engDuration: -1,
       engStart: -1,
     }),
-    [subscriptionData, subRooms, subRoomHours, userData]
+    [subscriptionData, subscriptionRooms, subscriptionRoomHours, userData]
   );
 
   const [options, setOptions] = useState<BookingOptions>(defaultOptions);
@@ -122,19 +122,21 @@ export function DashboardProvider({
   }, [defaultOptions]);
 
   // Derived state
-  const isSubscribed = useMemo(
-    () => options.subRooms.includes(options.room),
-    [options.subRooms, options.room]
+  const isSubscription = useMemo(
+    () => options.subscriptionRooms.includes(options.room),
+    [options.subscriptionRooms, options.room]
   );
 
   const activeSubscription = useMemo(() => {
-    if (!isSubscribed) return null;
+    if (!isSubscription) return null;
     return (
-      options.subscription.find((sub) => sub.roomId === options.room) || null
+      options.subscription.find(
+        (subscription) => subscription.roomId === options.room
+      ) || null
     );
-  }, [isSubscribed, options.subscription, options.room]);
+  }, [isSubscription, options.subscription, options.room]);
 
-  const areSubHoursAvailable = useMemo(() => {
+  const areSubscriptionHoursAvailable = useMemo(() => {
     if (!activeSubscription) return false;
     return activeSubscription.availableHours >= 4;
   }, [activeSubscription]);
@@ -251,9 +253,9 @@ export function DashboardProvider({
         prices: pricingData,
         options,
         setOptions,
-        isSubscribed,
+        isSubscription,
         activeSubscription,
-        areSubHoursAvailable,
+        areSubscriptionHoursAvailable,
         onRoomSelect,
         handleTimePick,
         clearTimeSelection,

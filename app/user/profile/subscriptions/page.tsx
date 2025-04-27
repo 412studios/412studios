@@ -63,7 +63,7 @@ export default async function Main() {
   const { getUser } = getKindeServerSession();
   const user = await getUser();
   const data = await getData(user?.id as string);
-  const subData = await getSubscription(user?.id as string);
+  const subscriptionData = await getSubscription(user?.id as string);
 
   const rooms = ["A", "B", "C"];
 
@@ -86,11 +86,11 @@ export default async function Main() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {subData.map((sub, index) => (
+              {subscriptionData.map((subscription, index) => (
                 <TableRow key={index}>
-                  <TableCell>Room {rooms[sub.roomId]}</TableCell>
-                  <TableCell>{sub.status}</TableCell>
-                  <TableCell>{sub.availableHours}</TableCell>
+                  <TableCell>Room {rooms[subscription.roomId]}</TableCell>
+                  <TableCell>{subscription.status}</TableCell>
+                  <TableCell>{subscription.availableHours}</TableCell>
                   <TableCell>
                     <Link href="/user/book">
                       <Button>Book</Button>

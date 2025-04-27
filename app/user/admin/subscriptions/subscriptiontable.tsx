@@ -49,11 +49,11 @@ interface Subscription {
   };
 }
 
-interface SubTableProps {
+interface SubscriptionTableProps {
   subscriptions: Subscription[];
 }
 
-export default function SubTable({ subscriptions = [] }: SubTableProps) {
+export default function SubscriptionTable({ subscriptions = [] }: SubscriptionTableProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedRoom, setSelectedRoom] = useState(0);
   const [filteredSubscriptions, setFilteredSubscriptions] =

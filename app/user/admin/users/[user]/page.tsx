@@ -24,7 +24,7 @@ export default async function Page(props: any) {
     },
   });
 
-  const userSubs = await prisma.subscription.findMany({
+  const userSubscriptions = await prisma.subscription.findMany({
     where: {
       userId: props.params.user,
     },
@@ -34,7 +34,7 @@ export default async function Page(props: any) {
     <>
       <BookingTable
         user={userDetails}
-        subs={userSubs}
+        subscriptions={userSubscriptions}
         bookings={userBookings}
       />
     </>

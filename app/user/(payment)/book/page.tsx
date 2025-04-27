@@ -28,7 +28,7 @@ export default function DashboardPage() {
           </div>
         )}
         {/* Subscription Details */}
-        {options.subRooms.length >= 1 && !isAdmin && (
+        {options.subscriptionRooms.length >= 1 && !isAdmin && (
           <div className="border p-2 bg-sky-200 mb-2">
             {options.subscription.map((element, index) => (
               <div key={index} className="rounded flex flex-col">

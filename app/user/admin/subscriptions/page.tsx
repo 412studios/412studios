@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import SubTable from "./subtable";
+import SubscriptionTable from "./subscriptiontable";
 import prisma from "@/app/lib/db";
 import { H2, H4, Subtitle, Section, Divider } from "@/components/ui/copy";
 
@@ -27,7 +27,7 @@ export default async function Page() {
           </span>
         </div>
         <CardContent>
-          <SubTable subscriptions={subscriptions} />
+          <SubscriptionTable subscriptions={subscriptions} />
         </CardContent>
       </Section>
     </>

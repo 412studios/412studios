@@ -34,8 +34,8 @@ export interface BookingOptions {
   price: number;
   loading: boolean;
   subscription: Subscription[];
-  subRooms: number[];
-  subRoomHours: number[];
+  subscriptionRooms: number[];
+  subscriptionRoomHours: number[];
   user: User | null;
   engDuration: number;
   engStart: number;

@@ -33,7 +33,7 @@ export const ShowDetails = ({
 
   let total = 0;
 
-  // IF USER IS NOT SUBSCRIBED
+  // IF USER IS NOT Subscription
   if (options.startTime != -1) {
     // SET DISPLAY TIME FROM TIMESLOTS
     displayStart = timeSlots[options.startTime].displayStart;

@@ -24,16 +24,16 @@ export const PickEng = () => {
   const [duration, setDuration] = useState<string>(placeholderDuration);
   const [durationArr, setDurationArr] = useState<number[]>([]);
 
-  // Check if subscribed
-  const isSubscribed = useMemo(
-    () => options.subRooms.includes(options.room),
-    [options.subRooms, options.room]
+  // Check if Subscription
+  const isSubscription = useMemo(
+    () => options.subscriptionRooms.includes(options.room),
+    [options.subscriptionRooms, options.room]
   );
 
-  // New: Check if we should use subscription-specific logic - only when subscribed AND not admin
+  // New: Check if we should use subscription-specific logic - only when Subscription AND not admin
   const useSubscriptionSlots = useMemo(
-    () => isSubscribed && !isAdmin,
-    [isSubscribed, isAdmin]
+    () => isSubscription && !isAdmin,
+    [isSubscription, isAdmin]
   );
 
   // Calculate startArr only when dependencies change
@@ -47,7 +47,7 @@ export const PickEng = () => {
       return arr;
     }
 
-    // Changed: Use useSubscriptionSlots instead of just checking subRooms
+    // Changed: Use useSubscriptionSlots instead of just checking subscriptionRooms
     if (useSubscriptionSlots) {
       if (options.startTime > -1) {
         min = options.startTime * 4;
