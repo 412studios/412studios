@@ -108,36 +108,6 @@ async function getSubscription(userId: string) {
       subscriptionId: true,
     },
   });
-
-  //ADDING HOURS IF ACTIVE SUBSCRIPTION RENEWS
-  for (const subscription of subscriptions) {
-    //JS AUTO CHANGES DATE TO 01
-    const originalDate = new Date(subscription.currentPeriodStart);
-    const updatedStart = new Date(
-      today.getFullYear(),
-      today.getMonth(),
-      originalDate.getDate()
-    );
-    const numericNewStart = parseInt(formatDateToNumeric(updatedStart));
-
-    const updatedEnd = new Date(
-      today.getFullYear(),
-      today.getMonth() + 1,
-      originalDate.getDate()
-    );
-    const numericNewEnd = parseInt(formatDateToNumeric(updatedEnd));
-    await prisma.subscription.updateMany({
-      where: {
-        userId: userId,
-        subscriptionId: subscription.subscriptionId,
-      },
-      data: {
-        currentPeriodStart: numericNewStart,
-        currentPeriodEnd: numericNewEnd,
-        availableHours: 16,
-      },
-    });
-  }
   return data;
 }
 

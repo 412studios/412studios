@@ -42,7 +42,10 @@ export default async function PageCancel({
       },
     });
 
-    if (successfulSub?.stripeSessionId) {
+    console.log(id);
+    console.log(successfulSub);
+
+    if (successfulSub) {
       await prisma.subscription.deleteMany({
         where: {
           subscriptionId: id,
