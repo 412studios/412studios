@@ -64,10 +64,10 @@ async function getData(user: any) {
   return data;
 }
 
-async function getSubscription(user: any) {
+async function getMembership(user: any) {
   noStore();
-  //RETURN SUBSCRIPTION DETAILS
-  const data = await prisma.subscription.findMany({
+  //RETURN Membership DETAILS
+  const data = await prisma.memberships.findMany({
     where: {
       userId: user.id,
       OR: [
@@ -94,7 +94,7 @@ export default async function Page() {
   const { getUser } = getKindeServerSession();
   const user = await getUser();
   const data = await getData(user);
-  const subscriptionData = await getSubscription(user);
+  const membershipData = await getMembership(user);
 
   return (
     <>
@@ -106,24 +106,24 @@ export default async function Page() {
             <p>Name: {data?.name}</p>
             <p>Email: {data?.email}</p>
           </div>
-          {/* SUBSCRIPTION DETAILS SECTION */}
+          {/* membership DETAILS SECTION */}
           <div>
-            {typeof subscriptionData[0] !== "undefined" &&
-              subscriptionData[0].status === "success" && (
+            {typeof membershipData[0] !== "undefined" &&
+              membershipData[0].status === "success" && (
                 <p>
                   <span className="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-blue-400 border border-blue-400">
-                    Subscription
+                    Membership
                   </span>
                 </p>
               )}
           </div>
           {/* MENU LINKS */}
           <div className="flex flex-col gap-2 max-w-[400px]">
-            {typeof subscriptionData[0] !== "undefined" &&
-              subscriptionData[0].status === "success" && (
+            {typeof membershipData[0] !== "undefined" &&
+              membershipData[0].status === "success" && (
                 <p>
                   <span className="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-blue-400 border border-blue-400">
-                    Subscription
+                    Membership
                   </span>
                 </p>
               )}
@@ -138,9 +138,9 @@ export default async function Page() {
                 </Button>
               </Link>
             )}
-            {typeof subscriptionData[0] !== "undefined" &&
-              subscriptionData[0].userId && (
-                <Link href="/user/profile/subscription">
+            {typeof membershipData[0] !== "undefined" &&
+              membershipData[0].userId && (
+                <Link href="/user/profile/membership">
                   <Button
                     variant="ghost"
                     size="sm"
@@ -150,8 +150,8 @@ export default async function Page() {
                   </Button>
                 </Link>
               )}
-            {typeof subscriptionData[0] !== "undefined" &&
-              subscriptionData[0].userId && (
+            {typeof membershipData[0] !== "undefined" &&
+              membershipData[0].userId && (
                 <Link href="/user/profile/bookings">
                   <Button
                     variant="ghost"

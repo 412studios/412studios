@@ -46,8 +46,8 @@ export default async function PageSuccess({
     const duration =
       successfulBooking.endTime + 1 - successfulBooking.startTime;
 
-    //Update subscription details
-    await prisma.subscription.updateMany({
+    //Update membership details
+    await prisma.memberships.updateMany({
       where: {
         userId: successfulBooking.userId,
         roomId: successfulBooking.roomId,
@@ -60,15 +60,15 @@ export default async function PageSuccess({
     });
   }
 
-  // HANDLE CONFIRMING SUBSCRIPTION + RETRIEVING ID FOR CANCELLING
-  const successfulSubscription = await prisma.subscription.findUnique({
+  // HANDLE CONFIRMING MEMBERSHIP + RETRIEVING ID FOR CANCELLING
+  const successfulMembership = await prisma.memberships.findUnique({
     where: {
-      subscriptionId: id,
+      membershipId: id,
     },
   });
 
-  //Set subscription as active when subscription is purchased
-  if (successfulSubscription) {
+  //Set membership as active when membership is purchased
+  if (successfulMembership) {
     const now = new Date();
     // First day of the current month
     const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
@@ -85,9 +85,9 @@ export default async function PageSuccess({
       firstDayOfNextMonth.getMonth() + 1
     ).padStart(2, "0")}01`;
 
-    await prisma.subscription.update({
+    await prisma.memberships.update({
       where: {
-        subscriptionId: id,
+        membershipId: id,
       },
       data: {
         status: "active",

@@ -30,9 +30,9 @@ async function getData(userId: string) {
   return data;
 }
 
-async function getSubscription(userId: string) {
+async function getMemberships(userId: string) {
   noStore();
-  const data = await prisma.subscription.findMany({
+  const data = await prisma.memberships.findMany({
     where: {
       userId: userId,
       OR: [
@@ -45,7 +45,7 @@ async function getSubscription(userId: string) {
       ],
     },
     select: {
-      stripeSubscriptionId: true,
+      stripeMembershipId: true,
       availableHours: true,
       userId: true,
       roomId: true,
@@ -63,7 +63,7 @@ export default async function Main() {
   const { getUser } = getKindeServerSession();
   const user = await getUser();
   const data = await getData(user?.id as string);
-  const subscriptionData = await getSubscription(user?.id as string);
+  const membershipData = await getMemberships(user?.id as string);
 
   const rooms = ["A", "B", "C"];
 
@@ -86,11 +86,11 @@ export default async function Main() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {subscriptionData.map((subscription, index) => (
+              {membershipData.map((membership, index) => (
                 <TableRow key={index}>
-                  <TableCell>Room {rooms[subscription.roomId]}</TableCell>
-                  <TableCell>{subscription.status}</TableCell>
-                  <TableCell>{subscription.availableHours}</TableCell>
+                  <TableCell>Room {rooms[membership.roomId]}</TableCell>
+                  <TableCell>{membership.status}</TableCell>
+                  <TableCell>{membership.availableHours}</TableCell>
                   <TableCell>
                     <Link href="/user/book">
                       <Button>Book</Button>

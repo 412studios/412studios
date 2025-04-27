@@ -27,8 +27,8 @@ interface BookingTableProps {
     email: string;
     role: string;
   } | null;
-  subscription: Array<{
-    subscriptionId: string;
+  membership: Array<{
+    membershipId: string;
     roomId: number;
     status: string;
     availableHours: number;
@@ -45,7 +45,7 @@ interface BookingTableProps {
 
 export default function BookingTable({
   user,
-  subscription,
+  membership,
   bookings,
 }: BookingTableProps) {
   const [isChecked, setIsChecked] = useState(true);
@@ -125,9 +125,9 @@ export default function BookingTable({
             <p className="text-sm text-muted-foreground">{user?.email}</p>
           </div>
 
-          {subscription && subscription.length > 0 && (
+          {membership && membership.length > 0 && (
             <div className="border-t-4 p-4">
-              <h2 className="text-xl font-bold mb-4">subscription</h2>
+              <h2 className="text-xl font-bold mb-4">membership</h2>
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -138,14 +138,14 @@ export default function BookingTable({
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {subscription.map((subscription, index) => (
+                  {membership.map((membership, index) => (
                     <TableRow key={index}>
-                      <TableCell>{roomName[subscription.roomId]}</TableCell>
-                      <TableCell>{subscription.status}</TableCell>
-                      <TableCell>{subscription.availableHours}</TableCell>
+                      <TableCell>{roomName[membership.roomId]}</TableCell>
+                      <TableCell>{membership.status}</TableCell>
+                      <TableCell>{membership.availableHours}</TableCell>
                       <TableCell>
                         <Link
-                          href={`/admin/subscription/${subscription.subscriptionId}`}
+                          href={`/admin/membership/${membership.membershipId}`}
                           className="hover:underline"
                         >
                           Edit

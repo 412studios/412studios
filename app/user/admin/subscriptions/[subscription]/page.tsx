@@ -6,10 +6,9 @@ import { redirect } from "next/navigation";
 import prisma from "@/app/lib/db";
 
 export default async function Page(id: any) {
-
-  const subscription = await prisma.subscription.findUnique({
+  const membership = await prisma.memberships.findUnique({
     where: {
-      subscriptionId: id.params.subscription,
+      membershipId: id.params.membership,
     },
     include: {
       user: {
@@ -23,9 +22,9 @@ export default async function Page(id: any) {
   async function submit(formData: FormData) {
     "use server";
     try {
-      await prisma.subscription.update({
+      await prisma.memberships.update({
         where: {
-          subscriptionId: id.params.subscription,
+          membershipId: id.params.membership,
         },
         data: {
           availableHours: Number(formData.get("num")),
@@ -34,15 +33,15 @@ export default async function Page(id: any) {
     } catch (error) {
       console.error("Failed to post booking:", error);
     }
-    redirect(`/admin/users/${String(subscription?.userId)}`);
+    redirect(`/admin/users/${String(membership?.userId)}`);
   }
   return (
     <>
       <Card>
         <CardHeader className="flex w-full justify-between">
-          <CardTitle>Subscription Details</CardTitle>
+          <CardTitle>Membership Details</CardTitle>
           <span className="flex-end">
-            <Link href={`/admin/users/${String(subscription?.userId)}`}>
+            <Link href={`/admin/users/${String(membership?.userId)}`}>
               <Button>Back</Button>
             </Link>
           </span>
@@ -50,28 +49,28 @@ export default async function Page(id: any) {
         <CardContent>
           <div className="space-y-4">
             <div>
-              <strong>User:</strong> {subscription?.user.name}
+              <strong>User:</strong> {membership?.user.name}
             </div>
             <div>
-              <strong>Status:</strong> {subscription?.status}
+              <strong>Status:</strong> {membership?.status}
             </div>
             <div>
-              <strong>Interval:</strong> {subscription?.interval}
+              <strong>Interval:</strong> {membership?.interval}
             </div>
             <div>
               <strong>Current Period Start:</strong>{" "}
-              {subscription?.currentPeriodStart}
+              {membership?.currentPeriodStart}
             </div>
             <div>
               <strong>Current Period End:</strong>{" "}
-              {subscription?.currentPeriodEnd}
+              {membership?.currentPeriodEnd}
             </div>
             <div>
               <strong>Available Hours</strong>
-              {subscription?.availableHours !== undefined ? (
+              {membership?.availableHours !== undefined ? (
                 <div className="mt-4">
                   <form action={submit}>
-                    <NumberInput initialNum={subscription?.availableHours} />
+                    <NumberInput initialNum={membership?.availableHours} />
                     <Button type="submit" className="mt-4 w-full">
                       Submit
                     </Button>

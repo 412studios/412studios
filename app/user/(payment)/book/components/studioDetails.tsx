@@ -68,7 +68,7 @@ export const StudioDetails = () => {
             </CardDescription>
             <CardDescription>
               <Link href={`/user/membership/${element.id}`} className="w-full">
-                Purchase Membership: {element.subscriptionPrice}
+                Purchase Membership: {element.membershipPrice}
               </Link>
             </CardDescription>
           </div>
@@ -120,7 +120,7 @@ export const StudioDetails = () => {
                       href={`/user/membership/${element.id}`}
                       className="w-full"
                     >
-                      Purchase Membership: {element.subscriptionPrice}
+                      Purchase Membership: {element.membershipPrice}
                     </Link>
                   </CardDescription>
                 </div>

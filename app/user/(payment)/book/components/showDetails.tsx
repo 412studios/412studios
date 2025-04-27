@@ -4,13 +4,13 @@ import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import {
   timeSlots,
-  subscriptionTimeSlots,
+  membershipTimeSlots,
 } from "@/app/user/(payment)/book/components/timeSlots";
 import { H4 } from "@/components/ui/copy";
 import { useDashboard } from "../context";
 import {
   validateStandardBooking,
-  validateSubscriptionBooking,
+  validateMembershipBooking,
 } from "../utils/bookingValidation";
 
 // No need to redeclare fbq as it's already declared in FacebookPixel.tsx
@@ -20,16 +20,16 @@ export const ShowDetails: React.FC = () => {
     prices,
     options,
     setOptions,
-    isSubscription,
+    isMembership,
     isAdmin,
     submitBooking,
-    submitSubscriptionBooking,
+    submitMembershipBooking,
     submitAdminBooking,
   } = useDashboard();
-  // Determine if we should use subscription behavior
-  const usesubscriptionslots = useMemo(
-    () => isSubscription && !isAdmin,
-    [isSubscription, isAdmin]
+  // Determine if we should use Membership behavior
+  const useMembershipSlots = useMemo(
+    () => isMembership && !isAdmin,
+    [isMembership, isAdmin]
   );
   // Use useMemo to calculate derived values that depend on options
   const {
@@ -39,8 +39,8 @@ export const ShowDetails: React.FC = () => {
     bookingTotal,
     engTotal,
     total,
-    foundSubscription,
-    subscriptionHasHours,
+    foundMembership,
+    membershipHasHours,
   } = useMemo(() => {
     let displayStart = "Not Selected";
     let displayEnd = "Not Selected";
@@ -49,18 +49,18 @@ export const ShowDetails: React.FC = () => {
     let engTotal = 0;
     let total = 0;
 
-    // Find subscription for current room with proper type safety
-    const foundSubscription =
-      options.subscription.find(
-        (subscription) => subscription.roomId === options.room
+    // Find membership for current room with proper type safety
+    const foundMembership =
+      options.membership.find(
+        (membership) => membership.roomId === options.room
       ) || null;
-    const subscriptionHasHours = (foundSubscription?.availableHours ?? 0) >= 4;
+    const membershipHasHours = (foundMembership?.availableHours ?? 0) >= 4;
 
-    // Changed: Use usesubscriptionslots instead of just isSubscription
-    if (usesubscriptionslots) {
+    // Changed: Use useMembershipSlots instead of just ismembership
+    if (useMembershipSlots) {
       if (options.startTime !== -1) {
-        displayStart = subscriptionTimeSlots[options.startTime].displayStart;
-        displayEnd = subscriptionTimeSlots[options.endTime].displayEnd;
+        displayStart = membershipTimeSlots[options.startTime].displayStart;
+        displayEnd = membershipTimeSlots[options.endTime].displayEnd;
         duration = (options.endTime - options.startTime + 1) * 4;
         total = 0;
 
@@ -98,16 +98,16 @@ export const ShowDetails: React.FC = () => {
       bookingTotal,
       engTotal,
       total,
-      foundSubscription,
-      subscriptionHasHours,
+      foundMembership,
+      membershipHasHours,
     };
   }, [
     options.startTime,
     options.endTime,
     options.engDuration,
     options.room,
-    options.subscription,
-    usesubscriptionslots,
+    options.membership,
+    useMembershipSlots,
     prices,
   ]);
 
@@ -146,11 +146,11 @@ export const ShowDetails: React.FC = () => {
     duration,
   ]);
 
-  const handlesubscriptionubmit = useCallback(() => {
-    // Track Facebook Pixel event for subscription booking checkout
+  const handleMembershipSubmit = useCallback(() => {
+    // Track Facebook Pixel event for membership booking checkout
     if (typeof window !== "undefined" && typeof window.fbq === "function") {
       window.fbq("track", "InitiateCheckout", {
-        content_type: "subscription_booking",
+        content_type: "membership_booking",
         content_ids: [options.room],
         content_name: `Studio ${prices[options.room].room}`,
         value: total,
@@ -161,9 +161,9 @@ export const ShowDetails: React.FC = () => {
       });
     }
 
-    submitSubscriptionBooking();
+    submitMembershipBooking();
   }, [
-    submitSubscriptionBooking,
+    submitMembershipBooking,
     options.room,
     options.date,
     options.user,
@@ -207,10 +207,10 @@ export const ShowDetails: React.FC = () => {
         </div>
       ) : (
         <>
-          {/* Changed: Use usesubscriptionslots instead of just isSubscription for conditional rendering */}
-          {usesubscriptionslots ? (
+          {/* Changed: Use useMembershipslots instead of just isMembership for conditional rendering */}
+          {useMembershipSlots ? (
             <div className="border rounded-lg mt-4 p-4">
-              <H4 className="pb-4">Subscription Details</H4>
+              <H4 className="pb-4">Membership Details</H4>
               <Table className="rounded-[8px] overflow-hidden border-t-0">
                 <TableBody className="border-t-0">
                   <TableRow>
@@ -248,15 +248,13 @@ export const ShowDetails: React.FC = () => {
                     <TableCell>{duration}</TableCell>
                   </TableRow>
 
-                  {subscriptionHasHours && foundSubscription && (
+                  {membershipHasHours && foundMembership && (
                     <>
                       <TableRow>
                         <TableCell>
                           <strong>Available Hours</strong>
                         </TableCell>
-                        <TableCell>
-                          {foundSubscription.availableHours}
-                        </TableCell>
+                        <TableCell>{foundMembership.availableHours}</TableCell>
                       </TableRow>
                       <TableRow>
                         <TableCell>
@@ -265,7 +263,7 @@ export const ShowDetails: React.FC = () => {
                         <TableCell>
                           {Math.max(
                             0,
-                            foundSubscription.availableHours - duration
+                            foundMembership.availableHours - duration
                           )}
                         </TableCell>
                       </TableRow>
@@ -310,7 +308,7 @@ export const ShowDetails: React.FC = () => {
 
               <div className="mt-4">
                 {(() => {
-                  const validation = validateSubscriptionBooking(options);
+                  const validation = validateMembershipBooking(options);
                   if (!validation.isValid) {
                     return (
                       <div className="alert">
@@ -322,7 +320,7 @@ export const ShowDetails: React.FC = () => {
                   return (
                     <Button
                       className="w-full"
-                      onClick={handlesubscriptionubmit}
+                      onClick={handleMembershipSubmit}
                       disabled={options.loading}
                     >
                       {options.loading ? "Redirecting..." : "Book Time"}

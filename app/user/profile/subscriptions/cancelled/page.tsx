@@ -50,14 +50,14 @@ async function getData(userId: string) {
   return data;
 }
 
-async function getSubscription(userId: string) {
+async function getMembership(userId: string) {
   noStore();
-  const data = await prisma.subscription.findMany({
+  const data = await prisma.memberships.findMany({
     where: {
       userId: userId,
     },
     select: {
-      stripeSubscriptionId: true,
+      stripeMembershipId: true,
       availableHours: true,
       userId: true,
       roomId: true,
@@ -79,7 +79,7 @@ export default async function Main() {
         </div>
         <div className="mt-3 w-full text-center sm:mt-5">
           <h3 className="text-lg font-medium leading-6">
-            Your subscription has been cancelled
+            Your memberships has been cancelled
           </h3>
           <div className="mt-5 w-full sm:mt-6">
             <Button className="w-full" asChild>

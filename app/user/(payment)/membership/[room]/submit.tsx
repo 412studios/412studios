@@ -1,11 +1,11 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { PostSubscription } from "@/app/lib/booking";
+import { PostMembership } from "@/app/lib/booking";
 
 export default function Submit(input: any) {
   const submit = async () => {
     try {
-      await PostSubscription(input);
+      await PostMembership(input);
     } catch (error) {
       console.error("Failed to post booking:", error);
     }

@@ -35,17 +35,17 @@ export default async function PageCancel({
       });
     }
 
-    // Handle subscription cancellation
-    const successfulSubscription = await prisma.subscription.findUnique({
+    // Handle membership cancellation
+    const successfulMembership = await prisma.memberships.findUnique({
       where: {
-        subscriptionId: id,
+        membershipId: id,
       },
     });
 
-    if (successfulSubscription) {
-      await prisma.subscription.deleteMany({
+    if (successfulMembership) {
+      await prisma.memberships.deleteMany({
         where: {
-          subscriptionId: id,
+          membershipId: id,
         },
       });
     }

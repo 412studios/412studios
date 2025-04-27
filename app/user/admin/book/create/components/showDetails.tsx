@@ -10,7 +10,7 @@ import {
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { timeSlots } from "@/app/user/(payment)/book/components/timeSlots";
-import { PostSubscriptionBooking } from "@/app/lib/booking";
+import { PostMembershipBooking } from "@/app/lib/booking";
 
 export const ShowDetails = ({
   prices,
@@ -33,7 +33,7 @@ export const ShowDetails = ({
 
   let total = 0;
 
-  // IF USER IS NOT Subscription
+  // IF USER IS NOT Membership
   if (options.startTime != -1) {
     // SET DISPLAY TIME FROM TIMESLOTS
     displayStart = timeSlots[options.startTime].displayStart;
@@ -67,7 +67,7 @@ export const ShowDetails = ({
     const startTime = options.startTime;
     const endTime = options.endTime;
     try {
-      await PostSubscriptionBooking(options, startTime, endTime, duration);
+      await PostMembershipBooking(options, startTime, endTime, duration);
     } catch (error) {
       console.error("Failed to post booking:", error);
     }

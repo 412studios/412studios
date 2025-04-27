@@ -31,10 +31,10 @@ function formatDate(numericDate: number) {
   });
 }
 
-interface Subscription {
-  subscriptionId: string;
+interface Membership {
+  membershipId: string;
   stripeSessionId: string;
-  stripeSubscriptionId: string;
+  stripeMembershipId: string;
   interval: string;
   status: string;
   planId: string;
@@ -49,17 +49,16 @@ interface Subscription {
   };
 }
 
-interface SubscriptionTableProps {
-  subscriptions: Subscription[];
+interface MembershipTableProps {
+  memberships: Membership[];
 }
 
-export default function SubscriptionTable({
-  subscriptions = [],
-}: SubscriptionTableProps) {
+export default function MembershipTable({
+  memberships = [],
+}: MembershipTableProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedRoom, setSelectedRoom] = useState(0);
-  const [filteredSubscriptions, setFilteredSubscriptions] =
-    useState(subscriptions);
+  const [filteredMemberships, setFilteredMemberships] = useState(memberships);
 
   const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
@@ -69,29 +68,27 @@ export default function SubscriptionTable({
     setSelectedRoom(Number(value));
   };
 
-  const filterSubscriptions = () => {
-    let filtered = subscriptions;
+  const filterMemberships = () => {
+    let filtered = memberships;
 
     if (selectedRoom !== 0) {
       filtered = filtered.filter(
-        (subscription) => subscription.roomId === selectedRoom - 1
+        (membership) => membership.roomId === selectedRoom - 1
       );
     }
 
     if (searchQuery) {
-      filtered = filtered.filter((subscription) =>
-        subscription.user.name
-          ?.toLowerCase()
-          .includes(searchQuery.toLowerCase())
+      filtered = filtered.filter((membership) =>
+        membership.user.name?.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
 
-    setFilteredSubscriptions(filtered);
+    setFilteredMemberships(filtered);
   };
 
   useEffect(() => {
-    filterSubscriptions();
-  }, [searchQuery, selectedRoom, subscriptions]);
+    filterMemberships();
+  }, [searchQuery, selectedRoom, memberships]);
 
   const roomName = ["A", "B", "C"];
 
@@ -127,42 +124,38 @@ export default function SubscriptionTable({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {Array.isArray(filteredSubscriptions) &&
-          filteredSubscriptions.length > 0 ? (
-            filteredSubscriptions.map(
-              (subscription: Subscription, index: number) => (
-                <TableRow key={index}>
-                  <TableCell>{roomName[subscription.roomId]}</TableCell>
-                  <TableCell>{subscription.status}</TableCell>
-                  <TableCell>
-                    {formatDate(subscription.currentPeriodStart)}
-                  </TableCell>
-                  <TableCell>
-                    {formatDate(subscription.currentPeriodEnd)}
-                  </TableCell>
-                  <TableCell>
-                    <Link
-                      href={`/admin/users/${subscription.userId}`}
-                      className="hover:underline"
-                    >
-                      {subscription.user.name}
-                    </Link>
-                  </TableCell>
-                  <TableCell>
-                    <Link
-                      href={`/admin/subscriptions/${subscription.subscriptionId}`}
-                      className="hover:underline"
-                    >
-                      Edit
-                    </Link>
-                  </TableCell>
-                </TableRow>
-              )
-            )
+          {Array.isArray(filteredMemberships) &&
+          filteredMemberships.length > 0 ? (
+            filteredMemberships.map((membership: Membership, index: number) => (
+              <TableRow key={index}>
+                <TableCell>{roomName[membership.roomId]}</TableCell>
+                <TableCell>{membership.status}</TableCell>
+                <TableCell>
+                  {formatDate(membership.currentPeriodStart)}
+                </TableCell>
+                <TableCell>{formatDate(membership.currentPeriodEnd)}</TableCell>
+                <TableCell>
+                  <Link
+                    href={`/admin/users/${membership.userId}`}
+                    className="hover:underline"
+                  >
+                    {membership.user.name}
+                  </Link>
+                </TableCell>
+                <TableCell>
+                  <Link
+                    href={`/admin/memberships/${membership.membershipId}`}
+                    className="hover:underline"
+                  >
+                    Edit
+                  </Link>
+                </TableCell>
+              </TableRow>
+            ))
           ) : (
             <TableRow>
               <TableCell className="text-center" colSpan={5}>
-                No subscriptions available
+                No memberships available
               </TableCell>
             </TableRow>
           )}

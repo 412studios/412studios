@@ -17,7 +17,7 @@ function validateBaseBooking(options: BookingOptions): BookingValidation {
 }
 
 /**
- * Validates a standard (non-subscription) booking
+ * Validates a standard (non-membership) booking
  * @param options - The booking options to validate
  * @returns Validation result with success status and optional error message
  */
@@ -42,11 +42,11 @@ export function validateStandardBooking(
 }
 
 /**
- * Validates a subscription-based booking
+ * Validates a membership-based booking
  * @param options - The booking options to validate
  * @returns Validation result with success status and optional error message
  */
-export function validateSubscriptionBooking(
+export function validateMembershipBooking(
   options: BookingOptions
 ): BookingValidation {
   const baseValidation = validateBaseBooking(options);
@@ -63,10 +63,10 @@ export function validateSubscriptionBooking(
     };
   }
 
-  const foundSubscription = options.subscription.find(
-    (subscription) => subscription.roomId === options.room
+  const foundmembership = options.membership.find(
+    (membership) => membership.roomId === options.room
   );
-  if (!foundSubscription || foundSubscription.availableHours < 4) {
+  if (!foundmembership || foundmembership.availableHours < 4) {
     return {
       isValid: false,
       message: "Hours are not available",

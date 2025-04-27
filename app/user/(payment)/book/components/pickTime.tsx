@@ -1,10 +1,10 @@
 "use client";
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { Button } from "@/components/ui/button";
-import { getBooking, getSubscriptionWeek } from "@/app/lib/booking";
+import { getBooking, getMembershipWeek } from "@/app/lib/booking";
 import {
   timeSlots,
-  subscriptionTimeSlots,
+  membershipTimeSlots,
 } from "@/app/user/(payment)/book/components/timeSlots";
 import { useDashboard } from "../context";
 import { BookingApiRecord } from "../types/booking";
@@ -28,15 +28,15 @@ export const PickTime = () => {
   const [bookedTimes, setBookedTimes] = useState<number[]>([]);
 
   // Memoize derived values
-  const isSubscription = useMemo(
-    () => options.subscriptionRooms.includes(options.room),
-    [options.subscriptionRooms, options.room]
+  const isMembership = useMemo(
+    () => options.membershipRooms.includes(options.room),
+    [options.membershipRooms, options.room]
   );
 
-  // New: Check if we should use subscription time slots - only when Subscription AND not admin
-  const usesubscriptionslots = useMemo(
-    () => isSubscription && !isAdmin,
-    [isSubscription, isAdmin]
+  // New: Check if we should use membership time slots - only when membership AND not admin
+  const useMembershipSlots = useMemo(
+    () => isMembership && !isAdmin,
+    [isMembership, isAdmin]
   );
 
   const formattedDate = useMemo(
@@ -44,23 +44,23 @@ export const PickTime = () => {
     [options.date]
   );
 
-  // Changed: Use time slots based on usesubscriptionslots rather than just isSubscription
+  // Changed: Use time slots based on usemembershipslots rather than just ismembership
   const timeArray = useMemo(
-    () => (usesubscriptionslots ? subscriptionTimeSlots : timeSlots),
-    [usesubscriptionslots]
+    () => (useMembershipSlots ? membershipTimeSlots : timeSlots),
+    [useMembershipSlots]
   );
 
   // Function to process single or range time selection
   const processTimeSelection = useCallback(
     (id: number, selList: number[]) => {
-      // Changed: For subscription bookings when not admin, select only one slot
-      if (usesubscriptionslots) {
-        const currentSubscription = options.subscription.find(
+      // Changed: For membership bookings when not admin, select only one slot
+      if (useMembershipSlots) {
+        const currentMembership = options.membership.find(
           (item) => item.roomId === options.room
         );
 
-        // Check if subscription has enough hours
-        if (!currentSubscription || currentSubscription.availableHours < 4) {
+        // Check if membership has enough hours
+        if (!currentMembership || currentMembership.availableHours < 4) {
           return { newList: selList, update: null };
         }
 
@@ -101,7 +101,7 @@ export const PickTime = () => {
         },
       };
     },
-    [bookedTimes, usesubscriptionslots, options.subscription, options.room]
+    [bookedTimes, useMembershipSlots, options.membership, options.room]
   );
 
   // Handle time slot selection
@@ -138,21 +138,17 @@ export const PickTime = () => {
 
     try {
       // Fetch booking data in parallel
-      const [bookings, checkSubscriptionWeek] = await Promise.all([
+      const [bookings, checkMembershipWeek] = await Promise.all([
         getBooking(options.room, parseInt(formattedDate)),
-        getSubscriptionWeek(
-          options.room,
-          parseInt(formattedDate),
-          options.user
-        ),
+        getMembershipWeek(options.room, parseInt(formattedDate), options.user),
       ]);
 
       // Process booking data
       let bookedSlots: number[] = [];
       // Check blocked value
       const isRoomBlocked = prices[options.room]?.blocked || false;
-      // Catch subscription acceptions
-      if (usesubscriptionslots && checkSubscriptionWeek && isRoomBlocked) {
+      // Catch membership acceptions
+      if (useMembershipSlots && checkMembershipWeek && isRoomBlocked) {
         // Weekly limit reached, block all slots
         fillArrGaps(bookedSlots, 0, 3);
       } else if (Array.isArray(bookings)) {
@@ -162,10 +158,10 @@ export const PickTime = () => {
         } else {
           // Process individual bookings
           bookings.forEach((booking: BookingApiRecord) => {
-            const start = usesubscriptionslots
+            const start = useMembershipSlots
               ? Math.floor(booking.startTime / 4)
               : booking.startTime;
-            const end = usesubscriptionslots
+            const end = useMembershipSlots
               ? Math.floor(booking.endTime / 4)
               : booking.endTime;
             fillArrGaps(bookedSlots, start, end);
@@ -180,9 +176,7 @@ export const PickTime = () => {
 
         if (isToday) {
           // If booking is for today, check which slots are less than 2 hours away
-          const slots = usesubscriptionslots
-            ? subscriptionTimeSlots
-            : timeSlots;
+          const slots = useMembershipSlots ? membershipTimeSlots : timeSlots;
 
           slots.forEach((slot) => {
             const hourValue = parseInt(slot.startTime);
@@ -209,7 +203,7 @@ export const PickTime = () => {
     options.date,
     options.user,
     formattedDate,
-    usesubscriptionslots,
+    useMembershipSlots,
     setOptions,
   ]);
 
@@ -232,7 +226,7 @@ export const PickTime = () => {
         key={slot.id}
         onClick={() => !isBooked && handleClick(slot.id)}
         className={`flex items-center justify-center text-center hover:cursor-pointer rounded-full
-      ${usesubscriptionslots ? "h-[25%] rounded-lg" : "p-1 my-1"}
+      ${useMembershipSlots ? "h-[25%] rounded-lg" : "p-1 my-1"}
       ${
         isBooked
           ? "bg-red-500 text-white"
@@ -248,7 +242,7 @@ export const PickTime = () => {
         <span>{slot.displayName}</span>
       </div>
     ),
-    [usesubscriptionslots, handleClick]
+    [useMembershipSlots, handleClick]
   );
 
   // Render the time slots list
@@ -285,7 +279,7 @@ export const PickTime = () => {
             <div
               className={`border w-full h-[310px] rounded-lg overflow-y-scroll p-2
                   ${
-                    usesubscriptionslots
+                    useMembershipSlots
                       ? "flex justify-center flex-col grow w-full"
                       : ""
                   }`}

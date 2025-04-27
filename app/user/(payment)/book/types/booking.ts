@@ -1,4 +1,4 @@
-import { User, Subscription, Pricing } from "@prisma/client";
+import { User, Memberships, Pricing } from "@prisma/client";
 
 /**
  * Type Definitions for the Booking System
@@ -33,9 +33,9 @@ export interface BookingOptions {
   duration: number;
   price: number;
   loading: boolean;
-  subscription: Subscription[];
-  subscriptionRooms: number[];
-  subscriptionRoomHours: number[];
+  membership: Memberships[];
+  membershipRooms: number[];
+  membershipRoomHours: number[];
   user: User | null;
   engDuration: number;
   engStart: number;
@@ -54,7 +54,7 @@ export interface BookingRecord {
   engineerStart?: number;
   engineerDuration?: number;
   price: number;
-  subscriptionId?: number;
+  membershipId?: number;
   type?: string;
 }
 

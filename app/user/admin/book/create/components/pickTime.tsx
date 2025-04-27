@@ -1,10 +1,10 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { getBooking, getSubscriptionWeek } from "@/app/lib/booking";
+import { getBooking, getMembershipWeek } from "@/app/lib/booking";
 import {
   timeSlots,
-  subscriptionTimeSlots,
+  membershipTimeSlots,
 } from "@/app/user/(payment)/book/components/timeSlots";
 
 export const PickTime = ({
@@ -22,11 +22,9 @@ export const PickTime = ({
   const [bookedTimes, setBookedTimes] = useState<number[]>([]);
   const [existingBookings, setExistingBookings] = useState<number[]>([]);
 
-  const isSubscription = options.subscriptionRooms.includes(
-    parseInt(options.room)
-  );
+  const isMembership = options.membershipRooms.includes(parseInt(options.room));
   const formattedDate = parseInt(formatDateToNumeric(options.date));
-  const timeArray = isSubscription ? subscriptionTimeSlots : timeSlots;
+  const timeArray = isMembership ? membershipTimeSlots : timeSlots;
 
   useEffect(() => {
     const initialBookedTimes = Array.isArray(existingBookings)
@@ -42,7 +40,7 @@ export const PickTime = ({
       setOptions((prevOptions: any) => ({ ...prevOptions, loading: true }));
       try {
         const bookings = await getBooking(options.room, formattedDate);
-        const checkSubscriptionWeek = await getSubscriptionWeek(
+        const checkMembershipWeek = await getMembershipWeek(
           options.room,
           formattedDate,
           options.user
@@ -51,13 +49,13 @@ export const PickTime = ({
         let setStart = 0;
         let setEnd = 0;
 
-        if (isSubscription && checkSubscriptionWeek) {
+        if (isMembership && checkMembershipWeek) {
           setStart = 0;
           setEnd = 3;
           fillArrGaps(arr, setStart, setEnd);
         } else {
           bookings.forEach((booking: any) => {
-            if (isSubscription) {
+            if (isMembership) {
               setStart = Math.floor(booking.startTime / 4);
               setEnd = Math.floor((booking.endTime - 1) / 4);
             } else {
@@ -115,14 +113,14 @@ export const PickTime = ({
         fullList.push(i);
       }
 
-      if (isSubscription) {
+      if (isMembership) {
         fullList = [id];
-        const currentSubscription = options.subscription.find(
+        const currentMembership = options.membership.find(
           (item: any) => item.roomId === options.room
         );
-        if (currentSubscription) {
+        if (currentMembership) {
           const checkHours =
-            currentSubscription.availableHours - fullList.length * 4;
+            currentMembership.availableHours - fullList.length * 4;
           if (checkHours <= -1) {
             setWarning(true);
             return prevSelList;
@@ -163,7 +161,7 @@ export const PickTime = ({
             <div
               className={`border w-full h-[310px] rounded-lg overflow-y-scroll p-2
                   ${
-                    isSubscription
+                    isMembership
                       ? "flex justify-center flex-col grow w-full"
                       : ""
                   }`}
@@ -173,7 +171,7 @@ export const PickTime = ({
                   key={slot.id}
                   onClick={() => handleClick(slot.id)}
                   className={`flex items-center justify-center text-center hover:cursor-pointer rounded-full
-                  ${isSubscription ? "h-[25%] rounded-lg" : "p-1 my-1"}
+                  ${isMembership ? "h-[25%] rounded-lg" : "p-1 my-1"}
                   ${
                     bookedTimes.includes(slot.id)
                       ? "bg-red-500"

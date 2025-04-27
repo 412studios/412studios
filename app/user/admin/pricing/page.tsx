@@ -13,7 +13,7 @@ interface Price {
   room: string;
   dayRate: number;
   hourlyRate: number;
-  subscriptionPrice: number;
+  membershipPrice: number;
   engineerPrice: number;
   blocked: boolean;
 }
@@ -79,10 +79,10 @@ export default function Page(data: any) {
           </TableCell>
           <TableCell>
             <Input
-              name={index + "subscription"}
-              value={val.subscriptionPrice}
+              name={index + "membership"}
+              value={val.membershipPrice}
               onChange={(e) =>
-                handleChange(index, "subscriptionPrice", e.target.value)
+                handleChange(index, "membershipPrice", e.target.value)
               }
             />
           </TableCell>

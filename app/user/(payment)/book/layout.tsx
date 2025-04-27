@@ -6,7 +6,7 @@ import { stripe } from "@/app/lib/stripe";
 import { unstable_noStore as noStore } from "next/cache";
 import { getPricing } from "@/app/lib/booking";
 import { DashboardProvider } from "./context";
-import { Pricing, Subscription, User } from "@prisma/client";
+import { Pricing, Memberships, User } from "@prisma/client";
 
 // Define the type for prices
 type PricesMap = {
@@ -87,9 +87,9 @@ const formatDateToNumeric = (date: Date | undefined): string => {
   return year + month + day;
 };
 
-async function getSubscription(userId: string) {
+async function getMembership(userId: string) {
   noStore();
-  const data = await prisma.subscription.findMany({
+  const data = await prisma.memberships.findMany({
     where: {
       userId: userId,
       OR: [
@@ -115,8 +115,8 @@ async function getSubscription(userId: string) {
   const today = new Date();
   const numericToday = parseInt(formatDateToNumeric(today));
 
-  // Fetch the current subscription details
-  const subscription = await prisma.subscription.findMany({
+  // Fetch the current membership details
+  const membership = await prisma.memberships.findMany({
     where: {
       userId: userId,
       currentPeriodEnd: {
@@ -127,7 +127,7 @@ async function getSubscription(userId: string) {
     select: {
       currentPeriodStart: true,
       currentPeriodEnd: true,
-      subscriptionId: true,
+      membershipId: true,
     },
   });
   return data;
@@ -152,7 +152,7 @@ export default async function DashboardLayout({
     lastName: user.family_name as string,
   });
 
-  const subscriptionData = await getSubscription(user?.id as string);
+  const membershipData = await getMembership(user?.id as string);
   const userDetails = await checkVerification(user?.id as string);
   if (userDetails?.isUserVerified != true) {
     return redirect("/");
@@ -168,7 +168,7 @@ export default async function DashboardLayout({
   return (
     <DashboardProvider
       userData={fullUser}
-      subscriptionData={subscriptionData as Subscription[]}
+      membershipData={membershipData as Memberships[]}
       pricingData={prices}
     >
       {children}

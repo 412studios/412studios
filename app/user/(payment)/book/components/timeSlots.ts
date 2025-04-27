@@ -115,7 +115,7 @@ export const timeSlots: TimeSlot[] = [
   },
 ];
 
-export const subscriptionTimeSlots: TimeSlot[] = [
+export const membershipTimeSlots: TimeSlot[] = [
   {
     id: 0,
     startTime: "08",

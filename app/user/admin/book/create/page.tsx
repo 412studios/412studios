@@ -17,15 +17,15 @@ import {
 import { H2, H4, Subtitle, Section, Divider } from "@/components/ui/copy";
 
 export default function Page(data: any) {
-  // COLLECT SUBSCRIPTION DETAILS IF AVAILABLE
-  // CREATE ARRAY OF ACTIVE subscription AND ROOM HOURS
-  const subscriptionRooms = useMemo(
-    () => data.subscription.map((element: any) => element.roomId),
-    [data.subscription]
+  // COLLECT membership DETAILS IF AVAILABLE
+  // CREATE ARRAY OF ACTIVE membership AND ROOM HOURS
+  const membershipRooms = useMemo(
+    () => data.membership.map((element: any) => element.roomId),
+    [data.membership]
   );
-  const subscriptionRoomHours = useMemo(
-    () => data.subscription.map((element: any) => element.availableHours),
-    [data.subscription]
+  const membershipRoomHours = useMemo(
+    () => data.membership.map((element: any) => element.availableHours),
+    [data.membership]
   );
 
   // SET DEFAULT OPTION VALUES ON LOAD
@@ -38,14 +38,14 @@ export default function Page(data: any) {
       duration: 0,
       price: 0,
       loading: false,
-      subscription: data.subscription,
-      subscriptionRooms: subscriptionRooms,
-      subscriptionRoomHours: subscriptionRoomHours,
+      membership: data.membership,
+      membershipRooms: membershipRooms,
+      membershipRoomHours: membershipRoomHours,
       user: data.user,
       engDuration: -1,
       engStart: -1,
     }),
-    [data.subscription, subscriptionRooms, subscriptionRoomHours, data.user]
+    [data.membership, membershipRooms, membershipRoomHours, data.user]
   );
 
   const [options, setOptions] = useState(defaultOptions);

@@ -88,7 +88,7 @@ export default function VerificationForm(user: any) {
           Before booking, we would love to learn more about your musical. Please
           provide any relevant details. Upon receiving your information, we will
           verify your account, enabling you to start booking sessions or
-          purchasing a subscription.
+          purchasing a membership.
         </CardDescription>
       </CardHeader>
       <CardContent>

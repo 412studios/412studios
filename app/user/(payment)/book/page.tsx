@@ -27,10 +27,10 @@ export default function DashboardPage() {
             </Link>
           </div>
         )}
-        {/* Subscription Details */}
-        {options.subscriptionRooms.length >= 1 && !isAdmin && (
+        {/* Membership Details */}
+        {options.membershipRooms.length >= 1 && !isAdmin && (
           <div className="border p-2 bg-sky-200 mb-2">
-            {options.subscription.map((element, index) => (
+            {options.membership.map((element, index) => (
               <div key={index} className="rounded flex flex-col">
                 <p>Membership In Studio {studioName[element.roomId]}</p>
                 <p>Membership Status: {element.status.toUpperCase()}</p>

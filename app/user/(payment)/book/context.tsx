@@ -9,29 +9,29 @@ import {
   useMemo,
   useCallback,
 } from "react";
-import { User, Subscription } from "@prisma/client";
+import { User, Memberships } from "@prisma/client";
 import { PricesMap, BookingOptions } from "./types/booking";
 
 // Context type with Prisma-generated types
 type DashboardContextType = {
   user: User | null;
   isAdmin: Boolean | null;
-  subscription: Subscription[];
+  membership: Memberships[];
   prices: PricesMap;
   options: BookingOptions;
   setOptions: React.Dispatch<React.SetStateAction<BookingOptions>>;
 
   // Derived state
-  isSubscription: boolean;
-  activeSubscription: Subscription | null;
-  areSubscriptionHoursAvailable: boolean;
+  isMembership: boolean;
+  activeMembership: Memberships | null;
+  areMembershipHoursAvailable: boolean;
 
   // Helper functions
   onRoomSelect: (id: string) => void;
   handleTimePick: (start: number, end: number, duration: number) => void;
   clearTimeSelection: () => void;
   submitBooking: () => Promise<void>;
-  submitSubscriptionBooking: () => Promise<void>;
+  submitMembershipBooking: () => Promise<void>;
   submitAdminBooking: () => Promise<void>;
 };
 
@@ -39,7 +39,7 @@ type DashboardContextType = {
 export const DashboardContext = createContext<DashboardContextType>({
   user: null,
   isAdmin: false,
-  subscription: [],
+  membership: [],
   prices: {},
   options: {
     room: 0,
@@ -49,25 +49,25 @@ export const DashboardContext = createContext<DashboardContextType>({
     duration: 0,
     price: 0,
     loading: false,
-    subscription: [],
-    subscriptionRooms: [],
-    subscriptionRoomHours: [],
+    membership: [],
+    membershipRooms: [],
+    membershipRoomHours: [],
     user: null,
     engDuration: -1,
     engStart: -1,
   },
   setOptions: () => {},
   // Add missing derived state properties
-  isSubscription: false,
-  activeSubscription: null,
-  areSubscriptionHoursAvailable: false,
+  isMembership: false,
+  activeMembership: null,
+  areMembershipHoursAvailable: false,
 
   // Add missing helper functions
   onRoomSelect: () => {},
   handleTimePick: () => {},
   clearTimeSelection: () => {},
   submitBooking: async () => {},
-  submitSubscriptionBooking: async () => {},
+  submitMembershipBooking: async () => {},
   submitAdminBooking: async () => {},
 });
 
@@ -75,23 +75,23 @@ export const DashboardContext = createContext<DashboardContextType>({
 export function DashboardProvider({
   children,
   userData,
-  subscriptionData,
+  membershipData,
   pricingData,
 }: {
   children: ReactNode;
   userData: User;
-  subscriptionData: Subscription[];
+  membershipData: Memberships[];
   pricingData: PricesMap;
 }) {
-  // Create arrays of subscription room IDs and hours
-  const subscriptionRooms = useMemo(
-    () => subscriptionData.map((element) => element.roomId),
-    [subscriptionData]
+  // Create arrays of membership room IDs and hours
+  const membershipRooms = useMemo(
+    () => membershipData.map((element) => element.roomId),
+    [membershipData]
   );
 
-  const subscriptionRoomHours = useMemo(
-    () => subscriptionData.map((element) => element.availableHours),
-    [subscriptionData]
+  const membershipRoomHours = useMemo(
+    () => membershipData.map((element) => element.availableHours),
+    [membershipData]
   );
 
   // Set default option values
@@ -104,14 +104,14 @@ export function DashboardProvider({
       duration: 0,
       price: 0,
       loading: false,
-      subscription: subscriptionData,
-      subscriptionRooms,
-      subscriptionRoomHours,
+      membership: membershipData,
+      membershipRooms,
+      membershipRoomHours,
       user: userData,
       engDuration: -1,
       engStart: -1,
     }),
-    [subscriptionData, subscriptionRooms, subscriptionRoomHours, userData]
+    [membershipData, membershipRooms, membershipRoomHours, userData]
   );
 
   const [options, setOptions] = useState<BookingOptions>(defaultOptions);
@@ -122,24 +122,24 @@ export function DashboardProvider({
   }, [defaultOptions]);
 
   // Derived state
-  const isSubscription = useMemo(
-    () => options.subscriptionRooms.includes(options.room),
-    [options.subscriptionRooms, options.room]
+  const isMembership = useMemo(
+    () => options.membershipRooms.includes(options.room),
+    [options.membershipRooms, options.room]
   );
 
-  const activeSubscription = useMemo(() => {
-    if (!isSubscription) return null;
+  const activeMembership = useMemo(() => {
+    if (!isMembership) return null;
     return (
-      options.subscription.find(
-        (subscription) => subscription.roomId === options.room
+      options.membership.find(
+        (membership) => membership.roomId === options.room
       ) || null
     );
-  }, [isSubscription, options.subscription, options.room]);
+  }, [isMembership, options.membership, options.room]);
 
-  const areSubscriptionHoursAvailable = useMemo(() => {
-    if (!activeSubscription) return false;
-    return activeSubscription.availableHours >= 4;
-  }, [activeSubscription]);
+  const areMembershipHoursAvailable = useMemo(() => {
+    if (!activeMembership) return false;
+    return activeMembership.availableHours >= 4;
+  }, [activeMembership]);
 
   // Helper functions - memoized to prevent unnecessary re-renders
   const onRoomSelect = useCallback(
@@ -197,7 +197,7 @@ export function DashboardProvider({
     }
   }, [options, setOptions]);
 
-  const submitSubscriptionBooking = useCallback(async () => {
+  const submitMembershipBooking = useCallback(async () => {
     setOptions((prevOptions) => ({
       ...prevOptions,
       loading: true,
@@ -209,10 +209,10 @@ export function DashboardProvider({
 
     try {
       // Import dynamically to avoid circular dependencies
-      const { PostSubscriptionBooking } = await import("@/app/lib/booking");
-      await PostSubscriptionBooking(options, startTime, endTime, duration);
+      const { PostMembershipBooking } = await import("@/app/lib/booking");
+      await PostMembershipBooking(options, startTime, endTime, duration);
     } catch (error) {
-      console.error("Failed to post subscription booking:", error);
+      console.error("Failed to post membership booking:", error);
       setOptions((prevOptions) => ({
         ...prevOptions,
         loading: false,
@@ -249,18 +249,18 @@ export function DashboardProvider({
       value={{
         user: userData,
         isAdmin: isAdmin,
-        subscription: subscriptionData,
+        membership: membershipData,
         prices: pricingData,
         options,
         setOptions,
-        isSubscription,
-        activeSubscription,
-        areSubscriptionHoursAvailable,
+        isMembership,
+        activeMembership,
+        areMembershipHoursAvailable,
         onRoomSelect,
         handleTimePick,
         clearTimeSelection,
         submitBooking,
-        submitSubscriptionBooking,
+        submitMembershipBooking,
         submitAdminBooking,
       }}
     >

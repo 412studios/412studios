@@ -65,9 +65,9 @@ const formatDateToNumeric = (date: Date | undefined): string => {
   return year + month + day;
 };
 
-async function getSubscription(userId: string) {
+async function getMembership(userId: string) {
   noStore();
-  const data = await prisma.subscription.findMany({
+  const data = await prisma.memberships.findMany({
     where: {
       userId: userId,
       OR: [
@@ -93,8 +93,8 @@ async function getSubscription(userId: string) {
   const today = new Date();
   const numericToday = parseInt(formatDateToNumeric(today));
 
-  // Fetch the current subscription details
-  const subscription = await prisma.subscription.findMany({
+  // Fetch the current membership details
+  const membership = await prisma.memberships.findMany({
     where: {
       userId: userId,
       currentPeriodEnd: {
@@ -105,7 +105,7 @@ async function getSubscription(userId: string) {
     select: {
       currentPeriodStart: true,
       currentPeriodEnd: true,
-      subscriptionId: true,
+      membershipId: true,
     },
   });
   return data;
@@ -129,7 +129,7 @@ export default async function DashboardLayout({
     lastName: user.family_name as string,
   });
 
-  const subscriptionData = await getSubscription(user?.id as string);
+  const membershipData = await getMembership(user?.id as string);
   const userDetails = await checkVerification(user?.id as string);
   if (userDetails?.isUserVerified != true) {
     return redirect("/");
@@ -138,7 +138,7 @@ export default async function DashboardLayout({
   const prices = await getPricing();
   return (
     <>
-      <Page user={user} subscription={subscriptionData} prices={prices} />
+      <Page user={user} membership={membershipData} prices={prices} />
     </>
   );
 }

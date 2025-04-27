@@ -20,7 +20,7 @@ export function SubmitButton() {
   );
 }
 
-export function StripeSubscriptionCreationButton() {
+export function StripeMembershipCreationButton() {
   const { pending } = useFormStatus();
   return (
     <>
@@ -30,7 +30,7 @@ export function StripeSubscriptionCreationButton() {
         </Button>
       ) : (
         <Button type="submit" className="w-fit">
-          Create Subscription
+          Create Membership
         </Button>
       )}
     </>

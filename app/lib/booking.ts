@@ -33,7 +33,7 @@ export async function getBooking(roomId: number, date: number) {
   return data;
 }
 
-export async function getSubscriptionWeek(
+export async function getMembershipWeek(
   roomId: number,
   date: number,
   user: any
@@ -89,8 +89,8 @@ export async function getSubscriptionWeek(
     },
   });
 
-  //GET SUBSCRIPTION DETAILS FOR WEEK MAX EXCEPTION
-  const userSubscription = await prisma.subscription.findMany({
+  //GET MEMBERSHIP DETAILS FOR WEEK MAX EXCEPTION
+  const userMembership = await prisma.memberships.findMany({
     where: {
       userId: user.id,
       roomId: roomId,
@@ -102,9 +102,9 @@ export async function getSubscriptionWeek(
   });
 
   // CHECK FOR MAX WEEK EXCEPTION
-  const hasWeekMaxException = userSubscription.some(
-    (subscription: any) =>
-      subscription.roomId === roomId && subscription.weekMax === false
+  const hasWeekMaxException = userMembership.some(
+    (membership: any) =>
+      membership.roomId === roomId && membership.weekMax === false
   );
 
   if (hasWeekMaxException) {
@@ -199,19 +199,19 @@ export async function PostAdminBooking(input: any) {
   return redirect("/user/book");
 }
 
-export async function PostSubscription(input: any) {
+export async function PostMembership(input: any) {
   noStore();
   const { getUser } = getKindeServerSession();
   const user = await getUser();
 
-  const subscriptionId: any = require("crypto").randomBytes(16).toString("hex");
+  const membershipId: any = require("crypto").randomBytes(16).toString("hex");
 
   //HANDLE DB UPDATE
-  await prisma.subscription.create({
+  await prisma.memberships.create({
     data: {
-      subscriptionId: subscriptionId,
+      membershipId: membershipId,
       stripeSessionId: "",
-      stripeSubscriptionId: "",
+      stripeMembershipId: "",
       interval: "month",
       status: "pending",
       planId: priceId,
@@ -227,10 +227,10 @@ export async function PostSubscription(input: any) {
   });
 
   //SEND TO STRIPE
-  return HandlePayment(user, subscriptionId, priceId, input.price);
+  return HandlePayment(user, membershipId, priceId, input.price);
 }
 
-export async function PostSubscriptionBooking(
+export async function PostMembershipBooking(
   input: any,
   startTime: any,
   endTime: any,
@@ -241,7 +241,7 @@ export async function PostSubscriptionBooking(
   const { getUser } = getKindeServerSession();
   const user = await getUser();
 
-  //CREATE BOOKING AND AUTO SET TO SUCCESS FOR PREPAID SUBSCRIPTION
+  //CREATE BOOKING AND AUTO SET TO SUCCESS FOR PREPAID MEMBERSHIP
   const bookingId: any = require("crypto").randomBytes(16).toString("hex");
 
   await prisma.bookings.create({
@@ -284,18 +284,18 @@ export async function PostSubscriptionBooking(
         status: "success",
       },
     });
-    //FIND SUBSCRIPTION FOR THIS USER AND THIS ROOM
-    const updatedSubscription = await prisma.subscription.findFirst({
+    //FIND MEMBERSHIP FOR THIS USER AND THIS ROOM
+    const updatedMembership = await prisma.memberships.findFirst({
       where: {
         userId: user?.id,
         roomId: parseInt(input.room),
       },
     });
-    // REMOVE HOURS FROM SUBSCRIPTION
-    if (updatedSubscription) {
-      await prisma.subscription.update({
+    // REMOVE HOURS FROM MEMBERSHIP
+    if (updatedMembership) {
+      await prisma.memberships.update({
         where: {
-          subscriptionId: updatedSubscription.subscriptionId,
+          membershipId: updatedMembership.membershipId,
         },
         data: {
           availableHours: {
@@ -333,7 +333,7 @@ export async function HandlePayment(
     throw new Error("Unable to get customer id");
   }
 
-  const subscriptionUrl = await getStripeSession({
+  const membershipUrl = await getStripeSession({
     customerId: dbUser.stripeCustomerId,
     domainUrl:
       process.env.NODE_ENV === "production"
@@ -344,5 +344,5 @@ export async function HandlePayment(
     unit_amount: priceWithTax,
   });
 
-  return redirect(subscriptionUrl);
+  return redirect(membershipUrl);
 }

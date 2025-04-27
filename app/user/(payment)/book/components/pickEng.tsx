@@ -24,16 +24,16 @@ export const PickEng = () => {
   const [duration, setDuration] = useState<string>(placeholderDuration);
   const [durationArr, setDurationArr] = useState<number[]>([]);
 
-  // Check if Subscription
-  const isSubscription = useMemo(
-    () => options.subscriptionRooms.includes(options.room),
-    [options.subscriptionRooms, options.room]
+  // Check if Membership
+  const isMembership = useMemo(
+    () => options.membershipRooms.includes(options.room),
+    [options.membershipRooms, options.room]
   );
 
-  // New: Check if we should use subscription-specific logic - only when Subscription AND not admin
-  const usesubscriptionslots = useMemo(
-    () => isSubscription && !isAdmin,
-    [isSubscription, isAdmin]
+  // New: Check if we should use membership-specific logic - only when Membership AND not admin
+  const useMembershipslots = useMemo(
+    () => isMembership && !isAdmin,
+    [isMembership, isAdmin]
   );
 
   // Calculate startArr only when dependencies change
@@ -47,8 +47,8 @@ export const PickEng = () => {
       return arr;
     }
 
-    // Changed: Use usesubscriptionslots instead of just checking subscriptionRooms
-    if (usesubscriptionslots) {
+    // Changed: Use useMembershipslots instead of just checking membershipRooms
+    if (useMembershipslots) {
       if (options.startTime > -1) {
         min = options.startTime * 4;
         max = options.endTime * 4 + 3;
@@ -63,7 +63,7 @@ export const PickEng = () => {
     }
 
     return arr;
-  }, [options.startTime, options.endTime, options.room, usesubscriptionslots]);
+  }, [options.startTime, options.endTime, options.room, useMembershipslots]);
 
   // Reset form when time selection changes
   useEffect(() => {

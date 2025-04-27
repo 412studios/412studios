@@ -15,7 +15,7 @@ async function cleanupPendingBookings() {
       },
     });
 
-    const deletedSubscriptions = await prisma.subscription.deleteMany({
+    const deletedMemberships = await prisma.memberships.deleteMany({
       where: {
         status: "pending",
         createdAt: {
@@ -25,14 +25,14 @@ async function cleanupPendingBookings() {
     });
 
     console.log(
-      `[CRON] DELETED || ${deletedBookings.count} bookings || ${deletedSubscriptions.count} subscriptions`
+      `[CRON] DELETED || ${deletedBookings.count} bookings || ${deletedMemberships.count} memberships`
     );
 
     return NextResponse.json({
       success: true,
       deletedBookings: deletedBookings.count,
-      deletedSubscriptions: deletedSubscriptions.count,
-      message: `Deleted ${deletedBookings.count} old pending bookings and ${deletedSubscriptions.count} old pending subscriptions`,
+      deletedMemberships: deletedMemberships.count,
+      message: `Deleted ${deletedBookings.count} old pending bookings and ${deletedMemberships.count} old pending memberships`,
     });
   } catch (error) {
     console.error("[CRON] Error in cleanup job:", error);

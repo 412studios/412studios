@@ -54,14 +54,14 @@ async function getData({
   }
 }
 
-async function getSubscription(userId: string) {
+async function getMemberships(userId: string) {
   noStore();
-  const data = await prisma.subscription.findMany({
+  const data = await prisma.memberships.findMany({
     where: {
       userId: userId,
     },
     select: {
-      stripeSubscriptionId: true,
+      stripeMembershipId: true,
       availableHours: true,
       userId: true,
       roomId: true,
@@ -91,6 +91,6 @@ export default async function DashboardLayout({
     id: user.id as string,
     lastName: user.family_name as string,
   });
-  // const subscriptionData = await getSubscription(user.id as string);
+  // const membershipData = await getMembership(user.id as string);
   return <>{children}</>;
 }

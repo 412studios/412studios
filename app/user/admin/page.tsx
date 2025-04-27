@@ -46,7 +46,7 @@ export default async function Main() {
   const user = await getUser();
   const userDetails = await getUserDetails(user?.id as string);
 
-  // deletePendingsubscription();
+  // deletePendingmembership();
 
   return (
     <>
@@ -67,10 +67,10 @@ export default async function Main() {
                   <span>Users</span>
                 </span>
               </Link>
-              <Link href="/user/admin/subscription">
+              <Link href="/user/admin/membership">
                 <span className="hover:bg-accent hover:text-accent-forground group flex items-center rounded-md px-3 py-2 text-sm font-medium">
                   <Book className="text-primary mr-2 h-4 w-4" />
-                  <span>subscription</span>
+                  <span>membership</span>
                 </span>
               </Link>
               <Link href="/user/admin/book/">
