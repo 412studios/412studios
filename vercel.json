@@ -1,8 +1,9 @@
 {
-  "crons": [
+  "cron": [
     {
       "path": "/api/cron/cleanup",
-      "schedule": "* * * * *"
+      "schedule": "* * * * *",
+      "method": "POST"
     }
   ]
 }
