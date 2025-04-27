@@ -63,7 +63,7 @@ export default async function Page() {
                     </h3>
                     <CardDescription>
                       Monthly membership Price: $
-                      {prices[element.id].subscriptionPrice}
+                      {prices[element.id].membershipPrice}
                     </CardDescription>
                     <CardDescription>
                       Includes 4 X 4 hour sessions (16 hours total) every month.

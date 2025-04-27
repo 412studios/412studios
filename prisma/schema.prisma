@@ -18,7 +18,6 @@ model User {
   isUserVerified      Boolean        @default(true)
   userBio             String?
   acceptedTerms       Boolean        @default(false)
-  subscription       Subscription[]
   memberships         Memberships[]
   phone               String?
   socialLinks         String?
@@ -47,25 +46,6 @@ model Bookings {
   user            User     @relation(fields: [userId], references: [id])
 }
 
-model Subscription {
-  subscriptionId       String   @id @unique
-  stripeSessionId      String
-  stripeSubscriptionId String
-  interval             String
-  status               String
-  planId               String
-  currentPeriodStart   Int
-  currentPeriodEnd     Int
-  createdAt            DateTime @default(now())
-  updtedAt             DateTime @updatedAt
-  roomId               Int
-  availableHours       Int
-  updateHours          DateTime @default(now())
-  user                 User     @relation(fields: [userId], references: [id])
-  userId               String
-  weekMax              Boolean  @default(true)
-}
-
 model Memberships {
   membershipId         String   @id @unique
   stripeSessionId      String
@@ -91,7 +71,7 @@ model Pricing {
   dayRate           Int
   hourlyRate        Int
   img               String
-  subscriptionPrice Int
+  membershipPrice   Int
   engineerPrice     Int
   blocked           Boolean @default(false)
   User              User?   @relation(fields: [userId], references: [id])

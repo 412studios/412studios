@@ -9,7 +9,7 @@ import { H4, Section } from "@/components/ui/copy";
 interface PriceItem {
   id: string;
   room: string;
-  subscriptionPrice: number;
+  membershipPrice: number;
   img: string;
   blocked: boolean;
 }
@@ -69,14 +69,14 @@ export default async function Page({
                 <h1 className="text-2xl font-bold tracking-tight mt-4">
                   Room {selectedRoom.room} Membership
                 </h1>
-                <p>Membership Price: ${selectedRoom.subscriptionPrice}.00</p>
+                <p>Membership Price: ${selectedRoom.membershipPrice}.00</p>
                 <p>Includes 4 X 4 hour sessions</p>
                 {selectedRoom.blocked ? (
                   <Link href="/user/book">
                     <Button className="w-full mt-4">Return to Booking</Button>
                   </Link>
                 ) : (
-                  <Submit id={roomId} price={selectedRoom.subscriptionPrice} />
+                  <Submit id={roomId} price={selectedRoom.membershipPrice} />
                 )}
               </div>
             )}

@@ -125,7 +125,7 @@ export async function getPricing() {
       dayRate: true,
       hourlyRate: true,
       img: true,
-      subscriptionPrice: true,
+      membershipPrice: true,
       engineerPrice: true,
       userId: true,
       blocked: true,
