@@ -16,7 +16,7 @@ async function cleanupPendingBookings() {
     const fifteenMinutesAgo = new Date(Date.now() - 15 * 60 * 1000);
 
     console.log(
-      `[CRON] Checking for pending bookings before ${fifteenMinutesAgo.toISOString()}`
+      `[CRON] Checking for pending bookings and subscriptions before ${fifteenMinutesAgo.toISOString()}`
     );
 
     const pendingBookings = await prisma.bookings.findMany({
@@ -24,12 +24,24 @@ async function cleanupPendingBookings() {
       select: { bookingId: true, createdAt: true, status: true },
     });
 
+    const pendingSubscriptions = await prisma.subscription.findMany({
+      where: { status: "pending" },
+      select: { subscriptionId: true, createdAt: true, status: true },
+    });
+
     console.log(
       `[CRON] Found ${pendingBookings.length} pending bookings:`,
       pendingBookings.map((b) => `${b.bookingId} (created: ${b.createdAt})`)
     );
 
-    const deletedRows = await prisma.bookings.deleteMany({
+    console.log(
+      `[CRON] Found ${pendingSubscriptions.length} pending subscriptions:`,
+      pendingSubscriptions.map(
+        (s) => `${s.subscriptionId} (created: ${s.createdAt})`
+      )
+    );
+
+    const deletedBookings = await prisma.bookings.deleteMany({
       where: {
         status: "pending",
         createdAt: {
@@ -38,12 +50,25 @@ async function cleanupPendingBookings() {
       },
     });
 
-    console.log(`[CRON] Deleted ${deletedRows.count} old pending rows`);
+    const deletedSubscriptions = await prisma.subscription.deleteMany({
+      where: {
+        status: "pending",
+        createdAt: {
+          lt: fifteenMinutesAgo,
+        },
+      },
+    });
+
+    console.log(`[CRON] Deleted ${deletedBookings.count} old pending bookings`);
+    console.log(
+      `[CRON] Deleted ${deletedSubscriptions.count} old pending subscriptions`
+    );
 
     return NextResponse.json({
       success: true,
-      deleted: deletedRows.count,
-      message: `Deleted ${deletedRows.count} old pending bookings`,
+      deletedBookings: deletedBookings.count,
+      deletedSubscriptions: deletedSubscriptions.count,
+      message: `Deleted ${deletedBookings.count} old pending bookings and ${deletedSubscriptions.count} old pending subscriptions`,
     });
   } catch (error) {
     console.error("[CRON] Error in cleanup job:", error);

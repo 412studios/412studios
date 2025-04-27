@@ -42,9 +42,6 @@ export default async function PageCancel({
       },
     });
 
-    console.log(id);
-    console.log(successfulSub);
-
     if (successfulSub) {
       await prisma.subscription.deleteMany({
         where: {
