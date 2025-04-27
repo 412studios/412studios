@@ -27,7 +27,7 @@ export const ShowDetails: React.FC = () => {
     submitAdminBooking,
   } = useDashboard();
   // Determine if we should use subscription behavior
-  const useSubscriptionSlots = useMemo(
+  const usesubscriptionslots = useMemo(
     () => isSubscription && !isAdmin,
     [isSubscription, isAdmin]
   );
@@ -56,8 +56,8 @@ export const ShowDetails: React.FC = () => {
       ) || null;
     const subscriptionHasHours = (foundSubscription?.availableHours ?? 0) >= 4;
 
-    // Changed: Use useSubscriptionSlots instead of just isSubscription
-    if (useSubscriptionSlots) {
+    // Changed: Use usesubscriptionslots instead of just isSubscription
+    if (usesubscriptionslots) {
       if (options.startTime !== -1) {
         displayStart = subscriptionTimeSlots[options.startTime].displayStart;
         displayEnd = subscriptionTimeSlots[options.endTime].displayEnd;
@@ -107,7 +107,7 @@ export const ShowDetails: React.FC = () => {
     options.engDuration,
     options.room,
     options.subscription,
-    useSubscriptionSlots,
+    usesubscriptionslots,
     prices,
   ]);
 
@@ -146,7 +146,7 @@ export const ShowDetails: React.FC = () => {
     duration,
   ]);
 
-  const handleSubscriptionSubmit = useCallback(() => {
+  const handlesubscriptionubmit = useCallback(() => {
     // Track Facebook Pixel event for subscription booking checkout
     if (typeof window !== "undefined" && typeof window.fbq === "function") {
       window.fbq("track", "InitiateCheckout", {
@@ -207,8 +207,8 @@ export const ShowDetails: React.FC = () => {
         </div>
       ) : (
         <>
-          {/* Changed: Use useSubscriptionSlots instead of just isSubscription for conditional rendering */}
-          {useSubscriptionSlots ? (
+          {/* Changed: Use usesubscriptionslots instead of just isSubscription for conditional rendering */}
+          {usesubscriptionslots ? (
             <div className="border rounded-lg mt-4 p-4">
               <H4 className="pb-4">Subscription Details</H4>
               <Table className="rounded-[8px] overflow-hidden border-t-0">
@@ -322,7 +322,7 @@ export const ShowDetails: React.FC = () => {
                   return (
                     <Button
                       className="w-full"
-                      onClick={handleSubscriptionSubmit}
+                      onClick={handlesubscriptionubmit}
                       disabled={options.loading}
                     >
                       {options.loading ? "Redirecting..." : "Book Time"}

@@ -16,7 +16,7 @@ import { PricesMap, BookingOptions } from "./types/booking";
 type DashboardContextType = {
   user: User | null;
   isAdmin: Boolean | null;
-  subscriptions: Subscription[];
+  subscription: Subscription[];
   prices: PricesMap;
   options: BookingOptions;
   setOptions: React.Dispatch<React.SetStateAction<BookingOptions>>;
@@ -39,7 +39,7 @@ type DashboardContextType = {
 export const DashboardContext = createContext<DashboardContextType>({
   user: null,
   isAdmin: false,
-  subscriptions: [],
+  subscription: [],
   prices: {},
   options: {
     room: 0,
@@ -249,7 +249,7 @@ export function DashboardProvider({
       value={{
         user: userData,
         isAdmin: isAdmin,
-        subscriptions: subscriptionData,
+        subscription: subscriptionData,
         prices: pricingData,
         options,
         setOptions,

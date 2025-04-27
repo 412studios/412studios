@@ -53,7 +53,9 @@ interface SubscriptionTableProps {
   subscriptions: Subscription[];
 }
 
-export default function SubscriptionTable({ subscriptions = [] }: SubscriptionTableProps) {
+export default function SubscriptionTable({
+  subscriptions = [],
+}: SubscriptionTableProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedRoom, setSelectedRoom] = useState(0);
   const [filteredSubscriptions, setFilteredSubscriptions] =
@@ -72,7 +74,7 @@ export default function SubscriptionTable({ subscriptions = [] }: SubscriptionTa
 
     if (selectedRoom !== 0) {
       filtered = filtered.filter(
-        (subscription) => subscription.roomId === selectedRoom - 1,
+        (subscription) => subscription.roomId === selectedRoom - 1
       );
     }
 
@@ -80,7 +82,7 @@ export default function SubscriptionTable({ subscriptions = [] }: SubscriptionTa
       filtered = filtered.filter((subscription) =>
         subscription.user.name
           ?.toLowerCase()
-          .includes(searchQuery.toLowerCase()),
+          .includes(searchQuery.toLowerCase())
       );
     }
 
@@ -155,7 +157,7 @@ export default function SubscriptionTable({ subscriptions = [] }: SubscriptionTa
                     </Link>
                   </TableCell>
                 </TableRow>
-              ),
+              )
             )
           ) : (
             <TableRow>

@@ -94,7 +94,7 @@ async function getSubscription(userId: string) {
   const numericToday = parseInt(formatDateToNumeric(today));
 
   // Fetch the current subscription details
-  const subscriptions = await prisma.subscription.findMany({
+  const subscription = await prisma.subscription.findMany({
     where: {
       userId: userId,
       currentPeriodEnd: {

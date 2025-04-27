@@ -34,7 +34,7 @@ export const PickTime = () => {
   );
 
   // New: Check if we should use subscription time slots - only when Subscription AND not admin
-  const useSubscriptionSlots = useMemo(
+  const usesubscriptionslots = useMemo(
     () => isSubscription && !isAdmin,
     [isSubscription, isAdmin]
   );
@@ -44,17 +44,17 @@ export const PickTime = () => {
     [options.date]
   );
 
-  // Changed: Use time slots based on useSubscriptionSlots rather than just isSubscription
+  // Changed: Use time slots based on usesubscriptionslots rather than just isSubscription
   const timeArray = useMemo(
-    () => (useSubscriptionSlots ? subscriptionTimeSlots : timeSlots),
-    [useSubscriptionSlots]
+    () => (usesubscriptionslots ? subscriptionTimeSlots : timeSlots),
+    [usesubscriptionslots]
   );
 
   // Function to process single or range time selection
   const processTimeSelection = useCallback(
     (id: number, selList: number[]) => {
       // Changed: For subscription bookings when not admin, select only one slot
-      if (useSubscriptionSlots) {
+      if (usesubscriptionslots) {
         const currentSubscription = options.subscription.find(
           (item) => item.roomId === options.room
         );
@@ -101,7 +101,7 @@ export const PickTime = () => {
         },
       };
     },
-    [bookedTimes, useSubscriptionSlots, options.subscription, options.room]
+    [bookedTimes, usesubscriptionslots, options.subscription, options.room]
   );
 
   // Handle time slot selection
@@ -152,7 +152,7 @@ export const PickTime = () => {
       // Check blocked value
       const isRoomBlocked = prices[options.room]?.blocked || false;
       // Catch subscription acceptions
-      if (useSubscriptionSlots && checkSubscriptionWeek && isRoomBlocked) {
+      if (usesubscriptionslots && checkSubscriptionWeek && isRoomBlocked) {
         // Weekly limit reached, block all slots
         fillArrGaps(bookedSlots, 0, 3);
       } else if (Array.isArray(bookings)) {
@@ -162,10 +162,10 @@ export const PickTime = () => {
         } else {
           // Process individual bookings
           bookings.forEach((booking: BookingApiRecord) => {
-            const start = useSubscriptionSlots
+            const start = usesubscriptionslots
               ? Math.floor(booking.startTime / 4)
               : booking.startTime;
-            const end = useSubscriptionSlots
+            const end = usesubscriptionslots
               ? Math.floor(booking.endTime / 4)
               : booking.endTime;
             fillArrGaps(bookedSlots, start, end);
@@ -180,7 +180,7 @@ export const PickTime = () => {
 
         if (isToday) {
           // If booking is for today, check which slots are less than 2 hours away
-          const slots = useSubscriptionSlots
+          const slots = usesubscriptionslots
             ? subscriptionTimeSlots
             : timeSlots;
 
@@ -209,7 +209,7 @@ export const PickTime = () => {
     options.date,
     options.user,
     formattedDate,
-    useSubscriptionSlots,
+    usesubscriptionslots,
     setOptions,
   ]);
 
@@ -232,7 +232,7 @@ export const PickTime = () => {
         key={slot.id}
         onClick={() => !isBooked && handleClick(slot.id)}
         className={`flex items-center justify-center text-center hover:cursor-pointer rounded-full
-      ${useSubscriptionSlots ? "h-[25%] rounded-lg" : "p-1 my-1"}
+      ${usesubscriptionslots ? "h-[25%] rounded-lg" : "p-1 my-1"}
       ${
         isBooked
           ? "bg-red-500 text-white"
@@ -248,7 +248,7 @@ export const PickTime = () => {
         <span>{slot.displayName}</span>
       </div>
     ),
-    [useSubscriptionSlots, handleClick]
+    [usesubscriptionslots, handleClick]
   );
 
   // Render the time slots list
@@ -285,7 +285,7 @@ export const PickTime = () => {
             <div
               className={`border w-full h-[310px] rounded-lg overflow-y-scroll p-2
                   ${
-                    useSubscriptionSlots
+                    usesubscriptionslots
                       ? "flex justify-center flex-col grow w-full"
                       : ""
                   }`}

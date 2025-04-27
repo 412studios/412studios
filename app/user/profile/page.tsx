@@ -140,7 +140,7 @@ export default async function Page() {
             )}
             {typeof subscriptionData[0] !== "undefined" &&
               subscriptionData[0].userId && (
-                <Link href="/user/profile/subscriptions">
+                <Link href="/user/profile/subscription">
                   <Button
                     variant="ghost"
                     size="sm"

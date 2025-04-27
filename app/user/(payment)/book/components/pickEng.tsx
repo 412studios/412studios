@@ -31,7 +31,7 @@ export const PickEng = () => {
   );
 
   // New: Check if we should use subscription-specific logic - only when Subscription AND not admin
-  const useSubscriptionSlots = useMemo(
+  const usesubscriptionslots = useMemo(
     () => isSubscription && !isAdmin,
     [isSubscription, isAdmin]
   );
@@ -47,8 +47,8 @@ export const PickEng = () => {
       return arr;
     }
 
-    // Changed: Use useSubscriptionSlots instead of just checking subscriptionRooms
-    if (useSubscriptionSlots) {
+    // Changed: Use usesubscriptionslots instead of just checking subscriptionRooms
+    if (usesubscriptionslots) {
       if (options.startTime > -1) {
         min = options.startTime * 4;
         max = options.endTime * 4 + 3;
@@ -63,7 +63,7 @@ export const PickEng = () => {
     }
 
     return arr;
-  }, [options.startTime, options.endTime, options.room, useSubscriptionSlots]);
+  }, [options.startTime, options.endTime, options.room, usesubscriptionslots]);
 
   // Reset form when time selection changes
   useEffect(() => {

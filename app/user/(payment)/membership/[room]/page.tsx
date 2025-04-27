@@ -5,19 +5,39 @@ import { getPricing } from "@/app/lib/booking";
 import Submit from "./submit";
 import { H4, Section } from "@/components/ui/copy";
 
-export default async function Page(context: any) {
-  let prices;
+// Define a type for the price item
+interface PriceItem {
+  id: string;
+  room: string;
+  subscriptionPrice: number;
+  img: string;
+  blocked: boolean;
+}
+
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ room: string }>;
+}) {
+  // Await the params promise explicitly
+  const resolvedParams = await params;
+  const roomId = resolvedParams.room;
+
+  let prices: PriceItem[] = [];
   try {
     prices = await getPricing();
   } catch (error) {
     console.error("Error fetching prices:", error);
   }
 
+  // Find the selected room by matching the ID
+  const selectedRoom = prices.find((price) => price.id === roomId);
+
   return (
     <Section>
       <H4>Memberships</H4>
       <div>
-        {prices ? (
+        {prices.length > 0 ? (
           <>
             <div className="w-full flex gap-2">
               {prices.map((price) => (
@@ -28,42 +48,38 @@ export default async function Page(context: any) {
                 </div>
               ))}
             </div>
-            <div className="mt-4">
-              <div className="relative">
-                <Image
-                  src={`/images/${prices[context.params.room].img}`}
-                  alt="banner"
-                  height="6186"
-                  width="9279"
-                  className="rounded-xl w-full max-w-[600px] mx-auto"
-                />
-                {prices[context.params.room].blocked ? (
-                  <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-xl w-full max-w-[600px] mx-auto">
-                    <div className="text-white text-2xl font-bold">
-                      Currently Unavailable
+            {selectedRoom && (
+              <div className="mt-4">
+                <div className="relative">
+                  <Image
+                    src={`/images/${selectedRoom.img}`}
+                    alt="banner"
+                    height="6186"
+                    width="9279"
+                    className="rounded-xl w-full max-w-[600px] mx-auto"
+                  />
+                  {selectedRoom.blocked ? (
+                    <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-xl w-full max-w-[600px] mx-auto">
+                      <div className="text-white text-2xl font-bold">
+                        Currently Unavailable
+                      </div>
                     </div>
-                  </div>
-                ) : null}
+                  ) : null}
+                </div>
+                <h1 className="text-2xl font-bold tracking-tight mt-4">
+                  Room {selectedRoom.room} Membership
+                </h1>
+                <p>Membership Price: ${selectedRoom.subscriptionPrice}.00</p>
+                <p>Includes 4 X 4 hour sessions</p>
+                {selectedRoom.blocked ? (
+                  <Link href="/user/book">
+                    <Button className="w-full mt-4">Return to Booking</Button>
+                  </Link>
+                ) : (
+                  <Submit id={roomId} price={selectedRoom.subscriptionPrice} />
+                )}
               </div>
-              <h1 className="text-2xl font-bold tracking-tight mt-4">
-                Room {prices[context.params.room].room} Membership
-              </h1>
-              <p>
-                Membership Price: $
-                {prices[context.params.room].subscriptionPrice}.00
-              </p>
-              <p>Includes 4 X 4 hour sessions</p>
-              {prices[context.params.room].blocked ? (
-                <Link href="/user/book">
-                  <Button className="w-full mt-4">Return to Booking</Button>
-                </Link>
-              ) : (
-                <Submit
-                  id={context.params.room}
-                  price={prices[context.params.room].subscriptionPrice}
-                />
-              )}
-            </div>
+            )}
           </>
         ) : (
           <>Loading...</>

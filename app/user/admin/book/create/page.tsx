@@ -18,7 +18,7 @@ import { H2, H4, Subtitle, Section, Divider } from "@/components/ui/copy";
 
 export default function Page(data: any) {
   // COLLECT SUBSCRIPTION DETAILS IF AVAILABLE
-  // CREATE ARRAY OF ACTIVE SUBSCRIPTIONS AND ROOM HOURS
+  // CREATE ARRAY OF ACTIVE subscription AND ROOM HOURS
   const subscriptionRooms = useMemo(
     () => data.subscription.map((element: any) => element.roomId),
     [data.subscription]
