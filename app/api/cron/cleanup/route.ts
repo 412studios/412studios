@@ -13,11 +13,14 @@ async function cleanupPendingBookings() {
     //   return new NextResponse("Unauthorized", { status: 401 });
     // }
 
-    const fifteenMinutesAgo = new Date(Date.now() - 15 * 60 * 1000);
+    // const fifteenMinutesAgo = new Date(Date.now() - 15 * 60 * 1000);
+    const fifteenMinutesAgo = new Date(Date.now());
 
-    console.log(
-      `[CRON] Checking for pending bookings and subscriptions before ${fifteenMinutesAgo.toISOString()}`
-    );
+    // Check all statuses for bookings
+    const allBookingStatuses = await prisma.bookings.findMany({
+      select: { status: true },
+      distinct: ["status"],
+    });
 
     const pendingBookings = await prisma.bookings.findMany({
       where: { status: "pending" },
@@ -29,18 +32,18 @@ async function cleanupPendingBookings() {
       select: { subscriptionId: true, createdAt: true, status: true },
     });
 
-    console.log(
-      `[CRON] Found ${pendingBookings.length} pending bookings:`,
-      pendingBookings.map((b) => `${b.bookingId} (created: ${b.createdAt})`)
-    );
+    // First find the pending bookings that are older than 15 minutes
+    const bookingsToDelete = await prisma.bookings.findMany({
+      where: {
+        status: "pending",
+        createdAt: {
+          lt: fifteenMinutesAgo,
+        },
+      },
+      select: { bookingId: true, createdAt: true, status: true },
+    });
 
-    console.log(
-      `[CRON] Found ${pendingSubscriptions.length} pending subscriptions:`,
-      pendingSubscriptions.map(
-        (s) => `${s.subscriptionId} (created: ${s.createdAt})`
-      )
-    );
-
+    // Then attempt to delete them
     const deletedBookings = await prisma.bookings.deleteMany({
       where: {
         status: "pending",
@@ -59,9 +62,8 @@ async function cleanupPendingBookings() {
       },
     });
 
-    console.log(`[CRON] Deleted ${deletedBookings.count} old pending bookings`);
     console.log(
-      `[CRON] Deleted ${deletedSubscriptions.count} old pending subscriptions`
+      `[CRON] DELETED || ${deletedBookings.count} bookings || ${deletedSubscriptions.count} subscriptions`
     );
 
     return NextResponse.json({
