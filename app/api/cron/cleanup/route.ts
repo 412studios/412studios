@@ -4,8 +4,8 @@ import prisma from "@/app/lib/db";
 // Disable Next.js body parsing, we don't need it for this endpoint
 export const dynamic = "force-dynamic";
 
-// This endpoint will only accept POST requests
-export async function POST() {
+// Common function for both GET and POST requests
+async function cleanupPendingBookings() {
   try {
     // Vercel secret verification, if desired
     // const authorization = request.headers.get("authorization");
@@ -52,4 +52,14 @@ export async function POST() {
       { status: 500 }
     );
   }
+}
+
+// Added GET handler to support Vercel cron jobs
+export async function GET() {
+  return cleanupPendingBookings();
+}
+
+// Maintain POST handler for backward compatibility
+export async function POST() {
+  return cleanupPendingBookings();
 }
