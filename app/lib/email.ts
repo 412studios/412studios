@@ -143,6 +143,7 @@ Thank you for choosing 412 Studios!
     .map-button { 
       display: inline-block; 
       border: 1px solid #4285F4; 
+      background-color: white;
       color: white; 
       padding: 10px 15px; 
       text-decoration: none; 
@@ -255,6 +256,7 @@ Thank you for choosing 412 Studios!
     .map-button { 
       display: inline-block; 
       border: 1px solid #4285F4; 
+      background-color: white;
       color: white; 
       padding: 10px 15px; 
       text-decoration: none; 
