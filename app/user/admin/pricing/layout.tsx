@@ -52,8 +52,17 @@ export default async function Main() {
   return (
     <>
       <Section>
+      <Card>
         <form action={submit}>
-          <H4>Update Pricing</H4>
+          <CardHeader>
+            <CardTitle>Update Pricing</CardTitle>
+          </CardHeader>
+          <div className="px-4 flex gap-4">
+            <Link href="/user/admin">
+              <Button>Back</Button>
+            </Link>
+            <Button type="submit">Submit</Button>
+          </div>
           <CardContent>
             <Table>
               <TableHeader>
@@ -68,20 +77,11 @@ export default async function Main() {
               </TableHeader>
               <TableBody>
                 <Page prices={prices} />
-                <TableRow>
-                  <TableCell className="text-center">
-                    <Button type="submit">Submit</Button>
-                  </TableCell>
-                </TableRow>
               </TableBody>
             </Table>
           </CardContent>
-          <CardFooter>
-            <Link href="/user/admin">
-              <Button>Back</Button>
-            </Link>
-          </CardFooter>
         </form>
+        </Card>
       </Section>
     </>
   );
