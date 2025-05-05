@@ -176,6 +176,27 @@ export async function PostAdminBooking(input: any) {
   // HANDLE DB UPDATE
   const bookingId: string = require("crypto").randomBytes(16).toString("hex");
 
+  // Get user details for email notification
+  const userToBook = await prisma.user.findUnique({
+    where: {
+      id: input.user?.id || user?.id,
+    },
+    select: {
+      email: true,
+      name: true,
+    },
+  });
+
+  // Get studio name for the email
+  const studioInfo = await prisma.pricing.findFirst({
+    where: {
+      id: input.room.toString(),
+    },
+    select: {
+      room: true,
+    },
+  });
+
   await prisma.bookings.create({
     data: {
       bookingId: bookingId,
@@ -195,6 +216,41 @@ export async function PostAdminBooking(input: any) {
       addDetails: "",
     },
   });
+
+  try {
+    // Import dynamically to avoid circular dependencies
+    const { sendBookingConfirmationEmail } = await import("@/app/lib/email");
+    
+    // Format date for email
+    const bookingDate = input.date 
+      ? input.date.toDateString()
+      : new Date(Math.floor(formatDate(input.date) / 10000), 
+                (Math.floor(formatDate(input.date) % 10000) / 100) - 1, 
+                formatDate(input.date) % 100).toDateString();
+    
+    // Get time slot display strings
+    const { timeSlots } = await import("@/app/user/(payment)/book/components/timeSlots");
+    const startTimeStr = timeSlots[input.startTime]?.displayStart || `${input.startTime}:00`;
+    const endTimeStr = timeSlots[input.endTime]?.displayEnd || `${input.endTime + 1}:00`;
+    
+    if (userToBook?.email) {
+      await sendBookingConfirmationEmail(
+        userToBook.email,
+        {
+          studioName: `Studio ${studioInfo?.room || input.room}`,
+          date: bookingDate,
+          startTime: startTimeStr,
+          endTime: endTimeStr,
+          duration: input.duration,
+          price: input.price,
+          engineeringIncluded: input.engDuration > 0
+        }
+      );
+    }
+  } catch (error) {
+    console.error("Failed to send booking confirmation email:", error);
+    // Don't block the booking process if email fails
+  }
 
   return redirect("/user/book");
 }
@@ -293,7 +349,8 @@ export async function PostMembershipBooking(
     });
     // REMOVE HOURS FROM MEMBERSHIP
     if (updatedMembership) {
-      await prisma.memberships.update({
+      // Update membership hours
+      const updatedMembershipResult = await prisma.memberships.update({
         where: {
           membershipId: updatedMembership.membershipId,
         },
@@ -303,6 +360,62 @@ export async function PostMembershipBooking(
           },
         },
       });
+      
+      // Get user email for notification
+      try {
+        // Get user details for email
+        const userDetails = await prisma.user.findUnique({
+          where: {
+            id: user?.id,
+          },
+          select: {
+            email: true,
+            name: true,
+          },
+        });
+        
+        // Get studio info
+        const studioInfo = await prisma.pricing.findFirst({
+          where: {
+            id: input.room.toString(),
+          },
+          select: {
+            room: true,
+          },
+        });
+        
+        // Get formatted time details
+        const { timeSlots } = await import("@/app/user/(payment)/book/components/timeSlots");
+        const startTimeStr = timeSlots[input.startTime]?.displayStart || `${input.startTime}:00`;
+        const endTimeStr = timeSlots[input.endTime]?.displayEnd || `${input.endTime + 1}:00`;
+        
+        // Format date for display
+        const bookingDate = input.date.toDateString();
+        
+        // Send email notification about hours usage
+        if (userDetails?.email) {
+          console.log("Sending membership hours usage email to:", userDetails.email);
+          
+          const { sendMembershipUsageEmail } = await import("@/app/lib/email");
+          await sendMembershipUsageEmail(
+            userDetails.email,
+            {
+              studioName: `Studio ${studioInfo?.room || input.room}`,
+              date: bookingDate,
+              startTime: startTimeStr,
+              endTime: endTimeStr,
+              hoursUsed: duration,
+              remainingHours: updatedMembershipResult.availableHours,
+              bookingId: bookingId
+            }
+          );
+          
+          console.log("Membership hours usage email sent successfully");
+        }
+      } catch (emailError) {
+        console.error("Failed to send membership hours usage email:", emailError);
+        // Don't block the booking process if email fails
+      }
     }
     return redirect("/user/profile/");
   }
