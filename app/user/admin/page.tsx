@@ -70,7 +70,7 @@ export default async function Main() {
               <Link href="/user/admin/membership">
                 <span className="hover:bg-accent hover:text-accent-forground group flex items-center rounded-md px-3 py-2 text-sm font-medium">
                   <Book className="text-primary mr-2 h-4 w-4" />
-                  <span>membership</span>
+                  <span>Membership</span>
                 </span>
               </Link>
               <Link href="/user/admin/book/">
