@@ -22,7 +22,6 @@ export default async function Page({
   // Await the params promise explicitly
   const resolvedParams = await params;
   const roomId = resolvedParams.room;
-
   let prices: PriceItem[] = [];
   try {
     prices = await getPricing();
