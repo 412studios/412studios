@@ -21,14 +21,11 @@ export const metadata: Metadata = {
   title: "412 Studios",
   description: "412 Studios Toronto",
   metadataBase: new URL("https://www.412studios.ca/"),
-  icons: [
-    {
-      rel: "icon",
-      type: "image/x-icon",
-      url: "/icon.png",
-      media: "(prefers-color-scheme: light)",
-    },
-  ],
+  icons: {
+    icon: "/icon.png",
+    shortcut: "/icon.png",
+    apple: "/icon.png",
+  },
 };
 
 export default async function RootLayout({
