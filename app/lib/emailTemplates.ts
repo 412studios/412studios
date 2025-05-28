@@ -55,17 +55,25 @@ const BASE_STYLES = `
     display: flex;
     justify-content: center;
   }
+  .header svg {
+    heigh: 100%;
+    max-heigth: 130px;
+    width: auto;
+  }
   h1 {
     font-size: 28px;
     font-weight: 700;
+    margin: 0 !important;
   }
   h3 {
     color: #333;
     font-size: 18px;
     font-weight: 700;
+    margin: 0 !important;
   }
   p {
     font-size: 14px;
+    margin: 0 !important;
   }
   strong {
     font-weight: 700;
@@ -105,6 +113,7 @@ const BASE_STYLES = `
     background-color: #333;
     text-decoration: none;
     transition: background-color 0.5s ease-in-out;
+    color: white !important;
   }
   .footer { 
     text-align: center; 
@@ -174,7 +183,7 @@ const generateBookingContent = (data: BookingDetails) => ({
       <a href="${EMAIL_CONSTANTS.GOOGLE_MAPS_URL}" class="map-button" target="_blank">Directions</a>
     </div>
     <div class="title-section">
-      <p>For additional inquieries, please contact us at<br /> <a href="mailto:${EMAIL_CONSTANTS.SUPPORT_EMAIL}">${EMAIL_CONSTANTS.SUPPORT_EMAIL}</a>.</p>
+      <p>For additional information, please contact us at<br /> <a href="mailto:${EMAIL_CONSTANTS.SUPPORT_EMAIL}">${EMAIL_CONSTANTS.SUPPORT_EMAIL}</a>.</p>
     </div>
   `,
   plainText: `
@@ -193,7 +202,7 @@ Studio Location:
 ${EMAIL_CONSTANTS.STUDIO_ADDRESS}
 Address: ${EMAIL_CONSTANTS.GOOGLE_MAPS_URL}
 
-For additional inquieries, please contact us at ${EMAIL_CONSTANTS.SUPPORT_EMAIL}.
+For additional information, please contact us at ${EMAIL_CONSTANTS.SUPPORT_EMAIL}.
   `,
 });
 
