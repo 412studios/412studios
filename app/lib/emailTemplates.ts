@@ -74,9 +74,10 @@ const BASE_STYLES = `
   p {
     font-size: 14px;
     margin: 0 !important;
+    color: #333 !important
   }
   a {
-    color: black !important
+    color: #333 !important
   }
   strong {
     font-weight: 700;
@@ -122,7 +123,9 @@ const BASE_STYLES = `
     padding: 20px; 
     background-color: #111;
     font-size: 12px; 
-    color: #fff; 
+  }
+  .footer p {
+    color: #fff !important;
   }
 `;
 
