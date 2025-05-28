@@ -75,6 +75,9 @@ const BASE_STYLES = `
     font-size: 14px;
     margin: 0 !important;
   }
+  a {
+    color: black !important
+  }
   strong {
     font-weight: 700;
   }
@@ -101,7 +104,7 @@ const BASE_STYLES = `
   .map-button { 
     display: inline-block; 
     background-color: #111;
-    color: #f9f9f9; 
+    color: #f9f9f9 !important; 
     padding: 1px 45px; 
     text-decoration: none; 
     border-radius: 30px; 
@@ -113,7 +116,6 @@ const BASE_STYLES = `
     background-color: #333;
     text-decoration: none;
     transition: background-color 0.5s ease-in-out;
-    color: white !important;
   }
   .footer { 
     text-align: center; 
@@ -228,8 +230,7 @@ const generateMembershipContent = (data: MembershipDetails) => ({
       <a href="${EMAIL_CONSTANTS.GOOGLE_MAPS_URL}" class="map-button" target="_blank">Directions</a>
     </div>
     <div class="title-section">
-      <p>Your membership is now active. You can book studio time using your membership hours through your account.</p>
-      <p>Thank you for choosing ${EMAIL_CONSTANTS.COMPANY_NAME}!</p>
+      <p>For additional information, please contact us at<br /> <a href="mailto:${EMAIL_CONSTANTS.SUPPORT_EMAIL}">${EMAIL_CONSTANTS.SUPPORT_EMAIL}</a>.</p>
     </div>
   `,
   plainText: `
@@ -248,8 +249,7 @@ Studio Location:
 ${EMAIL_CONSTANTS.STUDIO_ADDRESS}
 Address: ${EMAIL_CONSTANTS.GOOGLE_MAPS_URL}
 
-Your membership is now active. You can book studio time using your membership hours through your account.
-Thank you for choosing ${EMAIL_CONSTANTS.COMPANY_NAME}!
+For additional information, please contact us at ${EMAIL_CONSTANTS.SUPPORT_EMAIL}.
   `,
 });
 
@@ -278,8 +278,7 @@ const generateUsageContent = (data: UsageDetails) => ({
       <a href="${EMAIL_CONSTANTS.GOOGLE_MAPS_URL}" class="map-button" target="_blank">Directions</a>
     </div>
     <div class="title-section">
-      <p>Your membership is now active. You can book studio time using your membership hours through your account.</p>
-      <p>Thank you for choosing ${EMAIL_CONSTANTS.COMPANY_NAME}!</p>
+      <p>For additional information, please contact us at<br /> <a href="mailto:${EMAIL_CONSTANTS.SUPPORT_EMAIL}">${EMAIL_CONSTANTS.SUPPORT_EMAIL}</a>.</p>
     </div>
   `,
   plainText: `
@@ -300,8 +299,7 @@ Studio Location:
 ${EMAIL_CONSTANTS.STUDIO_ADDRESS}
 Address: ${EMAIL_CONSTANTS.GOOGLE_MAPS_URL}
 
-Your membership is now active. You can book studio time using your membership hours through your account.
-Thank you for choosing ${EMAIL_CONSTANTS.COMPANY_NAME}!
+For additional information, please contact us at ${EMAIL_CONSTANTS.SUPPORT_EMAIL}.
   `,
 });
 
