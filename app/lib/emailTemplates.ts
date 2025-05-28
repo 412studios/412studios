@@ -6,29 +6,26 @@ export const EMAIL_CONSTANTS = {
   SUPPORT_EMAIL: "alec@412studios.com",
   COMPANY_NAME: "412 Studios",
   WEBSITE_URL: "https://412studios.com",
+  BASE_URL: process.env.NODE_ENV === "production" 
+    ? "https://412studios.ca" 
+    : process.env.VERCEL_URL 
+    ? `https://${process.env.VERCEL_URL}` 
+    : "http://localhost:3000",
 };
 
-// 412 Studios Logo HTML (email-compatible)
-const LOGO_HTML = `
-<div style="
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 36px;
-  font-weight: bold;
-  color: white;
-  text-align: center;
-  padding: 10px 0;
-  letter-spacing: 2px;
-">
-  <span style="
-    background-color: white;
-    color: #222;
-    padding: 8px 20px;
-    border-radius: 50px;
-    display: inline-block;
-    margin-right: 10px;
-  ">412</span>
-  <span>STUDIOS</span>
-</div>
+// 412 Studios Logo PNG (email-compatible)
+const getLOGO_PNG = () => `
+<img 
+  src="${EMAIL_CONSTANTS.BASE_URL}/icons/Logo.png" 
+  alt="412 Studios" 
+  style="
+    height: auto;
+    max-height: 60px;
+    width: auto;
+    display: block;
+    margin: 0 auto;
+  "
+/>
 `;
 
 // Base email styles
@@ -48,6 +45,7 @@ const BASE_STYLES = `
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 1px solid rgba(0, 0, 0, 0.1) !important;
   }
   .header { 
     background-color: #222; 
@@ -342,7 +340,7 @@ export const generateEmail = (
 <body>
   <div class="email-container">
     <div class="header">
-      ${LOGO_HTML}
+      ${getLOGO_PNG()}
     </div>
     <div class="content">
       ${emailContent.content}
