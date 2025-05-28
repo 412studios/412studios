@@ -6,11 +6,12 @@ export const EMAIL_CONSTANTS = {
   SUPPORT_EMAIL: "alec@412studios.com",
   COMPANY_NAME: "412 Studios",
   WEBSITE_URL: "https://412studios.com",
-  BASE_URL: process.env.NODE_ENV === "production" 
-    ? "https://412studios.ca" 
-    : process.env.VERCEL_URL 
-    ? `https://${process.env.VERCEL_URL}` 
-    : "http://localhost:3000",
+  BASE_URL:
+    process.env.NODE_ENV === "production"
+      ? "https://412studios.ca"
+      : process.env.VERCEL_URL
+        ? `https://${process.env.VERCEL_URL}`
+        : "http://localhost:3000",
 };
 
 // 412 Studios Logo PNG (email-compatible)
@@ -37,6 +38,7 @@ const BASE_STYLES = `
     margin: 0;
     padding: 0;
     background-color: #f4f4f4;
+    
   }
   .email-container { 
     max-width: 600px; 
@@ -45,7 +47,7 @@ const BASE_STYLES = `
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    box-shadow: 1px solid rgba(0, 0, 0, 0.1) !important;
+    border: 1px solid #111 !important;
   }
   .header { 
     background-color: #222; 
@@ -92,14 +94,12 @@ const BASE_STYLES = `
     padding: 15px; 
     margin: 15px 0; 
     border-radius: 12px;
-    border: 1px solid black;
   }  
   .location-section { 
     background-color: #f9f9f9; 
     padding: 15px; 
     margin: 15px 0; 
     border-radius: 12px;
-    border: 1px solid black;
   }
   .map-button { 
     display: inline-block; 
