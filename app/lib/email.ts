@@ -38,7 +38,12 @@ export const sendEmail = async (
   text: string,
   html?: string
 ) => {
-  console.log(`Starting to send email to ${to} with subject "${subject}"`);
+  console.log(`=== EMAIL SENDING DEBUG ===`);
+  console.log(`To: ${to}`);
+  console.log(`Subject: ${subject}`);
+  console.log(`From: 412 Studios <${RESEND_FROM_EMAIL}>`);
+  console.log(`API Key present: ${RESEND_API_KEY ? "Yes" : "No"}`);
+  console.log(`API Key length: ${RESEND_API_KEY?.length || 0}`);
 
   try {
     // If Resend client isn't available, create a new instance just for this request
