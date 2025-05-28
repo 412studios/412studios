@@ -12,7 +12,7 @@ export const SUPPORT_EMAIL = "alec@412studios.com";
 // Initialize Resend with API key
 console.log(
   "Initializing Resend client with API key:",
-  RESEND_API_KEY ? "Present" : "Missing",
+  RESEND_API_KEY ? "Present" : "Missing"
 );
 let resendClient: Resend;
 
@@ -36,13 +36,14 @@ export const sendEmail = async (
   to: string,
   subject: string,
   text: string,
-  html?: string,
+  html?: string
 ) => {
   console.log(`Starting to send email to ${to} with subject "${subject}"`);
 
   try {
     // If Resend client isn't available, create a new instance just for this request
     const emailClient = resendClient || new Resend(RESEND_API_KEY);
+    console.log(`Using email client:`, typeof emailClient);
 
     // Verify resend instance
     if (!emailClient || typeof emailClient.emails?.send !== "function") {
@@ -53,6 +54,7 @@ export const sendEmail = async (
       };
     }
 
+    console.log("Attempting to send email via Resend...");
     const { data, error } = await emailClient.emails.send({
       from: `412 Studios <${RESEND_FROM_EMAIL}>`,
       to: [to],
@@ -63,17 +65,26 @@ export const sendEmail = async (
 
     if (error) {
       console.error("Error sending email with Resend:", error);
+      console.error("Error type:", typeof error);
+      console.error("Error details:", JSON.stringify(error, null, 2));
       return { success: false, error };
     }
 
-    console.log("Email sent successfully to:", to);
+    console.log("Email sent successfully!");
+    console.log("Response data:", JSON.stringify(data, null, 2));
+    console.log("=== EMAIL SENDING COMPLETE ===");
     return { success: true, data };
   } catch (error) {
     console.error("Exception sending email with Resend:", error);
     console.error(
       "Error details:",
-      error instanceof Error ? error.message : "Unknown error",
+      error instanceof Error ? error.message : "Unknown error"
     );
+    console.error(
+      "Error stack:",
+      error instanceof Error ? error.stack : "No stack"
+    );
+    console.log("=== EMAIL SENDING FAILED ===");
     return { success: false, error };
   }
 };
@@ -93,7 +104,7 @@ export const sendBookingConfirmationEmail = async (
     duration: number;
     price: number;
     engineeringIncluded?: boolean;
-  },
+  }
 ) => {
   const {
     studioName,
@@ -207,7 +218,7 @@ export const sendMembershipConfirmationEmail = async (
     billingCycle: string;
     status: string;
     validThrough: string;
-  },
+  }
 ) => {
   const {
     studioName,
@@ -321,7 +332,7 @@ export const sendMembershipUsageEmail = async (
     hoursUsed: number;
     remainingHours: number;
     bookingId: string;
-  },
+  }
 ) => {
   const {
     studioName,
@@ -424,27 +435,24 @@ export const sendTestEmail = async () => {
     console.log("Testing email integration...");
     console.log("API Key:", RESEND_API_KEY ? "Present" : "Missing");
     console.log("From Email:", RESEND_FROM_EMAIL);
-    
+
     if (!RESEND_API_KEY) {
       console.error("Skipping email test - RESEND_API_KEY is missing");
       return { success: false, error: "RESEND_API_KEY is missing" };
     }
-    
+
     const testEmail = "delivered@resend.dev";
-    
-    const testResult = await sendBookingConfirmationEmail(
-      testEmail,
-      {
-        studioName: "Test Studio",
-        date: new Date().toDateString(),
-        startTime: "10:00 AM",
-        endTime: "12:00 PM",
-        duration: 2,
-        price: 0,
-        engineeringIncluded: false
-      }
-    );
-    
+
+    const testResult = await sendBookingConfirmationEmail(testEmail, {
+      studioName: "Test Studio",
+      date: new Date().toDateString(),
+      startTime: "10:00 AM",
+      endTime: "12:00 PM",
+      duration: 2,
+      price: 0,
+      engineeringIncluded: false,
+    });
+
     console.log("Test email result:", testResult);
     return testResult;
   } catch (emailTestError) {
@@ -459,10 +467,13 @@ export const sendTestEmail = async () => {
 /**
  * Handle booking confirmation email with all necessary data fetching
  */
-export const handleBookingConfirmationEmail = async (booking: any, prisma: any) => {
+export const handleBookingConfirmationEmail = async (
+  booking: any,
+  prisma: any
+) => {
   try {
     console.log("Starting booking email process...");
-    
+
     const studioInfo = await prisma.pricing.findFirst({
       where: {
         id: booking.roomId.toString(),
@@ -475,29 +486,37 @@ export const handleBookingConfirmationEmail = async (booking: any, prisma: any) 
 
     const bookingDate = new Date(
       Math.floor(booking.date / 10000),
-      (Math.floor(booking.date % 10000) / 100) - 1,
+      Math.floor(booking.date % 10000) / 100 - 1,
       booking.date % 100
     ).toDateString();
     console.log("Formatted date:", bookingDate);
-    
+
     let startTimeStr = `${booking.startTime}:00`;
     let endTimeStr = `${booking.endTime + 1}:00`;
     console.log("Initial time strings:", { startTimeStr, endTimeStr });
-    
+
     try {
-      const { timeSlots } = await import("@/app/user/(payment)/book/components/timeSlots");
+      const { timeSlots } = await import(
+        "@/app/user/(payment)/book/components/timeSlots"
+      );
       console.log("TimeSlots imported successfully");
       startTimeStr = timeSlots[booking.startTime]?.displayStart || startTimeStr;
       endTimeStr = timeSlots[booking.endTime]?.displayEnd || endTimeStr;
       console.log("Formatted time strings:", { startTimeStr, endTimeStr });
     } catch (timeSlotError) {
-      console.error("Failed to import timeSlots, using default time format:", timeSlotError);
+      console.error(
+        "Failed to import timeSlots, using default time format:",
+        timeSlotError
+      );
     }
-    
+
     const duration = booking.endTime + 1 - booking.startTime;
-    
+
     if (booking.user?.email) {
-      console.log("Starting to send booking confirmation email to:", booking.user.email);
+      console.log(
+        "Starting to send booking confirmation email to:",
+        booking.user.email
+      );
       console.log("Email data:", {
         studioName: `Studio ${studioInfo?.room || booking.roomId}`,
         date: bookingDate,
@@ -505,21 +524,18 @@ export const handleBookingConfirmationEmail = async (booking: any, prisma: any) 
         endTime: endTimeStr,
         duration: duration,
         price: booking.totalPrice,
-        engineeringIncluded: booking.engineerTotal > 0
+        engineeringIncluded: booking.engineerTotal > 0,
       });
-      
-      const result = await sendBookingConfirmationEmail(
-        booking.user.email,
-        {
-          studioName: `Studio ${studioInfo?.room || booking.roomId}`,
-          date: bookingDate,
-          startTime: startTimeStr,
-          endTime: endTimeStr,
-          duration: duration,
-          price: booking.totalPrice,
-          engineeringIncluded: booking.engineerTotal > 0,
-        }
-      );
+
+      const result = await sendBookingConfirmationEmail(booking.user.email, {
+        studioName: `Studio ${studioInfo?.room || booking.roomId}`,
+        date: bookingDate,
+        startTime: startTimeStr,
+        endTime: endTimeStr,
+        duration: duration,
+        price: booking.totalPrice,
+        engineeringIncluded: booking.engineerTotal > 0,
+      });
       console.log("Email send result:", result);
       console.log(`Booking confirmation email sent to ${booking.user.email}`);
       return result;
@@ -538,8 +554,10 @@ export const handleBookingConfirmationEmail = async (booking: any, prisma: any) 
  */
 export const handleMembershipUsageEmail = async (booking: any, prisma: any) => {
   try {
-    console.log("Membership hours were decremented, fetching details for email notification");
-    
+    console.log(
+      "Membership hours were decremented, fetching details for email notification"
+    );
+
     const updatedMembership = await prisma.memberships.findFirst({
       where: {
         userId: booking.userId,
@@ -550,7 +568,7 @@ export const handleMembershipUsageEmail = async (booking: any, prisma: any) => {
         roomId: true,
       },
     });
-    
+
     if (updatedMembership && booking.user?.email) {
       const studioInfo = await prisma.pricing.findFirst({
         where: {
@@ -560,49 +578,61 @@ export const handleMembershipUsageEmail = async (booking: any, prisma: any) => {
           room: true,
         },
       });
-      
+
       const bookingDate = new Date(
         Math.floor(booking.date / 10000),
-        (Math.floor(booking.date % 10000) / 100) - 1,
+        Math.floor(booking.date % 10000) / 100 - 1,
         booking.date % 100
       ).toDateString();
-      
+
       let startTimeStr = `${booking.startTime}:00`;
       let endTimeStr = `${booking.endTime + 1}:00`;
-      
+
       try {
-        const { timeSlots } = await import("@/app/user/(payment)/book/components/timeSlots");
-        startTimeStr = timeSlots[booking.startTime]?.displayStart || startTimeStr;
+        const { timeSlots } = await import(
+          "@/app/user/(payment)/book/components/timeSlots"
+        );
+        startTimeStr =
+          timeSlots[booking.startTime]?.displayStart || startTimeStr;
         endTimeStr = timeSlots[booking.endTime]?.displayEnd || endTimeStr;
       } catch (timeSlotError) {
-        console.error("Failed to import timeSlots for usage email, using default format:", timeSlotError);
+        console.error(
+          "Failed to import timeSlots for usage email, using default format:",
+          timeSlotError
+        );
       }
-      
+
       const duration = booking.endTime + 1 - booking.startTime;
-      
-      console.log("Sending membership hours usage email to:", booking.user.email);
-      
-      const result = await sendMembershipUsageEmail(
-        booking.user.email,
-        {
-          studioName: `Studio ${studioInfo?.room || booking.roomId}`,
-          date: bookingDate,
-          startTime: startTimeStr,
-          endTime: endTimeStr,
-          hoursUsed: duration,
-          remainingHours: updatedMembership.availableHours,
-          bookingId: booking.bookingId
-        }
+
+      console.log(
+        "Sending membership hours usage email to:",
+        booking.user.email
       );
-      
+
+      const result = await sendMembershipUsageEmail(booking.user.email, {
+        studioName: `Studio ${studioInfo?.room || booking.roomId}`,
+        date: bookingDate,
+        startTime: startTimeStr,
+        endTime: endTimeStr,
+        hoursUsed: duration,
+        remainingHours: updatedMembership.availableHours,
+        bookingId: booking.bookingId,
+      });
+
       console.log("Membership hours usage email sent successfully");
       return result;
     } else {
       console.warn("No updated membership or user email found");
-      return { success: false, error: "No updated membership or user email found" };
+      return {
+        success: false,
+        error: "No updated membership or user email found",
+      };
     }
   } catch (usageEmailError) {
-    console.error("Failed to send membership hours usage email:", usageEmailError);
+    console.error(
+      "Failed to send membership hours usage email:",
+      usageEmailError
+    );
     return { success: false, error: usageEmailError };
   }
 };
@@ -610,10 +640,13 @@ export const handleMembershipUsageEmail = async (booking: any, prisma: any) => {
 /**
  * Handle membership confirmation email with all necessary data fetching
  */
-export const handleMembershipConfirmationEmail = async (membership: any, prisma: any) => {
+export const handleMembershipConfirmationEmail = async (
+  membership: any,
+  prisma: any
+) => {
   try {
     console.log("Starting membership email process...");
-    
+
     const studioInfo = await prisma.pricing.findFirst({
       where: {
         id: membership.roomId.toString(),
@@ -624,25 +657,28 @@ export const handleMembershipConfirmationEmail = async (membership: any, prisma:
       },
     });
     console.log("Membership studio info fetched:", studioInfo);
-    
+
     const now = new Date();
     const firstDayOfNextMonth = new Date(
       now.getFullYear(),
       now.getMonth() + 1,
       1
     );
-    
+
     if (membership.user?.email) {
-      console.log("Starting to send membership confirmation email to:", membership.user.email);
+      console.log(
+        "Starting to send membership confirmation email to:",
+        membership.user.email
+      );
       console.log("Membership email data:", {
         studioName: `Studio ${studioInfo?.room || membership.roomId}`,
         availableHours: membership.availableHours,
         membershipPrice: studioInfo?.membershipPrice || 0,
         billingCycle: membership.interval,
         status: membership.status,
-        validThrough: firstDayOfNextMonth.toLocaleDateString()
+        validThrough: firstDayOfNextMonth.toLocaleDateString(),
       });
-      
+
       const result = await sendMembershipConfirmationEmail(
         membership.user.email,
         {
@@ -651,11 +687,13 @@ export const handleMembershipConfirmationEmail = async (membership: any, prisma:
           membershipPrice: studioInfo?.membershipPrice || 0,
           billingCycle: membership.interval,
           status: membership.status,
-          validThrough: firstDayOfNextMonth.toLocaleDateString()
+          validThrough: firstDayOfNextMonth.toLocaleDateString(),
         }
       );
       console.log("Membership email send result:", result);
-      console.log(`Membership confirmation email sent to ${membership.user.email}`);
+      console.log(
+        `Membership confirmation email sent to ${membership.user.email}`
+      );
       return result;
     } else {
       console.warn("No user email found for membership confirmation");
