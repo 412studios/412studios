@@ -106,7 +106,7 @@ export default function NavbarClient({
   }, []);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-x w-[calc(100%+3px)]">
+    <header className="sticky top-0 z-50 border-b border-x-0 w-[calc(100%+1px)] border-r">
       <nav
         id="main-nav"
         ref={navRef}

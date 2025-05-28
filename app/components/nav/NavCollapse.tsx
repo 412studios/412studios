@@ -26,7 +26,7 @@ export default function NavCollapse({
   return (
     <div
       className={`z-50 absolute right-0 transition-all duration-300 ease-in-out overflow-hidden border-t bg-background/30 backdrop-blur-md ${
-        isOpen ? "w-full sm:w-72 border-l" : "w-0"
+        isOpen ? "w-full sm:w-72 sm:border-l" : "w-0"
       }`}
       style={{
         top: `${navHeight}px`,
