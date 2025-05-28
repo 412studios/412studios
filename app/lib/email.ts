@@ -7,6 +7,8 @@ import {
   generateMembershipConfirmationText,
   generateMembershipUsageEmail,
   generateMembershipUsageText,
+  generateBookingReminderEmail,
+  generateBookingReminderText,
   EMAIL_CONSTANTS,
   type BookingDetails,
   type MembershipDetails,
@@ -152,6 +154,21 @@ export const sendMembershipUsageEmail = async (
 ) => {
   const subject = `Membership Hours Used - 412 Studios`;
   const emailContent = generateEmail("membership-usage", usageDetails);
+
+  return sendEmail(to, subject, emailContent.text, emailContent.html);
+};
+
+/**
+ * Send a booking reminder email
+ * @param to Recipient email address
+ * @param bookingDetails Booking information
+ */
+export const sendBookingReminderEmail = async (
+  to: string,
+  bookingDetails: BookingDetails
+) => {
+  const subject = `Reminder: Your studio session is tomorrow at ${bookingDetails.studioName}`;
+  const emailContent = generateEmail("booking-reminder", bookingDetails);
 
   return sendEmail(to, subject, emailContent.text, emailContent.html);
 };

@@ -132,7 +132,8 @@ const BASE_STYLES = `
 export type EmailType =
   | "booking-confirmation"
   | "membership-confirmation"
-  | "membership-usage";
+  | "membership-usage"
+  | "booking-reminder";
 
 // Email data interfaces
 export interface BookingDetails {
@@ -187,7 +188,9 @@ const generateBookingContent = (data: BookingDetails) => ({
       <a href="${EMAIL_CONSTANTS.GOOGLE_MAPS_URL}" class="map-button" target="_blank">Directions</a>
     </div>
     <div class="title-section">
-      <p>For additional information, please contact us at<br /> <a href="mailto:${EMAIL_CONSTANTS.SUPPORT_EMAIL}">${EMAIL_CONSTANTS.SUPPORT_EMAIL}</a>.</p>
+      <p>For additional information, please contact us at</p>
+      <p><a href="mailto:${EMAIL_CONSTANTS.SUPPORT_EMAIL}">${EMAIL_CONSTANTS.SUPPORT_EMAIL}</a></p>
+      <p><a href="tel:+16475402321">647-540-2321</a></p>
     </div>
   `,
   plainText: `
@@ -206,7 +209,9 @@ Studio Location:
 ${EMAIL_CONSTANTS.STUDIO_ADDRESS}
 Directions: ${EMAIL_CONSTANTS.GOOGLE_MAPS_URL}
 
-For additional information, please contact us at ${EMAIL_CONSTANTS.SUPPORT_EMAIL}.
+For additional information, please contact us at
+${EMAIL_CONSTANTS.SUPPORT_EMAIL}
+647-540-2321
   `,
 });
 
@@ -232,7 +237,9 @@ const generateMembershipContent = (data: MembershipDetails) => ({
       <a href="${EMAIL_CONSTANTS.GOOGLE_MAPS_URL}" class="map-button" target="_blank">Directions</a>
     </div>
     <div class="title-section">
-      <p>For additional information, please contact us at<br /> <a href="mailto:${EMAIL_CONSTANTS.SUPPORT_EMAIL}">${EMAIL_CONSTANTS.SUPPORT_EMAIL}</a>.</p>
+      <p>For additional information, please contact us at</p>
+      <p><a href="mailto:${EMAIL_CONSTANTS.SUPPORT_EMAIL}">${EMAIL_CONSTANTS.SUPPORT_EMAIL}</a></p>
+      <p><a href="tel:+16475402321">647-540-2321</a></p>
     </div>
   `,
   plainText: `
@@ -251,7 +258,9 @@ Studio Location:
 ${EMAIL_CONSTANTS.STUDIO_ADDRESS}
 Directions: ${EMAIL_CONSTANTS.GOOGLE_MAPS_URL}
 
-For additional information, please contact us at ${EMAIL_CONSTANTS.SUPPORT_EMAIL}.
+For additional information, please contact us at
+${EMAIL_CONSTANTS.SUPPORT_EMAIL}
+647-540-2321
   `,
 });
 
@@ -280,7 +289,9 @@ const generateUsageContent = (data: UsageDetails) => ({
       <a href="${EMAIL_CONSTANTS.GOOGLE_MAPS_URL}" class="map-button" target="_blank">Directions</a>
     </div>
     <div class="title-section">
-      <p>For additional information, please contact us at<br /> <a href="mailto:${EMAIL_CONSTANTS.SUPPORT_EMAIL}">${EMAIL_CONSTANTS.SUPPORT_EMAIL}</a>.</p>
+      <p>For additional information, please contact us at</p>
+      <p><a href="mailto:${EMAIL_CONSTANTS.SUPPORT_EMAIL}">${EMAIL_CONSTANTS.SUPPORT_EMAIL}</a>/p>
+      <p><a href="tel:+16475402321">647-540-2321</a></p>
     </div>
   `,
   plainText: `
@@ -301,7 +312,60 @@ Studio Location:
 ${EMAIL_CONSTANTS.STUDIO_ADDRESS}
 Directions: ${EMAIL_CONSTANTS.GOOGLE_MAPS_URL}
 
-For additional information, please contact us at ${EMAIL_CONSTANTS.SUPPORT_EMAIL}.
+For additional information, please contact us at
+${EMAIL_CONSTANTS.SUPPORT_EMAIL}
+647-540-2321
+  `,
+});
+
+const generateReminderContent = (data: BookingDetails) => ({
+  title: "Session Reminder",
+  content: `
+    <div class="title-section">
+      <h1>Session Reminder</h1>
+      <p>Your studio session is tomorrow at ${EMAIL_CONSTANTS.COMPANY_NAME}!</p>
+    </div>
+    <div class="details-section">
+      <h3>Session Details:</h3>
+      <p><strong>Studio:</strong> ${data.studioName}</p>
+      <p><strong>Date:</strong> ${data.date}</p>
+      <p><strong>Time:</strong> ${data.startTime} - ${data.endTime}</p>
+      <p><strong>Duration:</strong> ${data.duration} hours</p>
+      <p><strong>Engineering Services:</strong> ${data.engineeringIncluded ? "Included" : "Not included"}</p>
+      <p><strong>Total Price:</strong> $${data.price}.00 CAD</p>
+    </div>
+    <div class="location-section">
+      <h3>Studio Location:</h3>
+      <p><strong>Address:</strong> ${EMAIL_CONSTANTS.STUDIO_ADDRESS}</p>
+      <a href="${EMAIL_CONSTANTS.GOOGLE_MAPS_URL}" class="map-button" target="_blank">Directions</a>
+    </div>
+    <div class="title-section">
+      <p>Looking forward to seeing you tomorrow!</p>
+      <p>For questions, contact us at:</p>
+      <p><a href="mailto:${EMAIL_CONSTANTS.SUPPORT_EMAIL}">${EMAIL_CONSTANTS.SUPPORT_EMAIL}</a></p>
+      <p><a href="tel:+16475402321">647-540-2321</a></p>
+    </div>
+  `,
+  plainText: `
+Session Reminder
+Your studio session is tomorrow at ${EMAIL_CONSTANTS.COMPANY_NAME}!
+
+Session Details:
+- Studio: ${data.studioName}
+- Date: ${data.date}
+- Time: ${data.startTime} - ${data.endTime}
+- Duration: ${data.duration} hours
+- Engineering Services: ${data.engineeringIncluded ? "Included" : "Not included"}
+- Total Price: $${data.price}.00 CAD
+
+Studio Location:
+${EMAIL_CONSTANTS.STUDIO_ADDRESS}
+Directions: ${EMAIL_CONSTANTS.GOOGLE_MAPS_URL}
+
+Looking forward to seeing you tomorrow! 
+For questions, contact us at:
+${EMAIL_CONSTANTS.SUPPORT_EMAIL}
+647-540-2321
   `,
 });
 
@@ -321,6 +385,9 @@ export const generateEmail = (
       break;
     case "membership-usage":
       emailContent = generateUsageContent(data as UsageDetails);
+      break;
+    case "booking-reminder":
+      emailContent = generateReminderContent(data as BookingDetails);
       break;
     default:
       throw new Error(`Unknown email type: ${type}`);
@@ -380,3 +447,9 @@ export const generateMembershipUsageEmail = (data: UsageDetails) =>
 
 export const generateMembershipUsageText = (data: UsageDetails) =>
   generateEmail("membership-usage", data).text;
+
+export const generateBookingReminderEmail = (data: BookingDetails) =>
+  generateEmail("booking-reminder", data).html;
+
+export const generateBookingReminderText = (data: BookingDetails) =>
+  generateEmail("booking-reminder", data).text;
