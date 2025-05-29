@@ -29,102 +29,221 @@ const getLOGO_PNG = () => `
 />
 `;
 
-// Base email styles
+// Base email styles with dark mode prevention
 const BASE_STYLES = `
-  body { 
-    font-family: Helvetica; 
-    line-height: 1.6; 
-    color: #333; 
-    margin: 0;
-    padding: 0;
-    background-color: #f4f4f4;
-    
+  /* Dark mode prevention for all email clients */
+  [data-ogsc] body,
+  [data-ogsc] .email-container,
+  [data-ogsc] .content,
+  [data-ogsc] .details-section,
+  [data-ogsc] .location-section,
+  [data-ogsc] h1,
+  [data-ogsc] h3,
+  [data-ogsc] p,
+  [data-ogsc] a,
+  [data-ogsc] strong {
+    background-color: white !important;
+    color: #333 !important;
   }
+
+  /* Outlook dark mode prevention */
+  [data-ogsb] body,
+  [data-ogsb] .email-container,
+  [data-ogsb] .content,
+  [data-ogsb] .details-section,
+  [data-ogsb] .location-section,
+  [data-ogsb] h1,
+  [data-ogsb] h3,
+  [data-ogsb] p,
+  [data-ogsb] a,
+  [data-ogsb] strong {
+    background-color: white !important;
+    color: #333 !important;
+  }
+
+  /* Gmail dark mode prevention */
+  [data-ogsc] .go-button,
+  [data-ogsb] .go-button {
+    background-color: #111 !important;
+    color: #f9f9f9 !important;
+  }
+
+  /* Force light mode using CSS custom properties */
+  :root {
+    color-scheme: light only;
+    supported-color-schemes: light;
+  }
+
+  /* Meta tag approach for dark mode prevention */
+  @media (prefers-color-scheme: dark) {
+    body,
+    .email-container,
+    .content,
+    .details-section,
+    .location-section,
+    h1,
+    h3,
+    p,
+    a,
+    strong {
+      background-color: white !important;
+      color: #333 !important;
+    }
+    
+    .header{
+      background-color: #111 !important;
+    }
+    .footer {
+      background-color: #111 !important;
+    }
+    .footer p {
+      background-color: #111 !important;
+      color: #fff !important;
+    }
+    
+    .map-button {
+      background-color: #111 !important;
+      color: #f9f9f9 !important;
+    }
+  }
+
+  body { 
+    font-family: Helvetica, Arial, sans-serif !important; 
+    line-height: 1.6 !important; 
+    color: #333 !important; 
+    margin: 0 !important;
+    padding: 0 !important;
+    background-color: #f4f4f4 !important;
+    color-scheme: light !important;
+    supported-color-schemes: light !important;
+  }
+  
   .email-container { 
-    max-width: 600px; 
-    margin: 0 auto; 
-    background-color: white;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 600px !important; 
+    margin: 0 auto !important; 
+    background-color: white !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
     border: 1px solid #111 !important;
   }
+  
   .header { 
-    background-color: #222; 
-    color: #fff; 
-    padding: 30px; 
-    display: flex;
-    justify-content: center;
+    padding: 30px !important; 
+    display: flex !important;
+    justify-content: center !important;
   }
+  
   .header svg {
-    heigh: 100%;
-    max-heigth: 130px;
-    width: auto;
+    height: 100% !important;
+    max-height: 130px !important;
+    width: auto !important;
   }
+  
   h1 {
-    font-size: 28px;
-    font-weight: 700;
+    font-size: 28px !important;
+    font-weight: 700 !important;
     margin: 0 !important;
+    color: #333 !important;
   }
+  
   h3 {
-    color: #333;
-    font-size: 18px;
-    font-weight: 700;
+    color: #333 !important;
+    font-size: 18px !important;
+    font-weight: 700 !important;
     margin: 0 !important;
   }
+  
   p {
-    font-size: 14px;
+    font-size: 14px !important;
     margin: 0 !important;
-    color: #333 !important
+    color: #333 !important;
   }
+  
   a {
-    color: #333 !important
+    color: #333 !important;
+    text-decoration: underline !important;
   }
+  
   strong {
-    font-weight: 700;
+    font-weight: 700 !important;
+    color: #333 !important;
   }
+  
   .content { 
-    padding: 15px; 
+    padding: 15px !important; 
+    background-color: white !important;
   }
+  
   .title-section {
-    text-align: center;
+    text-align: center !important;
+    background-color: white !important;
   }
+  
   .details-section { 
-    background-color: #f9f9f9; 
-    padding: 15px; 
-    margin: 15px 0; 
-    border-radius: 12px;
+    background-color: #f9f9f9 !important; 
+    padding: 15px !important; 
+    margin: 15px 0 !important; 
+    border-radius: 12px !important;
   }  
+  
   .location-section { 
-    background-color: #f9f9f9; 
-    padding: 15px; 
-    margin: 15px 0; 
-    border-radius: 12px;
+    background-color: #f9f9f9 !important; 
+    padding: 15px !important; 
+    margin: 15px 0 !important; 
+    border-radius: 12px !important;
   }
+  
   .map-button { 
-    display: inline-block; 
-    background-color: #111;
+    display: inline-block !important; 
+    background-color: #111 !important;
     color: #f9f9f9 !important; 
-    padding: 1px 45px; 
-    text-decoration: none; 
-    border-radius: 30px; 
-    margin-top: 10px;
-    font-weight: bold;
-    font-size: 14px;
+    padding: 10px 45px !important; 
+    text-decoration: none !important; 
+    border-radius: 30px !important; 
+    margin-top: 10px !important;
+    font-weight: bold !important;
+    font-size: 14px !important;
   }
+  
   .map-button:hover {
-    background-color: #333;
-    text-decoration: none;
-    transition: background-color 0.5s ease-in-out;
+    background-color: #333 !important;
+    text-decoration: none !important;
+    transition: background-color 0.5s ease-in-out !important;
   }
+  
   .footer { 
-    text-align: center; 
-    padding: 20px; 
-    background-color: #111;
-    font-size: 12px; 
+    text-align: center !important; 
+    padding: 20px !important; 
+    background-color: #111 !important;
+    font-size: 12px !important; 
   }
+  
   .footer p {
     color: #fff !important;
+  }
+
+  /* Additional mobile-specific fixes */
+  @media only screen and (max-width: 600px) {
+    .email-container {
+      width: 100% !important;
+      margin: 0 !important;
+      border-radius: 0 !important;
+    }
+    
+    .header {
+      padding: 20px !important;
+    }
+    
+    .content {
+      padding: 10px !important;
+    }
+    
+    .details-section,
+    .location-section {
+      margin: 10px 0 !important;
+      padding: 12px !important;
+    }
   }
 `;
 
@@ -290,7 +409,7 @@ const generateUsageContent = (data: UsageDetails) => ({
     </div>
     <div class="title-section">
       <p>For additional information, please contact us at</p>
-      <p><a href="mailto:${EMAIL_CONSTANTS.SUPPORT_EMAIL}">${EMAIL_CONSTANTS.SUPPORT_EMAIL}</a>/p>
+      <p><a href="mailto:${EMAIL_CONSTANTS.SUPPORT_EMAIL}">${EMAIL_CONSTANTS.SUPPORT_EMAIL}</a></p>
       <p><a href="tel:+16475402321">647-540-2321</a></p>
     </div>
   `,
@@ -399,6 +518,8 @@ export const generateEmail = (
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light">
+  <meta name="supported-color-schemes" content="light">
   <title>${emailContent.title}</title>
   <style>
     ${BASE_STYLES}
