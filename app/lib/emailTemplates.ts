@@ -14,85 +14,12 @@ export const EMAIL_CONSTANTS = {
         : "http://localhost:3000",
 };
 
-// Style map for inline replacements
-const EMAIL_STYLE_MAP: Record<string, string> = {
-  "email-container": `
-    max-width: 640px;
-    margin: 0 auto;
-    overflow: hidden;
-    border: 1px solid #111;
-    border-radius: 6px;
-  `,
-  "email-header": `
-    background-color: #111;
-    color: white;
-    padding: 15px;
-    text-align: center;
-  `,
-  "email-content": `
-    padding: 15px;
-    background-color: rgb(247, 247, 247);
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-  `,
-  "email-footer": `
-    background-color: #111;
-    color: white;
-    padding: 15px;
-    text-align: center;
-  `,
-  "email-section": `
-    padding: 15px;
-    background-color: rgb(239, 239, 239);
-    border-radius: 6px;
-  `,
-  "map-button": `
-    display: inline-block;
-    padding: 10px 15px;
-    background-color: #111;
-    color: white;
-    text-decoration: none;
-    border-radius: 4px;
-    margin-top: 10px;
-  `,
-};
-
-// Utility to replace class attributes with inline styles
-function inlineEmailStyles(html: string): string {
-  return html.replace(/class="([^"]+)"/g, (_, classNames: string) => {
-    const combinedStyles = classNames
-      .split(/\s+/)
-      .map((cls) => EMAIL_STYLE_MAP[cls] || "")
-      .join(" ")
-      .trim();
-
-    return combinedStyles ? `style="${combinedStyles}"` : "";
-  });
-}
-
-const getLOGO_PNG = () => `
-<img 
-  src="${EMAIL_CONSTANTS.BASE_URL}/icons/Logo.png" 
-  alt="412 Studios" 
-  style="
-    height: auto;
-    max-height: 60px;
-    width: auto;
-    display: block;
-    margin: 0 auto;
-  "
-/>
-`;
-
-// Email types
 export type EmailType =
   | "booking-confirmation"
   | "membership-confirmation"
   | "membership-usage"
   | "booking-reminder";
 
-// Email data interfaces
 export interface BookingDetails {
   studioName: string;
   date: string;
@@ -122,101 +49,128 @@ export interface UsageDetails {
   bookingId: string;
 }
 
-const generateBookingContent = (data: BookingDetails) => ({
-  title: "Booking Confirmation",
-  content: `
-    <div class="email-section">
-      <h1>Booking Confirmed</h1>
-      <p>Thank you for choosing ${EMAIL_CONSTANTS.COMPANY_NAME}!</p>
-    </div>
-    <div class="email-section">
-      <h3>Booking Details:</h3>
-      <p><strong>Studio:</strong> ${data.studioName}</p>
-      <p><strong>Date:</strong> ${data.date}</p>
-      <p><strong>Time:</strong> ${data.startTime} - ${data.endTime}</p>
-      <p><strong>Duration:</strong> ${data.duration} hours</p>
-      <p><strong>Engineering Services:</strong> ${data.engineeringIncluded ? "Included" : "Not included"}</p>
-      <p><strong>Total Price:</strong> $${data.price}.00 CAD</p>
-    </div>
-    <div class="email-section">
-      <h3>Studio Location:</h3>
-      <p><strong>Address:</strong> ${EMAIL_CONSTANTS.STUDIO_ADDRESS}</p>
-      <a href="${EMAIL_CONSTANTS.GOOGLE_MAPS_URL}" class="map-button" target="_blank">Directions</a>
-    </div>
-    <div class="email-section">
-      <p>For additional information, please contact us at</p>
-      <p><a href="mailto:${EMAIL_CONSTANTS.SUPPORT_EMAIL}">${EMAIL_CONSTANTS.SUPPORT_EMAIL}</a></p>
-      <p><a href="tel:+16475402321">647-540-2321</a></p>
-    </div>
+// Style map for inline replacements
+const EMAIL_STYLE_MAP: Record<string, string> = {
+  "main-wrapper": `
+    width: 100%;
+    max-width: 640px;
+    margin: 0 auto;
+    border: 1px solid #111;
+    background-color: #f7f7f7;
   `,
-  plainText: `
-Booking Confirmed
-Thank you for choosing ${EMAIL_CONSTANTS.COMPANY_NAME}!
-
-Booking Details:
-- Studio: ${data.studioName}
-- Date: ${data.date}
-- Time: ${data.startTime} - ${data.endTime}
-- Duration: ${data.duration} hours
-- Engineering Services: ${data.engineeringIncluded ? "Included" : "Not included"}
-- Total Price: $${data.price}.00 CAD
-
-Studio Location:
-${EMAIL_CONSTANTS.STUDIO_ADDRESS}
-Directions: ${EMAIL_CONSTANTS.GOOGLE_MAPS_URL}
-
-For additional information, please contact us at
-${EMAIL_CONSTANTS.SUPPORT_EMAIL}
-647-540-2321
+  header: `
+    background-color: #111;
+    color: #ffffff;
+    padding: 20px;
+    text-align: center;
   `,
-});
+  section: `
+    padding: 15px;
+    background-color: #efefef;
+  `,
+  footer: `
+    background-color: #111;
+    color: white;
+    text-align: center;
+    padding: 15px;
+  `,
+  link: `
+    color: #0000EE;
+    text-decoration: underline;
+  `,
+};
+
+function inlineEmailStyles(html: string): string {
+  return html.replace(/class="([^"]+)"/g, (_, classNames: string) => {
+    const combinedStyles = classNames
+      .split(/\s+/)
+      .map((cls) => EMAIL_STYLE_MAP[cls] || "")
+      .join(" ")
+      .trim();
+
+    return combinedStyles ? `style="${combinedStyles}"` : "";
+  });
+}
+
+const getLOGO_PNG = () => `
+<img 
+  src="${EMAIL_CONSTANTS.BASE_URL}/icons/Logo.png" 
+  alt="412 Studios" 
+  style="height:auto;max-height:60px;width:auto;display:block;margin:0 auto;"/>
+`;
 
 export const generateEmail = (
   type: EmailType,
   data: BookingDetails | MembershipDetails | UsageDetails
 ) => {
-  let emailContent;
-
-  switch (type) {
-    case "booking-confirmation":
-      emailContent = generateBookingContent(data as BookingDetails);
-      break;
-    default:
-      throw new Error(`Unknown email type: ${type}`);
+  if (type !== "booking-confirmation") {
+    throw new Error(`Email type not yet supported: ${type}`);
   }
 
-  const rawHtml = `
+  const booking = data as BookingDetails;
+  const html = `
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${emailContent.title}</title>
+  <title>Booking Confirmation</title>
 </head>
 <body>
-  <div class="email-container">
-    <div class="email-header">
-      ${getLOGO_PNG()}
-    </div>
-    <div class="email-content">
-      ${emailContent.content}
-    </div>
-    <div class="email-footer">
-      <p>© ${new Date().getFullYear()} ${EMAIL_CONSTANTS.COMPANY_NAME}. All rights reserved.</p>
-      <p>${EMAIL_CONSTANTS.STUDIO_ADDRESS}</p>
-    </div>
-  </div>
+  <table class="main-wrapper" cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td class="header">
+        ${getLOGO_PNG()}
+      </td>
+    </tr>
+    <tr>
+      <td class="section">
+        <h1 style="margin:0;color:#000;">Booking Confirmed</h1>
+        <p style="color:#000;">Thank you for choosing ${EMAIL_CONSTANTS.COMPANY_NAME}!</p>
+      </td>
+    </tr>
+    <tr>
+      <td class="section">
+        <h3 style="margin:0;color:#000;">Booking Details:</h3>
+        <p style="color:#000;"><strong>Studio:</strong> ${booking.studioName}</p>
+        <p style="color:#000;"><strong>Date:</strong> ${booking.date}</p>
+        <p style="color:#000;"><strong>Time:</strong> ${booking.startTime} - ${booking.endTime}</p>
+        <p style="color:#000;"><strong>Duration:</strong> ${booking.duration} hours</p>
+        <p style="color:#000;"><strong>Engineering Services:</strong> ${booking.engineeringIncluded ? "Included" : "Not included"}</p>
+        <p style="color:#000;"><strong>Total Price:</strong> $${booking.price}.00 CAD</p>
+      </td>
+    </tr>
+    <tr>
+      <td class="section">
+        <h3 style="margin:0;color:#000;">Studio Location:</h3>
+        <p style="color:#000;"><strong>Address:</strong> <a class="link" href="${EMAIL_CONSTANTS.GOOGLE_MAPS_URL}" target="_blank">${EMAIL_CONSTANTS.STUDIO_ADDRESS}</a></p>
+        <p><a class="link" href="${EMAIL_CONSTANTS.GOOGLE_MAPS_URL}" target="_blank" style="display:inline-block;padding:10px 15px;background:#111;color:#fff;text-decoration:none;border-radius:4px;margin-top:10px;">Directions</a></p>
+      </td>
+    </tr>
+    <tr>
+      <td class="section">
+        <p style="color:#000;">For additional information, please contact us at:</p>
+        <p><a class="link" href="mailto:${EMAIL_CONSTANTS.SUPPORT_EMAIL}">${EMAIL_CONSTANTS.SUPPORT_EMAIL}</a></p>
+        <p><a class="link" href="tel:+16475402321">647-540-2321</a></p>
+      </td>
+    </tr>
+    <tr>
+      <td class="footer">
+        <p>© ${new Date().getFullYear()} ${EMAIL_CONSTANTS.COMPANY_NAME}. All rights reserved.</p>
+        <p><a class="link" href="${EMAIL_CONSTANTS.GOOGLE_MAPS_URL}" target="_blank">${EMAIL_CONSTANTS.STUDIO_ADDRESS}</a></p>
+      </td>
+    </tr>
+  </table>
 </body>
 </html>
   `;
 
   return {
-    html: inlineEmailStyles(rawHtml.trim()),
-    text: emailContent.plainText.trim(),
+    html: inlineEmailStyles(html.trim()),
+    text: `Booking Confirmed\nThank you for choosing ${EMAIL_CONSTANTS.COMPANY_NAME}!\n\nBooking Details:\n- Studio: ${booking.studioName}\n- Date: ${booking.date}\n- Time: ${booking.startTime} - ${booking.endTime}\n- Duration: ${booking.duration} hours\n- Engineering Services: ${booking.engineeringIncluded ? "Included" : "Not included"}\n- Total Price: $${booking.price}.00 CAD\n\nStudio Location:\n${EMAIL_CONSTANTS.STUDIO_ADDRESS}\nDirections: ${EMAIL_CONSTANTS.GOOGLE_MAPS_URL}\n\nFor additional information, please contact us at\n${EMAIL_CONSTANTS.SUPPORT_EMAIL}\n647-540-2321`,
   };
 };
 
-// Convenience functions for backwards compatibility
 export const generateBookingConfirmationEmail = (data: BookingDetails) =>
   generateEmail("booking-confirmation", data).html;
 
