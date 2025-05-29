@@ -14,15 +14,13 @@ export const EMAIL_CONSTANTS = {
         : "http://localhost:3000",
 };
 
-// 412 Studios Logo PNG (email-compatible)
 const getLOGO_PNG = () => `
 <img 
-  src="${EMAIL_CONSTANTS.BASE_URL}/icons/Logo.png" 
+  src="${EMAIL_CONSTANTS.BASE_URL}/images/email-head.gif" 
   alt="412 Studios" 
   style="
+    width: 100%;
     height: auto;
-    max-height: 60px;
-    width: auto;
     display: block;
     margin: 0 auto;
   "
@@ -33,8 +31,7 @@ const getLOGO_PNG = () => `
 const INLINE_STYLES = {
   container:
     "width: 100%; max-width: 640px; margin: 0 auto; font-family: Arial, sans-serif; line-height: 1.6;",
-  header:
-    "background-color: #111; color: white; padding: 15px; text-align: center;",
+  header: "background-color: #111; color: white; text-align: center;",
   content: "padding: 15px; background-color: rgb(247, 247, 247);",
   section:
     "padding: 15px; background-color: rgb(239, 239, 239); border-radius: 6px; margin-bottom: 15px;",
