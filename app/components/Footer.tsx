@@ -17,7 +17,6 @@ export function Footer() {
 
         {/* Grid Layout */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-[12px] p-2">
-          {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-[12px] p-2 max-w-[1400px]"> */}
           {/* Column 2: Contact Info */}
           <div>
             <h3 className="font-semibold mb-2">Contact</h3>

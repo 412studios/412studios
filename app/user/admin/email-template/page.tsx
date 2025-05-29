@@ -160,7 +160,7 @@ export default async function EmailTemplate() {
 
   const bookingDetails = {
     studioName: "Studio A",
-    date: new Date().toDateString(),
+    date: "Mon Dec 25 2023",
     startTime: "2:00 PM",
     endTime: "5:00 PM",
     duration: 3,
