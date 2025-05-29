@@ -309,11 +309,8 @@ export const generateEmail = (
                     <p style="${INLINE_STYLES.p}"><a href="mailto:${EMAIL_CONSTANTS.SUPPORT_EMAIL}" style="${INLINE_STYLES.link}">${EMAIL_CONSTANTS.SUPPORT_EMAIL}</a></p>
                     <p style="${INLINE_STYLES.p}"><a href="tel:+16475402321" style="${INLINE_STYLES.link}">647-540-2321</a></p>
                   </div>
-                  <div style="${INLINE_STYLES.section}">
+                  <div style="${INLINE_STYLES.section} margin-bottom: 0px">
                     <p style="${INLINE_STYLES.p}; text-align: center;">© ${new Date().getFullYear()} ${EMAIL_CONSTANTS.COMPANY_NAME}. All rights reserved.</p>
-                    <p style="${INLINE_STYLES.p}; text-align: center;">
-                      ${EMAIL_CONSTANTS.STUDIO_ADDRESS}
-                    </p>
                   </div>
                 </td>
               </tr>
