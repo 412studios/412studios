@@ -31,17 +31,22 @@ const getLOGO_PNG = () => `
 
 // Email-compatible inline styles
 const INLINE_STYLES = {
-  container: "max-width: 640px; margin: 0 auto; font-family: Arial, sans-serif; line-height: 1.6;",
-  header: "background-color: #111; color: white; padding: 15px; text-align: center;",
+  container:
+    "width: 100%; max-width: 640px; margin: 0 auto; font-family: Arial, sans-serif; line-height: 1.6;",
+  header:
+    "background-color: #111; color: white; padding: 15px; text-align: center;",
   content: "padding: 15px; background-color: rgb(247, 247, 247);",
-  section: "padding: 15px; background-color: rgb(239, 239, 239); border-radius: 6px; margin-bottom: 15px;",
+  section:
+    "padding: 15px; background-color: rgb(239, 239, 239); border-radius: 6px; margin-bottom: 15px;",
   h1: "font-size: 24px; font-weight: bold; margin: 0 0 10px 0; color: #333;",
   h3: "font-size: 16px; font-weight: bold; margin: 0 0 10px 0; color: #333;",
   p: "font-size: 14px; margin: 5px 0; color: #333;",
   strong: "font-weight: bold;",
-  button: "display: inline-block; background-color: #111; color: white; padding: 8px 20px; border-radius: 25px; text-decoration: none; margin-top: 10px;",
+  button:
+    "display: inline-block; background-color: #111; color: white; padding: 2px 30px; border-radius: 25px; text-decoration: none; margin-top: 10px;",
   link: "color: #111; text-decoration: none;",
-  footer: "background-color: #111; color: white; padding: 15px; text-align: center;",
+  footer:
+    "background-color: #111; color: white; padding: 15px; text-align: center;",
 };
 
 // Email types
@@ -278,41 +283,45 @@ export const generateEmail = (
   <meta name="supported-color-schemes" content="light">
   <title>${emailContent.title}</title>
 </head>
-<body style="margin: 0; padding: 0; background-color: #f4f4f4;">
+<body style="margin: 0; padding: 0;">
   <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
-    <tr>
-      <td align="center" style="padding: 20px 0;">
-        <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="${INLINE_STYLES.container}">
-          <tr>
-            <td style="${INLINE_STYLES.header}">
-              ${getLOGO_PNG()}
-            </td>
-          </tr>
-          <tr>
-            <td style="${INLINE_STYLES.content}">
-              ${emailContent.content}
-              <div style="${INLINE_STYLES.section}">
-                <h3 style="${INLINE_STYLES.h3}">Studio Location:</h3>
-                <p style="${INLINE_STYLES.p}"><span style="${INLINE_STYLES.strong}">Address:</span></p>
-                <p style="${INLINE_STYLES.p}">${EMAIL_CONSTANTS.STUDIO_ADDRESS}</p>
-                <p style="${INLINE_STYLES.p}"><a href="${EMAIL_CONSTANTS.GOOGLE_MAPS_URL}" style="${INLINE_STYLES.button}" target="_blank">Get Directions</a></p>
-              </div>
-              <div style="${INLINE_STYLES.section}">
-                <p style="${INLINE_STYLES.p}">For additional information, please contact us at:</p>
-                <p style="${INLINE_STYLES.p}"><a href="mailto:${EMAIL_CONSTANTS.SUPPORT_EMAIL}" style="${INLINE_STYLES.link}">${EMAIL_CONSTANTS.SUPPORT_EMAIL}</a></p>
-                <p style="${INLINE_STYLES.p}"><a href="tel:+16475402321" style="${INLINE_STYLES.link}">647-540-2321</a></p>
-              </div>
-              <div style="${INLINE_STYLES.section}">
-                <p style="${INLINE_STYLES.p}; text-align: center;">© ${new Date().getFullYear()} ${EMAIL_CONSTANTS.COMPANY_NAME}. All rights reserved.</p>
-                <p style="${INLINE_STYLES.p}; text-align: center;">
-                  ${EMAIL_CONSTANTS.STUDIO_ADDRESS}
-                </p>
-              </div>
-            </td>
-          </tr>
-        </table>
-      </td>
-    </tr>
+    <tbody>
+      <tr>
+        <td align="center">
+          <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="${INLINE_STYLES.container}">
+            <tbody>
+              <tr>
+                <td style="${INLINE_STYLES.header}">
+                  ${getLOGO_PNG()}
+                </td>
+              </tr>
+              <tr>
+                <td style="${INLINE_STYLES.content}">
+                  ${emailContent.content}
+                  <div style="${INLINE_STYLES.section}">
+                    <h3 style="${INLINE_STYLES.h3}">Studio Location:</h3>
+                    <p style="${INLINE_STYLES.p}"><span style="${INLINE_STYLES.strong}">Address:</span></p>
+                    <p style="${INLINE_STYLES.p}">${EMAIL_CONSTANTS.STUDIO_ADDRESS}</p>
+                    <p style="${INLINE_STYLES.p}"><a href="${EMAIL_CONSTANTS.GOOGLE_MAPS_URL}" style="${INLINE_STYLES.button}" target="_blank">Get Directions</a></p>
+                  </div>
+                  <div style="${INLINE_STYLES.section}">
+                    <p style="${INLINE_STYLES.p}">For additional information, please contact us at:</p>
+                    <p style="${INLINE_STYLES.p}"><a href="mailto:${EMAIL_CONSTANTS.SUPPORT_EMAIL}" style="${INLINE_STYLES.link}">${EMAIL_CONSTANTS.SUPPORT_EMAIL}</a></p>
+                    <p style="${INLINE_STYLES.p}"><a href="tel:+16475402321" style="${INLINE_STYLES.link}">647-540-2321</a></p>
+                  </div>
+                  <div style="${INLINE_STYLES.section}">
+                    <p style="${INLINE_STYLES.p}; text-align: center;">© ${new Date().getFullYear()} ${EMAIL_CONSTANTS.COMPANY_NAME}. All rights reserved.</p>
+                    <p style="${INLINE_STYLES.p}; text-align: center;">
+                      ${EMAIL_CONSTANTS.STUDIO_ADDRESS}
+                    </p>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+      </tr>
+    </tbody>
   </table>
 </body>
 </html>
