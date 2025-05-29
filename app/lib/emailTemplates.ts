@@ -29,7 +29,6 @@ const getLOGO_PNG = () => `
 />
 `;
 
-// Base email styles with dark mode prevention
 const BASE_STYLES = `
   .email-container {
     max-width: 640px !Important;
@@ -46,7 +45,7 @@ const BASE_STYLES = `
   .email-content {
     padding: 15px !important;
     background-color:rgb(247, 247, 247) !important;
-    display: flex !important; 
+    display: flex !important;  
     flex-direction: column !important; 
     gap: 15px !important;
     
@@ -62,11 +61,9 @@ const BASE_STYLES = `
     background-color:rgb(239, 239, 239) !important;
     border-radius: 6px !important;
   }
-
   strong {
     font-weight: 700 !important;
   }
-
 `;
 
 // Email types
@@ -340,8 +337,6 @@ export const generateEmail = (
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="color-scheme" content="light">
-  <meta name="supported-color-schemes" content="light">
   <title>${emailContent.title}</title>
   <style>
     ${BASE_STYLES}
