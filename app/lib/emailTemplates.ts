@@ -31,220 +31,42 @@ const getLOGO_PNG = () => `
 
 // Base email styles with dark mode prevention
 const BASE_STYLES = `
-  /* Dark mode prevention for all email clients */
-  [data-ogsc] body,
-  [data-ogsc] .email-container,
-  [data-ogsc] .content,
-  [data-ogsc] .details-section,
-  [data-ogsc] .location-section,
-  [data-ogsc] h1,
-  [data-ogsc] h3,
-  [data-ogsc] p,
-  [data-ogsc] a,
-  [data-ogsc] strong {
-    background-color: white !important;
-    color: #333 !important;
+  .email-container {
+    max-width: 640px !Important;
+    margin: 0 auto !Important;
+    overflow: hidden !Important;
+    border: 1px solid #111 !Important;
+    border-radius: 6px !important;
   }
-
-  /* Outlook dark mode prevention */
-  [data-ogsb] body,
-  [data-ogsb] .email-container,
-  [data-ogsb] .content,
-  [data-ogsb] .details-section,
-  [data-ogsb] .location-section,
-  [data-ogsb] h1,
-  [data-ogsb] h3,
-  [data-ogsb] p,
-  [data-ogsb] a,
-  [data-ogsb] strong {
-    background-color: white !important;
-    color: #333 !important;
-  }
-
-  /* Gmail dark mode prevention */
-  [data-ogsc] .go-button,
-  [data-ogsb] .go-button {
+  .email-header {
     background-color: #111 !important;
-    color: #f9f9f9 !important;
+    color: white !important;
+    padding: 15px !important;
   }
-
-  /* Force light mode using CSS custom properties */
-  :root {
-    color-scheme: light only;
-    supported-color-schemes: light;
-  }
-
-  /* Meta tag approach for dark mode prevention */
-  @media (prefers-color-scheme: dark) {
-    body,
-    .email-container,
-    .content,
-    .details-section,
-    .location-section,
-    h1,
-    h3,
-    p,
-    a,
-    strong {
-      background-color: white !important;
-      color: #333 !important;
-    }
+  .email-content {
+    padding: 15px !important;
+    background-color:rgb(247, 247, 247) !important;
+    display: flex !important; 
+    flex-direction: column !important; 
+    gap: 15px !important;
     
-    .header{
-      background-color: #111 !important;
-    }
-    .footer {
-      background-color: #111 !important;
-    }
-    .footer p {
-      background-color: #111 !important;
-      color: #fff !important;
-    }
-    
-    .map-button {
-      background-color: #111 !important;
-      color: #f9f9f9 !important;
-    }
+  }
+  .email-footer {
+    background-color: #111 !important;
+    color: white !important;
+    padding: 15px !important;
+    text-align: center !important;
+  }
+  .email-section {
+    padding: 15px !important;
+    background-color:rgb(239, 239, 239) !important;
+    border-radius: 6px !important;
   }
 
-  body { 
-    font-family: Helvetica, Arial, sans-serif !important; 
-    line-height: 1.6 !important; 
-    color: #333 !important; 
-    margin: 0 !important;
-    padding: 0 !important;
-    background-color: #f4f4f4 !important;
-    color-scheme: light !important;
-    supported-color-schemes: light !important;
-  }
-  
-  .email-container { 
-    max-width: 600px !important; 
-    margin: 0 auto !important; 
-    background-color: white !important;
-    border-radius: 8px !important;
-    overflow: hidden !important;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
-    border: 1px solid #111 !important;
-  }
-  
-  .header { 
-    padding: 30px !important; 
-    display: flex !important;
-    justify-content: center !important;
-  }
-  
-  .header svg {
-    height: 100% !important;
-    max-height: 130px !important;
-    width: auto !important;
-  }
-  
-  h1 {
-    font-size: 28px !important;
-    font-weight: 700 !important;
-    margin: 0 !important;
-    color: #333 !important;
-  }
-  
-  h3 {
-    color: #333 !important;
-    font-size: 18px !important;
-    font-weight: 700 !important;
-    margin: 0 !important;
-  }
-  
-  p {
-    font-size: 14px !important;
-    margin: 0 !important;
-    color: #333 !important;
-  }
-  
-  a {
-    color: #333 !important;
-    text-decoration: underline !important;
-  }
-  
   strong {
     font-weight: 700 !important;
-    color: #333 !important;
-  }
-  
-  .content { 
-    padding: 15px !important; 
-    background-color: white !important;
-  }
-  
-  .title-section {
-    text-align: center !important;
-    background-color: white !important;
-  }
-  
-  .details-section { 
-    background-color: #f9f9f9 !important; 
-    padding: 15px !important; 
-    margin: 15px 0 !important; 
-    border-radius: 12px !important;
-  }  
-  
-  .location-section { 
-    background-color: #f9f9f9 !important; 
-    padding: 15px !important; 
-    margin: 15px 0 !important; 
-    border-radius: 12px !important;
-  }
-  
-  .map-button { 
-    display: inline-block !important; 
-    background-color: #111 !important;
-    color: #f9f9f9 !important; 
-    padding: 10px 45px !important; 
-    text-decoration: none !important; 
-    border-radius: 30px !important; 
-    margin-top: 10px !important;
-    font-weight: bold !important;
-    font-size: 14px !important;
-  }
-  
-  .map-button:hover {
-    background-color: #333 !important;
-    text-decoration: none !important;
-    transition: background-color 0.5s ease-in-out !important;
-  }
-  
-  .footer { 
-    text-align: center !important; 
-    padding: 20px !important; 
-    background-color: #111 !important;
-    font-size: 12px !important; 
-  }
-  
-  .footer p {
-    color: #fff !important;
   }
 
-  /* Additional mobile-specific fixes */
-  @media only screen and (max-width: 600px) {
-    .email-container {
-      width: 100% !important;
-      margin: 0 !important;
-      border-radius: 0 !important;
-    }
-    
-    .header {
-      padding: 20px !important;
-    }
-    
-    .content {
-      padding: 10px !important;
-    }
-    
-    .details-section,
-    .location-section {
-      margin: 10px 0 !important;
-      padding: 12px !important;
-    }
-  }
 `;
 
 // Email types
@@ -288,11 +110,11 @@ export interface UsageDetails {
 const generateBookingContent = (data: BookingDetails) => ({
   title: "Booking Confirmation",
   content: `
-    <div class="title-section">
+    <div class="email-section">
       <h1>Booking Confirmed</h1>
       <p>Thank you for choosing ${EMAIL_CONSTANTS.COMPANY_NAME}!</p>
     </div>
-    <div class="details-section">
+    <div class="email-section">
       <h3>Booking Details:</h3>
       <p><strong>Studio:</strong> ${data.studioName}</p>
       <p><strong>Date:</strong> ${data.date}</p>
@@ -301,12 +123,12 @@ const generateBookingContent = (data: BookingDetails) => ({
       <p><strong>Engineering Services:</strong> ${data.engineeringIncluded ? "Included" : "Not included"}</p>
       <p><strong>Total Price:</strong> $${data.price}.00 CAD</p>
     </div>
-    <div class="location-section">
+    <div class="email-section">
       <h3>Studio Location:</h3>
       <p><strong>Address:</strong> ${EMAIL_CONSTANTS.STUDIO_ADDRESS}</p>
       <a href="${EMAIL_CONSTANTS.GOOGLE_MAPS_URL}" class="map-button" target="_blank">Directions</a>
     </div>
-    <div class="title-section">
+    <div class="email-section">
       <p>For additional information, please contact us at</p>
       <p><a href="mailto:${EMAIL_CONSTANTS.SUPPORT_EMAIL}">${EMAIL_CONSTANTS.SUPPORT_EMAIL}</a></p>
       <p><a href="tel:+16475402321">647-540-2321</a></p>
@@ -337,11 +159,11 @@ ${EMAIL_CONSTANTS.SUPPORT_EMAIL}
 const generateMembershipContent = (data: MembershipDetails) => ({
   title: "Membership Confirmation",
   content: `
-    <div class="title-section">
+    <div class="email-section">
       <h1>Membership Confirmed</h1>
       <p>Thank you for choosing ${EMAIL_CONSTANTS.COMPANY_NAME}!</p>
     </div>
-    <div class="details-section">
+    <div class="email-section">
       <h3>Membership Details:</h3>
       <p><strong>Studio:</strong> ${data.studioName}</p>
       <p><strong>Available Hours:</strong> ${data.availableHours} hours</p>
@@ -350,12 +172,12 @@ const generateMembershipContent = (data: MembershipDetails) => ({
       <p><strong>Status:</strong> ${data.status}</p>
       <p><strong>Valid Through:</strong> ${data.validThrough}</p>
     </div>
-    <div class="location-section">
+    <div class="email-section">
       <h3>Studio Location:</h3>
       <p><strong>Address:</strong> ${EMAIL_CONSTANTS.STUDIO_ADDRESS}</p>
       <a href="${EMAIL_CONSTANTS.GOOGLE_MAPS_URL}" class="map-button" target="_blank">Directions</a>
     </div>
-    <div class="title-section">
+    <div class="email-section">
       <p>For additional information, please contact us at</p>
       <p><a href="mailto:${EMAIL_CONSTANTS.SUPPORT_EMAIL}">${EMAIL_CONSTANTS.SUPPORT_EMAIL}</a></p>
       <p><a href="tel:+16475402321">647-540-2321</a></p>
@@ -386,11 +208,11 @@ ${EMAIL_CONSTANTS.SUPPORT_EMAIL}
 const generateUsageContent = (data: UsageDetails) => ({
   title: "Membership Hours Used",
   content: `
-    <div class="title-section">
+    <div class="email-section">
       <h1>Membership Update</h1>
       <p>Thank you for choosing ${EMAIL_CONSTANTS.COMPANY_NAME}!</p>
     </div>
-    <div class="details-section">
+    <div class="email-section">
       <h3>Booking Details:</h3>
       <p><strong>Studio:</strong> ${data.studioName}</p>
       <p><strong>Date:</strong> ${data.date}</p>
@@ -398,16 +220,16 @@ const generateUsageContent = (data: UsageDetails) => ({
       <p><strong>Hours Used:</strong> ${data.hoursUsed} hours</p>
       <p><strong>Booking ID:</strong> ${data.bookingId}</p>
     </div>
-    <div class="location-section">
+    <div class="email-section">
       <h3>Membership Status:</h3>
       <p><strong>Remaining Hours:</strong> <span>${data.remainingHours} hours</span></p>
     </div>
-    <div class="location-section">
+    <div class="email-section">
       <h3>Studio Location:</h3>
       <p><strong>Address:</strong> ${EMAIL_CONSTANTS.STUDIO_ADDRESS}</p>
       <a href="${EMAIL_CONSTANTS.GOOGLE_MAPS_URL}" class="map-button" target="_blank">Directions</a>
     </div>
-    <div class="title-section">
+    <div class="email-section">
       <p>For additional information, please contact us at</p>
       <p><a href="mailto:${EMAIL_CONSTANTS.SUPPORT_EMAIL}">${EMAIL_CONSTANTS.SUPPORT_EMAIL}</a></p>
       <p><a href="tel:+16475402321">647-540-2321</a></p>
@@ -440,11 +262,11 @@ ${EMAIL_CONSTANTS.SUPPORT_EMAIL}
 const generateReminderContent = (data: BookingDetails) => ({
   title: "Session Reminder",
   content: `
-    <div class="title-section">
+    <div class="email-section">
       <h1>Session Reminder</h1>
       <p>Your studio session is tomorrow at ${EMAIL_CONSTANTS.COMPANY_NAME}!</p>
     </div>
-    <div class="details-section">
+    <div class="email-section">
       <h3>Session Details:</h3>
       <p><strong>Studio:</strong> ${data.studioName}</p>
       <p><strong>Date:</strong> ${data.date}</p>
@@ -453,12 +275,12 @@ const generateReminderContent = (data: BookingDetails) => ({
       <p><strong>Engineering Services:</strong> ${data.engineeringIncluded ? "Included" : "Not included"}</p>
       <p><strong>Total Price:</strong> $${data.price}.00 CAD</p>
     </div>
-    <div class="location-section">
+    <div class="email-section">
       <h3>Studio Location:</h3>
       <p><strong>Address:</strong> ${EMAIL_CONSTANTS.STUDIO_ADDRESS}</p>
       <a href="${EMAIL_CONSTANTS.GOOGLE_MAPS_URL}" class="map-button" target="_blank">Directions</a>
     </div>
-    <div class="title-section">
+    <div class="email-section">
       <p>Looking forward to seeing you tomorrow!</p>
       <p>For questions, contact us at:</p>
       <p><a href="mailto:${EMAIL_CONSTANTS.SUPPORT_EMAIL}">${EMAIL_CONSTANTS.SUPPORT_EMAIL}</a></p>
@@ -527,13 +349,13 @@ export const generateEmail = (
 </head>
 <body>
   <div class="email-container">
-    <div class="header">
+    <div class="email-header">
       ${getLOGO_PNG()}
     </div>
-    <div class="content">
+    <div class="email-content">
       ${emailContent.content}
     </div>
-    <div class="footer">
+    <div class="email-footer">
       <p>© ${new Date().getFullYear()} ${EMAIL_CONSTANTS.COMPANY_NAME}. All rights reserved.</p>
       <p>
         ${EMAIL_CONSTANTS.STUDIO_ADDRESS}
