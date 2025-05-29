@@ -14,11 +14,76 @@ export const EMAIL_CONSTANTS = {
         : "http://localhost:3000",
 };
 
-// Email styling utility functions
+// Dark mode resistant styles - these will force light mode in all email clients
+const DARK_MODE_STYLES = `
+  /* Force light mode and prevent dark mode overrides */
+  [data-ogsc] .email-container,
+  [data-ogsb] .email-container,
+  .email-container {
+    background-color: #ffffff !important;
+    color: #111111 !important;
+  }
+  
+  [data-ogsc] .email-header,
+  [data-ogsb] .email-header,
+  .email-header {
+    background-color: #111111 !important;
+    color: #ffffff !important;
+  }
+  
+  [data-ogsc] .email-content,
+  [data-ogsb] .email-content,
+  .email-content {
+    background-color: #ffffff !important;
+    color: #111111 !important;
+  }
+  
+  [data-ogsc] .email-section,
+  [data-ogsb] .email-section,
+  .email-section {
+    background-color: #efefef !important;
+    color: #111111 !important;
+  }
+  
+  [data-ogsc] .email-footer,
+  [data-ogsb] .email-footer,
+  .email-footer {
+    background-color: #111111 !important;
+    color: #ffffff !important;
+  }
+  
+  [data-ogsc] .email-text,
+  [data-ogsb] .email-text,
+  .email-text {
+    color: #111111 !important;
+  }
+  
+  [data-ogsc] .email-text-white,
+  [data-ogsb] .email-text-white,
+  .email-text-white {
+    color: #ffffff !important;
+  }
+  
+  [data-ogsc] .email-button,
+  [data-ogsb] .email-button,
+  .email-button {
+    background-color: #111111 !important;
+    color: #ffffff !important;
+    border: 2px solid #111111 !important;
+  }
+  
+  [data-ogsc] .email-link,
+  [data-ogsb] .email-link,
+  .email-link {
+    color: #111111 !important;
+  }
+`;
+
+// Email styling utility functions with dark mode resistance
 const createSection = (content: string, bgColor: string = "#efefef") => `
-  <table cellpadding="15" cellspacing="0" border="0" width="100%" style="margin-top: 15px;">
+  <table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-top: 15px;">
     <tr>
-      <td style="background-color: ${bgColor}; border-radius: 6px; padding: 15px;">
+      <td class="email-section" style="background-color: ${bgColor} !important; border-radius: 6px; padding: 15px; color: #111111 !important;">
         ${content}
       </td>
     </tr>
@@ -26,38 +91,46 @@ const createSection = (content: string, bgColor: string = "#efefef") => `
 `;
 
 const createFirstSection = (content: string, bgColor: string = "#efefef") => `
-  <table cellpadding="15" cellspacing="0" border="0" width="100%" style="background-color: #f7f7f7; border-radius: 6px;">
+  <table cellpadding="0" cellspacing="0" border="0" width="100%">
     <tr>
-      <td style="background-color: ${bgColor}; border-radius: 6px; padding: 15px;">
+      <td class="email-section" style="background-color: ${bgColor} !important; border-radius: 6px; padding: 15px; color: #111111 !important;">
         ${content}
       </td>
     </tr>
   </table>
 `;
 
+// Styles with dark mode resistance
 const h1Style =
-  "color: #111111; font-family: Arial, sans-serif; font-size: 24px; font-weight: bold; margin: 0 0 10px 0;";
+  "color: #111111 !important; font-family: Arial, Helvetica, sans-serif !important; font-size: 24px !important; font-weight: bold !important; margin: 0 0 10px 0 !important; line-height: 1.2 !important;";
 const h3Style =
-  "color: #111111; font-family: Arial, sans-serif; font-size: 18px; font-weight: bold; margin: 0 0 10px 0;";
+  "color: #111111 !important; font-family: Arial, Helvetica, sans-serif !important; font-size: 18px !important; font-weight: bold !important; margin: 0 0 10px 0 !important; line-height: 1.2 !important;";
 const pStyle =
-  "color: #111111; font-family: Arial, sans-serif; font-size: 14px; line-height: 1.4; margin: 5px 0;";
+  "color: #111111 !important; font-family: Arial, Helvetica, sans-serif !important; font-size: 14px !important; line-height: 1.4 !important; margin: 5px 0 !important;";
 const pLargeStyle =
-  "color: #111111; font-family: Arial, sans-serif; font-size: 16px; line-height: 1.4; margin: 0;";
-const strongStyle = "font-weight: bold;";
+  "color: #111111 !important; font-family: Arial, Helvetica, sans-serif !important; font-size: 16px !important; line-height: 1.4 !important; margin: 0 !important;";
+const pWhiteStyle =
+  "color: #ffffff !important; font-family: Arial, Helvetica, sans-serif !important; font-size: 12px !important; line-height: 1.4 !important; margin: 5px 0 !important;";
+const strongStyle = "font-weight: bold !important; color: inherit !important;";
 const buttonStyle =
-  "display: inline-block; background-color: #111111; color: #ffffff; text-decoration: none; padding: 10px 20px; border-radius: 4px; font-family: Arial, sans-serif; font-size: 14px; font-weight: bold; margin-top: 10px;";
-const linkStyle = "color: #111111; text-decoration: underline;";
+  "display: inline-block !important; background-color: #111111 !important; color: #ffffff !important; text-decoration: none !important; padding: 10px 20px !important; border-radius: 4px !important; font-family: Arial, Helvetica, sans-serif !important; font-size: 14px !important; font-weight: bold !important; margin-top: 10px !important; border: 2px solid #111111 !important;";
+const linkStyle =
+  "color: #111111 !important; text-decoration: underline !important;";
 
-const createH1 = (text: string) => `<h1 style="${h1Style}">${text}</h1>`;
-const createH3 = (text: string) => `<h3 style="${h3Style}">${text}</h3>`;
+const createH1 = (text: string) =>
+  `<h1 class="email-text" style="${h1Style}">${text}</h1>`;
+const createH3 = (text: string) =>
+  `<h3 class="email-text" style="${h3Style}">${text}</h3>`;
 const createP = (text: string, large: boolean = false) =>
-  `<p style="${large ? pLargeStyle : pStyle}">${text}</p>`;
+  `<p class="email-text" style="${large ? pLargeStyle : pStyle}">${text}</p>`;
+const createPWhite = (text: string) =>
+  `<p class="email-text-white" style="${pWhiteStyle}">${text}</p>`;
 const createStrong = (text: string) =>
   `<strong style="${strongStyle}">${text}</strong>`;
 const createButton = (text: string, href: string) =>
-  `<a href="${href}" target="_blank" style="${buttonStyle}">${text}</a>`;
+  `<a href="${href}" target="_blank" class="email-button" style="${buttonStyle}">${text}</a>`;
 const createLink = (text: string, href: string) =>
-  `<a href="${href}" style="${linkStyle}">${text}</a>`;
+  `<a href="${href}" class="email-link" style="${linkStyle}">${text}</a>`;
 
 const createDetailRow = (label: string, value: string) =>
   createP(`${createStrong(label + ":")} ${value}`);
@@ -68,7 +141,7 @@ const getLOGO_PNG = () => `
   alt="412 Studios" 
   height="60"
   width="auto"
-  style="height: 60px; width: auto; display: block; margin: 0 auto; max-width: 100%;"
+  style="height: 60px !important; width: auto !important; display: block !important; margin: 0 auto !important; max-width: 100% !important;"
 />
 `;
 
@@ -339,32 +412,68 @@ export const generateEmail = (
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="color-scheme" content="light">
+  <meta name="color-scheme" content="light only">
   <meta name="supported-color-schemes" content="light">
   <title>${emailContent.title}</title>
+  <style>
+    ${DARK_MODE_STYLES}
+    
+    /* Additional Gmail and iOS overrides */
+    @media (prefers-color-scheme: dark) {
+      .email-container,
+      .email-content,
+      .email-section {
+        background-color: #ffffff !important;
+        color: #111111 !important;
+      }
+      .email-header,
+      .email-footer {
+        background-color: #111111 !important;
+        color: #ffffff !important;
+      }
+      .email-text {
+        color: #111111 !important;
+      }
+      .email-text-white {
+        color: #ffffff !important;
+      }
+      .email-button {
+        background-color: #111111 !important;
+        color: #ffffff !important;
+        border: 2px solid #111111 !important;
+      }
+      .email-link {
+        color: #111111 !important;
+      }
+    }
+  </style>
 </head>
-<body style="margin: 0; padding: 0; background-color: #f7f7f7; font-family: Arial, sans-serif;">
-  <table cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color: #f7f7f7;">
+<body style="margin: 0 !important; padding: 0 !important; background-color: #f7f7f7 !important; font-family: Arial, Helvetica, sans-serif !important;">
+  <div style="display: none; overflow: hidden; line-height: 1px; opacity: 0; max-height: 0; max-width: 0;">
+    ${emailContent.title} - ${EMAIL_CONSTANTS.COMPANY_NAME}
+    &#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;
+  </div>
+  <table cellpadding="0" cellspacing="0" border="0" width="100%" class="email-container" style="background-color: #f7f7f7 !important; margin: 0 !important; padding: 0 !important;">
     <tr>
-      <td align="center" style="padding: 20px 0;">
-        <table cellpadding="0" cellspacing="0" border="0" width="640" style="max-width: 640px; width: 100%; background-color: #ffffff; border: 1px solid #111111; border-radius: 6px;">
+      <td align="center" style="padding: 20px 10px !important;">
+        <table cellpadding="0" cellspacing="0" border="0" width="600" style="max-width: 600px !important; width: 100% !important; background-color: #ffffff !important; border: 2px solid #111111 !important; border-radius: 8px !important;">
           <!-- Header -->
           <tr>
-            <td style="background-color: #111111; color: #ffffff; padding: 15px; text-align: center; border-radius: 6px 6px 0 0;">
+            <td class="email-header" style="background-color: #111111 !important; color: #ffffff !important; padding: 20px !important; text-align: center !important; border-radius: 6px 6px 0 0 !important;">
               ${getLOGO_PNG()}
             </td>
           </tr>
           <!-- Content -->
           <tr>
-            <td style="padding: 0;">
+            <td class="email-content" style="padding: 15px !important; background-color: #ffffff !important; color: #111111 !important;">
               ${emailContent.content}
             </td>
           </tr>
           <!-- Footer -->
           <tr>
-            <td style="background-color: #111111; color: #ffffff; padding: 15px; text-align: center; border-radius: 0 0 6px 6px;">
-              <p style="color: #ffffff; font-family: Arial, sans-serif; font-size: 12px; line-height: 1.4; margin: 5px 0;">© ${new Date().getFullYear()} ${EMAIL_CONSTANTS.COMPANY_NAME}. All rights reserved.</p>
-              <p style="color: #ffffff; font-family: Arial, sans-serif; font-size: 12px; line-height: 1.4; margin: 5px 0;">${EMAIL_CONSTANTS.STUDIO_ADDRESS}</p>
+            <td class="email-footer" style="background-color: #111111 !important; color: #ffffff !important; padding: 20px !important; text-align: center !important; border-radius: 0 0 6px 6px !important;">
+              ${createPWhite(`© ${new Date().getFullYear()} ${EMAIL_CONSTANTS.COMPANY_NAME}. All rights reserved.`)}
+              ${createPWhite(EMAIL_CONSTANTS.STUDIO_ADDRESS)}
             </td>
           </tr>
         </table>
