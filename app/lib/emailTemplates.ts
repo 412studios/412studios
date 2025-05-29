@@ -20,9 +20,11 @@ const getLOGO_PNG = () => `
   alt="412 Studios" 
   style="
     width: 100%;
+    max-height: 200px;
     height: auto;
     display: block;
     margin: 0 auto;
+    object-fit: cover;
   "
 />
 `;
