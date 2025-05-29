@@ -29,61 +29,20 @@ const getLOGO_PNG = () => `
 />
 `;
 
-const BASE_STYLES = `
-  .email-container {
-    max-width: 640px !Important;
-    margin: 0 auto !Important;
-    overflow: hidden !Important;
-    border-radius: 6px !important;
-  }
-  .email-header {
-    background-color: #111 !important;
-    color: white !important;
-    padding: 15px !important;
-  }
-  .email-content {
-    padding: 15px !important;
-    background-color:rgb(247, 247, 247) !important;
-    display: flex !important;  
-    flex-direction: column !important; 
-    gap: 15px !important;
-    
-  }
-  .email-footer {
-    background-color: #111 !important;
-    color: white !important;
-    padding: 15px !important;
-    text-align: center !important;
-  }
-  .email-section {
-    padding: 15px !important;
-    background-color:rgb(239, 239, 239) !important;
-    border-radius: 6px !important;
-  }
-  strong {
-    font-weight: 700 !important;
-  }
-  p {
-    font-size: 14px !important;
-  }
-  h1 {
-    font-size: 24px !important;
-    font-weight: 700 !important;
-  }
-  h3 {
-    font-size: 16px !important;
-    font-weight: 700 !important;
-  }
-  .map-button {
-    border: 1px solid;
-    border-radius: 100px !important;
-    padding: 1px 30px !important;
-    margin-top: 10px !important;
-  }
-  .map-button:hover {
-    text-decoration: none;
-  }
-`;
+// Email-compatible inline styles
+const INLINE_STYLES = {
+  container: "max-width: 640px; margin: 0 auto; font-family: Arial, sans-serif; line-height: 1.6;",
+  header: "background-color: #111; color: white; padding: 15px; text-align: center;",
+  content: "padding: 15px; background-color: rgb(247, 247, 247);",
+  section: "padding: 15px; background-color: rgb(239, 239, 239); border-radius: 6px; margin-bottom: 15px;",
+  h1: "font-size: 24px; font-weight: bold; margin: 0 0 10px 0; color: #333;",
+  h3: "font-size: 16px; font-weight: bold; margin: 0 0 10px 0; color: #333;",
+  p: "font-size: 14px; margin: 5px 0; color: #333;",
+  strong: "font-weight: bold;",
+  button: "display: inline-block; background-color: #111; color: white; padding: 8px 20px; border-radius: 25px; text-decoration: none; margin-top: 10px;",
+  link: "color: #111; text-decoration: none;",
+  footer: "background-color: #111; color: white; padding: 15px; text-align: center;",
+};
 
 // Email types
 export type EmailType =
@@ -126,18 +85,18 @@ export interface UsageDetails {
 const generateBookingContent = (data: BookingDetails) => ({
   title: "Booking Confirmation",
   content: `
-    <div class="email-section">
-      <h1>Booking Confirmed</h1>
-      <p>Thank you for choosing ${EMAIL_CONSTANTS.COMPANY_NAME}!</p>
+    <div style="${INLINE_STYLES.section}">
+      <h1 style="${INLINE_STYLES.h1}">Booking Confirmed</h1>
+      <p style="${INLINE_STYLES.p}">Thank you for choosing ${EMAIL_CONSTANTS.COMPANY_NAME}!</p>
     </div>
-    <div class="email-section">
-      <h3>Booking Details:</h3>
-      <p><strong>Studio:</strong> ${data.studioName}</p>
-      <p><strong>Date:</strong> ${data.date}</p>
-      <p><strong>Time:</strong> ${data.startTime} - ${data.endTime}</p>
-      <p><strong>Duration:</strong> ${data.duration} hours</p>
-      <p><strong>Engineering Services:</strong> ${data.engineeringIncluded ? "Included" : "Not included"}</p>
-      <p><strong>Total Price:</strong> $${data.price}.00 CAD</p>
+    <div style="${INLINE_STYLES.section}">
+      <h3 style="${INLINE_STYLES.h3}">Booking Details:</h3>
+      <p style="${INLINE_STYLES.p}"><span style="${INLINE_STYLES.strong}">Studio:</span> ${data.studioName}</p>
+      <p style="${INLINE_STYLES.p}"><span style="${INLINE_STYLES.strong}">Date:</span> ${data.date}</p>
+      <p style="${INLINE_STYLES.p}"><span style="${INLINE_STYLES.strong}">Time:</span> ${data.startTime} - ${data.endTime}</p>
+      <p style="${INLINE_STYLES.p}"><span style="${INLINE_STYLES.strong}">Duration:</span> ${data.duration} hours</p>
+      <p style="${INLINE_STYLES.p}"><span style="${INLINE_STYLES.strong}">Engineering Services:</span> ${data.engineeringIncluded ? "Included" : "Not included"}</p>
+      <p style="${INLINE_STYLES.p}"><span style="${INLINE_STYLES.strong}">Total Price:</span> $${data.price}.00 CAD</p>
     </div>
   `,
   plainText: `
@@ -165,18 +124,18 @@ ${EMAIL_CONSTANTS.SUPPORT_EMAIL}
 const generateMembershipContent = (data: MembershipDetails) => ({
   title: "Membership Confirmation",
   content: `
-    <div class="email-section">
-      <h1>Membership Confirmed</h1>
-      <p>Thank you for choosing ${EMAIL_CONSTANTS.COMPANY_NAME}!</p>
+    <div style="${INLINE_STYLES.section}">
+      <h1 style="${INLINE_STYLES.h1}">Membership Confirmed</h1>
+      <p style="${INLINE_STYLES.p}">Thank you for choosing ${EMAIL_CONSTANTS.COMPANY_NAME}!</p>
     </div>
-    <div class="email-section">
-      <h3>Membership Details:</h3>
-      <p><strong>Studio:</strong> ${data.studioName}</p>
-      <p><strong>Available Hours:</strong> ${data.availableHours} hours</p>
-      <p><strong>Membership Fee:</strong> $${data.membershipPrice}.00 CAD</p>
-      <p><strong>Billing Cycle:</strong> ${data.billingCycle}</p>
-      <p><strong>Status:</strong> ${data.status}</p>
-      <p><strong>Valid Through:</strong> ${data.validThrough}</p>
+    <div style="${INLINE_STYLES.section}">
+      <h3 style="${INLINE_STYLES.h3}">Membership Details:</h3>
+      <p style="${INLINE_STYLES.p}"><span style="${INLINE_STYLES.strong}">Studio:</span> ${data.studioName}</p>
+      <p style="${INLINE_STYLES.p}"><span style="${INLINE_STYLES.strong}">Available Hours:</span> ${data.availableHours} hours</p>
+      <p style="${INLINE_STYLES.p}"><span style="${INLINE_STYLES.strong}">Membership Fee:</span> $${data.membershipPrice}.00 CAD</p>
+      <p style="${INLINE_STYLES.p}"><span style="${INLINE_STYLES.strong}">Billing Cycle:</span> ${data.billingCycle}</p>
+      <p style="${INLINE_STYLES.p}"><span style="${INLINE_STYLES.strong}">Status:</span> ${data.status}</p>
+      <p style="${INLINE_STYLES.p}"><span style="${INLINE_STYLES.strong}">Valid Through:</span> ${data.validThrough}</p>
     </div>
   `,
   plainText: `
@@ -204,21 +163,21 @@ ${EMAIL_CONSTANTS.SUPPORT_EMAIL}
 const generateUsageContent = (data: UsageDetails) => ({
   title: "Membership Hours Used",
   content: `
-    <div class="email-section">
-      <h1>Membership Update</h1>
-      <p>Thank you for choosing ${EMAIL_CONSTANTS.COMPANY_NAME}!</p>
+    <div style="${INLINE_STYLES.section}">
+      <h1 style="${INLINE_STYLES.h1}">Membership Update</h1>
+      <p style="${INLINE_STYLES.p}">Thank you for choosing ${EMAIL_CONSTANTS.COMPANY_NAME}!</p>
     </div>
-    <div class="email-section">
-      <h3>Booking Details:</h3>
-      <p><strong>Studio:</strong> ${data.studioName}</p>
-      <p><strong>Date:</strong> ${data.date}</p>
-      <p><strong>Time:</strong> ${data.startTime} - ${data.endTime}</p>
-      <p><strong>Hours Used:</strong> ${data.hoursUsed} hours</p>
-      <p><strong>Booking ID:</strong> ${data.bookingId}</p>
+    <div style="${INLINE_STYLES.section}">
+      <h3 style="${INLINE_STYLES.h3}">Booking Details:</h3>
+      <p style="${INLINE_STYLES.p}"><span style="${INLINE_STYLES.strong}">Studio:</span> ${data.studioName}</p>
+      <p style="${INLINE_STYLES.p}"><span style="${INLINE_STYLES.strong}">Date:</span> ${data.date}</p>
+      <p style="${INLINE_STYLES.p}"><span style="${INLINE_STYLES.strong}">Time:</span> ${data.startTime} - ${data.endTime}</p>
+      <p style="${INLINE_STYLES.p}"><span style="${INLINE_STYLES.strong}">Hours Used:</span> ${data.hoursUsed} hours</p>
+      <p style="${INLINE_STYLES.p}"><span style="${INLINE_STYLES.strong}">Booking ID:</span> ${data.bookingId}</p>
     </div>
-    <div class="email-section">
-      <h3>Membership Status:</h3>
-      <p><strong>Remaining Hours:</strong> <span>${data.remainingHours} hours</span></p>
+    <div style="${INLINE_STYLES.section}">
+      <h3 style="${INLINE_STYLES.h3}">Membership Status:</h3>
+      <p style="${INLINE_STYLES.p}"><span style="${INLINE_STYLES.strong}">Remaining Hours:</span> ${data.remainingHours} hours</p>
     </div>
   `,
   plainText: `
@@ -248,18 +207,18 @@ ${EMAIL_CONSTANTS.SUPPORT_EMAIL}
 const generateReminderContent = (data: BookingDetails) => ({
   title: "Session Reminder",
   content: `
-    <div class="email-section">
-      <h1>Session Reminder</h1>
-      <p>Your studio session is tomorrow at ${EMAIL_CONSTANTS.COMPANY_NAME}!</p>
+    <div style="${INLINE_STYLES.section}">
+      <h1 style="${INLINE_STYLES.h1}">Session Reminder</h1>
+      <p style="${INLINE_STYLES.p}">Your studio session is tomorrow at ${EMAIL_CONSTANTS.COMPANY_NAME}!</p>
     </div>
-    <div class="email-section">
-      <h3>Session Details:</h3>
-      <p><strong>Studio:</strong> ${data.studioName}</p>
-      <p><strong>Date:</strong> ${data.date}</p>
-      <p><strong>Time:</strong> ${data.startTime} - ${data.endTime}</p>
-      <p><strong>Duration:</strong> ${data.duration} hours</p>
-      <p><strong>Engineering Services:</strong> ${data.engineeringIncluded ? "Included" : "Not included"}</p>
-      <p><strong>Total Price:</strong> $${data.price}.00 CAD</p>
+    <div style="${INLINE_STYLES.section}">
+      <h3 style="${INLINE_STYLES.h3}">Session Details:</h3>
+      <p style="${INLINE_STYLES.p}"><span style="${INLINE_STYLES.strong}">Studio:</span> ${data.studioName}</p>
+      <p style="${INLINE_STYLES.p}"><span style="${INLINE_STYLES.strong}">Date:</span> ${data.date}</p>
+      <p style="${INLINE_STYLES.p}"><span style="${INLINE_STYLES.strong}">Time:</span> ${data.startTime} - ${data.endTime}</p>
+      <p style="${INLINE_STYLES.p}"><span style="${INLINE_STYLES.strong}">Duration:</span> ${data.duration} hours</p>
+      <p style="${INLINE_STYLES.p}"><span style="${INLINE_STYLES.strong}">Engineering Services:</span> ${data.engineeringIncluded ? "Included" : "Not included"}</p>
+      <p style="${INLINE_STYLES.p}"><span style="${INLINE_STYLES.strong}">Total Price:</span> $${data.price}.00 CAD</p>
     </div>
   `,
   plainText: `
@@ -318,36 +277,43 @@ export const generateEmail = (
   <meta name="color-scheme" content="light">
   <meta name="supported-color-schemes" content="light">
   <title>${emailContent.title}</title>
-  <style>
-    ${BASE_STYLES}
-  </style>
 </head>
-<body>
-  <div class="email-container">
-    <div class="email-header">
-      ${getLOGO_PNG()}
-    </div>
-    <div class="email-content">
-      ${emailContent.content}
-      <div class="email-section">
-        <h3>Studio Location:</h3>
-        <p><strong>Address:</strong></p>
-        <p>${EMAIL_CONSTANTS.STUDIO_ADDRESS}</p>
-        <p class="flex"><a href="${EMAIL_CONSTANTS.GOOGLE_MAPS_URL}" class="map-button" target="_blank">Directions</a></p>
-      </div>
-      <div class="email-section">
-        <p>For additional information, please contact us at:</p>
-        <p><a href="mailto:${EMAIL_CONSTANTS.SUPPORT_EMAIL}">${EMAIL_CONSTANTS.SUPPORT_EMAIL}</a></p>
-        <p><a href="tel:+16475402321">647-540-2321</a></p>
-      </div>
-      <div class="email-section text-center">
-        <p>© ${new Date().getFullYear()} ${EMAIL_CONSTANTS.COMPANY_NAME}. All rights reserved.</p>
-        <p>
-          ${EMAIL_CONSTANTS.STUDIO_ADDRESS}
-        </p>
-      </div>
-    </div>
-  </div>
+<body style="margin: 0; padding: 0; background-color: #f4f4f4;">
+  <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+    <tr>
+      <td align="center" style="padding: 20px 0;">
+        <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="${INLINE_STYLES.container}">
+          <tr>
+            <td style="${INLINE_STYLES.header}">
+              ${getLOGO_PNG()}
+            </td>
+          </tr>
+          <tr>
+            <td style="${INLINE_STYLES.content}">
+              ${emailContent.content}
+              <div style="${INLINE_STYLES.section}">
+                <h3 style="${INLINE_STYLES.h3}">Studio Location:</h3>
+                <p style="${INLINE_STYLES.p}"><span style="${INLINE_STYLES.strong}">Address:</span></p>
+                <p style="${INLINE_STYLES.p}">${EMAIL_CONSTANTS.STUDIO_ADDRESS}</p>
+                <p style="${INLINE_STYLES.p}"><a href="${EMAIL_CONSTANTS.GOOGLE_MAPS_URL}" style="${INLINE_STYLES.button}" target="_blank">Get Directions</a></p>
+              </div>
+              <div style="${INLINE_STYLES.section}">
+                <p style="${INLINE_STYLES.p}">For additional information, please contact us at:</p>
+                <p style="${INLINE_STYLES.p}"><a href="mailto:${EMAIL_CONSTANTS.SUPPORT_EMAIL}" style="${INLINE_STYLES.link}">${EMAIL_CONSTANTS.SUPPORT_EMAIL}</a></p>
+                <p style="${INLINE_STYLES.p}"><a href="tel:+16475402321" style="${INLINE_STYLES.link}">647-540-2321</a></p>
+              </div>
+              <div style="${INLINE_STYLES.section}">
+                <p style="${INLINE_STYLES.p}; text-align: center;">© ${new Date().getFullYear()} ${EMAIL_CONSTANTS.COMPANY_NAME}. All rights reserved.</p>
+                <p style="${INLINE_STYLES.p}; text-align: center;">
+                  ${EMAIL_CONSTANTS.STUDIO_ADDRESS}
+                </p>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
 </body>
 </html>
   `;
