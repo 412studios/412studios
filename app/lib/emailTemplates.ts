@@ -14,150 +14,76 @@ export const EMAIL_CONSTANTS = {
         : "http://localhost:3000",
 };
 
-// Dark mode resistant styles - these will force light mode in all email clients
-const DARK_MODE_STYLES = `
-  /* Force light mode and prevent dark mode overrides */
-  [data-ogsc] .email-container,
-  [data-ogsb] .email-container,
-  .email-container {
-    background-color: #ffffff !important;
-    color: #111111 !important;
-  }
-  
-  [data-ogsc] .email-header,
-  [data-ogsb] .email-header,
-  .email-header {
-    background-color: #111111 !important;
-    color: #ffffff !important;
-  }
-  
-  [data-ogsc] .email-content,
-  [data-ogsb] .email-content,
-  .email-content {
-    background-color: #ffffff !important;
-    color: #111111 !important;
-  }
-  
-  [data-ogsc] .email-section,
-  [data-ogsb] .email-section,
-  .email-section {
-    background-color: #efefef !important;
-    color: #111111 !important;
-  }
-  
-  [data-ogsc] .email-footer,
-  [data-ogsb] .email-footer,
-  .email-footer {
-    background-color: #111111 !important;
-    color: #ffffff !important;
-  }
-  
-  [data-ogsc] .email-text,
-  [data-ogsb] .email-text,
-  .email-text {
-    color: #111111 !important;
-  }
-  
-  [data-ogsc] .email-text-white,
-  [data-ogsb] .email-text-white,
-  .email-text-white {
-    color: #ffffff !important;
-  }
-  
-  [data-ogsc] .email-button,
-  [data-ogsb] .email-button,
-  .email-button {
-    background-color: #111111 !important;
-    color: #ffffff !important;
-    border: 2px solid #111111 !important;
-  }
-  
-  [data-ogsc] .email-link,
-  [data-ogsb] .email-link,
-  .email-link {
-    color: #111111 !important;
-  }
-`;
-
-// Email styling utility functions with dark mode resistance
-const createSection = (content: string, bgColor: string = "#efefef") => `
-  <table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-top: 15px;">
-    <tr>
-      <td class="email-section" style="background-color: ${bgColor} !important; border-radius: 6px; padding: 15px; color: #111111 !important;">
-        ${content}
-      </td>
-    </tr>
-  </table>
-`;
-
-const createFirstSection = (content: string, bgColor: string = "#efefef") => `
-  <table cellpadding="0" cellspacing="0" border="0" width="100%">
-    <tr>
-      <td class="email-section" style="background-color: ${bgColor} !important; border-radius: 6px; padding: 15px; color: #111111 !important;">
-        ${content}
-      </td>
-    </tr>
-  </table>
-`;
-
-// Styles with dark mode resistance
-const h1Style =
-  "color: #111111 !important; font-family: Arial, Helvetica, sans-serif !important; font-size: 24px !important; font-weight: bold !important; margin: 0 0 10px 0 !important; line-height: 1.2 !important;";
-const h3Style =
-  "color: #111111 !important; font-family: Arial, Helvetica, sans-serif !important; font-size: 18px !important; font-weight: bold !important; margin: 0 0 10px 0 !important; line-height: 1.2 !important;";
-const pStyle =
-  "color: #111111 !important; font-family: Arial, Helvetica, sans-serif !important; font-size: 14px !important; line-height: 1.4 !important; margin: 5px 0 !important;";
-const pLargeStyle =
-  "color: #111111 !important; font-family: Arial, Helvetica, sans-serif !important; font-size: 16px !important; line-height: 1.4 !important; margin: 0 !important;";
-const pWhiteStyle =
-  "color: #ffffff !important; font-family: Arial, Helvetica, sans-serif !important; font-size: 12px !important; line-height: 1.4 !important; margin: 5px 0 !important;";
-const strongStyle = "font-weight: bold !important; color: inherit !important;";
-const buttonStyle =
-  "display: inline-block !important; background-color: #111111 !important; color: #ffffff !important; text-decoration: none !important; padding: 10px 20px !important; border-radius: 4px !important; font-family: Arial, Helvetica, sans-serif !important; font-size: 14px !important; font-weight: bold !important; margin-top: 10px !important; border: 2px solid #111111 !important;";
-const linkStyle =
-  "color: #111111 !important; text-decoration: underline !important;";
-
-const createH1 = (text: string) =>
-  `<h1 class="email-text" style="${h1Style}">${text}</h1>`;
-const createH3 = (text: string) =>
-  `<h3 class="email-text" style="${h3Style}">${text}</h3>`;
-const createP = (text: string, large: boolean = false) =>
-  `<p class="email-text" style="${large ? pLargeStyle : pStyle}">${text}</p>`;
-const createPWhite = (text: string) =>
-  `<p class="email-text-white" style="${pWhiteStyle}">${text}</p>`;
-const createStrong = (text: string) =>
-  `<strong style="${strongStyle}">${text}</strong>`;
-const createButton = (text: string, href: string) =>
-  `<a href="${href}" target="_blank" class="email-button" style="${buttonStyle}">${text}</a>`;
-const createLink = (text: string, href: string) =>
-  `<a href="${href}" class="email-link" style="${linkStyle}">${text}</a>`;
-
-const createDetailRow = (label: string, value: string) =>
-  createP(`${createStrong(label + ":")} ${value}`);
-
+// 412 Studios Logo PNG (email-compatible)
 const getLOGO_PNG = () => `
 <img 
   src="${EMAIL_CONSTANTS.BASE_URL}/icons/Logo.png" 
   alt="412 Studios" 
-  height="60"
-  width="auto"
-  style="height: 60px !important; width: auto !important; display: block !important; margin: 0 auto !important; max-width: 100% !important;"
+  style="
+    height: auto;
+    max-height: 60px;
+    width: auto;
+    display: block;
+    margin: 0 auto;
+  "
 />
 `;
 
-const createContactSection = () =>
-  createSection(`
-  ${createP("For additional information, please contact us at")}
-  ${createP(createLink(EMAIL_CONSTANTS.SUPPORT_EMAIL, `mailto:${EMAIL_CONSTANTS.SUPPORT_EMAIL}`))}
-  ${createP(createLink("647-540-2321", "tel:+16475402321"))}
-`);
-
-const createLocationSection = () =>
-  createSection(`
-  ${createH3("Studio Location")}
-  ${createDetailRow("Address", EMAIL_CONSTANTS.STUDIO_ADDRESS)}
-  ${createButton("Get Directions", EMAIL_CONSTANTS.GOOGLE_MAPS_URL)}
-`);
+const BASE_STYLES = `
+  .email-container {
+    max-width: 640px !Important;
+    margin: 0 auto !Important;
+    overflow: hidden !Important;
+    border-radius: 6px !important;
+  }
+  .email-header {
+    background-color: #111 !important;
+    color: white !important;
+    padding: 15px !important;
+  }
+  .email-content {
+    padding: 15px !important;
+    background-color:rgb(247, 247, 247) !important;
+    display: flex !important;  
+    flex-direction: column !important; 
+    gap: 15px !important;
+    
+  }
+  .email-footer {
+    background-color: #111 !important;
+    color: white !important;
+    padding: 15px !important;
+    text-align: center !important;
+  }
+  .email-section {
+    padding: 15px !important;
+    background-color:rgb(239, 239, 239) !important;
+    border-radius: 6px !important;
+  }
+  strong {
+    font-weight: 700 !important;
+  }
+  p {
+    font-size: 14px !important;
+  }
+  h1 {
+    font-size: 24px !important;
+    font-weight: 700 !important;
+  }
+  h3 {
+    font-size: 16px !important;
+    font-weight: 700 !important;
+  }
+  .map-button {
+    border: 1px solid;
+    border-radius: 100px !important;
+    padding: 1px 30px !important;
+    margin-top: 10px !important;
+  }
+  .map-button:hover {
+    text-decoration: none;
+  }
+`;
 
 // Email types
 export type EmailType =
@@ -200,23 +126,19 @@ export interface UsageDetails {
 const generateBookingContent = (data: BookingDetails) => ({
   title: "Booking Confirmation",
   content: `
-    ${createFirstSection(`
-      ${createH1("Booking Confirmed")}
-      ${createP(`Thank you for choosing ${EMAIL_CONSTANTS.COMPANY_NAME}!`, true)}
-    `)}
-    
-    ${createSection(`
-      ${createH3("Booking Details")}
-      ${createDetailRow("Studio", data.studioName)}
-      ${createDetailRow("Date", data.date)}
-      ${createDetailRow("Time", `${data.startTime} - ${data.endTime}`)}
-      ${createDetailRow("Duration", `${data.duration} hours`)}
-      ${createDetailRow("Engineering Services", data.engineeringIncluded ? "Included" : "Not included")}
-      ${createDetailRow("Total Price", `$${data.price}.00 CAD`)}
-    `)}
-    
-    ${createLocationSection()}
-    ${createContactSection()}
+    <div class="email-section">
+      <h1>Booking Confirmed</h1>
+      <p>Thank you for choosing ${EMAIL_CONSTANTS.COMPANY_NAME}!</p>
+    </div>
+    <div class="email-section">
+      <h3>Booking Details:</h3>
+      <p><strong>Studio:</strong> ${data.studioName}</p>
+      <p><strong>Date:</strong> ${data.date}</p>
+      <p><strong>Time:</strong> ${data.startTime} - ${data.endTime}</p>
+      <p><strong>Duration:</strong> ${data.duration} hours</p>
+      <p><strong>Engineering Services:</strong> ${data.engineeringIncluded ? "Included" : "Not included"}</p>
+      <p><strong>Total Price:</strong> $${data.price}.00 CAD</p>
+    </div>
   `,
   plainText: `
 Booking Confirmed
@@ -243,23 +165,19 @@ ${EMAIL_CONSTANTS.SUPPORT_EMAIL}
 const generateMembershipContent = (data: MembershipDetails) => ({
   title: "Membership Confirmation",
   content: `
-    ${createFirstSection(`
-      ${createH1("Membership Confirmed")}
-      ${createP(`Thank you for choosing ${EMAIL_CONSTANTS.COMPANY_NAME}!`, true)}
-    `)}
-    
-    ${createSection(`
-      ${createH3("Membership Details")}
-      ${createDetailRow("Studio", data.studioName)}
-      ${createDetailRow("Available Hours", `${data.availableHours} hours`)}
-      ${createDetailRow("Membership Fee", `$${data.membershipPrice}.00 CAD`)}
-      ${createDetailRow("Billing Cycle", data.billingCycle)}
-      ${createDetailRow("Status", data.status)}
-      ${createDetailRow("Valid Through", data.validThrough)}
-    `)}
-    
-    ${createLocationSection()}
-    ${createContactSection()}
+    <div class="email-section">
+      <h1>Membership Confirmed</h1>
+      <p>Thank you for choosing ${EMAIL_CONSTANTS.COMPANY_NAME}!</p>
+    </div>
+    <div class="email-section">
+      <h3>Membership Details:</h3>
+      <p><strong>Studio:</strong> ${data.studioName}</p>
+      <p><strong>Available Hours:</strong> ${data.availableHours} hours</p>
+      <p><strong>Membership Fee:</strong> $${data.membershipPrice}.00 CAD</p>
+      <p><strong>Billing Cycle:</strong> ${data.billingCycle}</p>
+      <p><strong>Status:</strong> ${data.status}</p>
+      <p><strong>Valid Through:</strong> ${data.validThrough}</p>
+    </div>
   `,
   plainText: `
 Membership Confirmed
@@ -286,27 +204,22 @@ ${EMAIL_CONSTANTS.SUPPORT_EMAIL}
 const generateUsageContent = (data: UsageDetails) => ({
   title: "Membership Hours Used",
   content: `
-    ${createFirstSection(`
-      ${createH1("Membership Update")}
-      ${createP(`Thank you for choosing ${EMAIL_CONSTANTS.COMPANY_NAME}!`, true)}
-    `)}
-    
-    ${createSection(`
-      ${createH3("Booking Details")}
-      ${createDetailRow("Studio", data.studioName)}
-      ${createDetailRow("Date", data.date)}
-      ${createDetailRow("Time", `${data.startTime} - ${data.endTime}`)}
-      ${createDetailRow("Hours Used", `${data.hoursUsed} hours`)}
-      ${createDetailRow("Booking ID", data.bookingId)}
-    `)}
-    
-    ${createSection(`
-      ${createH3("Membership Status")}
-      ${createDetailRow("Remaining Hours", `${data.remainingHours} hours`)}
-    `)}
-    
-    ${createLocationSection()}
-    ${createContactSection()}
+    <div class="email-section">
+      <h1>Membership Update</h1>
+      <p>Thank you for choosing ${EMAIL_CONSTANTS.COMPANY_NAME}!</p>
+    </div>
+    <div class="email-section">
+      <h3>Booking Details:</h3>
+      <p><strong>Studio:</strong> ${data.studioName}</p>
+      <p><strong>Date:</strong> ${data.date}</p>
+      <p><strong>Time:</strong> ${data.startTime} - ${data.endTime}</p>
+      <p><strong>Hours Used:</strong> ${data.hoursUsed} hours</p>
+      <p><strong>Booking ID:</strong> ${data.bookingId}</p>
+    </div>
+    <div class="email-section">
+      <h3>Membership Status:</h3>
+      <p><strong>Remaining Hours:</strong> <span>${data.remainingHours} hours</span></p>
+    </div>
   `,
   plainText: `
 Membership Update
@@ -335,29 +248,19 @@ ${EMAIL_CONSTANTS.SUPPORT_EMAIL}
 const generateReminderContent = (data: BookingDetails) => ({
   title: "Session Reminder",
   content: `
-    ${createFirstSection(`
-      ${createH1("Session Reminder")}
-      ${createP(`Your studio session is tomorrow at ${EMAIL_CONSTANTS.COMPANY_NAME}!`, true)}
-    `)}
-    
-    ${createSection(`
-      ${createH3("Session Details")}
-      ${createDetailRow("Studio", data.studioName)}
-      ${createDetailRow("Date", data.date)}
-      ${createDetailRow("Time", `${data.startTime} - ${data.endTime}`)}
-      ${createDetailRow("Duration", `${data.duration} hours`)}
-      ${createDetailRow("Engineering Services", data.engineeringIncluded ? "Included" : "Not included")}
-      ${createDetailRow("Total Price", `$${data.price}.00 CAD`)}
-    `)}
-    
-    ${createLocationSection()}
-    
-    ${createSection(`
-      ${createP("Looking forward to seeing you tomorrow!")}
-      ${createP("For questions, contact us at:")}
-      ${createP(createLink(EMAIL_CONSTANTS.SUPPORT_EMAIL, `mailto:${EMAIL_CONSTANTS.SUPPORT_EMAIL}`))}
-      ${createP(createLink("647-540-2321", "tel:+16475402321"))}
-    `)}
+    <div class="email-section">
+      <h1>Session Reminder</h1>
+      <p>Your studio session is tomorrow at ${EMAIL_CONSTANTS.COMPANY_NAME}!</p>
+    </div>
+    <div class="email-section">
+      <h3>Session Details:</h3>
+      <p><strong>Studio:</strong> ${data.studioName}</p>
+      <p><strong>Date:</strong> ${data.date}</p>
+      <p><strong>Time:</strong> ${data.startTime} - ${data.endTime}</p>
+      <p><strong>Duration:</strong> ${data.duration} hours</p>
+      <p><strong>Engineering Services:</strong> ${data.engineeringIncluded ? "Included" : "Not included"}</p>
+      <p><strong>Total Price:</strong> $${data.price}.00 CAD</p>
+    </div>
   `,
   plainText: `
 Session Reminder
@@ -412,74 +315,39 @@ export const generateEmail = (
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="color-scheme" content="light only">
+  <meta name="color-scheme" content="light">
   <meta name="supported-color-schemes" content="light">
   <title>${emailContent.title}</title>
   <style>
-    ${DARK_MODE_STYLES}
-    
-    /* Additional Gmail and iOS overrides */
-    @media (prefers-color-scheme: dark) {
-      .email-container,
-      .email-content,
-      .email-section {
-        background-color: #ffffff !important;
-        color: #111111 !important;
-      }
-      .email-header,
-      .email-footer {
-        background-color: #111111 !important;
-        color: #ffffff !important;
-      }
-      .email-text {
-        color: #111111 !important;
-      }
-      .email-text-white {
-        color: #ffffff !important;
-      }
-      .email-button {
-        background-color: #111111 !important;
-        color: #ffffff !important;
-        border: 2px solid #111111 !important;
-      }
-      .email-link {
-        color: #111111 !important;
-      }
-    }
+    ${BASE_STYLES}
   </style>
 </head>
-<body style="margin: 0 !important; padding: 0 !important; background-color: #f7f7f7 !important; font-family: Arial, Helvetica, sans-serif !important;">
-  <div style="display: none; overflow: hidden; line-height: 1px; opacity: 0; max-height: 0; max-width: 0;">
-    ${emailContent.title} - ${EMAIL_CONSTANTS.COMPANY_NAME}
-    &#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;
+<body>
+  <div class="email-container">
+    <div class="email-header">
+      ${getLOGO_PNG()}
+    </div>
+    <div class="email-content">
+      ${emailContent.content}
+      <div class="email-section">
+        <h3>Studio Location:</h3>
+        <p><strong>Address:</strong></p>
+        <p>${EMAIL_CONSTANTS.STUDIO_ADDRESS}</p>
+        <p class="flex"><a href="${EMAIL_CONSTANTS.GOOGLE_MAPS_URL}" class="map-button" target="_blank">Directions</a></p>
+      </div>
+      <div class="email-section">
+        <p>For additional information, please contact us at:</p>
+        <p><a href="mailto:${EMAIL_CONSTANTS.SUPPORT_EMAIL}">${EMAIL_CONSTANTS.SUPPORT_EMAIL}</a></p>
+        <p><a href="tel:+16475402321">647-540-2321</a></p>
+      </div>
+      <div class="email-section text-center">
+        <p>© ${new Date().getFullYear()} ${EMAIL_CONSTANTS.COMPANY_NAME}. All rights reserved.</p>
+        <p>
+          ${EMAIL_CONSTANTS.STUDIO_ADDRESS}
+        </p>
+      </div>
+    </div>
   </div>
-  <table cellpadding="0" cellspacing="0" border="0" width="100%" class="email-container" style="background-color: #f7f7f7 !important; margin: 0 !important; padding: 0 !important;">
-    <tr>
-      <td align="center" style="padding: 20px 10px !important;">
-        <table cellpadding="0" cellspacing="0" border="0" width="600" style="max-width: 600px !important; width: 100% !important; background-color: #ffffff !important; border: 2px solid #111111 !important; border-radius: 8px !important;">
-          <!-- Header -->
-          <tr>
-            <td class="email-header" style="background-color: #111111 !important; color: #ffffff !important; padding: 20px !important; text-align: center !important; border-radius: 6px 6px 0 0 !important;">
-              ${getLOGO_PNG()}
-            </td>
-          </tr>
-          <!-- Content -->
-          <tr>
-            <td class="email-content" style="padding: 15px !important; background-color: #ffffff !important; color: #111111 !important;">
-              ${emailContent.content}
-            </td>
-          </tr>
-          <!-- Footer -->
-          <tr>
-            <td class="email-footer" style="background-color: #111111 !important; color: #ffffff !important; padding: 20px !important; text-align: center !important; border-radius: 0 0 6px 6px !important;">
-              ${createPWhite(`© ${new Date().getFullYear()} ${EMAIL_CONSTANTS.COMPANY_NAME}. All rights reserved.`)}
-              ${createPWhite(EMAIL_CONSTANTS.STUDIO_ADDRESS)}
-            </td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-  </table>
 </body>
 </html>
   `;
