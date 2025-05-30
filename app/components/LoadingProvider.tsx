@@ -110,11 +110,23 @@ function LoadingScreen({
         zIndex: 99999,
       }}
     >
-      <div className="flex flex-col items-center space-y-1">
-        <Logo className="h-auto w-24 text-primary animate-pulse brightness-125 hover:brightness-150 transition-all duration-[1500ms]" />
-        <div className="text-primary text-sm font-light">
-          {Math.round(loadingProgress)}%
+      <div className="flex flex-col items-center space-y-2">
+        <div className="relative h-auto w-48">
+          {/* Grey background logo */}
+          <Logo className="h-auto w-48 text-gray-300" />
+          {/* Dark fill overlay that grows from bottom */}
+          <div
+            className="absolute inset-0 overflow-hidden"
+            style={{
+              clipPath: `inset(${100 - loadingProgress}% 0 0 0)`,
+            }}
+          >
+            <Logo className="h-auto w-48 text-primary" />
+          </div>
         </div>
+        {/* <div className="text-primary text-sm font-light">
+          {Math.round(loadingProgress)}%
+        </div> */}
       </div>
     </div>
   );
