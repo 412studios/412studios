@@ -115,7 +115,7 @@ export default function NavbarClient({
         <div className="flex flex-col">
           {/* MAIN NAV */}
           <div
-            className={`p-2 border-b-0 flex justify-between items-center ${
+            className={`p-1 border-b-0 flex justify-between items-center ${
               isHomepage ? "md:border-b" : "md:border-b-0"
             }`}
           >
@@ -182,7 +182,7 @@ export default function NavbarClient({
             <>
               <div
                 ref={subNavRef}
-                className="hidden md:flex items-start gap-2 text-[12px] font-normal overflow-hidden p-2"
+                className="hidden md:flex items-start gap-2 text-[12px] font-normal overflow-hidden p-1"
               >
                 {links.map((link) => (
                   <Link key={link.href} href={link.href} onClick={closeMenu}>
