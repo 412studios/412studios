@@ -53,11 +53,8 @@ function LoadingScreen({
       const elapsed = Date.now() - startTime;
       const progress = Math.min(elapsed / duration, 1);
 
-      // Ease-in-out cubic function for natural feel
-      const eased =
-        progress < 0.5
-          ? 4 * progress * progress * progress
-          : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+      // Custom easing: slower start, gradual acceleration, quick finish
+      const eased = progress * progress * (3 - 2 * progress) * (1 + 0.5 * progress);
 
       const newProgress = eased * 100;
       setLoadingProgress(newProgress);
