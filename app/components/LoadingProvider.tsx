@@ -18,6 +18,7 @@ function LoadingScreen({
   const [shouldShow, setShouldShow] = useState(true);
   const [isVisible, setIsVisible] = useState(true);
   const [opacity, setOpacity] = useState(1);
+  const [loadingProgress, setLoadingProgress] = useState(0);
   const pathname = usePathname();
 
   // Check if current path should be excluded
@@ -42,6 +43,30 @@ function LoadingScreen({
     setIsLoading(true);
     setIsVisible(true);
     setOpacity(1);
+    setLoadingProgress(0);
+
+    // Animate progress from 0 to 100 with easing
+    let startTime = Date.now();
+    const duration = 1000; // 1 second
+
+    const progressInterval = setInterval(() => {
+      const elapsed = Date.now() - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+
+      // Ease-in-out cubic function for natural feel
+      const eased =
+        progress < 0.5
+          ? 4 * progress * progress * progress
+          : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+
+      const newProgress = eased * 100;
+      setLoadingProgress(newProgress);
+
+      if (progress >= 1) {
+        clearInterval(progressInterval);
+        setLoadingProgress(100);
+      }
+    }, 16); // ~60fps
 
     let fadeOutTimer: NodeJS.Timeout;
 
@@ -59,6 +84,7 @@ function LoadingScreen({
 
     return () => {
       clearTimeout(minTimer);
+      clearInterval(progressInterval);
       if (fadeOutTimer) clearTimeout(fadeOutTimer);
     };
   }, [pathname, excludedPaths, excludedPatterns]);
@@ -70,23 +96,25 @@ function LoadingScreen({
       setShouldShow(true);
       setIsVisible(true);
       setOpacity(1);
+      setLoadingProgress(0);
     }
   }, [pathname, excludedPaths, excludedPatterns]);
 
   if (!shouldShow || !isVisible) return null;
 
   return (
-    <div 
-      className="fixed inset-0 flex items-center justify-center bg-background transition-opacity duration-500 ease-out"
+    <div
+      className="fixed inset-0 flex items-center justify-center bg-background transition-opacity duration-3000 ease-out"
       style={{
         opacity: opacity,
         zIndex: 99999,
       }}
     >
-      <div className="flex space-x-1">
-        <div className="h-2 w-2 bg-primary rounded-full animate-bounce [animation-delay:-0.3s]"></div>
-        <div className="h-2 w-2 bg-primary rounded-full animate-bounce [animation-delay:-0.15s]"></div>
-        <div className="h-2 w-2 bg-primary rounded-full animate-bounce"></div>
+      <div className="flex flex-col items-center space-y-1">
+        <Logo className="h-auto w-24 text-primary animate-pulse brightness-125 hover:brightness-150 transition-all duration-[1500ms]" />
+        <div className="text-primary text-sm font-light">
+          {Math.round(loadingProgress)}%
+        </div>
       </div>
     </div>
   );
@@ -126,11 +154,7 @@ function NavigationLoader({
     return () => clearTimeout(timer);
   }, [pathname, searchParams, excludedPaths, excludedPatterns]); // Added dependencies
 
-  return (
-    <>
-      {children}
-    </>
-  );
+  return <>{children}</>;
 }
 
 // Context Type
