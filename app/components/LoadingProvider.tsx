@@ -128,11 +128,6 @@ function NavigationLoader({
 
   return (
     <>
-      {isNavigating && !isExcluded() && (
-        <div className="fixed top-0 left-0 w-full h-1 bg-muted z-[9998]">
-          <div className="h-full bg-primary animate-pulse"></div>
-        </div>
-      )}
       {children}
     </>
   );
