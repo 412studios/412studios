@@ -1,10 +1,19 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { Logo } from "@/public/icons/logo";
 
+// =====================
 // Loading Screen Component
+// =====================
+
 interface LoadingScreenProps {
   excludedPaths?: string[];
   excludedPatterns?: RegExp[];
@@ -21,17 +30,12 @@ function LoadingScreen({
   const [loadingProgress, setLoadingProgress] = useState(0);
   const pathname = usePathname();
 
-  // Check if current path should be excluded
   const isExcluded = () => {
-    // Check exact path matches
     if (excludedPaths.includes(pathname)) return true;
-
-    // Check pattern matches
     return excludedPatterns.some((pattern) => pattern.test(pathname));
   };
 
   useEffect(() => {
-    // Check if this page should show loading screen
     if (isExcluded()) {
       setShouldShow(false);
       setIsLoading(false);
@@ -45,48 +49,37 @@ function LoadingScreen({
     setOpacity(1);
     setLoadingProgress(0);
 
-    // Animate progress from 0 to 100 with easing
-    let startTime = Date.now();
-    const duration = 1000; // 1 second
+    const startTime = Date.now();
+    const duration = 1000;
 
     const progressInterval = setInterval(() => {
       const elapsed = Date.now() - startTime;
       const progress = Math.min(elapsed / duration, 1);
-
-      // Custom easing: slower start, gradual acceleration, quick finish
-      const eased = progress * progress * (3 - 2 * progress) * (1 + 0.5 * progress);
-
-      const newProgress = eased * 100;
-      setLoadingProgress(newProgress);
+      // Easing: smoother start and end, less overshoot
+      const eased = progress * progress * (3 - 2 * progress);
+      setLoadingProgress(eased * 100);
 
       if (progress >= 1) {
         clearInterval(progressInterval);
         setLoadingProgress(100);
       }
-    }, 16); // ~60fps
+    }, 16);
 
-    let fadeOutTimer: NodeJS.Timeout;
-
-    // Minimum loading time of 1 second
     const minTimer = setTimeout(() => {
-      // Start fade out animation
       setOpacity(0);
-
-      // Remove from DOM after fade animation completes
-      fadeOutTimer = setTimeout(() => {
+      const fadeOutTimer = setTimeout(() => {
         setIsLoading(false);
         setIsVisible(false);
-      }, 500); // 500ms for fade animation
-    }, 1000); // 1 second minimum
+      }, 500); // Match fade duration
+      return () => clearTimeout(fadeOutTimer);
+    }, 1000);
 
     return () => {
-      clearTimeout(minTimer);
       clearInterval(progressInterval);
-      if (fadeOutTimer) clearTimeout(fadeOutTimer);
+      clearTimeout(minTimer);
     };
   }, [pathname, excludedPaths, excludedPatterns]);
 
-  // Reset loading state when pathname changes
   useEffect(() => {
     if (!isExcluded()) {
       setIsLoading(true);
@@ -101,17 +94,16 @@ function LoadingScreen({
 
   return (
     <div
-      className="fixed inset-0 flex items-center justify-center bg-background transition-opacity duration-3000 ease-out"
+      className="fixed inset-0 flex items-center justify-center bg-background transition-opacity duration-500 ease-out pointer-events-none"
       style={{
         opacity: opacity,
         zIndex: 99999,
       }}
+      aria-hidden="true"
     >
       <div className="flex flex-col items-center space-y-2">
         <div className="relative h-auto w-48">
-          {/* Grey background logo */}
           <Logo className="h-auto w-48 text-gray-300" />
-          {/* Dark fill overlay that grows from bottom */}
           <div
             className="absolute inset-0 overflow-hidden"
             style={{
@@ -121,19 +113,19 @@ function LoadingScreen({
             <Logo className="h-auto w-48 text-primary" />
           </div>
         </div>
-        {/* <div className="text-primary text-sm font-light">
-          {Math.round(loadingProgress)}%
-        </div> */}
       </div>
     </div>
   );
 }
 
+// =====================
 // Navigation Loader Component
+// =====================
+
 interface NavigationLoaderProps {
   excludedPaths?: string[];
   excludedPatterns?: RegExp[];
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 function NavigationLoader({
@@ -141,11 +133,9 @@ function NavigationLoader({
   excludedPatterns = [],
   children,
 }: NavigationLoaderProps) {
-  const [isNavigating, setIsNavigating] = useState(false);
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  // Check if current path should be excluded
   const isExcluded = () => {
     if (excludedPaths.includes(pathname)) return true;
     return excludedPatterns.some((pattern) => pattern.test(pathname));
@@ -153,20 +143,16 @@ function NavigationLoader({
 
   useEffect(() => {
     if (isExcluded()) return;
-
-    setIsNavigating(true);
-
-    const timer = setTimeout(() => {
-      setIsNavigating(false);
-    }, 500);
-
-    return () => clearTimeout(timer);
-  }, [pathname, searchParams, excludedPaths, excludedPatterns]); // Added dependencies
+    // Potentially extend logic here for analytics or transitions
+  }, [pathname, searchParams, excludedPaths, excludedPatterns]);
 
   return <>{children}</>;
 }
 
-// Context Type
+// =====================
+// Context and Provider
+// =====================
+
 interface LoadingContextType {
   isLoading: boolean;
   setLoading: (loading: boolean) => void;
@@ -174,17 +160,14 @@ interface LoadingContextType {
   includePage: (path: string) => void;
 }
 
-// Create Context
 const LoadingContext = createContext<LoadingContextType | undefined>(undefined);
 
-// Provider Props
 interface LoadingProviderProps {
-  children: React.ReactNode;
+  children: ReactNode;
   defaultExcludedPaths?: string[];
-  defaultExcludedPatterns?: string[]; // Changed from RegExp[] to string[]
+  defaultExcludedPatterns?: string[]; // Patterns as strings
 }
 
-// Main Provider Component
 export function LoadingProvider({
   children,
   defaultExcludedPaths = [],
@@ -193,26 +176,18 @@ export function LoadingProvider({
   const [isLoading, setIsLoading] = useState(false);
   const [excludedPaths, setExcludedPaths] =
     useState<string[]>(defaultExcludedPaths);
-  // Convert string patterns to RegExp objects on the client side
   const [excludedPatterns] = useState<RegExp[]>(
     defaultExcludedPatterns.map((pattern) => new RegExp(pattern))
   );
 
-  const setLoading = (loading: boolean) => {
-    setIsLoading(loading);
-  };
-
-  const excludePage = (path: string) => {
+  const excludePage = (path: string) =>
     setExcludedPaths((prev) => [...prev, path]);
-  };
-
-  const includePage = (path: string) => {
+  const includePage = (path: string) =>
     setExcludedPaths((prev) => prev.filter((p) => p !== path));
-  };
 
-  const contextValue = {
+  const contextValue: LoadingContextType = {
     isLoading,
-    setLoading,
+    setLoading: setIsLoading,
     excludePage,
     includePage,
   };
@@ -233,26 +208,22 @@ export function LoadingProvider({
   );
 }
 
-// Custom Hook
+// =====================
+// Hooks
+// =====================
+
 export function useLoading() {
   const context = useContext(LoadingContext);
-  if (context === undefined) {
+  if (!context) {
     throw new Error("useLoading must be used within a LoadingProvider");
   }
   return context;
 }
 
-// Hook for pages to control their loading state
 export function usePageLoading() {
   const { setLoading } = useLoading();
-
   useEffect(() => {
-    // Page is mounted, stop loading
     setLoading(false);
-
-    return () => {
-      // Page is unmounting, start loading for next page
-      setLoading(true);
-    };
+    return () => setLoading(true);
   }, [setLoading]);
 }
