@@ -4,6 +4,7 @@ import { unstable_noStore as noStore } from "next/cache";
 import prisma from "@/app/lib/db";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { Section } from "@/components/ui/copy";
+import Dashboard from "./components/main";
 
 import { Book, Mail } from "lucide-react";
 
@@ -43,16 +44,24 @@ export default async function Main() {
         <CardHeader>
           <CardTitle>Admin Dashboard</CardTitle>
         </CardHeader>
-        <div className="px-4">
+        <div className="px-4 flex gap-4">
           <Link href="/user/admin/pricing">
             <Button>
               <span>Update Pricing</span>
             </Button>
           </Link>
+          {/* 
+          <Link href="/user/admin/email-template">
+            <Button>
+              <span>Email Template</span>
+            </Button>
+          </Link> 
+          */}
         </div>
         <CardContent className="p-0">
           <div className="p-4">
-            <Link href="/user/admin/users">
+            <Dashboard />
+            {/* <Link href="/user/admin/users">
               <span className="hover:bg-accent hover:text-accent-forground group flex items-center rounded-md px-3 py-2 text-sm font-medium">
                 <Book className="text-primary mr-2 h-4 w-4" />
                 <span>Users</span>
@@ -69,13 +78,7 @@ export default async function Main() {
                 <Book className="text-primary mr-2 h-4 w-4" />
                 <span>Bookings</span>
               </span>
-            </Link>
-            <Link href="/user/admin/email-template">
-              <span className="hover:bg-accent hover:text-accent-forground group flex items-center rounded-md px-3 py-2 text-sm font-medium">
-                <Mail className="text-primary mr-2 h-4 w-4" />
-                <span>Email Template</span>
-              </span>
-            </Link>
+            </Link> */}
           </div>
         </CardContent>
       </Card>

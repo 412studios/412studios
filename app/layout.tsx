@@ -36,9 +36,8 @@ export default async function RootLayout({
   const FACEBOOK_PIXEL_ID = "1699908830923677";
 
   // Configure which pages should NOT show loading screen
-  const excludedPaths = ["/api", "/admin/settings"];
-
-  const excludedPatterns = ["^/api/", "^/admin/quick-", "\\.(json|xml|txt)$"];
+  const excludedPaths = ["/api", "/user/admin"];
+  const excludedPatterns = ["^/api/", "^/user/admin", "\\.(json|xml|txt)$"];
 
   return (
     <html lang="en">
