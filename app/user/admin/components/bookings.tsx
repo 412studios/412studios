@@ -19,6 +19,7 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { getAllBooking } from "@/app/lib/booking";
+import { timeSlots } from "@/app/user/(payment)/book/components/timeSlots";
 import { useState, useEffect } from "react";
 
 interface User {
@@ -63,6 +64,28 @@ export default function Bookings(): JSX.Element {
     fetchBookings();
   }, []);
 
+  // Helper function to format date from YYYYMMDD to readable format
+  const formatDate = (dateNum: number): string => {
+    const dateStr = dateNum.toString();
+    const year = dateStr.substring(0, 4);
+    const month = dateStr.substring(4, 6);
+    const day = dateStr.substring(6, 8);
+
+    const date = new Date(`${year}-${month}-${day}`);
+    return date.toLocaleDateString("en-US", {
+      weekday: "short",
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
+  };
+
+  // Helper function to get time display from time slot ID
+  const getTimeDisplay = (timeSlotId: number): string => {
+    const timeSlot = timeSlots.find((slot) => slot.id === timeSlotId);
+    return timeSlot ? timeSlot.displayStart : `${timeSlotId}:00`;
+  };
+
   // Get today's date
   const today: Date = new Date();
   const todayFormatted: string = today
@@ -103,78 +126,81 @@ export default function Bookings(): JSX.Element {
   }
 
   return (
-    <>
-      <div className="flex gap-4 mb-4 flex-wrap">
-        <Select
-          value={roomFilter}
-          onValueChange={(value: string) => setRoomFilter(value as RoomFilter)}
-        >
-          <SelectTrigger className="max-w-[180px]">
-            <SelectValue placeholder="Studio" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Studios</SelectItem>
-            <SelectItem value="a">Studio A</SelectItem>
-            <SelectItem value="b">Studio B</SelectItem>
-            <SelectItem value="c">Studio C</SelectItem>
-          </SelectContent>
-        </Select>
-        <div className="flex gap-2 items-center">
-          <Checkbox
-            checked={showPrevious}
-            onCheckedChange={setShowPrevious}
-            id="showPrevious"
+    <div className="flex flex-col h-full">
+      <div className="flex flex-col">
+        <div className="flex gap-4 mb-4 flex-wrap">
+          <Select
+            value={roomFilter}
+            onValueChange={(value: string) =>
+              setRoomFilter(value as RoomFilter)
+            }
+          >
+            <SelectTrigger className="max-w-[180px]">
+              <SelectValue placeholder="Studio" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Studios</SelectItem>
+              <SelectItem value="a">Studio A</SelectItem>
+              <SelectItem value="b">Studio B</SelectItem>
+              <SelectItem value="c">Studio C</SelectItem>
+            </SelectContent>
+          </Select>
+          <div className="flex gap-2 items-center">
+            <Checkbox
+              checked={showPrevious}
+              onCheckedChange={setShowPrevious}
+              id="showPrevious"
+            />
+            <label htmlFor="showPrevious" className="text-sm font-medium">
+              Show Previous
+            </label>
+          </div>
+        </div>
+        <div className="flex gap-4 mb-4 flex-wrap">
+          <Input
+            type="text"
+            placeholder="Search by user name"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
-          <label htmlFor="showPrevious" className="text-sm font-medium">
-            Show Previous
-          </label>
         </div>
       </div>
-      <div className="flex gap-4 mb-4 flex-wrap">
-        <Input
-          type="text"
-          placeholder="Search by user name..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-      </div>
-
-      {filteredBookings.length > 0 ? (
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Room</TableHead>
-              <TableHead>Date</TableHead>
-              <TableHead>Start</TableHead>
-              <TableHead>End</TableHead>
-              <TableHead>User</TableHead>
-              <TableHead>Details</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {filteredBookings.map((booking: Booking) => (
-              <TableRow key={booking.bookingId}>
-                <TableCell>{room[booking.roomId]}</TableCell>
-                <TableCell>{booking.date}</TableCell>
-                <TableCell>{booking.startTime}</TableCell>
-                <TableCell>{booking.endTime}</TableCell>
-                <TableCell>{booking.user.name ?? ""}</TableCell>
-                <TableCell>
-                  <Link href={`/user/admin/book/${booking.bookingId}`}>
-                    <Button variant="outline" size="sm">
-                      View Details
-                    </Button>
-                  </Link>
-                </TableCell>
+      <div className="h-full flex-1">
+        {filteredBookings.length > 0 ? (
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Room</TableHead>
+                <TableHead>Date</TableHead>
+                <TableHead>Start</TableHead>
+                <TableHead>End</TableHead>
+                <TableHead>User</TableHead>
+                <TableHead>Details</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      ) : (
-        <div className="p-4 text-center text-gray-500 h-full w-full flex items-center justify-center">
-          No bookings available
-        </div>
-      )}
-    </>
+            </TableHeader>
+            <TableBody>
+              {filteredBookings.map((booking: Booking) => (
+                <TableRow key={booking.bookingId}>
+                  <TableCell>{room[booking.roomId]}</TableCell>
+                  <TableCell>{formatDate(booking.date)}</TableCell>
+                  <TableCell>{getTimeDisplay(booking.startTime)}</TableCell>
+                  <TableCell>{getTimeDisplay(booking.endTime)}</TableCell>
+                  <TableCell>{booking.user.name ?? ""}</TableCell>
+                  <TableCell>
+                    <Button variant="outline" size="sm">
+                      Edit
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        ) : (
+          <div className="p-4 text-center text-gray-500 h-full w-full flex items-center justify-center">
+            No bookings available
+          </div>
+        )}
+      </div>
+    </div>
   );
 }

@@ -1,16 +1,6 @@
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { unstable_noStore as noStore } from "next/cache";
 import prisma from "@/app/lib/db";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import Bookings from "@/app/user/admin/components/bookings";
 
 export default async function Dashboard() {
@@ -34,16 +24,15 @@ export default async function Dashboard() {
       },
     },
   });
-
   return (
-    <Tabs defaultValue="users">
+    <Tabs defaultValue="bookings">
       <TabsList className="mb-4">
         <TabsTrigger value="bookings">Bookings</TabsTrigger>
         <TabsTrigger value="users">Users</TabsTrigger>
         <TabsTrigger value="members">Members</TabsTrigger>
       </TabsList>
       {/* BOOKINGS SECTION */}
-      <TabsContent value="bookings" className="overflow-hidden">
+      <TabsContent value="bookings">
         <Bookings />
       </TabsContent>
       <TabsContent value="users">
