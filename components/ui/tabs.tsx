@@ -40,7 +40,7 @@ const TabsContent = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <TabsPrimitive.Content
     ref={ref}
-    className={cn("w-full h-[50vh] overflow-scroll", className)}
+    className={cn("w-full overflow-auto flex flex-col max-h-[50vh]", className)}
     {...props}
   />
 ));

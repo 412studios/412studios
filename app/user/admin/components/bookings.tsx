@@ -105,10 +105,10 @@ export default function Bookings(): JSX.Element {
             <SelectValue placeholder="Studio" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All</SelectItem>
-            <SelectItem value="a">A</SelectItem>
-            <SelectItem value="b">B</SelectItem>
-            <SelectItem value="c">C</SelectItem>
+            <SelectItem value="all">All Studios</SelectItem>
+            <SelectItem value="a">Studio A</SelectItem>
+            <SelectItem value="b">Studio B</SelectItem>
+            <SelectItem value="c">Studio C</SelectItem>
           </SelectContent>
         </Select>
         <div className="flex gap-2 items-center">
