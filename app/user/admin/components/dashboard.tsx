@@ -2,6 +2,7 @@ import { unstable_noStore as noStore } from "next/cache";
 import prisma from "@/app/lib/db";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Bookings from "@/app/user/admin/components/bookings";
+import Users from "@/app/user/admin/components/users";
 
 export default async function Dashboard() {
   noStore();
@@ -36,18 +37,7 @@ export default async function Dashboard() {
         <Bookings />
       </TabsContent>
       <TabsContent value="users">
-        {users.length > 0 ? (
-          users.map((user) => (
-            <div key={user.id} className="p-4 border-b">
-              <h3 className="font-semibold">{user.name ?? ""}</h3>
-              <p className="text-gray-600">{user.email ?? ""}</p>
-            </div>
-          ))
-        ) : (
-          <div className="p-4 text-center text-gray-500 h-full w-full flex items-center justify-center">
-            No users available
-          </div>
-        )}
+        <Users />
       </TabsContent>
       <TabsContent value="members">
         {members.length > 0 ? (
