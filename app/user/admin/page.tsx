@@ -4,9 +4,7 @@ import { unstable_noStore as noStore } from "next/cache";
 import prisma from "@/app/lib/db";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { Section } from "@/components/ui/copy";
-import Dashboard from "./components/main";
-
-import { Book, Mail } from "lucide-react";
+import Dashboard from "@/app/user/admin/components/dashboard";
 
 import {
   Card,
@@ -50,35 +48,10 @@ export default async function Main() {
               <span>Update Pricing</span>
             </Button>
           </Link>
-          {/* 
-          <Link href="/user/admin/email-template">
-            <Button>
-              <span>Email Template</span>
-            </Button>
-          </Link> 
-          */}
         </div>
         <CardContent className="p-0">
           <div className="p-4">
             <Dashboard />
-            {/* <Link href="/user/admin/users">
-              <span className="hover:bg-accent hover:text-accent-forground group flex items-center rounded-md px-3 py-2 text-sm font-medium">
-                <Book className="text-primary mr-2 h-4 w-4" />
-                <span>Users</span>
-              </span>
-            </Link>
-            <Link href="/user/admin/membership">
-              <span className="hover:bg-accent hover:text-accent-forground group flex items-center rounded-md px-3 py-2 text-sm font-medium">
-                <Book className="text-primary mr-2 h-4 w-4" />
-                <span>Memberships</span>
-              </span>
-            </Link>
-            <Link href="/user/admin/book/">
-              <span className="hover:bg-accent hover:text-accent-forground group flex items-center rounded-md px-3 py-2 text-sm font-medium">
-                <Book className="text-primary mr-2 h-4 w-4" />
-                <span>Bookings</span>
-              </span>
-            </Link> */}
           </div>
         </CardContent>
       </Card>
