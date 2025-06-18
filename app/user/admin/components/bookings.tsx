@@ -17,6 +17,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
 import { getAllBooking } from "@/app/lib/booking";
 import { useState, useEffect } from "react";
 
@@ -41,6 +42,7 @@ export default function Bookings(): JSX.Element {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [roomFilter, setRoomFilter] = useState<RoomFilter>("all");
   const [showPrevious, setShowPrevious] = useState<boolean>(false);
+  const [searchTerm, setSearchTerm] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
 
   const room: string[] = ["A", "B", "C"];
@@ -83,6 +85,12 @@ export default function Bookings(): JSX.Element {
       if (booking.date < todayAsNumber) return false;
     }
 
+    // Filter by user name
+    if (searchTerm.trim() !== "") {
+      const userName = booking.user.name?.toLowerCase() || "";
+      if (!userName.includes(searchTerm.toLowerCase())) return false;
+    }
+
     return true;
   });
 
@@ -96,7 +104,7 @@ export default function Bookings(): JSX.Element {
 
   return (
     <>
-      <div className="flex gap-4 mb-4">
+      <div className="flex gap-4 mb-4 flex-wrap">
         <Select
           value={roomFilter}
           onValueChange={(value: string) => setRoomFilter(value as RoomFilter)}
@@ -122,6 +130,15 @@ export default function Bookings(): JSX.Element {
           </label>
         </div>
       </div>
+      <div className="flex gap-4 mb-4 flex-wrap">
+        <Input
+          type="text"
+          placeholder="Search by user name..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </div>
+
       {filteredBookings.length > 0 ? (
         <Table>
           <TableHeader>
