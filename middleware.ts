@@ -1,21 +1,29 @@
 import { withAuth } from "@kinde-oss/kinde-auth-nextjs/middleware";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-
 import { NextRequest, NextResponse } from "next/server";
 
 export default async function middleware(request: NextRequest) {
   const { getPermission } = getKindeServerSession();
-  const admin = await getPermission("admin");
 
-  // Update the path check to use "/user/admin"
+  // Handle admin routes
   if (request.nextUrl.pathname.startsWith("/user/admin")) {
+    const admin = await getPermission("admin");
     if (!admin?.isGranted) {
       return NextResponse.redirect(new URL("/", request.url));
     }
   }
-  return await withAuth(request);
+
+  // Only apply auth to user routes, not the home page
+  if (request.nextUrl.pathname.startsWith("/user")) {
+    return await withAuth(request);
+  }
+
+  // Add pathname header for layout to use
+  const response = NextResponse.next();
+  response.headers.set("x-pathname", request.nextUrl.pathname);
+  return response;
 }
 
 export const config = {
-  matcher: ["/user/admin/:path*", "/user/:path*"],
+  matcher: ["/user/:path*"],
 };

@@ -8,7 +8,7 @@ import { LoadingProvider } from "./components/LoadingProvider";
 import { unstable_noStore as noStore } from "next/cache";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import FacebookPixel from "./components/FacebookPixel";
-import { useState } from "react"; // Added if needed for local fade-in (optional)
+import { headers } from "next/headers";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -29,13 +29,22 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   noStore();
-  const { isAuthenticated, getUser } = getKindeServerSession();
-  const isUserAuthenticated = await isAuthenticated();
-  const user = await getUser();
+
+  // Get the current pathname to conditionally check auth
+  const headersList = await headers();
+  const pathname = headersList.get("x-pathname") || "";
+
+  // Only check authentication for protected routes
+  let isUserAuthenticated = false;
+  let user = null;
+
+  if (pathname.startsWith("/user")) {
+    const { isAuthenticated, getUser } = getKindeServerSession();
+    isUserAuthenticated = await isAuthenticated();
+    user = await getUser();
+  }
 
   const FACEBOOK_PIXEL_ID = "1699908830923677";
-
-  // Configure which pages should NOT show loading screen
   const excludedPaths = ["/api", "/user/admin"];
   const excludedPatterns = ["^/api/", "^/user/admin", "\\.(json|xml|txt)$"];
 
@@ -50,7 +59,6 @@ export default async function RootLayout({
           defaultExcludedPatterns={excludedPatterns}
         >
           <div className="relative">
-            {/* Fade-in/out wrapper */}
             <div className="relative z-10 transition-opacity duration-500 ease-out">
               <Navbar />
               <UserProvider isAuthenticated={isUserAuthenticated} user={user}>
