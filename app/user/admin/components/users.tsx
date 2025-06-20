@@ -21,6 +21,14 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { ArrowLeft } from "lucide-react";
 
+interface Membership {
+  membershipId: string;
+  status: string;
+  roomId: number;
+  availableHours: number;
+  planId: string;
+}
+
 interface User {
   id: string;
   name: string | null;
@@ -34,6 +42,7 @@ interface User {
   phone: string | null;
   socialLinks: string | null;
   categories: string | null;
+  memberships: Membership[];
 }
 
 export default function Users(): JSX.Element {
@@ -43,6 +52,7 @@ export default function Users(): JSX.Element {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [saving, setSaving] = useState<boolean>(false);
   const [saveError, setSaveError] = useState<string>("");
+  const [membershipFilter, setMembershipFilter] = useState<string>("all");
 
   // Edited user fields
   const [editedName, setEditedName] = useState<string>("");
@@ -58,6 +68,12 @@ export default function Users(): JSX.Element {
     useState<boolean>(false);
   const [editedAcceptedTerms, setEditedAcceptedTerms] =
     useState<boolean>(false);
+
+  // Membership management state
+  const [editedMemberships, setEditedMemberships] = useState<Membership[]>([]);
+  const [membershipChanges, setMembershipChanges] = useState<{
+    [key: string]: number;
+  }>({});
 
   useEffect(() => {
     const fetchUsers = async (): Promise<void> => {
@@ -77,13 +93,60 @@ export default function Users(): JSX.Element {
     fetchUsers();
   }, []);
 
+  const getActiveMemberships = (user: User): Membership[] => {
+    return (
+      user.memberships?.filter(
+        (membership) => membership.status === "active"
+      ) || []
+    );
+  };
+
   const filteredUsers = users.filter((user) => {
-    if (searchTerm.trim() === "") return true;
-    const searchLower = searchTerm.toLowerCase();
-    const userName = user.name?.toLowerCase() || "";
-    const userEmail = user.email?.toLowerCase() || "";
-    return userName.includes(searchLower) || userEmail.includes(searchLower);
+    // Apply search filter
+    if (searchTerm.trim() !== "") {
+      const searchLower = searchTerm.toLowerCase();
+      const userName = user.name?.toLowerCase() || "";
+      const userEmail = user.email?.toLowerCase() || "";
+      if (!userName.includes(searchLower) && !userEmail.includes(searchLower)) {
+        return false;
+      }
+    }
+
+    // Apply membership filter
+    if (membershipFilter !== "all") {
+      const activeMemberships = getActiveMemberships(user);
+      if (membershipFilter === "members" && activeMemberships.length === 0) {
+        return false;
+      }
+      if (membershipFilter === "non-members" && activeMemberships.length > 0) {
+        return false;
+      }
+    }
+
+    return true;
   });
+
+  const getMembershipStatus = (user: User): string => {
+    const activeMemberships = getActiveMemberships(user);
+    if (activeMemberships.length === 0) return "No Membership";
+    if (activeMemberships.length === 1) return "Member";
+    return `Member (${activeMemberships.length} studios)`;
+  };
+
+  const getMembershipDetails = (user: User): string => {
+    const activeMemberships = getActiveMemberships(user);
+    if (activeMemberships.length === 0) return "No active memberships";
+
+    const studios = ["A", "B", "C"];
+    const details = activeMemberships
+      .map(
+        (membership) =>
+          `Studio ${studios[membership.roomId]}: ${membership.availableHours} hours`
+      )
+      .join(", ");
+
+    return details;
+  };
 
   const handleViewDetails = (user: User): void => {
     setSelectedUser(user);
@@ -97,6 +160,8 @@ export default function Users(): JSX.Element {
     setEditedVerifyFormSubmitted(user.verifyFormSubmitted);
     setEditedIsUserVerified(user.isUserVerified);
     setEditedAcceptedTerms(user.acceptedTerms);
+    setEditedMemberships(user.memberships || []);
+    setMembershipChanges({});
     setSaveError("");
   };
 
@@ -116,13 +181,54 @@ export default function Users(): JSX.Element {
       setEditedVerifyFormSubmitted(selectedUser.verifyFormSubmitted);
       setEditedIsUserVerified(selectedUser.isUserVerified);
       setEditedAcceptedTerms(selectedUser.acceptedTerms);
+      setEditedMemberships(selectedUser.memberships || []);
+      setMembershipChanges({});
       setSaveError("");
     }
   };
 
+  const addMembership = (roomId: number) => {
+    const membershipId = `temp_${Date.now()}_${roomId}`;
+    const newMembership: Membership = {
+      membershipId,
+      status: "active",
+      roomId,
+      availableHours: 16, // Default hours
+      planId: "admin_created",
+    };
+    setEditedMemberships([...editedMemberships, newMembership]);
+  };
+
+  const removeMembership = (membershipId: string) => {
+    setEditedMemberships(
+      editedMemberships.filter((m) => m.membershipId !== membershipId)
+    );
+    const newChanges = { ...membershipChanges };
+    delete newChanges[membershipId];
+    setMembershipChanges(newChanges);
+  };
+
+  const updateMembershipHours = (membershipId: string, hours: number) => {
+    setEditedMemberships(
+      editedMemberships.map((m) =>
+        m.membershipId === membershipId ? { ...m, availableHours: hours } : m
+      )
+    );
+    setMembershipChanges({ ...membershipChanges, [membershipId]: hours });
+  };
+
+  const getAvailableStudios = (): number[] => {
+    const existingRooms = editedMemberships
+      .filter((m) => m.status === "active")
+      .map((m) => m.roomId);
+    return [0, 1, 2].filter((roomId) => !existingRooms.includes(roomId));
+  };
+
   const hasChanges = () => {
     if (!selectedUser) return false;
-    return (
+
+    // Check basic user field changes
+    const userFieldsChanged =
       editedName !== (selectedUser.name || "") ||
       editedEmail !== selectedUser.email ||
       editedRole !== selectedUser.role ||
@@ -132,7 +238,21 @@ export default function Users(): JSX.Element {
       editedCategories !== (selectedUser.categories || "") ||
       editedVerifyFormSubmitted !== selectedUser.verifyFormSubmitted ||
       editedIsUserVerified !== selectedUser.isUserVerified ||
-      editedAcceptedTerms !== selectedUser.acceptedTerms
+      editedAcceptedTerms !== selectedUser.acceptedTerms;
+
+    // Check membership changes
+    const originalMemberships = selectedUser.memberships || [];
+    const membershipStructureChanged =
+      editedMemberships.length !== originalMemberships.length ||
+      editedMemberships.some(
+        (em) =>
+          !originalMemberships.find((om) => om.membershipId === em.membershipId)
+      );
+
+    const membershipHoursChanged = Object.keys(membershipChanges).length > 0;
+
+    return (
+      userFieldsChanged || membershipStructureChanged || membershipHoursChanged
     );
   };
 
@@ -143,7 +263,8 @@ export default function Users(): JSX.Element {
     setSaveError("");
 
     try {
-      const response = await fetch("/api/admin/users/update", {
+      // Update basic user information
+      const userResponse = await fetch("/api/admin/users/update", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -161,17 +282,113 @@ export default function Users(): JSX.Element {
         }),
       });
 
-      if (response.ok) {
-        const updatedUser = await response.json();
-
-        // Update local state
-        const updatedUsers = users.map((user) =>
-          user.id === selectedUser.id ? updatedUser.user : user
-        );
-        setUsers(updatedUsers);
-        setSelectedUser(updatedUser.user);
-      } else {
+      if (!userResponse.ok) {
         setSaveError("Failed to update user. Please try again.");
+        setSaving(false);
+        return;
+      }
+
+      let updatedUserData = await userResponse.json();
+
+      // Handle membership changes
+      const originalMemberships = selectedUser.memberships || [];
+
+      // Find new memberships to create
+      const newMemberships = editedMemberships.filter(
+        (em) =>
+          em.membershipId.startsWith("temp_") &&
+          !originalMemberships.find((om) => om.membershipId === em.membershipId)
+      );
+
+      // Find memberships to remove
+      const removedMemberships = originalMemberships.filter(
+        (om) =>
+          !editedMemberships.find((em) => em.membershipId === om.membershipId)
+      );
+
+      // Find memberships with hour changes
+      const modifiedMemberships = editedMemberships.filter((em) => {
+        const original = originalMemberships.find(
+          (om) => om.membershipId === em.membershipId
+        );
+        return original && original.availableHours !== em.availableHours;
+      });
+
+      // Process membership changes
+      for (const membership of newMemberships) {
+        const createResponse = await fetch(
+          "/api/admin/users/membership/create",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              userId: selectedUser.id,
+              roomId: membership.roomId,
+              availableHours: membership.availableHours,
+            }),
+          }
+        );
+
+        if (!createResponse.ok) {
+          setSaveError("Failed to create membership. Please try again.");
+          setSaving(false);
+          return;
+        }
+      }
+
+      for (const membership of removedMemberships) {
+        const deleteResponse = await fetch(
+          "/api/admin/users/membership/delete",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              membershipId: membership.membershipId,
+            }),
+          }
+        );
+
+        if (!deleteResponse.ok) {
+          setSaveError("Failed to remove membership. Please try again.");
+          setSaving(false);
+          return;
+        }
+      }
+
+      for (const membership of modifiedMemberships) {
+        const updateResponse = await fetch(
+          "/api/admin/users/membership/update",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              membershipId: membership.membershipId,
+              availableHours: membership.availableHours,
+            }),
+          }
+        );
+
+        if (!updateResponse.ok) {
+          setSaveError("Failed to update membership hours. Please try again.");
+          setSaving(false);
+          return;
+        }
+      }
+
+      // Fetch updated user data with memberships
+      const refreshResponse = await fetch(`/api/admin/users/detailed`);
+      if (refreshResponse.ok) {
+        const allUsers = await refreshResponse.json();
+        const refreshedUser = allUsers.find(
+          (u: User) => u.id === selectedUser.id
+        );
+
+        if (refreshedUser) {
+          setUsers(allUsers);
+          setSelectedUser(refreshedUser);
+          setEditedMemberships(refreshedUser.memberships || []);
+          setMembershipChanges({});
+        }
       }
     } catch (error) {
       console.error("Error updating user:", error);
@@ -249,6 +466,85 @@ export default function Users(): JSX.Element {
               />
             </TableCell>
           </TableRow>
+          <TableRow>
+            <TableCell>Membership Status</TableCell>
+            <TableCell>
+              <Input value={getMembershipStatus(user)} disabled />
+            </TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>Membership Management</TableCell>
+            <TableCell>
+              <div className="space-y-2">
+                {editedMemberships
+                  .filter((m) => m.status === "active")
+                  .map((membership) => {
+                    const studios = ["A", "B", "C"];
+                    return (
+                      <div
+                        key={membership.membershipId}
+                        className="flex items-center gap-2 p-2 border rounded"
+                      >
+                        <span className="min-w-16">
+                          Studio {studios[membership.roomId]}:
+                        </span>
+                        <Input
+                          type="number"
+                          value={membership.availableHours}
+                          onChange={(e) =>
+                            updateMembershipHours(
+                              membership.membershipId,
+                              parseInt(e.target.value) || 0
+                            )
+                          }
+                          className="w-20"
+                          min="0"
+                        />
+                        <span className="text-sm text-gray-500">hours</span>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() =>
+                            removeMembership(membership.membershipId)
+                          }
+                          className="ml-auto"
+                        >
+                          Remove
+                        </Button>
+                      </div>
+                    );
+                  })}
+
+                {getAvailableStudios().length > 0 && (
+                  <div className="flex gap-2">
+                    <span className="text-sm text-gray-600">
+                      Add membership:
+                    </span>
+                    {getAvailableStudios().map((roomId) => {
+                      const studios = ["A", "B", "C"];
+                      return (
+                        <Button
+                          key={roomId}
+                          variant="outline"
+                          size="sm"
+                          onClick={() => addMembership(roomId)}
+                        >
+                          Studio {studios[roomId]}
+                        </Button>
+                      );
+                    })}
+                  </div>
+                )}
+
+                {editedMemberships.filter((m) => m.status === "active")
+                  .length === 0 && (
+                  <div className="text-gray-500 text-sm">
+                    No active memberships
+                  </div>
+                )}
+              </div>
+            </TableCell>
+          </TableRow>
           {saveError && (
             <TableRow>
               <TableCell colSpan={2}>
@@ -308,6 +604,16 @@ export default function Users(): JSX.Element {
     <div className="flex flex-col h-full">
       <div className="flex flex-col">
         <div className="flex gap-4 mb-4 flex-wrap">
+          <Select value={membershipFilter} onValueChange={setMembershipFilter}>
+            <SelectTrigger className="max-w-[180px]">
+              <SelectValue placeholder="Filter by membership" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Users</SelectItem>
+              <SelectItem value="non-members">Non-Members</SelectItem>
+              <SelectItem value="members">Members</SelectItem>
+            </SelectContent>
+          </Select>
           <Input
             type="text"
             placeholder="Search by name or email"
@@ -323,6 +629,7 @@ export default function Users(): JSX.Element {
               <TableRow>
                 <TableHead>Name</TableHead>
                 <TableHead>Email</TableHead>
+                <TableHead>Membership</TableHead>
                 <TableHead>Details</TableHead>
               </TableRow>
             </TableHeader>
@@ -331,6 +638,7 @@ export default function Users(): JSX.Element {
                 <TableRow key={user.id}>
                   <TableCell>{user.name || "No name"}</TableCell>
                   <TableCell>{user.email}</TableCell>
+                  <TableCell>{getMembershipStatus(user)}</TableCell>
                   <TableCell>
                     <Button
                       variant="outline"

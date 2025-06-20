@@ -17,6 +17,15 @@ export async function GET(request: NextRequest) {
         phone: true,
         socialLinks: true,
         categories: true,
+        memberships: {
+          select: {
+            membershipId: true,
+            status: true,
+            roomId: true,
+            availableHours: true,
+            planId: true,
+          }
+        },
       },
       orderBy: {
         name: 'asc'

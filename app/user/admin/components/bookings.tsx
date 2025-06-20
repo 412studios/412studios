@@ -482,12 +482,19 @@ export default function Bookings(): JSX.Element {
           <TableRow>
             <TableCell>Status</TableCell>
             <TableCell>
-              <Button
-                variant="outline"
-                className="w-full justify-between pl-4 pr-4"
+              <Select
+                value={selectedStatus}
+                onValueChange={setSelectedStatus}
               >
-                {booking.status}
-              </Button>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="pending">Pending</SelectItem>
+                  <SelectItem value="success">Success</SelectItem>
+                  <SelectItem value="cancelled">Cancelled</SelectItem>
+                </SelectContent>
+              </Select>
             </TableCell>
           </TableRow>
           <TableRow>
