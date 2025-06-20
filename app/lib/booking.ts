@@ -48,6 +48,19 @@ export async function getAllBooking() {
   return data;
 }
 
+export async function deleteBooking(id: string) {
+  noStore();
+  const data = await prisma.bookings.delete({
+    where: {
+      bookingId: id,
+    },
+    select: {
+      bookingId: true,
+    },
+  });
+  return data;
+}
+
 export async function getMembershipWeek(
   roomId: number,
   date: number,
