@@ -226,15 +226,11 @@ export function DashboardProvider({
   }
 
   const submitAdminBooking = useCallback(async () => {
-    setOptions((prevOptions) => ({
-      ...prevOptions,
-      loading: true,
-    }));
-
     try {
       // Import dynamically to avoid circular dependencies
       const { PostAdminBooking } = await import("@/app/lib/booking");
       await PostAdminBooking(options);
+      // Don't reset loading state on success - let the redirect handle the page change
     } catch (error) {
       console.error("Failed to post booking:", error);
       setOptions((prevOptions) => ({

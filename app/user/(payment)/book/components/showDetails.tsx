@@ -173,6 +173,15 @@ export const ShowDetails: React.FC = () => {
   ]);
 
   const handleAdminSubmit = useCallback(() => {
+    // Prevent double submission
+    if (options.loading) return;
+
+    // Set loading state immediately
+    setOptions((prevOptions) => ({
+      ...prevOptions,
+      loading: true,
+    }));
+
     // Track Facebook Pixel event for admin booking
     if (typeof window !== "undefined" && typeof window.fbq === "function") {
       window.fbq("track", "InitiateCheckout", {
@@ -190,9 +199,11 @@ export const ShowDetails: React.FC = () => {
     submitAdminBooking();
   }, [
     submitAdminBooking,
+    setOptions,
     options.room,
     options.date,
     options.user,
+    options.loading,
     prices,
     total,
     duration,

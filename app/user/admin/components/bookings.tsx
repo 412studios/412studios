@@ -48,6 +48,10 @@ export default function Bookings(): JSX.Element {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
+  const [editedStartTime, setEditedStartTime] = useState<number>(0);
+  const [editedEndTime, setEditedEndTime] = useState<number>(0);
+  const [saving, setSaving] = useState<boolean>(false);
+  const [conflictError, setConflictError] = useState<string>("");
 
   const room: string[] = ["A", "B", "C"];
 
@@ -125,6 +129,9 @@ export default function Bookings(): JSX.Element {
 
   const handleViewDetails = (booking: Booking): void => {
     setSelectedBooking(booking);
+    setEditedStartTime(booking.startTime);
+    setEditedEndTime(booking.endTime);
+    setConflictError("");
   };
 
   const handleBackToList = (): void => {
@@ -139,6 +146,134 @@ export default function Bookings(): JSX.Element {
     } catch (error) {
       console.error("Failed to delete booking:", error);
     }
+  };
+
+  const handleResetTimes = () => {
+    if (selectedBooking) {
+      setEditedStartTime(selectedBooking.startTime);
+      setEditedEndTime(selectedBooking.endTime);
+      setConflictError("");
+    }
+  };
+
+  const checkTimeConflict = async (bookingId: string, roomId: number, date: number, startTime: number, endTime: number): Promise<boolean> => {
+    try {
+      const response = await fetch('/api/booking/check-conflict', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ bookingId, roomId, date, startTime, endTime })
+      });
+      const result = await response.json();
+      return result.hasConflict;
+    } catch (error) {
+      console.error('Error checking conflict:', error);
+      return true;
+    }
+  };
+
+  const updateBookingTimes = async (bookingId: string, startTime: number, endTime: number): Promise<boolean> => {
+    try {
+      const response = await fetch('/api/booking/update-times', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ bookingId, startTime, endTime })
+      });
+      return response.ok;
+    } catch (error) {
+      console.error('Error updating booking:', error);
+      return false;
+    }
+  };
+
+  const validateTimes = (): string | null => {
+    if (editedStartTime >= editedEndTime) {
+      return "End time must be after start time.";
+    }
+    if (editedEndTime - editedStartTime < 2) {
+      return "Booking must be at least 2 hours long. Please select an end time that is at least 2 hours after the start time.";
+    }
+    return null;
+  };
+
+  const handleStartTimeChange = (value: string) => {
+    const newStartTime = parseInt(value);
+    
+    // Validate the new start time
+    if (newStartTime >= editedEndTime || editedEndTime - newStartTime < 2) {
+      // Snap back to original start time if invalid
+      if (selectedBooking) {
+        setEditedStartTime(selectedBooking.startTime);
+      }
+      return;
+    }
+    
+    setEditedStartTime(newStartTime);
+    setConflictError("");
+  };
+
+  const handleEndTimeChange = (value: string) => {
+    const newEndTime = parseInt(value);
+    
+    // Validate the new end time
+    if (newEndTime <= editedStartTime || newEndTime - editedStartTime < 2) {
+      // Snap back to original end time if invalid
+      if (selectedBooking) {
+        setEditedEndTime(selectedBooking.endTime);
+      }
+      return;
+    }
+    
+    setEditedEndTime(newEndTime);
+    setConflictError("");
+  };
+
+  const handleSaveTimeChanges = async () => {
+    if (!selectedBooking) return;
+
+    setSaving(true);
+    setConflictError("");
+
+    // Validate times
+    const validationError = validateTimes();
+    if (validationError) {
+      setConflictError(validationError);
+      setSaving(false);
+      return;
+    }
+
+    const hasConflict = await checkTimeConflict(
+      selectedBooking.bookingId,
+      selectedBooking.roomId,
+      selectedBooking.date,
+      editedStartTime,
+      editedEndTime
+    );
+
+    if (hasConflict) {
+      setConflictError("Time conflict detected. Please choose different times.");
+      setSaving(false);
+      return;
+    }
+
+    const success = await updateBookingTimes(
+      selectedBooking.bookingId,
+      editedStartTime,
+      editedEndTime
+    );
+
+    if (success) {
+      const updatedBookings = bookings.map(booking => 
+        booking.bookingId === selectedBooking.bookingId
+          ? { ...booking, startTime: editedStartTime, endTime: editedEndTime }
+          : booking
+      );
+      setBookings(updatedBookings);
+      setSelectedBooking({ ...selectedBooking, startTime: editedStartTime, endTime: editedEndTime });
+    } else {
+      setConflictError("Failed to update booking times. Please try again.");
+    }
+
+    setSaving(false);
   };
 
   const BookingDetailView = ({ booking }: { booking: Booking }) => (
@@ -181,15 +316,50 @@ export default function Bookings(): JSX.Element {
           <TableRow>
             <TableCell>Start Time</TableCell>
             <TableCell>
-              <Input value={getTimeDisplay(booking.startTime)} disabled />
+              <Select
+                value={editedStartTime.toString()}
+                onValueChange={handleStartTimeChange}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {timeSlots.map((slot) => (
+                    <SelectItem key={slot.id} value={slot.id.toString()}>
+                      {slot.displayStart}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </TableCell>
           </TableRow>
           <TableRow>
             <TableCell>End Time</TableCell>
             <TableCell>
-              <Input value={getTimeDisplay(booking.endTime)} disabled />
+              <Select
+                value={editedEndTime.toString()}
+                onValueChange={handleEndTimeChange}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {timeSlots.map((slot) => (
+                    <SelectItem key={slot.id} value={slot.id.toString()}>
+                      {slot.displayStart}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </TableCell>
           </TableRow>
+          {(conflictError || validateTimes()) && (
+            <TableRow>
+              <TableCell colSpan={2}>
+                <div className="text-red-500 text-sm">{conflictError || validateTimes()}</div>
+              </TableCell>
+            </TableRow>
+          )}
           <TableRow>
             <TableCell colSpan={2}>
               <div className="flex gap-2">
@@ -202,8 +372,21 @@ export default function Bookings(): JSX.Element {
                   <ArrowLeft className="h-4 w-4" />
                   Back
                 </Button>
-                <Button variant="default" size="default">
-                  Save
+                <Button 
+                  variant="default" 
+                  size="default"
+                  onClick={handleSaveTimeChanges}
+                  disabled={saving || (editedStartTime === booking.startTime && editedEndTime === booking.endTime) || validateTimes() !== null}
+                >
+                  {saving ? "Saving..." : "Save Times"}
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="default"
+                  onClick={handleResetTimes}
+                  disabled={saving}
+                >
+                  Reset
                 </Button>
                 <Button
                   variant="destructive"

@@ -283,7 +283,7 @@ export async function PostAdminBooking(input: any) {
     // Don't block the booking process if email fails
   }
 
-  return redirect("/user/book");
+  return redirect("/user/admin");
 }
 
 export async function PostMembership(input: any) {
