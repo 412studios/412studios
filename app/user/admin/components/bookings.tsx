@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { H2, H4 } from "@/components/ui/copy";
@@ -20,7 +20,14 @@ import {
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
-import { Calendar, Clock, User, MapPin, ArrowLeft } from "lucide-react";
+import {
+  Calendar,
+  Clock,
+  User,
+  MapPin,
+  ArrowLeft,
+  ChevronDown,
+} from "lucide-react";
 import { getAllBooking, deleteBooking } from "@/app/lib/booking";
 import { timeSlots } from "@/app/user/(payment)/book/components/timeSlots";
 
@@ -52,23 +59,73 @@ export default function Bookings(): JSX.Element {
   const [editedEndTime, setEditedEndTime] = useState<number>(0);
   const [saving, setSaving] = useState<boolean>(false);
   const [conflictError, setConflictError] = useState<string>("");
+  const [users, setUsers] = useState<User[]>([]);
+  const [selectedUserId, setSelectedUserId] = useState<string>("");
+  const [userSearchTerm, setUserSearchTerm] = useState<string>("");
+  const [isUserDropdownOpen, setIsUserDropdownOpen] = useState<boolean>(false);
+  const userDropdownRef = useRef<HTMLDivElement>(null);
 
   const room: string[] = ["A", "B", "C"];
 
+  // Filter users based on search term
+  const filteredUsers = users.filter((user) => {
+    const searchLower = userSearchTerm.toLowerCase();
+    const userName = user.name?.toLowerCase() || "";
+    const userEmail = user.email?.toLowerCase() || "";
+    return userName.includes(searchLower) || userEmail.includes(searchLower);
+  });
+
   useEffect(() => {
-    const fetchBookings = async (): Promise<void> => {
+    const fetchData = async (): Promise<void> => {
       try {
-        const data: Booking[] = await getAllBooking();
-        setBookings(data);
+        const [bookingsData, usersData] = await Promise.all([
+          getAllBooking(),
+          fetchUsers(),
+        ]);
+        setBookings(bookingsData);
+        setUsers(usersData);
       } catch (error) {
-        console.error("Error fetching bookings:", error);
+        console.error("Error fetching data:", error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchBookings();
+    fetchData();
   }, []);
+
+  // Close user dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        userDropdownRef.current &&
+        !userDropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsUserDropdownOpen(false);
+      }
+    };
+
+    if (isUserDropdownOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isUserDropdownOpen]);
+
+  const fetchUsers = async (): Promise<User[]> => {
+    try {
+      const response = await fetch("/api/admin/users");
+      if (response.ok) {
+        return await response.json();
+      }
+      return [];
+    } catch (error) {
+      console.error("Error fetching users:", error);
+      return [];
+    }
+  };
 
   const formatDate = (dateNum: number): string => {
     const dateStr = dateNum.toString();
@@ -87,6 +144,11 @@ export default function Bookings(): JSX.Element {
   const getTimeDisplay = (timeSlotId: number): string => {
     const timeSlot = timeSlots.find((slot) => slot.id === timeSlotId);
     return timeSlot ? timeSlot.displayStart : `${timeSlotId}:00`;
+  };
+
+  const getEndTimeDisplay = (timeSlotId: number): string => {
+    const timeSlot = timeSlots.find((slot) => slot.id === timeSlotId);
+    return timeSlot ? timeSlot.displayEnd : `${timeSlotId + 1}:00`;
   };
 
   const getDuration = (startTime: number, endTime: number): string => {
@@ -131,6 +193,7 @@ export default function Bookings(): JSX.Element {
     setSelectedBooking(booking);
     setEditedStartTime(booking.startTime);
     setEditedEndTime(booking.endTime);
+    setSelectedUserId(booking.user.id);
     setConflictError("");
   };
 
@@ -148,39 +211,75 @@ export default function Bookings(): JSX.Element {
     }
   };
 
-  const handleResetTimes = () => {
+  const handleResetChanges = () => {
     if (selectedBooking) {
       setEditedStartTime(selectedBooking.startTime);
       setEditedEndTime(selectedBooking.endTime);
+      setSelectedUserId(selectedBooking.user.id);
+      setUserSearchTerm("");
+      setIsUserDropdownOpen(false);
       setConflictError("");
     }
   };
 
-  const checkTimeConflict = async (bookingId: string, roomId: number, date: number, startTime: number, endTime: number): Promise<boolean> => {
+  const handleUserSelect = (userId: string) => {
+    setSelectedUserId(userId);
+    setIsUserDropdownOpen(false);
+    setUserSearchTerm("");
+  };
+
+  const checkTimeConflict = async (
+    bookingId: string,
+    roomId: number,
+    date: number,
+    startTime: number,
+    endTime: number
+  ): Promise<boolean> => {
     try {
-      const response = await fetch('/api/booking/check-conflict', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ bookingId, roomId, date, startTime, endTime })
+      const response = await fetch("/api/booking/check-conflict", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ bookingId, roomId, date, startTime, endTime }),
       });
       const result = await response.json();
       return result.hasConflict;
     } catch (error) {
-      console.error('Error checking conflict:', error);
+      console.error("Error checking conflict:", error);
       return true;
     }
   };
 
-  const updateBookingTimes = async (bookingId: string, startTime: number, endTime: number): Promise<boolean> => {
+  const updateBookingTimes = async (
+    bookingId: string,
+    startTime: number,
+    endTime: number
+  ): Promise<boolean> => {
     try {
-      const response = await fetch('/api/booking/update-times', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ bookingId, startTime, endTime })
+      const response = await fetch("/api/booking/update-times", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ bookingId, startTime, endTime }),
       });
       return response.ok;
     } catch (error) {
-      console.error('Error updating booking:', error);
+      console.error("Error updating booking:", error);
+      return false;
+    }
+  };
+
+  const updateBookingUser = async (
+    bookingId: string,
+    userId: string
+  ): Promise<boolean> => {
+    try {
+      const response = await fetch("/api/booking/update-user", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ bookingId, userId }),
+      });
+      return response.ok;
+    } catch (error) {
+      console.error("Error updating booking user:", error);
       return false;
     }
   };
@@ -189,7 +288,9 @@ export default function Bookings(): JSX.Element {
     if (editedStartTime >= editedEndTime) {
       return "End time must be after start time.";
     }
-    if (editedEndTime - editedStartTime < 2) {
+    // Calculate actual duration: each slot is 1 hour, so duration = (endTime - startTime + 1)
+    const actualDuration = editedEndTime - editedStartTime + 1;
+    if (actualDuration < 2) {
       return "Booking must be at least 2 hours long. Please select an end time that is at least 2 hours after the start time.";
     }
     return null;
@@ -197,81 +298,129 @@ export default function Bookings(): JSX.Element {
 
   const handleStartTimeChange = (value: string) => {
     const newStartTime = parseInt(value);
-    
-    // Validate the new start time
-    if (newStartTime >= editedEndTime || editedEndTime - newStartTime < 2) {
+
+    // Validate the new start time - calculate actual duration
+    const actualDuration = editedEndTime - newStartTime + 1;
+    if (newStartTime >= editedEndTime || actualDuration < 2) {
       // Snap back to original start time if invalid
       if (selectedBooking) {
         setEditedStartTime(selectedBooking.startTime);
       }
       return;
     }
-    
+
     setEditedStartTime(newStartTime);
     setConflictError("");
   };
 
   const handleEndTimeChange = (value: string) => {
     const newEndTime = parseInt(value);
-    
-    // Validate the new end time
-    if (newEndTime <= editedStartTime || newEndTime - editedStartTime < 2) {
+
+    // Validate the new end time - calculate actual duration
+    const actualDuration = newEndTime - editedStartTime + 1;
+    if (newEndTime <= editedStartTime || actualDuration < 2) {
       // Snap back to original end time if invalid
       if (selectedBooking) {
         setEditedEndTime(selectedBooking.endTime);
       }
       return;
     }
-    
+
     setEditedEndTime(newEndTime);
     setConflictError("");
   };
 
-  const handleSaveTimeChanges = async () => {
+  const handleSaveChanges = async () => {
     if (!selectedBooking) return;
 
     setSaving(true);
     setConflictError("");
 
-    // Validate times
-    const validationError = validateTimes();
-    if (validationError) {
-      setConflictError(validationError);
+    // Check what needs to be updated
+    const timesChanged =
+      editedStartTime !== selectedBooking.startTime ||
+      editedEndTime !== selectedBooking.endTime;
+    const userChanged = selectedUserId !== selectedBooking.user.id;
+
+    if (!timesChanged && !userChanged) {
       setSaving(false);
       return;
     }
 
-    const hasConflict = await checkTimeConflict(
-      selectedBooking.bookingId,
-      selectedBooking.roomId,
-      selectedBooking.date,
-      editedStartTime,
-      editedEndTime
-    );
+    // Validate times if they changed
+    if (timesChanged) {
+      const validationError = validateTimes();
+      if (validationError) {
+        setConflictError(validationError);
+        setSaving(false);
+        return;
+      }
 
-    if (hasConflict) {
-      setConflictError("Time conflict detected. Please choose different times.");
-      setSaving(false);
-      return;
-    }
-
-    const success = await updateBookingTimes(
-      selectedBooking.bookingId,
-      editedStartTime,
-      editedEndTime
-    );
-
-    if (success) {
-      const updatedBookings = bookings.map(booking => 
-        booking.bookingId === selectedBooking.bookingId
-          ? { ...booking, startTime: editedStartTime, endTime: editedEndTime }
-          : booking
+      const hasConflict = await checkTimeConflict(
+        selectedBooking.bookingId,
+        selectedBooking.roomId,
+        selectedBooking.date,
+        editedStartTime,
+        editedEndTime
       );
-      setBookings(updatedBookings);
-      setSelectedBooking({ ...selectedBooking, startTime: editedStartTime, endTime: editedEndTime });
-    } else {
-      setConflictError("Failed to update booking times. Please try again.");
+
+      if (hasConflict) {
+        setConflictError(
+          "Time conflict detected. Please choose different times."
+        );
+        setSaving(false);
+        return;
+      }
     }
+
+    // Update times if changed
+    if (timesChanged) {
+      const timesSuccess = await updateBookingTimes(
+        selectedBooking.bookingId,
+        editedStartTime,
+        editedEndTime
+      );
+
+      if (!timesSuccess) {
+        setConflictError("Failed to update booking times. Please try again.");
+        setSaving(false);
+        return;
+      }
+    }
+
+    // Update user if changed
+    if (userChanged) {
+      const userSuccess = await updateBookingUser(
+        selectedBooking.bookingId,
+        selectedUserId
+      );
+
+      if (!userSuccess) {
+        setConflictError("Failed to update booking user. Please try again.");
+        setSaving(false);
+        return;
+      }
+    }
+
+    // Update local state
+    const selectedUser = users.find((user) => user.id === selectedUserId);
+    const updatedBookings = bookings.map((booking) =>
+      booking.bookingId === selectedBooking.bookingId
+        ? {
+            ...booking,
+            startTime: editedStartTime,
+            endTime: editedEndTime,
+            user: selectedUser || booking.user,
+          }
+        : booking
+    );
+    setBookings(updatedBookings);
+    setSelectedBooking({
+      ...selectedBooking,
+      startTime: editedStartTime,
+      endTime: editedEndTime,
+      user: selectedUser || selectedBooking.user,
+    });
 
     setSaving(false);
   };
@@ -310,7 +459,49 @@ export default function Bookings(): JSX.Element {
           <TableRow>
             <TableCell>User</TableCell>
             <TableCell>
-              <Input value={booking.user.name || "Unknown User"} disabled />
+              <div className="relative" ref={userDropdownRef}>
+                <Button
+                  variant="outline"
+                  onClick={() => setIsUserDropdownOpen(!isUserDropdownOpen)}
+                  className="w-full justify-between pl-4 pr-4"
+                >
+                  {users.find((user) => user.id === selectedUserId)?.name ||
+                    users.find((user) => user.id === selectedUserId)?.email ||
+                    "Select a user"}
+                  <ChevronDown className="h-4" />
+                </Button>
+
+                {isUserDropdownOpen && (
+                  <div className="absolute top-full left-0 right-0 z-50 mt-1 rounded-lg shadow-lg bg-background rounded-md border">
+                    <div className="p-2 border-b">
+                      <Input
+                        placeholder="Search users..."
+                        value={userSearchTerm}
+                        onChange={(e) => setUserSearchTerm(e.target.value)}
+                        className="h-8"
+                        autoFocus
+                      />
+                    </div>
+                    <div className="max-h-48 overflow-y-auto">
+                      {filteredUsers.length > 0 ? (
+                        filteredUsers.map((user) => (
+                          <div
+                            key={user.id}
+                            className="px-3 py-2 cursor-pointer hover:bg-gray-100 text-sm"
+                            onClick={() => handleUserSelect(user.id)}
+                          >
+                            {user.name || user.email || "Unknown User"}
+                          </div>
+                        ))
+                      ) : (
+                        <div className="p-2 text-sm text-gray-500 text-center">
+                          No users found
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
             </TableCell>
           </TableRow>
           <TableRow>
@@ -346,7 +537,7 @@ export default function Bookings(): JSX.Element {
                 <SelectContent>
                   {timeSlots.map((slot) => (
                     <SelectItem key={slot.id} value={slot.id.toString()}>
-                      {slot.displayStart}
+                      {slot.displayEnd}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -356,7 +547,9 @@ export default function Bookings(): JSX.Element {
           {(conflictError || validateTimes()) && (
             <TableRow>
               <TableCell colSpan={2}>
-                <div className="text-red-500 text-sm">{conflictError || validateTimes()}</div>
+                <div className="text-red-500 text-sm">
+                  {conflictError || validateTimes()}
+                </div>
               </TableCell>
             </TableRow>
           )}
@@ -372,18 +565,24 @@ export default function Bookings(): JSX.Element {
                   <ArrowLeft className="h-4 w-4" />
                   Back
                 </Button>
-                <Button 
-                  variant="default" 
+                <Button
+                  variant="default"
                   size="default"
-                  onClick={handleSaveTimeChanges}
-                  disabled={saving || (editedStartTime === booking.startTime && editedEndTime === booking.endTime) || validateTimes() !== null}
+                  onClick={handleSaveChanges}
+                  disabled={
+                    saving ||
+                    (editedStartTime === booking.startTime &&
+                      editedEndTime === booking.endTime &&
+                      selectedUserId === booking.user.id) ||
+                    validateTimes() !== null
+                  }
                 >
-                  {saving ? "Saving..." : "Save Times"}
+                  {saving ? "Saving..." : "Save Changes"}
                 </Button>
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   size="default"
-                  onClick={handleResetTimes}
+                  onClick={handleResetChanges}
                   disabled={saving}
                 >
                   Reset
@@ -477,7 +676,7 @@ export default function Bookings(): JSX.Element {
                   <TableCell>{room[booking.roomId]}</TableCell>
                   <TableCell>{formatDate(booking.date)}</TableCell>
                   <TableCell>{getTimeDisplay(booking.startTime)}</TableCell>
-                  <TableCell>{getTimeDisplay(booking.endTime)}</TableCell>
+                  <TableCell>{getEndTimeDisplay(booking.endTime)}</TableCell>
                   <TableCell>{booking.user.name ?? ""}</TableCell>
                   <TableCell>
                     <Button

@@ -19,7 +19,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (endTime - startTime < 2) {
+    // Calculate actual duration: each slot is 1 hour, so duration = (endTime - startTime + 1)
+    const actualDuration = endTime - startTime + 1;
+    if (actualDuration < 2) {
       return NextResponse.json(
         { error: "Booking must be at least 2 hours long" },
         { status: 400 }
