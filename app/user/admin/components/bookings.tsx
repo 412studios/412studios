@@ -44,6 +44,7 @@ interface Booking {
   startTime: number;
   endTime: number;
   user: User;
+  status: string;
 }
 
 type RoomFilter = "all" | "a" | "b" | "c";
@@ -63,6 +64,7 @@ export default function Bookings(): JSX.Element {
   const [selectedUserId, setSelectedUserId] = useState<string>("");
   const [userSearchTerm, setUserSearchTerm] = useState<string>("");
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState<boolean>(false);
+  const [selectedStatus, setSelectedStatus] = useState<string>("");
   const userDropdownRef = useRef<HTMLDivElement>(null);
 
   const room: string[] = ["A", "B", "C"];
@@ -194,6 +196,7 @@ export default function Bookings(): JSX.Element {
     setEditedStartTime(booking.startTime);
     setEditedEndTime(booking.endTime);
     setSelectedUserId(booking.user.id);
+    setSelectedStatus(booking.status);
     setConflictError("");
   };
 
@@ -216,6 +219,7 @@ export default function Bookings(): JSX.Element {
       setEditedStartTime(selectedBooking.startTime);
       setEditedEndTime(selectedBooking.endTime);
       setSelectedUserId(selectedBooking.user.id);
+      setSelectedStatus(selectedBooking.status);
       setUserSearchTerm("");
       setIsUserDropdownOpen(false);
       setConflictError("");
@@ -284,6 +288,23 @@ export default function Bookings(): JSX.Element {
     }
   };
 
+  const updateBookingStatus = async (
+    bookingId: string,
+    status: string
+  ): Promise<boolean> => {
+    try {
+      const response = await fetch("/api/booking/update-status", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ bookingId, status }),
+      });
+      return response.ok;
+    } catch (error) {
+      console.error("Error updating booking status:", error);
+      return false;
+    }
+  };
+
   const validateTimes = (): string | null => {
     if (editedStartTime >= editedEndTime) {
       return "End time must be after start time.";
@@ -341,8 +362,9 @@ export default function Bookings(): JSX.Element {
       editedStartTime !== selectedBooking.startTime ||
       editedEndTime !== selectedBooking.endTime;
     const userChanged = selectedUserId !== selectedBooking.user.id;
+    const statusChanged = selectedStatus !== selectedBooking.status;
 
-    if (!timesChanged && !userChanged) {
+    if (!timesChanged && !userChanged && !statusChanged) {
       setSaving(false);
       return;
     }
@@ -402,6 +424,20 @@ export default function Bookings(): JSX.Element {
       }
     }
 
+    // Update status if changed
+    if (statusChanged) {
+      const statusSuccess = await updateBookingStatus(
+        selectedBooking.bookingId,
+        selectedStatus
+      );
+
+      if (!statusSuccess) {
+        setConflictError("Failed to update booking status. Please try again.");
+        setSaving(false);
+        return;
+      }
+    }
+
     // Update local state
     const selectedUser = users.find((user) => user.id === selectedUserId);
     const updatedBookings = bookings.map((booking) =>
@@ -411,6 +447,7 @@ export default function Bookings(): JSX.Element {
             startTime: editedStartTime,
             endTime: editedEndTime,
             user: selectedUser || booking.user,
+            status: selectedStatus,
           }
         : booking
     );
@@ -420,6 +457,7 @@ export default function Bookings(): JSX.Element {
       startTime: editedStartTime,
       endTime: editedEndTime,
       user: selectedUser || selectedBooking.user,
+      status: selectedStatus,
     });
 
     setSaving(false);
@@ -444,16 +482,23 @@ export default function Bookings(): JSX.Element {
           <TableRow>
             <TableCell>Status</TableCell>
             <TableCell>
-              <Input
-                value={isUpcoming(booking.date) ? "Upcoming" : "Completed"}
-                disabled
-              />
+              <Button
+                variant="outline"
+                className="w-full justify-between pl-4 pr-4"
+              >
+                {booking.status}
+              </Button>
             </TableCell>
           </TableRow>
           <TableRow>
             <TableCell>Date</TableCell>
             <TableCell>
-              <Input value={formatDate(booking.date)} disabled />
+              <Button
+                variant="outline"
+                className="w-full justify-between pl-4 pr-4"
+              >
+                {formatDate(booking.date)}
+              </Button>
             </TableCell>
           </TableRow>
           <TableRow>
@@ -573,7 +618,8 @@ export default function Bookings(): JSX.Element {
                     saving ||
                     (editedStartTime === booking.startTime &&
                       editedEndTime === booking.endTime &&
-                      selectedUserId === booking.user.id) ||
+                      selectedUserId === booking.user.id &&
+                      selectedStatus === booking.status) ||
                     validateTimes() !== null
                   }
                 >

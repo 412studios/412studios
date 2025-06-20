@@ -42,6 +42,7 @@ export async function getAllBooking() {
       date: true,
       startTime: true,
       endTime: true,
+      status: true,
       user: true,
     },
   });
