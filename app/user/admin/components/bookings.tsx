@@ -131,10 +131,10 @@ export default function Bookings(): JSX.Element {
 
   const formatDate = (dateNum: number): string => {
     const dateStr = dateNum.toString();
-    const year = dateStr.substring(0, 4);
-    const month = dateStr.substring(4, 6);
-    const day = dateStr.substring(6, 8);
-    const date = new Date(`${year}-${month}-${day}`);
+    const year = parseInt(dateStr.substring(0, 4));
+    const month = parseInt(dateStr.substring(4, 6)) - 1; // JavaScript months are 0-indexed
+    const day = parseInt(dateStr.substring(6, 8));
+    const date = new Date(year, month, day);
     return date.toLocaleDateString("en-US", {
       weekday: "short",
       year: "numeric",
