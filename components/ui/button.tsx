@@ -12,12 +12,13 @@ const buttonVariants = cva(
           "bg-primary text-background hover:bg-primary/50 transition-all duration-700",
         secondary: "bg-background text-primary hover:bg-opacity-50",
         outline:
-          "border text-primary bg-background/60 hover:bg-background hover:text-primary transition-all duration-300",
+          "border text-primary bg-background/60 hover:bg-background hover:text-primary transition-all duration-700",
         destructive:
           "bg-destructive text-destructive-foreground hover:bg-destructive/90",
         ghost:
           "transition ease-in-out hover:bg-primary/50 border-0 transition-all duration-700 ease-in-out",
         link: "text-primary underline-offset-4 hover:underline",
+        nav: "p-6 rounded-lg border w-full hover:bg-background/40 transition-all duration-300",
       },
       size: {
         default: "h-6 px-12",

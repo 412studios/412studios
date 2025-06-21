@@ -40,40 +40,24 @@ export default function NavCollapse({
         {isAuthenticated ? (
           <>
             <Link href="/user/book">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="w-full text-left justify-start px-2 border-[1px]"
-              >
+              <Button variant="nav" size="sm">
                 BOOK NOW
               </Button>
             </Link>
             <Link href="/user/profile">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="w-full text-left justify-start px-2 border-[1px]"
-              >
+              <Button variant="nav" size="sm">
                 PROFILE
               </Button>
             </Link>
             {isAdmin && (
               <Link href="/user/admin">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="w-full text-left justify-start px-2 border-[1px]"
-                >
+                <Button variant="nav" size="sm">
                   ADMIN
                 </Button>
               </Link>
             )}
             <LogoutLink>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="w-full text-left justify-start px-2 border-[1px]"
-              >
+              <Button variant="nav" size="sm">
                 LOG OUT
               </Button>
             </LogoutLink>
@@ -81,26 +65,18 @@ export default function NavCollapse({
         ) : (
           <>
             <RegisterLink>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="w-full text-left justify-start px-2 border-[1px]"
-              >
+              <Button variant="nav" size="sm">
                 SIGN UP
               </Button>
             </RegisterLink>
             <LoginLink>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="w-full text-left justify-start px-2 border-[1px]"
-              >
+              <Button variant="nav" size="sm">
                 LOG IN
               </Button>
             </LoginLink>
           </>
         )}
-        <div className="flex sm:hidden flex-col">
+        <div className="flex sm:hidden flex-col gap-2 mt-2">
           {links.map((link) => (
             <Link key={link.href} href={link.href}>
               <Button
