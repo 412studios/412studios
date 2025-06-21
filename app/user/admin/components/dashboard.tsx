@@ -3,6 +3,7 @@ import prisma from "@/app/lib/db";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Bookings from "@/app/user/admin/components/bookings";
 import Users from "@/app/user/admin/components/users";
+import Pricing from "@/app/user/admin/components/pricing";
 
 export default async function Dashboard() {
   noStore();
@@ -25,11 +26,23 @@ export default async function Dashboard() {
       },
     },
   });
+  const pricing = await prisma.pricing.findMany({
+    select: {
+      id: true,
+      room: true,
+      dayRate: true,
+      hourlyRate: true,
+      membershipPrice: true,
+      engineerPrice: true,
+      blocked: true,
+    },
+  });
   return (
     <Tabs defaultValue="bookings">
       <TabsList className="mb-4">
         <TabsTrigger value="bookings">Bookings</TabsTrigger>
         <TabsTrigger value="users">Users</TabsTrigger>
+        <TabsTrigger value="pricing">Pricing</TabsTrigger>
       </TabsList>
       {/* BOOKINGS SECTION */}
       <TabsContent value="bookings">
@@ -37,6 +50,9 @@ export default async function Dashboard() {
       </TabsContent>
       <TabsContent value="users">
         <Users />
+      </TabsContent>
+      <TabsContent value="pricing">
+        <Pricing pricing={pricing} />
       </TabsContent>
     </Tabs>
   );
