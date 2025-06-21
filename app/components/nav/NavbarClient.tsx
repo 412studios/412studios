@@ -16,11 +16,13 @@ import {
 interface NavbarClientProps {
   isAuthenticated: boolean;
   user: any;
+  isAdmin: boolean;
 }
 
 export default function NavbarClient({
   isAuthenticated,
   user,
+  isAdmin,
 }: NavbarClientProps) {
   const links = [
     { href: "#home", label: "HOME" },
@@ -203,6 +205,7 @@ export default function NavbarClient({
         isTransitioning={isTransitioning}
         handleMenuClick={handleMenuClick}
         links={links}
+        isAdmin={isAdmin}
       />
     </header>
   );

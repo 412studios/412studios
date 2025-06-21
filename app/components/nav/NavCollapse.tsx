@@ -13,6 +13,7 @@ interface NavCollapseProps {
   isTransitioning: boolean;
   handleMenuClick: () => void;
   links?: Array<{ href: string; label: string }>;
+  isAdmin?: boolean;
 }
 
 export default function NavCollapse({
@@ -22,6 +23,7 @@ export default function NavCollapse({
   isTransitioning,
   handleMenuClick,
   links = [],
+  isAdmin = false,
 }: NavCollapseProps) {
   return (
     <div
@@ -55,6 +57,17 @@ export default function NavCollapse({
                 PROFILE
               </Button>
             </Link>
+            {isAdmin && (
+              <Link href="/user/admin">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="w-full text-left justify-start px-2 border-[1px]"
+                >
+                  ADMIN
+                </Button>
+              </Link>
+            )}
             <LogoutLink>
               <Button
                 variant="ghost"
