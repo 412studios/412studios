@@ -1,23 +1,9 @@
-"use client";
-
 import * as React from "react";
 import * as TabsPrimitive from "@radix-ui/react-tabs";
 
 import { cn } from "@/lib/utils";
 
-const Tabs = React.forwardRef<
-  React.ElementRef<typeof TabsPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Root> & {
-    className?: string;
-  }
->(({ className, ...props }, ref) => (
-  <TabsPrimitive.Root
-    ref={ref}
-    {...props}
-    className={cn("flex flex-col h-full overflow-hidden", className)}
-  />
-));
-Tabs.displayName = TabsPrimitive.Root.displayName;
+const Tabs = TabsPrimitive.Root;
 
 const TabsList = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.List>,
@@ -25,7 +11,10 @@ const TabsList = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <TabsPrimitive.List
     ref={ref}
-    className={cn("flex items-center justify-start gap-4", className)}
+    className={cn(
+      "inline-flex items-center justify-start gap-2 flex-shrink-0 border rounded-full border p-1",
+      className
+    )}
     {...props}
   />
 ));
@@ -38,7 +27,8 @@ const TabsTrigger = React.forwardRef<
   <TabsPrimitive.Trigger
     ref={ref}
     className={cn(
-      "border data-[state=active]:bg-primary data-[state=active]:text-background px-4 rounded-full transition-all duration-500",
+      "border px-12 rounded-full data-[state=active]:bg-primary data-[state=active]:text-background transition-all duration-200",
+      // "border border-gray-300 data-[state=active]:bg-white data-[state=active]:text-black data-[state=inactive]:bg-gray-100 data-[state=inactive]:text-black px-4 py-2 rounded-md transition-all duration-200 flex-shrink-0 font-medium",
       className
     )}
     {...props}
@@ -52,7 +42,10 @@ const TabsContent = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <TabsPrimitive.Content
     ref={ref}
-    className={cn("w-full h-full overflow-hidden", className)}
+    className={cn(
+      "ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
+      className
+    )}
     {...props}
   />
 ));

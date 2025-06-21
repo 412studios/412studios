@@ -4,10 +4,8 @@ import { PickTime } from "./components/pickTime";
 import { PickEng } from "./components/pickEng";
 import { ShowDetails } from "./components/showDetails";
 import { StudioDetails } from "./components/studioDetails";
-import { H4 } from "@/components/ui/copy";
+import { H2, H4 } from "@/components/ui/copy";
 import { useDashboard } from "./context";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
 
 export default function DashboardPage() {
   const { options, isAdmin } = useDashboard();
@@ -15,18 +13,7 @@ export default function DashboardPage() {
   return (
     <section className="block min-h-[calc(100vh-34px)] p-8">
       <div className="rounded-lg max-w-screen-lg mx-auto">
-        <H4>BOOK TIME</H4>
-        {/* Admin Details */}
-        {isAdmin && (
-          <div className="border p-2 bg-sky-200 mb-2">
-            <p>Admin Booking Dashboard</p>
-            <Link href="/user/admin/">
-              <Button variant="ghost" className="border-[1px] mt-2">
-                More Admin Options
-              </Button>
-            </Link>
-          </div>
-        )}
+        <H2>BOOK TIME</H2>
         {/* Membership Details */}
         {options.membershipRooms.length >= 1 && !isAdmin && (
           <div className="border p-2 bg-sky-200 mb-2">

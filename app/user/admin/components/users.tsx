@@ -408,11 +408,6 @@ export default function Users(): JSX.Element {
             </TableCell>
           </TableRow>
         </TableHeader>
-        <TableHeader>
-          <TableRow>
-            <TableCell colSpan={2}>User ID: {user.id}</TableCell>
-          </TableRow>
-        </TableHeader>
         <TableBody>
           <TableRow>
             <TableCell>Name</TableCell>
