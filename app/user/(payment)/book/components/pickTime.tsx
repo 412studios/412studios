@@ -231,8 +231,8 @@ export const PickTime = () => {
         isBooked
           ? "bg-red-500 text-white"
           : isSelected
-          ? "bg-emerald-500 text-black"
-          : "bg-background hover:bg-accent"
+            ? "bg-emerald-500 text-black"
+            : "bg-background hover:bg-accent"
       }`}
         role="button"
         aria-pressed={isSelected}
@@ -268,16 +268,16 @@ export const PickTime = () => {
     <>
       {isLoading ? (
         <div
-          className="flex grow rounded-lg items-center justify-center"
+          className="flex grow rounded-lg border items-center justify-center"
           aria-live="polite"
         >
           <div className="text-center">Loading available time slots...</div>
         </div>
       ) : (
-        <div className="flex flex-col gap-2 grow rounded-lg">
-          <div className="flex flex-grow w-full rounded-lg items-start">
+        <div className="flex flex-col h-[307px] rounded-lg border">
+          <div className="flex-1 overflow-hidden">
             <div
-              className={`border w-full h-[310px] rounded-lg overflow-y-scroll p-2
+              className={`w-full h-full rounded-t-lg overflow-y-scroll p-2
                   ${
                     useMembershipSlots
                       ? "flex justify-center flex-col grow w-full"
@@ -289,13 +289,15 @@ export const PickTime = () => {
               {renderTimeSlots}
             </div>
           </div>
-          <Button
-            className="w-full"
-            onClick={handleClear}
-            disabled={selList.length === 0}
-          >
-            CLEAR SELECTION
-          </Button>
+          <div className="flex-shrink-0 p-2 border-t">
+            <Button
+              className="w-full"
+              onClick={handleClear}
+              disabled={selList.length === 0}
+            >
+              CLEAR SELECTION
+            </Button>
+          </div>
         </div>
       )}
     </>

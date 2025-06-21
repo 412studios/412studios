@@ -10,30 +10,35 @@ export const PickDate = () => {
   // Disable past dates for selection
   const disabledDates = useMemo(() => {
     const today = new Date();
-    today.setHours(0, 0, 0, 0);  // Set to beginning of today
+    today.setHours(0, 0, 0, 0); // Set to beginning of today
     return { before: today };
   }, []);
 
   // Memoize the date selection handler
-  const handleDateSelect = useCallback((selectedDate: Date | undefined) => {
-    setDate(selectedDate);
-    if (selectedDate) {
-      setOptions(prevOptions => ({
-        ...prevOptions,
-        date: selectedDate,
-        startTime: -1,
-        endTime: -1
-      }));
-    }
-  }, [setOptions]);
+  const handleDateSelect = useCallback(
+    (selectedDate: Date | undefined) => {
+      setDate(selectedDate);
+      if (selectedDate) {
+        setOptions((prevOptions) => ({
+          ...prevOptions,
+          date: selectedDate,
+          startTime: -1,
+          endTime: -1,
+        }));
+      }
+    },
+    [setOptions]
+  );
 
   return (
-    <Calendar
-      mode="single"
-      selected={date}
-      onSelect={handleDateSelect}
-      disabled={disabledDates}
-      className="border rounded-lg border-black hover:bg-black/10 cursor-pointer duration-300"
-    />
+    <div className="mx-auto">
+      <Calendar
+        mode="single"
+        selected={date}
+        onSelect={handleDateSelect}
+        disabled={disabledDates}
+        className="border rounded-lg border-black"
+      />
+    </div>
   );
 };

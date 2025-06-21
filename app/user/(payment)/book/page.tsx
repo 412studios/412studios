@@ -27,18 +27,14 @@ export default function DashboardPage() {
           </div>
         )}
         <StudioDetails />
-        <div className="w-full">
-          <div className="flex flex-col sm:flex-row mt-2 gap-4">
-            <div className="shrink-1">
-              <H4 className="mb-2">SELECT DATE</H4>
-              <div className="rounded-lg flex-shrink flex justify-center">
-                <PickDate />
-              </div>
-            </div>
-            <div className="flex flex-col grow">
-              <H4 className="mb-2">SELECT TIME</H4>
-              <PickTime />
-            </div>
+        <div className="w-full flex flex-col sm:flex-row gap-4">
+          <div className="flex flex-col">
+            <H4 className="mb-2">SELECT DATE</H4>
+            <PickDate />
+          </div>
+          <div className="flex flex-col w-full">
+            <H4 className="mb-2">SELECT TIME</H4>
+            <PickTime />
           </div>
         </div>
         <PickEng />
