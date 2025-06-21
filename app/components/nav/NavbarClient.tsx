@@ -204,7 +204,7 @@ export default function NavbarClient({
         navHeight={navHeight}
         isTransitioning={isTransitioning}
         handleMenuClick={handleMenuClick}
-        links={links}
+        links={isHomepage ? links : []}
         isAdmin={isAdmin}
       />
     </header>
