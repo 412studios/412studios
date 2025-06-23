@@ -50,7 +50,7 @@
     overflow-x: hidden;
   }
   .hl::selection {
-    @apply bg-orange-400 text-black;
+    @apply text-black;
   }
 }
 

@@ -10,12 +10,6 @@ import {
   CarouselItem,
   CarouselControls,
 } from "@/components/ui/carousel";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 import { useDashboard } from "../context";
 
 export const StudioDetails = () => {
@@ -48,13 +42,7 @@ export const StudioDetails = () => {
                 </div>
               ) : null}
             </div>
-            <Button
-              onClick={handleButtonClick}
-              value={element.id}
-              className={`w-full mt-2 ${
-                options.room == element.id ? "bg-orange-500" : ""
-              }`}
-            >
+            <Button onClick={handleButtonClick} value={element.id}>
               Studio {element.room}
             </Button>
             <CardDescription>
@@ -100,9 +88,7 @@ export const StudioDetails = () => {
                   <Button
                     onClick={handleButtonClick}
                     value={element.id}
-                    className={`w-full mt-2 ${
-                      options.room == element.id ? "bg-orange-500" : ""
-                    }`}
+                    variant="default"
                   >
                     Studio {element.room}
                   </Button>
