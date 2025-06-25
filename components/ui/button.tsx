@@ -10,7 +10,8 @@ const buttonVariants = cva(
       variant: {
         default:
           "bg-primary text-background hover:bg-primary/50 active:bg-primary/70 focus:bg-primary/70 aria-[pressed=true]:bg-primary/70",
-        secondary: "bg-background text-primary hover:bg-opacity-50 active:bg-background/70 focus:bg-background/70 aria-[pressed=true]:bg-background/70",
+        secondary:
+          "bg-background text-primary hover:bg-opacity-50 active:bg-background/70 focus:bg-background/70 aria-[pressed=true]:bg-background/70",
         outline:
           "border text-primary bg-background/60 hover:bg-background hover:text-primary active:bg-background/80 focus:bg-background/80 aria-[pressed=true]:bg-background/80",
         destructive:
@@ -18,7 +19,7 @@ const buttonVariants = cva(
         ghost:
           "transition ease-in-out hover:bg-primary/50 border-0 transition-all duration-300 ease-in-out active:bg-primary/60 focus:bg-primary/60 aria-[pressed=true]:bg-primary/60",
         link: "text-primary underline-offset-4 hover:underline active:underline focus:underline",
-        nav: "p-6 rounded-lg border w-full hover:bg-background/40 transition-all duration-300 active:bg-background/60 focus:bg-background/60 aria-[pressed=true]:bg-background/60",
+        nav: "p-6 rounded-lg border w-full hover:bg-primary/20 transition-all duration-300 active:bg-background/60 focus:bg-background/60 aria-[pressed=true]:bg-background/60",
       },
       size: {
         default: "px-12",

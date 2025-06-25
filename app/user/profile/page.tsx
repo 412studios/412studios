@@ -5,7 +5,8 @@ import { unstable_noStore as noStore } from "next/cache";
 import prisma from "@/app/lib/db";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { stripe } from "@/app/lib/stripe";
-import { H4 } from "@/components/ui/copy";
+import { H4, Section } from "@/components/ui/copy";
+import { User, Dot, Book, LogOut, Settings } from "lucide-react";
 
 async function getData(user: any) {
   noStore();
@@ -97,99 +98,77 @@ export default async function Page() {
   const membershipData = await getMembership(user);
 
   return (
-    <>
-      <section className="block h-[calc(100vh-34px)] p-8">
-        <div className="p-2 rounded-lg font-medium">
+    <Section>
+      <div className="p-8 rounded-lg font-medium border">
+        <div className="flex flex-col gap-4">
           {/* TITLE SECTION */}
-          <div className="p-2">
-            <H4>412 Studios Profile</H4>
-            <p>Name: {data?.name}</p>
-            <p>Email: {data?.email}</p>
+          <div className="flex">
+            <div className="flex items-center px-4">
+              <User />
+            </div>
+            <div>
+              {data?.role === "admin" && (
+                <p className="text-xs">
+                  <Link href="/user/admin">Admin</Link>
+                </p>
+              )}
+              <H4>{data?.name}</H4>
+              <p className="text-xs">{data?.email}</p>
+            </div>
           </div>
           {/* membership DETAILS SECTION */}
-          <div>
-            {typeof membershipData[0] !== "undefined" &&
-              membershipData[0].status === "success" && (
-                <p>
-                  <span className="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-blue-400 border border-blue-400">
-                    Membership
-                  </span>
-                </p>
-              )}
-          </div>
-          {/* MENU LINKS */}
-          <div className="flex flex-col gap-2 max-w-[400px]">
-            {typeof membershipData[0] !== "undefined" &&
-              membershipData[0].status === "success" && (
-                <p>
-                  <span className="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-blue-400 border border-blue-400">
-                    Membership
-                  </span>
-                </p>
-              )}
-            {data?.isUserVerified && (
-              <Link href="/user/book/">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="w-full text-left justify-start px-2"
-                >
-                  Book Now
-                </Button>
-              </Link>
+          {typeof membershipData[0] !== "undefined" &&
+            membershipData[0].status === "success" && (
+              <p>
+                <span className="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-blue-400 border border-blue-400">
+                  Membership
+                </span>
+              </p>
             )}
+          {/* Main Buttons */}
+          <div className="flex flex-col sm:flex-row gap-2">
             {typeof membershipData[0] !== "undefined" &&
               membershipData[0].userId && (
-                <Link href="/user/profile/membership">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="w-full text-left justify-start px-2"
-                  >
+                <Link href="/user/profile/bookings" className="w-full">
+                  <Button variant="nav" size="sm" className="w-full">
+                    View Bookings
+                  </Button>
+                </Link>
+              )}
+            {typeof membershipData[0] !== "undefined" &&
+              membershipData[0].userId && (
+                <Link href="/user/profile" className="w-full">
+                  <Button variant="nav" size="sm" className="w-full">
                     Manage Memberships
                   </Button>
                 </Link>
               )}
-            {typeof membershipData[0] !== "undefined" &&
-              membershipData[0].userId && (
-                <Link href="/user/profile/bookings">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="w-full text-left justify-start px-2"
-                  >
-                    View Booking Details
-                  </Button>
-                </Link>
-              )}
-            <Link href="/user/profile/settings">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="w-full text-left justify-start px-2"
-              >
-                Settings
-              </Button>
+          </div>
+          {/* Final Links */}
+          <div className="flex flex-col sm:flex-row gap-4">
+            <Link
+              href="/user/profile/settings"
+              className="flex items-center text-xs gap-2"
+            >
+              <Settings className="h-4 w-4" />
+              Settings
             </Link>
-            {data?.role === "admin" && (
-              <Link href="/user/admin">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="w-full text-left justify-start px-2"
-                >
-                  Admin Dashboard
-                </Button>
+            {data?.isUserVerified && (
+              <Link
+                href="/user/book/"
+                className="flex items-center text-xs gap-2"
+              >
+                <Book className="h-4 w-4" />
+                Book Now
               </Link>
             )}
-            <LogoutLink>
-              <Button variant="ghost" size="sm" className="px-2 border-[1px]">
-                Logout
-              </Button>
+            <LogoutLink className="flex items-center text-xs gap-2">
+              <LogOut className="h-4 w-4" />
+              Log Out
             </LogoutLink>
           </div>
         </div>
-      </section>
-    </>
+      </div>
+    </Section>
   );
 }
