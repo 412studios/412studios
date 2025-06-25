@@ -42,7 +42,12 @@ export const StudioDetails = () => {
                 </div>
               ) : null}
             </div>
-            <Button onClick={handleButtonClick} value={element.id}>
+            <Button
+              onClick={handleButtonClick}
+              value={element.id}
+              variant="default"
+              aria-pressed={options.room === element.id}
+            >
               Studio {element.room}
             </Button>
             <CardDescription>
@@ -89,6 +94,7 @@ export const StudioDetails = () => {
                     onClick={handleButtonClick}
                     value={element.id}
                     variant="default"
+                    aria-pressed={options.room === element.id}
                   >
                     Studio {element.room}
                   </Button>
@@ -119,4 +125,3 @@ export const StudioDetails = () => {
     </section>
   );
 };
-3;

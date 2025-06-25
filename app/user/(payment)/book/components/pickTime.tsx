@@ -27,10 +27,16 @@ export const PickTime = () => {
   const [selList, setSelList] = useState<number[]>([]);
   const [bookedTimes, setBookedTimes] = useState<number[]>([]);
 
+  // Convert room string ID to number for database operations
+  const roomIdAsNumber = useMemo(
+    () => parseInt(options.room),
+    [options.room]
+  );
+
   // Memoize derived values
   const isMembership = useMemo(
-    () => options.membershipRooms.includes(options.room),
-    [options.membershipRooms, options.room]
+    () => options.membershipRooms.includes(roomIdAsNumber),
+    [options.membershipRooms, roomIdAsNumber]
   );
 
   // New: Check if we should use membership time slots - only when membership AND not admin
@@ -56,7 +62,7 @@ export const PickTime = () => {
       // Changed: For membership bookings when not admin, select only one slot
       if (useMembershipSlots) {
         const currentMembership = options.membership.find(
-          (item) => item.roomId === options.room
+          (item) => item.roomId === roomIdAsNumber
         );
 
         // Check if membership has enough hours
@@ -101,7 +107,7 @@ export const PickTime = () => {
         },
       };
     },
-    [bookedTimes, useMembershipSlots, options.membership, options.room]
+    [bookedTimes, useMembershipSlots, options.membership, roomIdAsNumber]
   );
 
   // Handle time slot selection
@@ -139,8 +145,8 @@ export const PickTime = () => {
     try {
       // Fetch booking data in parallel
       const [bookings, checkMembershipWeek] = await Promise.all([
-        getBooking(options.room, parseInt(formattedDate)),
-        getMembershipWeek(options.room, parseInt(formattedDate), options.user),
+        getBooking(roomIdAsNumber, parseInt(formattedDate)),
+        getMembershipWeek(roomIdAsNumber, parseInt(formattedDate), options.user),
       ]);
 
       // Process booking data
@@ -199,7 +205,7 @@ export const PickTime = () => {
       setOptions((prev) => ({ ...prev, loading: false }));
     }
   }, [
-    options.room,
+    roomIdAsNumber,
     options.date,
     options.user,
     formattedDate,

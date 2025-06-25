@@ -42,7 +42,7 @@ export const DashboardContext = createContext<DashboardContextType>({
   membership: [],
   prices: {},
   options: {
-    room: 0,
+    room: "0",
     date: new Date(),
     startTime: -1,
     endTime: -1,
@@ -94,10 +94,15 @@ export function DashboardProvider({
     [membershipData]
   );
 
-  // Set default option values
+  // Set default option values - use first available studio ID
+  const firstStudioId = useMemo(() => {
+    const studioIds = Object.keys(pricingData);
+    return studioIds.length > 0 ? studioIds[0] : "0";
+  }, [pricingData]);
+
   const defaultOptions = useMemo(
     () => ({
-      room: 0,
+      room: firstStudioId,
       date: new Date(),
       startTime: -1,
       endTime: -1,
@@ -111,7 +116,7 @@ export function DashboardProvider({
       engDuration: -1,
       engStart: -1,
     }),
-    [membershipData, membershipRooms, membershipRoomHours, userData]
+    [membershipData, membershipRooms, membershipRoomHours, userData, firstStudioId]
   );
 
   const [options, setOptions] = useState<BookingOptions>(defaultOptions);
@@ -123,7 +128,7 @@ export function DashboardProvider({
 
   // Derived state
   const isMembership = useMemo(
-    () => options.membershipRooms.includes(options.room),
+    () => options.membershipRooms.includes(parseInt(options.room)),
     [options.membershipRooms, options.room]
   );
 
@@ -131,7 +136,7 @@ export function DashboardProvider({
     if (!isMembership) return null;
     return (
       options.membership.find(
-        (membership) => membership.roomId === options.room
+        (membership) => membership.roomId === parseInt(options.room)
       ) || null
     );
   }, [isMembership, options.membership, options.room]);
@@ -146,7 +151,7 @@ export function DashboardProvider({
     (id: string) => {
       setOptions((prevOptions) => ({
         ...prevOptions,
-        room: parseInt(id),
+        room: id,
         date: new Date(),
         startTime: -1,
         endTime: -1,

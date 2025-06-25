@@ -10,7 +10,7 @@ import { Pricing, Memberships, User } from "@prisma/client";
 
 // Define the type for prices
 type PricesMap = {
-  [key: number]: Pricing;
+  [key: string]: Pricing;
 };
 
 async function getData({
@@ -163,7 +163,11 @@ export default async function DashboardLayout({
     where: { id: user.id as string },
   })) as User;
 
-  const prices = (await getPricing()) as PricesMap;
+  const pricingArray = await getPricing();
+  const prices: PricesMap = pricingArray.reduce((acc, price) => {
+    acc[price.id] = price;
+    return acc;
+  }, {} as PricesMap);
 
   return (
     <DashboardProvider

@@ -8,7 +8,7 @@ import { User, Memberships, Pricing } from "@prisma/client";
  * Maps room IDs to their pricing information
  */
 export type PricesMap = {
-  [key: number]: Pricing;
+  [key: string]: Pricing;
 };
 
 /**
@@ -26,7 +26,7 @@ export interface TimeSlot {
  * Main booking options state interface
  */
 export interface BookingOptions {
-  room: number;
+  room: string;
   date: Date;
   startTime: number;
   endTime: number;
