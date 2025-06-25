@@ -52,7 +52,7 @@ export const ShowDetails: React.FC = () => {
     // Find membership for current room with proper type safety
     const foundMembership =
       options.membership.find(
-        (membership) => membership.roomId === options.room
+        (membership) => membership.roomId === parseInt(options.room)
       ) || null;
     const membershipHasHours = (foundMembership?.availableHours ?? 0) >= 4;
 

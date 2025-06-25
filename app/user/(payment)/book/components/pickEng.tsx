@@ -26,7 +26,7 @@ export const PickEng = () => {
 
   // Check if Membership
   const isMembership = useMemo(
-    () => options.membershipRooms.includes(options.room),
+    () => options.membershipRooms.includes(parseInt(options.room)),
     [options.membershipRooms, options.room]
   );
 

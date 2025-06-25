@@ -64,7 +64,7 @@ export function validateMembershipBooking(
   }
 
   const foundmembership = options.membership.find(
-    (membership) => membership.roomId === options.room
+    (membership) => membership.roomId === parseInt(options.room)
   );
   if (!foundmembership || foundmembership.availableHours < 4) {
     return {

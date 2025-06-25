@@ -4,8 +4,8 @@ import { FaTiktok, FaInstagram, FaYoutube, FaSoundcloud } from "react-icons/fa";
 
 export function Footer() {
   return (
-    <footer className="bg-foreground text-white">
-      <div>
+    <footer className="bg-black text-white h-[50vh]">
+      <div className="flex flex-col h-full">
         {/* Logo Section */}
         <div className="p-2">
           <Link href="#home" aria-label="Header Logo">
@@ -16,26 +16,8 @@ export function Footer() {
         <div className="h-[1px] w-full bg-white"></div>
 
         {/* Grid Layout */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-[12px] p-2">
-          {/* Column 2: Contact Info */}
-          <div>
-            <h3 className="font-semibold mb-2">Contact</h3>
-            <div className="space-y-2">
-              <Link
-                href="mailto:Info@412studios.ca"
-                className="hover:underline flex items-center cursor-pointer"
-              >
-                Info@412studios.ca
-              </Link>
-              <Link
-                href="tel:647-540-2321"
-                className="hover:underline flex items-center cursor-pointer"
-              >
-                647-540-2321
-              </Link>
-            </div>
-          </div>
-          {/* Column 3: Social Media */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-[12px] p-2 flex-1">
+          {/* Column 1: Social Media */}
           <div>
             <h3 className="font-semibold mb-2">Follow Us</h3>
             <div className="space-y-2">
@@ -65,8 +47,26 @@ export function Footer() {
               </Link>
             </div>
           </div>
+          {/* Column 2: Contact Info */}
+          <div>
+            <h3 className="font-semibold mb-2">Contact</h3>
+            <div className="space-y-2">
+              <Link
+                href="mailto:Info@412studios.ca"
+                className="hover:underline flex items-center cursor-pointer"
+              >
+                Info@412studios.ca
+              </Link>
+              <Link
+                href="tel:647-540-2321"
+                className="hover:underline flex items-center cursor-pointer"
+              >
+                647-540-2321
+              </Link>
+            </div>
+          </div>
 
-          {/* Column 1: Address */}
+          {/* Column 3: Address */}
           <div>
             <h3 className="font-semibold mb-2">Location</h3>
             <p>412 Richmond St E, Toronto, ON M5A 1P8</p>
