@@ -28,10 +28,7 @@ export const PickTime = () => {
   const [bookedTimes, setBookedTimes] = useState<number[]>([]);
 
   // Convert room string ID to number for database operations
-  const roomIdAsNumber = useMemo(
-    () => parseInt(options.room),
-    [options.room]
-  );
+  const roomIdAsNumber = useMemo(() => parseInt(options.room), [options.room]);
 
   // Memoize derived values
   const isMembership = useMemo(
@@ -146,7 +143,11 @@ export const PickTime = () => {
       // Fetch booking data in parallel
       const [bookings, checkMembershipWeek] = await Promise.all([
         getBooking(roomIdAsNumber, parseInt(formattedDate)),
-        getMembershipWeek(roomIdAsNumber, parseInt(formattedDate), options.user),
+        getMembershipWeek(
+          roomIdAsNumber,
+          parseInt(formattedDate),
+          options.user
+        ),
       ]);
 
       // Process booking data
@@ -231,7 +232,7 @@ export const PickTime = () => {
       <div
         key={slot.id}
         onClick={() => !isBooked && handleClick(slot.id)}
-        className={`flex items-center justify-center text-center hover:cursor-pointer rounded-full
+        className={`flex items-center justify-center text-center rounded-full
       ${useMembershipSlots ? "h-[25%] rounded-lg" : "p-1 my-1"}
       ${
         isBooked
