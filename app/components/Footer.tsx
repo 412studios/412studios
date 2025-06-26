@@ -75,7 +75,11 @@ export function Footer() {
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2886.7634567891234!2d-79.36548248450276!3d43.65107797912345!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89d4cb2b7b7b7b7b%3A0x7b7b7b7b7b7b7b7b!2s412%20Richmond%20St%20E%2C%20Toronto%2C%20ON%20M5A%201P8%2C%20Canada!5e0!3m2!1sen!2sus!4v1234567890123!5m2!1sen!2sus"
                 width="100%"
                 height="100%"
-                style={{ border: 0 }}
+                style={{
+                  border: 0,
+                  filter: "invert(90%) hue-rotate(180deg)",
+                  borderRadius: "0.5rem",
+                }}
                 allowFullScreen
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
