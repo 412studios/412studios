@@ -236,9 +236,9 @@ export const PickTime = () => {
       ${useMembershipSlots ? "h-[25%] rounded-lg" : "p-1 my-1"}
       ${
         isBooked
-          ? "bg-red-500 text-white"
+          ? "btn-booked"
           : isSelected
-            ? "bg-emerald-500 text-black"
+            ? "bg-emerald-300"
             : "bg-background hover:bg-accent"
       }`}
         role="button"
@@ -278,7 +278,10 @@ export const PickTime = () => {
           className="flex grow rounded-lg border items-center justify-center"
           aria-live="polite"
         >
-          <div className="text-center">Loading available time slots...</div>
+          <div className="text-center flex items-center justify-center gap-2">
+            <div className="animate-spin rounded-full h-4 w-4 border-2 border-gray-300 border-t-gray-600"></div>
+            Loading...
+          </div>
         </div>
       ) : (
         <div className="flex flex-col h-[307px] rounded-lg border">

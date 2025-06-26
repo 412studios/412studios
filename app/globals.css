@@ -10,14 +10,11 @@
     --card-foreground: 222.2 84% 4.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
-
     /* --primary: 0 5% 8%; */
     --primary: 0 5% 12.7%;
     --primary-foreground: 0 5% 12.7%;
-
     --secondary: 0 0% 37.3%;
     --secondary-foreground: 0 0% 37.3%;
-
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
     --accent: 198 34.3% 83.7%;
@@ -28,7 +25,6 @@
     --input: 214.3 31.8% 91.4%;
     --ring: 222.2 84% 4.9%;
     --radius: 0.3rem;
-
     --circle-size: 40vw;
     --blending: hard-light;
   }
@@ -105,6 +101,17 @@ a:hover {
   .desk-only {
     display: none !important;
   }
+}
+
+.btn-booked {
+  border: 1px solid hsl(var(--accent));
+  background-image: repeating-linear-gradient(
+    45deg,
+    hsl(var(--accent)),
+    hsl(var(--accent)) 5px,
+    #ffffff 5px,
+    #ffffff 10px
+  );
 }
 
 /* ============================================ */
