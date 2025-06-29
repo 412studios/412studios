@@ -4,6 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Bookings from "@/app/user/admin/components/bookings";
 import Users from "@/app/user/admin/components/users";
 import Pricing from "@/app/user/admin/components/pricing";
+import CalendarSync from "@/app/user/admin/components/calendarSync";
 
 export default async function Dashboard() {
   noStore();
@@ -43,6 +44,7 @@ export default async function Dashboard() {
         <TabsTrigger value="bookings">Bookings</TabsTrigger>
         <TabsTrigger value="users">Users</TabsTrigger>
         <TabsTrigger value="pricing">Pricing</TabsTrigger>
+        <TabsTrigger value="calendar">Calendar</TabsTrigger>
       </TabsList>
       {/* BOOKINGS SECTION */}
       <TabsContent value="bookings">
@@ -53,6 +55,9 @@ export default async function Dashboard() {
       </TabsContent>
       <TabsContent value="pricing">
         <Pricing pricing={pricing} />
+      </TabsContent>
+      <TabsContent value="calendar">
+        <CalendarSync />
       </TabsContent>
     </Tabs>
   );

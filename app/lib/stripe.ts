@@ -22,6 +22,9 @@ export const getStripeSession = async ({
     customer: customerId,
     mode: "payment",
     billing_address_collection: "auto",
+    metadata: {
+      bookingId: bookingId,
+    },
     line_items: [
       {
         price_data: {

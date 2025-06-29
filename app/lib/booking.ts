@@ -226,6 +226,26 @@ export async function PostAdminBooking(input: any) {
     },
   });
 
+  // Create calendar event for admin booking
+  let calendarEventId: string | null = null;
+  try {
+    const { createCalendarEvent } = await import("@/app/lib/calendar");
+    calendarEventId = await createCalendarEvent({
+      bookingId,
+      roomId: parseInt(input.room),
+      date: formatDate(input.date),
+      startTime: input.startTime,
+      endTime: input.endTime,
+      userId: input.user?.id || user?.id || "",
+      engineerTotal: input.engDuration,
+      engineerStart: input.engStart,
+      totalPrice: input.price,
+      status: "success",
+    });
+  } catch (error) {
+    console.error("Failed to create calendar event:", error);
+  }
+
   await prisma.bookings.create({
     data: {
       bookingId: bookingId,
@@ -235,14 +255,14 @@ export async function PostAdminBooking(input: any) {
       startTime: input.startTime,
       endTime: input.endTime,
       status: "success",
-      userId: user?.id || "",
+      userId: input.user?.id || user?.id || "",
       stripeProductId: priceId,
       totalHours: input.duration,
       engineerTotal: input.engDuration,
       engineerStart: input.engStart,
       engineerStatus: "pending",
       totalPrice: input.price,
-      addDetails: "",
+      addDetails: calendarEventId || "",
     },
   });
 
@@ -372,6 +392,33 @@ export async function PostMembershipBooking(
         status: "success",
       },
     });
+
+    // Create calendar event for successful membership booking
+    try {
+      const { createCalendarEvent } = await import("@/app/lib/calendar");
+      const calendarEventId = await createCalendarEvent({
+        bookingId,
+        roomId: parseInt(input.room),
+        date: formatDate(input.date),
+        startTime: startTime,
+        endTime: endTime,
+        userId: user?.id || "",
+        engineerTotal: input.engDuration,
+        engineerStart: input.engStart,
+        totalPrice: input.price,
+        status: "success",
+      });
+
+      // Update booking with calendar event ID
+      if (calendarEventId) {
+        await prisma.bookings.update({
+          where: { bookingId: bookingId },
+          data: { addDetails: calendarEventId },
+        });
+      }
+    } catch (error) {
+      console.error("Failed to create calendar event for membership booking:", error);
+    }
     //FIND MEMBERSHIP FOR THIS USER AND THIS ROOM
     const updatedMembership = await prisma.memberships.findFirst({
       where: {
