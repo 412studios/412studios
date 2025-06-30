@@ -86,10 +86,10 @@ function formatBookingDateTime(
   let finalYear = year;
   let finalMonth = month;
   let finalDay = day;
-  
+
   if (hour >= 24) {
     hour = hour - 24; // Convert 24 to 0 (midnight)
-    
+
     // Add one day and handle month/year rollover
     const dateObj = new Date(year, month, day + 1);
     finalYear = dateObj.getFullYear();
@@ -99,10 +99,10 @@ function formatBookingDateTime(
 
   // Create date in Toronto timezone to avoid server timezone issues
   // Format: YYYY-MM-DDTHH:mm:ss (without Z suffix to indicate local time)
-  const paddedMonth = String(finalMonth + 1).padStart(2, '0');
-  const paddedDay = String(finalDay).padStart(2, '0');
-  const paddedHour = String(hour).padStart(2, '0');
-  
+  const paddedMonth = String(finalMonth + 1).padStart(2, "0");
+  const paddedDay = String(finalDay).padStart(2, "0");
+  const paddedHour = String(hour).padStart(2, "0");
+
   return `${finalYear}-${paddedMonth}-${paddedDay}T${paddedHour}:00:00`;
 }
 
@@ -170,10 +170,6 @@ export async function createCalendarEvent(
     description += `Client: ${user?.name || "Unknown"}\n`;
     description += `Email: ${user?.email || "Unknown"}\n`;
     description += `Duration: ${duration} hours\n`;
-
-    if (booking.totalPrice) {
-      description += `Price: $${booking.totalPrice}\n`;
-    }
 
     if (booking.engineerTotal && booking.engineerTotal > 0) {
       const engineerStartHour = booking.engineerStart
