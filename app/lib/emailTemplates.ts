@@ -8,10 +8,8 @@ export const EMAIL_CONSTANTS = {
   WEBSITE_URL: "https://412studios.com",
   BASE_URL:
     process.env.NODE_ENV === "production"
-      ? "https://412studios.ca"
-      : process.env.VERCEL_URL
-        ? `https://${process.env.VERCEL_URL}`
-        : "http://localhost:3000",
+      ? process.env.PRODUCTION_URL
+      : "http://localhost:3000",
 };
 
 const getLOGO_PNG = () => `
@@ -251,7 +249,7 @@ ${EMAIL_CONSTANTS.SUPPORT_EMAIL}
 // Universal email template generator
 export const generateEmail = (
   type: EmailType,
-  data: BookingDetails | MembershipDetails | UsageDetails
+  data: BookingDetails | MembershipDetails | UsageDetails,
 ) => {
   let emailContent;
 
