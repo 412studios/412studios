@@ -51,6 +51,34 @@ export async function getAllBooking() {
 
 export async function deleteBooking(id: string) {
   noStore();
+  
+  // First, get the booking with its calendar event ID
+  const booking = await prisma.bookings.findUnique({
+    where: {
+      bookingId: id,
+    },
+    select: {
+      bookingId: true,
+      addDetails: true, // This contains the calendar event ID
+    },
+  });
+
+  if (!booking) {
+    throw new Error("Booking not found");
+  }
+
+  // Delete the calendar event if it exists
+  if (booking.addDetails) {
+    const { deleteCalendarEvent } = await import("@/app/lib/calendar");
+    try {
+      await deleteCalendarEvent(booking.addDetails);
+    } catch (error) {
+      console.error("Error deleting calendar event:", error);
+      // Continue with booking deletion even if calendar deletion fails
+    }
+  }
+
+  // Delete the booking from database
   const data = await prisma.bookings.delete({
     where: {
       bookingId: id,
@@ -59,6 +87,7 @@ export async function deleteBooking(id: string) {
       bookingId: true,
     },
   });
+  
   return data;
 }
 

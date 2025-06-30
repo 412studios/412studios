@@ -32,37 +32,57 @@ interface CalendarEvent {
   };
 }
 
+// Time slot mapping - converts time slot ID to actual hour
+const timeSlotToHour = (timeSlotId: number): number => {
+  // Based on your timeSlots array, time slot 0 = 8am, 1 = 9am, etc.
+  return timeSlotId + 8;
+};
+
 // Initialize Google Calendar API
 async function getCalendarClient() {
   const credentials = {
     client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
-    private_key: process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+    private_key: process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, "\n"),
   };
 
   // Validate required environment variables
   if (!credentials.client_email || !credentials.private_key) {
-    throw new Error('Google service account credentials not configured. Please check GOOGLE_SERVICE_ACCOUNT_EMAIL and GOOGLE_PRIVATE_KEY environment variables.');
+    throw new Error(
+      "Google service account credentials not configured. Please check GOOGLE_SERVICE_ACCOUNT_EMAIL and GOOGLE_PRIVATE_KEY environment variables.",
+    );
   }
 
   const auth = new google.auth.JWT({
     email: credentials.client_email,
     key: credentials.private_key,
-    scopes: ['https://www.googleapis.com/auth/calendar'],
+    scopes: ["https://www.googleapis.com/auth/calendar"],
   });
 
   // Authorize the client
   await auth.authorize();
 
-  return google.calendar({ version: 'v3', auth });
+  return google.calendar({ version: "v3", auth });
 }
 
 // Convert booking date/time to ISO string
-function formatBookingDateTime(date: number, time: number): string {
+function formatBookingDateTime(
+  date: number,
+  timeSlotId: number,
+  isEndTime: boolean = false,
+): string {
   const year = Math.floor(date / 10000);
   const month = Math.floor((date % 10000) / 100) - 1; // Month is 0-indexed
   const day = date % 100;
-  
-  const bookingDate = new Date(year, month, day, time, 0, 0);
+
+  // Convert time slot ID to actual hour
+  let hour = timeSlotToHour(timeSlotId);
+
+  // For end time, add 1 hour since each slot represents a full hour
+  if (isEndTime) {
+    hour += 1;
+  }
+
+  const bookingDate = new Date(year, month, day, hour, 0, 0);
   return bookingDate.toISOString();
 }
 
@@ -71,11 +91,11 @@ async function getStudioName(roomId: number): Promise<string> {
   try {
     const pricing = await prisma.pricing.findFirst({
       where: { id: roomId.toString() },
-      select: { room: true }
+      select: { room: true },
     });
     return `Studio ${pricing?.room || roomId}`;
   } catch (error) {
-    console.error('Error getting studio name:', error);
+    console.error("Error getting studio name:", error);
     return `Studio ${roomId}`;
   }
 }
@@ -85,23 +105,25 @@ async function getUserDetails(userId: string) {
   try {
     const user = await prisma.user.findUnique({
       where: { id: userId },
-      select: { name: true, email: true }
+      select: { name: true, email: true },
     });
     return user;
   } catch (error) {
-    console.error('Error getting user details:', error);
+    console.error("Error getting user details:", error);
     return null;
   }
 }
 
 // Create calendar event for booking
-export async function createCalendarEvent(booking: BookingEvent): Promise<string | null> {
+export async function createCalendarEvent(
+  booking: BookingEvent,
+): Promise<string | null> {
   try {
     const calendar = await getCalendarClient();
     const calendarId = process.env.GOOGLE_CALENDAR_ID;
 
     if (!calendarId) {
-      console.error('Google Calendar ID not configured');
+      console.error("Google Calendar ID not configured");
       return null;
     }
 
@@ -110,37 +132,49 @@ export async function createCalendarEvent(booking: BookingEvent): Promise<string
     const studioName = await getStudioName(booking.roomId);
 
     // Format times
-    const startDateTime = formatBookingDateTime(booking.date, booking.startTime);
-    const endDateTime = formatBookingDateTime(booking.date, booking.endTime);
+    const startDateTime = formatBookingDateTime(
+      booking.date,
+      booking.startTime,
+    );
+    const endDateTime = formatBookingDateTime(
+      booking.date,
+      booking.endTime,
+      true,
+    );
 
-    // Create event description
-    let description = `Booking ID: ${booking.bookingId}\n`;
-    description += `Studio: ${studioName}\n`;
-    description += `Client: ${user?.name || 'Unknown'}\n`;
-    description += `Email: ${user?.email || 'Unknown'}\n`;
-    description += `Duration: ${booking.endTime - booking.startTime} hours\n`;
-    
+    // Calculate actual duration (number of time slots selected)
+    const duration = booking.endTime - booking.startTime + 1;
+
+    // Create event description (removed Booking ID line)
+    let description = `Studio: ${studioName}\n`;
+    description += `Client: ${user?.name || "Unknown"}\n`;
+    description += `Email: ${user?.email || "Unknown"}\n`;
+    description += `Duration: ${duration} hours\n`;
+
     if (booking.totalPrice) {
       description += `Price: $${booking.totalPrice}\n`;
     }
-    
+
     if (booking.engineerTotal && booking.engineerTotal > 0) {
-      description += `Engineer: ${booking.engineerTotal} hours (starts at ${booking.engineerStart}:00)\n`;
+      const engineerStartHour = booking.engineerStart
+        ? timeSlotToHour(booking.engineerStart)
+        : 0;
+      description += `Engineer: ${booking.engineerTotal} hours (starts at ${engineerStartHour}:00)\n`;
     }
-    
-    description += `Status: ${booking.status || 'pending'}\n`;
+
+    description += `Status: ${booking.status || "pending"}\n`;
     description += `\nCreated via 412 Studios Booking System`;
 
     const event: CalendarEvent = {
-      summary: `${studioName} - ${user?.name || 'Booking'}`,
+      summary: `${studioName} - ${user?.name || "Booking"}`,
       description,
       start: {
         dateTime: startDateTime,
-        timeZone: 'America/Toronto', // Adjust timezone as needed
+        timeZone: "America/Toronto", // Adjust timezone as needed
       },
       end: {
         dateTime: endDateTime,
-        timeZone: 'America/Toronto',
+        timeZone: "America/Toronto",
       },
     };
 
@@ -152,18 +186,18 @@ export async function createCalendarEvent(booking: BookingEvent): Promise<string
       requestBody: event,
     });
 
-    console.log('Calendar event created:', response.data.id);
+    console.log("Calendar event created:", response.data.id);
     return response.data.id || null;
   } catch (error) {
-    console.error('Error creating calendar event:', error);
+    console.error("Error creating calendar event:", error);
     return null;
   }
 }
 
 // Update calendar event
 export async function updateCalendarEvent(
-  eventId: string, 
-  booking: BookingEvent
+  eventId: string,
+  booking: BookingEvent,
 ): Promise<boolean> {
   try {
     const calendar = await getCalendarClient();
@@ -178,37 +212,49 @@ export async function updateCalendarEvent(
     const studioName = await getStudioName(booking.roomId);
 
     // Format times
-    const startDateTime = formatBookingDateTime(booking.date, booking.startTime);
-    const endDateTime = formatBookingDateTime(booking.date, booking.endTime);
+    const startDateTime = formatBookingDateTime(
+      booking.date,
+      booking.startTime,
+    );
+    const endDateTime = formatBookingDateTime(
+      booking.date,
+      booking.endTime,
+      true,
+    );
 
-    // Update event description
-    let description = `Booking ID: ${booking.bookingId}\n`;
-    description += `Studio: ${studioName}\n`;
-    description += `Client: ${user?.name || 'Unknown'}\n`;
-    description += `Email: ${user?.email || 'Unknown'}\n`;
-    description += `Duration: ${booking.endTime - booking.startTime} hours\n`;
-    
+    // Calculate actual duration (number of time slots selected)
+    const duration = booking.endTime - booking.startTime + 1;
+
+    // Update event description (removed Booking ID and duplicate Studio line)
+    let description = `Studio: ${studioName}\n`;
+    description += `Client: ${user?.name || "Unknown"}\n`;
+    description += `Email: ${user?.email || "Unknown"}\n`;
+    description += `Duration: ${duration} hours\n`;
+
     if (booking.totalPrice) {
       description += `Price: $${booking.totalPrice}\n`;
     }
-    
+
     if (booking.engineerTotal && booking.engineerTotal > 0) {
-      description += `Engineer: ${booking.engineerTotal} hours (starts at ${booking.engineerStart}:00)\n`;
+      const engineerStartHour = booking.engineerStart
+        ? timeSlotToHour(booking.engineerStart)
+        : 0;
+      description += `Engineer: ${booking.engineerTotal} hours (starts at ${engineerStartHour}:00)\n`;
     }
-    
-    description += `Status: ${booking.status || 'pending'}\n`;
+
+    description += `Status: ${booking.status || "pending"}\n`;
     description += `\nUpdated via 412 Studios Booking System`;
 
     const event: CalendarEvent = {
-      summary: `${studioName} - ${user?.name || 'Booking'}`,
+      summary: `${studioName} - ${user?.name || "Booking"}`,
       description,
       start: {
         dateTime: startDateTime,
-        timeZone: 'America/Toronto',
+        timeZone: "America/Toronto",
       },
       end: {
         dateTime: endDateTime,
-        timeZone: 'America/Toronto',
+        timeZone: "America/Toronto",
       },
     };
 
@@ -221,10 +267,10 @@ export async function updateCalendarEvent(
       requestBody: event,
     });
 
-    console.log('Calendar event updated:', eventId);
+    console.log("Calendar event updated:", eventId);
     return true;
   } catch (error) {
-    console.error('Error updating calendar event:', error);
+    console.error("Error updating calendar event:", error);
     return false;
   }
 }
@@ -244,10 +290,10 @@ export async function deleteCalendarEvent(eventId: string): Promise<boolean> {
       eventId,
     });
 
-    console.log('Calendar event deleted:', eventId);
+    console.log("Calendar event deleted:", eventId);
     return true;
   } catch (error) {
-    console.error('Error deleting calendar event:', error);
+    console.error("Error deleting calendar event:", error);
     return false;
   }
 }
@@ -255,13 +301,13 @@ export async function deleteCalendarEvent(eventId: string): Promise<boolean> {
 // Sync all existing bookings to calendar
 export async function syncAllBookingsToCalendar(): Promise<void> {
   try {
-    console.log('Starting calendar sync for all bookings...');
-    
+    console.log("Starting calendar sync for all bookings...");
+
     // First, get bookings that haven't been synced yet (addDetails is empty)
     const bookings = await prisma.bookings.findMany({
       where: {
-        status: 'success',
-        addDetails: '', // Only get bookings where addDetails is empty (not synced yet)
+        status: "success",
+        addDetails: "", // Only get bookings where addDetails is empty (not synced yet)
       },
       include: {
         user: {
@@ -277,7 +323,7 @@ export async function syncAllBookingsToCalendar(): Promise<void> {
     console.log(`Found ${bookings.length} successful bookings to sync`);
 
     if (bookings.length === 0) {
-      console.log('No bookings need syncing - all appear to be already synced');
+      console.log("No bookings need syncing - all appear to be already synced");
       return;
     }
 
@@ -285,8 +331,10 @@ export async function syncAllBookingsToCalendar(): Promise<void> {
     const batchSize = 10;
     for (let i = 0; i < bookings.length; i += batchSize) {
       const batch = bookings.slice(i, i + batchSize);
-      console.log(`Processing batch ${Math.floor(i / batchSize) + 1} of ${Math.ceil(bookings.length / batchSize)}`);
-      
+      console.log(
+        `Processing batch ${Math.floor(i / batchSize) + 1} of ${Math.ceil(bookings.length / batchSize)}`,
+      );
+
       for (const booking of batch) {
         try {
           const bookingEvent: BookingEvent = {
@@ -297,7 +345,7 @@ export async function syncAllBookingsToCalendar(): Promise<void> {
             endTime: booking.endTime,
             userId: booking.userId,
             userName: booking.user?.name || undefined,
-            userEmail: booking.user?.email || '',
+            userEmail: booking.user?.email || "",
             engineerTotal: booking.engineerTotal,
             engineerStart: booking.engineerStart,
             totalPrice: booking.totalPrice,
@@ -305,37 +353,42 @@ export async function syncAllBookingsToCalendar(): Promise<void> {
           };
 
           const eventId = await createCalendarEvent(bookingEvent);
-          
+
           if (eventId) {
             // Store the calendar event ID in the database for future reference
             await prisma.bookings.update({
               where: { bookingId: booking.bookingId },
               data: { addDetails: eventId },
             });
-            
-            console.log(`Synced booking ${booking.bookingId} to calendar event ${eventId}`);
+
+            console.log(
+              `Synced booking ${booking.bookingId} to calendar event ${eventId}`,
+            );
           } else {
             console.error(`Failed to sync booking ${booking.bookingId}`);
           }
         } catch (bookingError) {
-          console.error(`Error syncing booking ${booking.bookingId}:`, bookingError);
+          console.error(
+            `Error syncing booking ${booking.bookingId}:`,
+            bookingError,
+          );
           // Continue with other bookings even if one fails
         }
 
         // Add delay between each booking to avoid rate limiting
-        await new Promise(resolve => setTimeout(resolve, 100));
+        await new Promise((resolve) => setTimeout(resolve, 100));
       }
-      
+
       // Shorter delay between batches
       if (i + batchSize < bookings.length) {
-        console.log('Waiting before next batch...');
-        await new Promise(resolve => setTimeout(resolve, 500));
+        console.log("Waiting before next batch...");
+        await new Promise((resolve) => setTimeout(resolve, 500));
       }
     }
 
-    console.log('Calendar sync completed');
+    console.log("Calendar sync completed");
   } catch (error) {
-    console.error('Error syncing bookings to calendar:', error);
+    console.error("Error syncing bookings to calendar:", error);
     throw error; // Re-throw to let the API endpoint handle it
   }
 }
