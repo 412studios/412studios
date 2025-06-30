@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/app/lib/db";
+import { updateCalendarEvent } from "@/app/lib/calendar";
 
 export async function POST(request: NextRequest) {
   try {
@@ -36,8 +37,42 @@ export async function POST(request: NextRequest) {
         startTime: startTime,
         endTime: endTime,
         totalHours: endTime - startTime
+      },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true
+          }
+        }
       }
     });
+
+    // Update calendar event if it exists
+    if (updatedBooking.addDetails) {
+      try {
+        const bookingEvent = {
+          bookingId: updatedBooking.bookingId,
+          roomId: updatedBooking.roomId,
+          date: updatedBooking.date,
+          startTime: updatedBooking.startTime,
+          endTime: updatedBooking.endTime,
+          userId: updatedBooking.userId,
+          userName: updatedBooking.user?.name || undefined,
+          userEmail: updatedBooking.user?.email || "",
+          engineerTotal: updatedBooking.engineerTotal,
+          engineerStart: updatedBooking.engineerStart,
+          totalPrice: updatedBooking.totalPrice,
+          status: updatedBooking.status
+        };
+        
+        await updateCalendarEvent(updatedBooking.addDetails, bookingEvent);
+      } catch (calendarError) {
+        console.error("Error updating calendar event:", calendarError);
+        // Continue even if calendar update fails
+      }
+    }
 
     return NextResponse.json({ 
       success: true, 
