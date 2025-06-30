@@ -82,13 +82,28 @@ function formatBookingDateTime(
     hour += 1;
   }
 
+  // Handle midnight rollover - when hour becomes 24, it should be 0 of next day
+  let finalYear = year;
+  let finalMonth = month;
+  let finalDay = day;
+  
+  if (hour >= 24) {
+    hour = hour - 24; // Convert 24 to 0 (midnight)
+    
+    // Add one day and handle month/year rollover
+    const dateObj = new Date(year, month, day + 1);
+    finalYear = dateObj.getFullYear();
+    finalMonth = dateObj.getMonth();
+    finalDay = dateObj.getDate();
+  }
+
   // Create date in Toronto timezone to avoid server timezone issues
   // Format: YYYY-MM-DDTHH:mm:ss (without Z suffix to indicate local time)
-  const paddedMonth = String(month + 1).padStart(2, '0');
-  const paddedDay = String(day).padStart(2, '0');
+  const paddedMonth = String(finalMonth + 1).padStart(2, '0');
+  const paddedDay = String(finalDay).padStart(2, '0');
   const paddedHour = String(hour).padStart(2, '0');
   
-  return `${year}-${paddedMonth}-${paddedDay}T${paddedHour}:00:00`;
+  return `${finalYear}-${paddedMonth}-${paddedDay}T${paddedHour}:00:00`;
 }
 
 // Get studio name from room ID
