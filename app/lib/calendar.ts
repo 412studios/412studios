@@ -82,8 +82,13 @@ function formatBookingDateTime(
     hour += 1;
   }
 
-  const bookingDate = new Date(year, month, day, hour, 0, 0);
-  return bookingDate.toISOString();
+  // Create date in Toronto timezone to avoid server timezone issues
+  // Format: YYYY-MM-DDTHH:mm:ss (without Z suffix to indicate local time)
+  const paddedMonth = String(month + 1).padStart(2, '0');
+  const paddedDay = String(day).padStart(2, '0');
+  const paddedHour = String(hour).padStart(2, '0');
+  
+  return `${year}-${paddedMonth}-${paddedDay}T${paddedHour}:00:00`;
 }
 
 // Get studio name from room ID
