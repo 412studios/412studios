@@ -323,13 +323,13 @@ export async function syncAllBookingsToCalendar(): Promise<void> {
         }
 
         // Add delay between each booking to avoid rate limiting
-        await new Promise(resolve => setTimeout(resolve, 200));
+        await new Promise(resolve => setTimeout(resolve, 100));
       }
       
-      // Longer delay between batches
+      // Shorter delay between batches
       if (i + batchSize < bookings.length) {
         console.log('Waiting before next batch...');
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        await new Promise(resolve => setTimeout(resolve, 500));
       }
     }
 
