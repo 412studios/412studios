@@ -492,10 +492,7 @@ export default function Bookings(): JSX.Element {
           <TableRow>
             <TableCell>Status</TableCell>
             <TableCell>
-              <Select
-                value={selectedStatus}
-                onValueChange={setSelectedStatus}
-              >
+              <Select value={selectedStatus} onValueChange={setSelectedStatus}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
@@ -604,6 +601,32 @@ export default function Bookings(): JSX.Element {
                   ))}
                 </SelectContent>
               </Select>
+            </TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>
+              <span className="font-medium">Engineer:</span>
+            </TableCell>
+            <TableCell>
+              <div className="flex justify-between items-center w-full">
+                {booking.engineerTotal > 0 ? (
+                  <div className="flex justify-between items-center flex-1 ml-4">
+                    <span>Yes</span>
+                    <span>
+                      {getTimeDisplay(booking.engineerStart)} -{" "}
+                      {getTimeDisplay(
+                        booking.engineerStart + booking.engineerTotal - 1
+                      )}
+                    </span>
+                    <span>
+                      {booking.engineerTotal} hour
+                      {booking.engineerTotal !== 1 ? "s" : ""}
+                    </span>
+                  </div>
+                ) : (
+                  <span>No</span>
+                )}
+              </div>
             </TableCell>
           </TableRow>
           {(conflictError || validateTimes()) && (
