@@ -68,6 +68,9 @@ export default function Bookings(): JSX.Element {
   const [userSearchTerm, setUserSearchTerm] = useState<string>("");
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState<boolean>(false);
   const [selectedStatus, setSelectedStatus] = useState<string>("");
+  const [editedEngineerStart, setEditedEngineerStart] = useState<number>(0);
+  const [editedEngineerEnd, setEditedEngineerEnd] = useState<number>(0);
+  const [hasEngineer, setHasEngineer] = useState<boolean>(false);
   const userDropdownRef = useRef<HTMLDivElement>(null);
 
   const room: string[] = ["A", "B", "C"];
@@ -207,6 +210,9 @@ export default function Bookings(): JSX.Element {
     setEditedEndTime(booking.endTime);
     setSelectedUserId(booking.user.id);
     setSelectedStatus(booking.status);
+    setHasEngineer(booking.engineerTotal > 0);
+    setEditedEngineerStart(booking.engineerStart);
+    setEditedEngineerEnd(booking.engineerStart + booking.engineerTotal - 1);
     setConflictError("");
   };
 
@@ -230,6 +236,11 @@ export default function Bookings(): JSX.Element {
       setEditedEndTime(selectedBooking.endTime);
       setSelectedUserId(selectedBooking.user.id);
       setSelectedStatus(selectedBooking.status);
+      setHasEngineer(selectedBooking.engineerTotal > 0);
+      setEditedEngineerStart(selectedBooking.engineerStart);
+      setEditedEngineerEnd(
+        selectedBooking.engineerStart + selectedBooking.engineerTotal - 1
+      );
       setUserSearchTerm("");
       setIsUserDropdownOpen(false);
       setConflictError("");
@@ -315,6 +326,30 @@ export default function Bookings(): JSX.Element {
     }
   };
 
+  const updateBookingEngineer = async (
+    bookingId: string,
+    hasEngineer: boolean,
+    engineerStart: number,
+    engineerEnd: number
+  ): Promise<boolean> => {
+    try {
+      const response = await fetch("/api/booking/update-engineer", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          bookingId,
+          hasEngineer,
+          engineerStart,
+          engineerEnd,
+        }),
+      });
+      return response.ok;
+    } catch (error) {
+      console.error("Error updating booking engineer:", error);
+      return false;
+    }
+  };
+
   const validateTimes = (): string | null => {
     if (editedStartTime >= editedEndTime) {
       return "End time must be after start time.";
@@ -361,6 +396,41 @@ export default function Bookings(): JSX.Element {
     setConflictError("");
   };
 
+  const handleEngineerStartChange = (value: string) => {
+    const newEngineerStart = parseInt(value);
+
+    // Must be within booking time range
+    if (
+      newEngineerStart < editedStartTime ||
+      newEngineerStart >= editedEndTime
+    ) {
+      return;
+    }
+
+    // If new start would make end time invalid, adjust end time
+    if (newEngineerStart >= editedEngineerEnd) {
+      setEditedEngineerEnd(Math.min(newEngineerStart + 1, editedEndTime));
+    }
+
+    setEditedEngineerStart(newEngineerStart);
+    setConflictError("");
+  };
+
+  const handleEngineerEndChange = (value: string) => {
+    const newEngineerEnd = parseInt(value);
+
+    // Must be within booking time range and after engineer start
+    if (
+      newEngineerEnd <= editedEngineerStart ||
+      newEngineerEnd > editedEndTime
+    ) {
+      return;
+    }
+
+    setEditedEngineerEnd(newEngineerEnd);
+    setConflictError("");
+  };
+
   const handleSaveChanges = async () => {
     if (!selectedBooking) return;
 
@@ -373,8 +443,14 @@ export default function Bookings(): JSX.Element {
       editedEndTime !== selectedBooking.endTime;
     const userChanged = selectedUserId !== selectedBooking.user.id;
     const statusChanged = selectedStatus !== selectedBooking.status;
+    const engineerChanged =
+      hasEngineer !== selectedBooking.engineerTotal > 0 ||
+      (hasEngineer &&
+        (editedEngineerStart !== selectedBooking.engineerStart ||
+          editedEngineerEnd !==
+            selectedBooking.engineerStart + selectedBooking.engineerTotal - 1));
 
-    if (!timesChanged && !userChanged && !statusChanged) {
+    if (!timesChanged && !userChanged && !statusChanged && !engineerChanged) {
       setSaving(false);
       return;
     }
@@ -448,8 +524,29 @@ export default function Bookings(): JSX.Element {
       }
     }
 
+    // Update engineer if changed
+    if (engineerChanged) {
+      const engineerSuccess = await updateBookingEngineer(
+        selectedBooking.bookingId,
+        hasEngineer,
+        editedEngineerStart,
+        editedEngineerEnd
+      );
+
+      if (!engineerSuccess) {
+        setConflictError(
+          "Failed to update engineer details. Please try again."
+        );
+        setSaving(false);
+        return;
+      }
+    }
+
     // Update local state
     const selectedUser = users.find((user) => user.id === selectedUserId);
+    const newEngineerTotal = hasEngineer
+      ? editedEngineerEnd - editedEngineerStart + 1
+      : 0;
     const updatedBookings = bookings.map((booking) =>
       booking.bookingId === selectedBooking.bookingId
         ? {
@@ -458,6 +555,9 @@ export default function Bookings(): JSX.Element {
             endTime: editedEndTime,
             user: selectedUser || booking.user,
             status: selectedStatus,
+            engineerTotal: newEngineerTotal,
+            engineerStart: hasEngineer ? editedEngineerStart : 0,
+            engineerStatus: hasEngineer ? "pending" : "none",
           }
         : booking
     );
@@ -468,6 +568,9 @@ export default function Bookings(): JSX.Element {
       endTime: editedEndTime,
       user: selectedUser || selectedBooking.user,
       status: selectedStatus,
+      engineerTotal: newEngineerTotal,
+      engineerStart: hasEngineer ? editedEngineerStart : 0,
+      engineerStatus: hasEngineer ? "pending" : "none",
     });
 
     setSaving(false);
@@ -608,25 +711,84 @@ export default function Bookings(): JSX.Element {
               <span className="font-medium">Engineer:</span>
             </TableCell>
             <TableCell>
-              <div className="flex justify-between items-center w-full">
-                {booking.engineerTotal > 0 ? (
-                  <div className="flex justify-between items-center flex-1">
-                    <Button variant="outline">Yes</Button>
-                    <Button variant="outline">
-                      {getTimeDisplay(booking.engineerStart)}
-                    </Button>
-                    <Button variant="outline">
-                      {getTimeDisplay(
-                        booking.engineerStart + booking.engineerTotal - 1
-                      )}
-                    </Button>
-                    <Button variant="outline">
-                      {booking.engineerTotal} hour
-                      {booking.engineerTotal !== 1 ? "s" : ""}
-                    </Button>
-                  </div>
+              <div className="flex justify-between items-center w-full gap-2">
+                <Select
+                  value={hasEngineer ? "yes" : "no"}
+                  onValueChange={(value) => setHasEngineer(value === "yes")}
+                >
+                  <SelectTrigger className="w-20">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="yes">Yes</SelectItem>
+                    <SelectItem value="no">No</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                {hasEngineer ? (
+                  <>
+                    <Select
+                      value={editedEngineerStart.toString()}
+                      onValueChange={handleEngineerStartChange}
+                    >
+                      <SelectTrigger className="w-24">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {timeSlots
+                          .filter(
+                            (slot) =>
+                              slot.id >= editedStartTime &&
+                              slot.id < editedEndTime
+                          )
+                          .map((slot) => (
+                            <SelectItem
+                              key={slot.id}
+                              value={slot.id.toString()}
+                            >
+                              {slot.displayStart}
+                            </SelectItem>
+                          ))}
+                      </SelectContent>
+                    </Select>
+
+                    <span className="text-sm">to</span>
+
+                    <Select
+                      value={editedEngineerEnd.toString()}
+                      onValueChange={handleEngineerEndChange}
+                    >
+                      <SelectTrigger className="w-24">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {timeSlots
+                          .filter(
+                            (slot) =>
+                              slot.id > editedEngineerStart &&
+                              slot.id <= editedEndTime
+                          )
+                          .map((slot) => (
+                            <SelectItem
+                              key={slot.id}
+                              value={slot.id.toString()}
+                            >
+                              {slot.displayEnd}
+                            </SelectItem>
+                          ))}
+                      </SelectContent>
+                    </Select>
+
+                    <div className="w-20 text-center text-sm">
+                      ({editedEngineerEnd - editedEngineerStart + 1} hour
+                      {editedEngineerEnd - editedEngineerStart + 1 !== 1
+                        ? "s"
+                        : ""}
+                      )
+                    </div>
+                  </>
                 ) : (
-                  <span>No</span>
+                  <></>
                 )}
               </div>
             </TableCell>
@@ -661,7 +823,14 @@ export default function Bookings(): JSX.Element {
                     (editedStartTime === booking.startTime &&
                       editedEndTime === booking.endTime &&
                       selectedUserId === booking.user.id &&
-                      selectedStatus === booking.status) ||
+                      selectedStatus === booking.status &&
+                      hasEngineer === booking.engineerTotal > 0 &&
+                      (!hasEngineer ||
+                        (editedEngineerStart === booking.engineerStart &&
+                          editedEngineerEnd ===
+                            booking.engineerStart +
+                              booking.engineerTotal -
+                              1))) ||
                     validateTimes() !== null
                   }
                 >
