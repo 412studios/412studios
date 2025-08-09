@@ -45,6 +45,9 @@ interface Booking {
   endTime: number;
   user: User;
   status: string;
+  engineerTotal: number;
+  engineerStart: number;
+  engineerStatus: string;
 }
 
 type RoomFilter = "all" | "a" | "b" | "c";
@@ -156,6 +159,13 @@ export default function Bookings(): JSX.Element {
   const getDuration = (startTime: number, endTime: number): string => {
     const duration = endTime - startTime;
     return `${duration} hour${duration !== 1 ? "s" : ""}`;
+  };
+
+  const getEngineerStatus = (booking: Booking): string => {
+    if (booking.engineerTotal > 0) {
+      return "Yes";
+    }
+    return "N/A";
   };
 
   const isUpcoming = (dateNum: number): boolean => {
@@ -720,6 +730,7 @@ export default function Bookings(): JSX.Element {
                 <TableHead>Start</TableHead>
                 <TableHead>End</TableHead>
                 <TableHead>User</TableHead>
+                <TableHead>Engineer</TableHead>
                 <TableHead>Details</TableHead>
               </TableRow>
             </TableHeader>
@@ -731,6 +742,7 @@ export default function Bookings(): JSX.Element {
                   <TableCell>{getTimeDisplay(booking.startTime)}</TableCell>
                   <TableCell>{getEndTimeDisplay(booking.endTime)}</TableCell>
                   <TableCell>{booking.user.name ?? ""}</TableCell>
+                  <TableCell>{getEngineerStatus(booking)}</TableCell>
                   <TableCell>
                     <Button
                       variant="outline"

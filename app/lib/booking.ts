@@ -44,6 +44,9 @@ export async function getAllBooking() {
       endTime: true,
       status: true,
       user: true,
+      engineerTotal: true,
+      engineerStart: true,
+      engineerStatus: true,
     },
   });
   return data;
