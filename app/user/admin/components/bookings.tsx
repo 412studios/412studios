@@ -712,21 +712,21 @@ export default function Bookings(): JSX.Element {
             </TableCell>
             <TableCell>
               <div className="flex justify-between items-center w-full gap-2">
-                <Select
-                  value={hasEngineer ? "yes" : "no"}
-                  onValueChange={(value) => setHasEngineer(value === "yes")}
-                >
-                  <SelectTrigger className="w-20">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="yes">Yes</SelectItem>
-                    <SelectItem value="no">No</SelectItem>
-                  </SelectContent>
-                </Select>
-
                 {hasEngineer ? (
                   <>
+                    <Select
+                      value="yes"
+                      onValueChange={(value) => setHasEngineer(value === "yes")}
+                    >
+                      <SelectTrigger className="w-20">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="yes">Yes</SelectItem>
+                        <SelectItem value="no">No</SelectItem>
+                      </SelectContent>
+                    </Select>
+
                     <Select
                       value={editedEngineerStart.toString()}
                       onValueChange={handleEngineerStartChange}
@@ -788,7 +788,24 @@ export default function Bookings(): JSX.Element {
                     </div>
                   </>
                 ) : (
-                  <></>
+                  <>
+                    <Select
+                      value="no"
+                      onValueChange={(value) => setHasEngineer(value === "yes")}
+                    >
+                      <SelectTrigger className="flex-1">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="yes">Yes</SelectItem>
+                        <SelectItem value="no">No</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <div className="w-24 invisible"></div>
+                    <span className="text-sm invisible">to</span>
+                    <div className="w-24 invisible"></div>
+                    <div className="w-20 invisible"></div>
+                  </>
                 )}
               </div>
             </TableCell>
