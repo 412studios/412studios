@@ -5,10 +5,10 @@ export const EMAIL_CONSTANTS = {
     "https://www.google.com/maps/dir/?api=1&destination=412+Richmond+St+E+Toronto+ON+M5A+1P8",
   SUPPORT_EMAIL: "alec@412studios.com",
   COMPANY_NAME: "412 Studios",
-  WEBSITE_URL: "https://412studios.com",
+  WEBSITE_URL: "https://412studios.ca",
   BASE_URL:
     process.env.NODE_ENV === "production"
-      ? process.env.PRODUCTION_URL
+      ? (process.env.PRODUCTION_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "https://412studios.ca"))
       : "http://localhost:3000",
 };
 
