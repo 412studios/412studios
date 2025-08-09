@@ -610,18 +610,20 @@ export default function Bookings(): JSX.Element {
             <TableCell>
               <div className="flex justify-between items-center w-full">
                 {booking.engineerTotal > 0 ? (
-                  <div className="flex justify-between items-center flex-1 ml-4">
-                    <span>Yes</span>
-                    <span>
-                      {getTimeDisplay(booking.engineerStart)} -{" "}
+                  <div className="flex justify-between items-center flex-1">
+                    <Button variant="outline">Yes</Button>
+                    <Button variant="outline">
+                      {getTimeDisplay(booking.engineerStart)}
+                    </Button>
+                    <Button variant="outline">
                       {getTimeDisplay(
                         booking.engineerStart + booking.engineerTotal - 1
                       )}
-                    </span>
-                    <span>
+                    </Button>
+                    <Button variant="outline">
                       {booking.engineerTotal} hour
                       {booking.engineerTotal !== 1 ? "s" : ""}
-                    </span>
+                    </Button>
                   </div>
                 ) : (
                   <span>No</span>
