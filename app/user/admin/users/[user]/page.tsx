@@ -1,5 +1,5 @@
 import { unstable_noStore as noStore } from "next/cache";
-import prisma from "@/app/lib/db";
+import prisma from "@/lib/db";
 import BookingTable from "./bookingtable";
 
 export default async function Page(props: any) {

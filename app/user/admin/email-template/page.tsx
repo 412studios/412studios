@@ -1,9 +1,9 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { generateBookingConfirmationEmail } from "@/app/lib/emailTemplates";
+import { generateBookingConfirmationEmail } from "@/lib/emailTemplates";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { revalidatePath } from "next/cache";
-import prisma from "@/app/lib/db";
+import prisma from "@/lib/db";
 import { unstable_noStore as noStore } from "next/cache";
 
 import { Mail } from "lucide-react";
@@ -13,7 +13,7 @@ import {
   sendMembershipConfirmationEmail,
   sendMembershipUsageEmail,
   sendBookingReminderEmail,
-} from "@/app/lib/email";
+} from "@/lib/email";
 
 async function getUserDetails(userId: string) {
   noStore();

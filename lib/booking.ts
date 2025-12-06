@@ -2,8 +2,8 @@
 import { unstable_noStore as noStore } from "next/cache";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { redirect } from "next/navigation";
-import prisma from "@/app/lib/db";
-import { getStripeSession } from "@/app/lib/stripe";
+import prisma from "@/lib/db";
+import { getStripeSession } from "@/lib/stripe";
 const priceId = process.env.STRIPE_PRICE_ID_STANDARD_BOOKING as string;
 
 const formatDate = (date: Date | undefined): number => {
@@ -72,7 +72,7 @@ export async function deleteBooking(id: string) {
 
   // Delete the calendar event if it exists
   if (booking.addDetails) {
-    const { deleteCalendarEvent } = await import("@/app/lib/calendar");
+    const { deleteCalendarEvent } = await import("@/lib/calendar");
     try {
       await deleteCalendarEvent(booking.addDetails);
     } catch (error) {
@@ -261,7 +261,7 @@ export async function PostAdminBooking(input: any) {
   // Create calendar event for admin booking
   let calendarEventId: string | null = null;
   try {
-    const { createCalendarEvent } = await import("@/app/lib/calendar");
+    const { createCalendarEvent } = await import("@/lib/calendar");
     calendarEventId = await createCalendarEvent({
       bookingId,
       roomId: parseInt(input.room),
@@ -300,7 +300,7 @@ export async function PostAdminBooking(input: any) {
 
   try {
     // Import dynamically to avoid circular dependencies
-    const { sendBookingConfirmationEmail } = await import("@/app/lib/email");
+    const { sendBookingConfirmationEmail } = await import("@/lib/email");
 
     // Format date for email
     const bookingDate = input.date
@@ -427,7 +427,7 @@ export async function PostMembershipBooking(
 
     // Create calendar event for successful membership booking
     try {
-      const { createCalendarEvent } = await import("@/app/lib/calendar");
+      const { createCalendarEvent } = await import("@/lib/calendar");
       const calendarEventId = await createCalendarEvent({
         bookingId,
         roomId: parseInt(input.room),
@@ -514,7 +514,7 @@ export async function PostMembershipBooking(
             userDetails.email
           );
 
-          const { sendMembershipUsageEmail } = await import("@/app/lib/email");
+          const { sendMembershipUsageEmail } = await import("@/lib/email");
           await sendMembershipUsageEmail(userDetails.email, {
             studioName: `Studio ${studioInfo?.room || input.room}`,
             date: bookingDate,

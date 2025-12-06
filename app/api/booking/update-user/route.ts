@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import prisma from "@/app/lib/db";
-import { updateCalendarEvent } from "@/app/lib/calendar";
+import prisma from "@/lib/db";
+import { updateCalendarEvent } from "@/lib/calendar";
 
 export async function POST(request: NextRequest) {
   try {

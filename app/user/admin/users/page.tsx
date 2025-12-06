@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { unstable_noStore as noStore } from "next/cache";
-import prisma from "@/app/lib/db";
+import prisma from "@/lib/db";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import UserTable from "./usertable";
 import { H2, H4, Subtitle, Section, Divider } from "@/components/ui/copy";

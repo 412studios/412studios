@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import prisma from "@/app/lib/db";
-import { sendBookingReminderEmail } from "@/app/lib/email";
+import prisma from "@/lib/db";
+import { sendBookingReminderEmail } from "@/lib/email";
 export const dynamic = "force-dynamic";
 
 async function sendReminderEmails() {

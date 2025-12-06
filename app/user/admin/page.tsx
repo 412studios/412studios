@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { H2 } from "@/components/ui/copy";
 import { unstable_noStore as noStore } from "next/cache";
-import prisma from "@/app/lib/db";
+import prisma from "@/lib/db";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { Section } from "@/components/ui/copy";
 import Dashboard from "@/app/user/admin/components/dashboard";

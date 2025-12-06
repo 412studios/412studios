@@ -1,6 +1,6 @@
 "use server";
 import { google } from "googleapis";
-import prisma from "@/app/lib/db";
+import prisma from "@/lib/db";
 
 // Types for calendar events
 interface BookingEvent {

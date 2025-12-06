@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { XIcon } from "lucide-react";
 import Link from "next/link";
-import prisma from "@/app/lib/db";
+import prisma from "@/lib/db";
 
 // Using a separate API route pattern for Next.js 15.2+
 export default async function PageCancel({

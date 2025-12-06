@@ -1,5 +1,5 @@
 import { unstable_noStore as noStore } from "next/cache";
-import prisma from "@/app/lib/db";
+import prisma from "@/lib/db";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Bookings from "@/app/user/admin/components/bookings";
 import Users from "@/app/user/admin/components/users";

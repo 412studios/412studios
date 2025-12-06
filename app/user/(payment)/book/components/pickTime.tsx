@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { Button } from "@/components/ui/button";
-import { getBooking, getMembershipWeek } from "@/app/lib/booking";
+import { getBooking, getMembershipWeek } from "@/lib/booking";
 import {
   timeSlots,
   membershipTimeSlots,

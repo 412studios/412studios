@@ -28,7 +28,7 @@ import {
   ArrowLeft,
   ChevronDown,
 } from "lucide-react";
-import { getAllBooking, deleteBooking } from "@/app/lib/booking";
+import { getAllBooking, deleteBooking } from "@/lib/booking";
 import { timeSlots } from "@/app/user/(payment)/book/components/timeSlots";
 
 interface User {

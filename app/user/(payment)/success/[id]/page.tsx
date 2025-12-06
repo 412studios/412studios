@@ -2,14 +2,14 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Check } from "lucide-react";
 import Link from "next/link";
-import prisma from "@/app/lib/db";
+import prisma from "@/lib/db";
 import { unstable_noStore as noStore } from "next/cache";
 import { 
   sendTestEmail,
   handleBookingConfirmationEmail,
   handleMembershipUsageEmail, 
   handleMembershipConfirmationEmail
-} from "@/app/lib/email";
+} from "@/lib/email";
 
 export default async function PageSuccess({
   params,

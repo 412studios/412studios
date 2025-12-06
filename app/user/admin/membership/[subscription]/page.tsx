@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import NumberInput from "./numinput";
 import { redirect } from "next/navigation";
-import prisma from "@/app/lib/db";
+import prisma from "@/lib/db";
 
 export default async function Page(id: any) {
   const membership = await prisma.memberships.findUnique({

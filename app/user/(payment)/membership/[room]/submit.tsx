@@ -1,6 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { PostMembership } from "@/app/lib/booking";
+import { PostMembership } from "@/lib/booking";
 
 export default function Submit(input: any) {
   const submit = async () => {

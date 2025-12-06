@@ -191,7 +191,7 @@ export function DashboardProvider({
 
     try {
       // Import dynamically to avoid circular dependencies
-      const { PostBooking } = await import("@/app/lib/booking");
+      const { PostBooking } = await import("@/lib/booking");
       await PostBooking(options);
     } catch (error) {
       console.error("Failed to post booking:", error);
@@ -214,7 +214,7 @@ export function DashboardProvider({
 
     try {
       // Import dynamically to avoid circular dependencies
-      const { PostMembershipBooking } = await import("@/app/lib/booking");
+      const { PostMembershipBooking } = await import("@/lib/booking");
       await PostMembershipBooking(options, startTime, endTime, duration);
     } catch (error) {
       console.error("Failed to post membership booking:", error);
@@ -233,7 +233,7 @@ export function DashboardProvider({
   const submitAdminBooking = useCallback(async () => {
     try {
       // Import dynamically to avoid circular dependencies
-      const { PostAdminBooking } = await import("@/app/lib/booking");
+      const { PostAdminBooking } = await import("@/lib/booking");
       await PostAdminBooking(options);
       // Don't reset loading state on success - let the redirect handle the page change
     } catch (error) {

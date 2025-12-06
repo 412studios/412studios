@@ -1,6 +1,6 @@
 import { headers } from "next/headers";
 import Stripe from "stripe";
-import prisma from "@/app/lib/db";
+import prisma from "@/lib/db";
 
 // Initialize Stripe with your secret key
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
@@ -39,7 +39,7 @@ async function handleBookingPaymentSuccess(session: Stripe.Checkout.Session) {
 
     // Create calendar event for the successful booking
     try {
-      const { createCalendarEvent } = await import("@/app/lib/calendar");
+      const { createCalendarEvent } = await import("@/lib/calendar");
       const calendarEventId = await createCalendarEvent({
         bookingId: booking.bookingId,
         roomId: booking.roomId,

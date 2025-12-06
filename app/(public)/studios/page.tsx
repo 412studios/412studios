@@ -1,4 +1,4 @@
-import EquipmentList from "@/app/components/equipmentList";
+import EquipmentList from "@/components/custom/equipmentList";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -10,7 +10,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-import { getPricing } from "@/app/lib/booking";
+import { getPricing } from "@/lib/booking";
 import { H2, H4, Subtitle, Section, Divider } from "@/components/ui/copy";
 
 export default async function Page() {

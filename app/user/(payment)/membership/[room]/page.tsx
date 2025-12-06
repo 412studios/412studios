@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
-import { getPricing } from "@/app/lib/booking";
+import { getPricing } from "@/lib/booking";
 import Submit from "./submit";
 import { H4, Section } from "@/components/ui/copy";
 

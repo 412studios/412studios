@@ -1,14 +1,14 @@
 import { type Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { Navbar } from "./components/nav/Navbar";
-import { Footer } from "./components/Footer";
-import { UserProvider } from "./components/UserContext";
-import { LoadingProvider } from "./components/LoadingProvider";
-import { ScrollToTop } from "./components/ScrollToTop";
+import { Navbar } from "@/components/custom/nav/Navbar";
+import { Footer } from "@/components/custom/Footer";
+import { UserProvider } from "@/components/custom/UserContext";
+import { LoadingProvider } from "@/components/custom/LoadingProvider";
+import { ScrollToTop } from "@/components/custom/ScrollToTop";
 import { unstable_noStore as noStore } from "next/cache";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-import FacebookPixel from "./components/FacebookPixel";
+import FacebookPixel from "@/components/custom/FacebookPixel";
 import { headers } from "next/headers";
 
 const inter = Inter({ subsets: ["latin"] });

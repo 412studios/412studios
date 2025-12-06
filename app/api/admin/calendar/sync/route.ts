@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-import { syncAllBookingsToCalendar } from "@/app/lib/calendar";
+import { syncAllBookingsToCalendar } from "@/lib/calendar";
 
 export const runtime = 'nodejs';
 export const maxDuration = 60;

@@ -1,8 +1,8 @@
 "use client";
-import { Services } from "@/app/components/servicesCarousel";
-import { Contact } from "@/app/components/contact";
-import { OurStudios } from "@/app/components/ourStudios";
-import { Banner } from "@/app/components/banner";
+import { Services } from "@/components/custom/servicesCarousel";
+import { Contact } from "@/components/custom/contact";
+import { OurStudios } from "@/components/custom/ourStudios";
+import { Banner } from "@/components/custom/banner";
 import { H2, Subtitle, Section, Divider } from "@/components/ui/copy";
 export default function Home() {
   return (

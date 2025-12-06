@@ -1,10 +1,10 @@
 import { ReactNode } from "react";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { redirect } from "next/navigation";
-import prisma from "@/app/lib/db";
-import { stripe } from "@/app/lib/stripe";
+import prisma from "@/lib/db";
+import { stripe } from "@/lib/stripe";
 import { unstable_noStore as noStore } from "next/cache";
-import { getPricing } from "@/app/lib/booking";
+import { getPricing } from "@/lib/booking";
 import { DashboardProvider } from "./context";
 import { Pricing, Memberships, User } from "@prisma/client";
 

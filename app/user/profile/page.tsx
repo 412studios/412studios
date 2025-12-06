@@ -2,9 +2,9 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
 import { unstable_noStore as noStore } from "next/cache";
-import prisma from "@/app/lib/db";
+import prisma from "@/lib/db";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-import { stripe } from "@/app/lib/stripe";
+import { stripe } from "@/lib/stripe";
 import { H4, Section } from "@/components/ui/copy";
 import { User, Dot, Book, LogOut, Settings } from "lucide-react";
 

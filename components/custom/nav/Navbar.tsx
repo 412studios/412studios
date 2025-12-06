@@ -1,6 +1,6 @@
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import NavbarClient from "./NavbarClient";
-import prisma from "@/app/lib/db";
+import prisma from "@/lib/db";
 
 export async function Navbar() {
   // Fetch authentication status on the server
