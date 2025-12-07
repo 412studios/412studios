@@ -58,6 +58,10 @@ export default function OfferCodes() {
     isActive: true,
   });
   const [isSaving, setIsSaving] = useState(false);
+  const [notification, setNotification] = useState<{
+    type: "success" | "error";
+    message: string;
+  } | null>(null);
 
   useEffect(() => {
     fetchOfferCodes();
@@ -114,11 +118,16 @@ export default function OfferCodes() {
 
   const handleSave = async () => {
     if (!formData.code || !formData.discountValue) {
-      alert("Please fill in all required fields");
+      setNotification({
+        type: "error",
+        message: "Please fill in all required fields",
+      });
+      setTimeout(() => setNotification(null), 5000);
       return;
     }
 
     setIsSaving(true);
+    setNotification(null);
     try {
       const url = editingCode
         ? `/api/admin/offer-codes/${editingCode.id}`
@@ -134,20 +143,30 @@ export default function OfferCodes() {
       });
 
       if (response.ok) {
-        alert(
-          editingCode
+        setNotification({
+          type: "success",
+          message: editingCode
             ? "Offer code updated successfully!"
-            : "Offer code created successfully!"
-        );
+            : "Offer code created successfully!",
+        });
+        setTimeout(() => setNotification(null), 5000);
         handleCloseDialog();
         fetchOfferCodes();
       } else {
         const data = await response.json();
-        alert(data.error || "Failed to save offer code");
+        setNotification({
+          type: "error",
+          message: data.error || "Failed to save offer code",
+        });
+        setTimeout(() => setNotification(null), 5000);
       }
     } catch (error) {
       console.error("Error saving offer code:", error);
-      alert("Failed to save offer code. Please try again.");
+      setNotification({
+        type: "error",
+        message: "Failed to save offer code. Please try again.",
+      });
+      setTimeout(() => setNotification(null), 5000);
     } finally {
       setIsSaving(false);
     }
@@ -158,25 +177,39 @@ export default function OfferCodes() {
       return;
     }
 
+    setNotification(null);
     try {
       const response = await fetch(`/api/admin/offer-codes/${id}`, {
         method: "DELETE",
       });
 
       if (response.ok) {
-        alert("Offer code deleted successfully!");
+        setNotification({
+          type: "success",
+          message: "Offer code deleted successfully!",
+        });
+        setTimeout(() => setNotification(null), 5000);
         fetchOfferCodes();
       } else {
         const data = await response.json();
-        alert(data.error || "Failed to delete offer code");
+        setNotification({
+          type: "error",
+          message: data.error || "Failed to delete offer code",
+        });
+        setTimeout(() => setNotification(null), 5000);
       }
     } catch (error) {
       console.error("Error deleting offer code:", error);
-      alert("Failed to delete offer code. Please try again.");
+      setNotification({
+        type: "error",
+        message: "Failed to delete offer code. Please try again.",
+      });
+      setTimeout(() => setNotification(null), 5000);
     }
   };
 
   const handleToggleActive = async (code: OfferCode) => {
+    setNotification(null);
     try {
       const response = await fetch(`/api/admin/offer-codes/${code.id}`, {
         method: "PATCH",
@@ -191,11 +224,19 @@ export default function OfferCodes() {
       if (response.ok) {
         fetchOfferCodes();
       } else {
-        alert("Failed to update offer code status");
+        setNotification({
+          type: "error",
+          message: "Failed to update offer code status",
+        });
+        setTimeout(() => setNotification(null), 5000);
       }
     } catch (error) {
       console.error("Error toggling offer code:", error);
-      alert("Failed to update offer code status");
+      setNotification({
+        type: "error",
+        message: "Failed to update offer code status",
+      });
+      setTimeout(() => setNotification(null), 5000);
     }
   };
 
@@ -205,6 +246,17 @@ export default function OfferCodes() {
 
   return (
     <div className="space-y-4">
+      {notification && (
+        <div
+          className={`p-4 rounded-lg border ${
+            notification.type === "success"
+              ? "bg-green-50 border-green-200 text-green-800 dark:bg-green-900/20 dark:border-green-800 dark:text-green-200"
+              : "bg-red-50 border-red-200 text-red-800 dark:bg-red-900/20 dark:border-red-800 dark:text-red-200"
+          }`}
+        >
+          <p className="font-medium">{notification.message}</p>
+        </div>
+      )}
       <div className="flex justify-between items-center">
         <h3 className="text-lg font-semibold">Manage Offer Codes</h3>
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
