@@ -39,6 +39,11 @@ export interface BookingOptions {
   user: User | null;
   engDuration: number;
   engStart: number;
+  offerCode?: string;
+  offerCodeId?: string;
+  discountType?: string;
+  discountValue?: number;
+  discountAmount?: number;
 }
 
 /**

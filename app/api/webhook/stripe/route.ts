@@ -12,7 +12,7 @@ async function handleBookingPaymentSuccess(session: Stripe.Checkout.Session) {
   try {
     // Get booking ID from session metadata
     const bookingId = session.metadata?.bookingId;
-    
+
     if (!bookingId) {
       console.log("No booking ID found in session metadata");
       return;
@@ -27,6 +27,11 @@ async function handleBookingPaymentSuccess(session: Stripe.Checkout.Session) {
           select: {
             name: true,
             email: true,
+          },
+        },
+        offerCode: {
+          select: {
+            code: true,
           },
         },
       },
@@ -59,11 +64,56 @@ async function handleBookingPaymentSuccess(session: Stripe.Checkout.Session) {
           where: { bookingId: booking.bookingId },
           data: { addDetails: calendarEventId },
         });
-        
+
         console.log(`Calendar event ${calendarEventId} created for booking ${bookingId}`);
       }
     } catch (calendarError) {
       console.error("Failed to create calendar event:", calendarError);
+    }
+
+    // Send booking confirmation email
+    try {
+      const { sendBookingConfirmationEmail } = await import("@/lib/email");
+
+      // Get studio name
+      const pricing = await prisma.pricing.findFirst({
+        where: { id: booking.roomId.toString() },
+        select: { room: true },
+      });
+
+      // Format date
+      const dateStr = booking.date.toString();
+      const year = parseInt(dateStr.substring(0, 4));
+      const month = parseInt(dateStr.substring(4, 6)) - 1;
+      const day = parseInt(dateStr.substring(6, 8));
+      const bookingDate = new Date(year, month, day).toDateString();
+
+      // Get time slot display strings
+      const { timeSlots } = await import("@/app/user/(payment)/book/components/timeSlots");
+      const startTimeStr = timeSlots[booking.startTime]?.displayStart || `${booking.startTime}:00`;
+      const endTimeStr = timeSlots[booking.endTime]?.displayEnd || `${booking.endTime + 1}:00`;
+
+      // Calculate original price if discount was applied
+      const originalPrice = booking.discountAmount && booking.discountAmount > 0
+        ? booking.totalPrice + booking.discountAmount
+        : undefined;
+
+      if (booking.user?.email) {
+        await sendBookingConfirmationEmail(booking.user.email, {
+          studioName: `Studio ${pricing?.room || booking.roomId}`,
+          date: bookingDate,
+          startTime: startTimeStr,
+          endTime: endTimeStr,
+          duration: booking.totalHours,
+          price: booking.totalPrice,
+          engineeringIncluded: booking.engineerTotal > 0,
+          offerCode: booking.offerCode?.code,
+          discountAmount: booking.discountAmount || undefined,
+          originalPrice: originalPrice,
+        });
+      }
+    } catch (emailError) {
+      console.error("Failed to send booking confirmation email:", emailError);
     }
 
     console.log(`Booking ${bookingId} marked as successful and synced to calendar`);

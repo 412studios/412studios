@@ -62,6 +62,9 @@ export interface BookingDetails {
   duration: number;
   price: number;
   engineeringIncluded?: boolean;
+  offerCode?: string;
+  discountAmount?: number;
+  originalPrice?: number;
 }
 
 export interface MembershipDetails {
@@ -98,6 +101,10 @@ const generateBookingContent = (data: BookingDetails) => ({
       <p style="${INLINE_STYLES.p}"><span style="${INLINE_STYLES.strong}">Time:</span> ${data.startTime} - ${data.endTime}</p>
       <p style="${INLINE_STYLES.p}"><span style="${INLINE_STYLES.strong}">Duration:</span> ${data.duration} hours</p>
       <p style="${INLINE_STYLES.p}"><span style="${INLINE_STYLES.strong}">Engineering Services:</span> ${data.engineeringIncluded ? "Included" : "Not included"}</p>
+      ${data.offerCode && data.discountAmount ? `
+      <p style="${INLINE_STYLES.p}"><span style="${INLINE_STYLES.strong}">Original Price:</span> $${data.originalPrice}.00 CAD</p>
+      <p style="${INLINE_STYLES.p}; color: #16a34a;"><span style="${INLINE_STYLES.strong}">Discount (${data.offerCode}):</span> -$${data.discountAmount}.00 CAD</p>
+      ` : ''}
       <p style="${INLINE_STYLES.p}"><span style="${INLINE_STYLES.strong}">Total Price:</span> $${data.price}.00 CAD</p>
     </div>
   `,
@@ -111,7 +118,9 @@ Booking Details:
 - Time: ${data.startTime} - ${data.endTime}
 - Duration: ${data.duration} hours
 - Engineering Services: ${data.engineeringIncluded ? "Included" : "Not included"}
-- Total Price: $${data.price}.00 CAD
+${data.offerCode && data.discountAmount ? `- Original Price: $${data.originalPrice}.00 CAD
+- Discount (${data.offerCode}): -$${data.discountAmount}.00 CAD
+` : ''}- Total Price: $${data.price}.00 CAD
 
 Studio Location:
 ${EMAIL_CONSTANTS.STUDIO_ADDRESS}

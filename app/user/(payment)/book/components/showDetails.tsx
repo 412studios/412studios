@@ -38,6 +38,7 @@ export const ShowDetails: React.FC = () => {
     duration,
     bookingTotal,
     engTotal,
+    discountAmount,
     total,
     foundMembership,
     membershipHasHours,
@@ -47,6 +48,7 @@ export const ShowDetails: React.FC = () => {
     let duration = 0;
     let bookingTotal = 0;
     let engTotal = 0;
+    let discountAmount = 0;
     let total = 0;
 
     // Find membership for current room with proper type safety
@@ -91,12 +93,23 @@ export const ShowDetails: React.FC = () => {
       }
     }
 
+    // Apply discount if offer code is present (only for non-membership bookings)
+    if (!useMembershipSlots && options.offerCodeId && options.discountType && options.discountValue) {
+      if (options.discountType === "percentage") {
+        discountAmount = Math.round((total * options.discountValue) / 100);
+      } else if (options.discountType === "fixed") {
+        discountAmount = Math.min(options.discountValue, total);
+      }
+      total = Math.max(0, total - discountAmount);
+    }
+
     return {
       displayStart,
       displayEnd,
       duration,
       bookingTotal,
       engTotal,
+      discountAmount,
       total,
       foundMembership,
       membershipHasHours,
@@ -107,17 +120,21 @@ export const ShowDetails: React.FC = () => {
     options.engDuration,
     options.room,
     options.membership,
+    options.offerCodeId,
+    options.discountType,
+    options.discountValue,
     useMembershipSlots,
     prices,
   ]);
 
-  // Update total price in global state when it changes
+  // Update total price and discount amount in global state when they change
   useEffect(() => {
     setOptions((prevOptions) => ({
       ...prevOptions,
       price: total,
+      discountAmount: discountAmount,
     }));
-  }, [total, setOptions]);
+  }, [total, discountAmount, setOptions]);
 
   // Safely handle button clicks with loading state managed in context
   const handleBookingSubmit = useCallback(() => {
@@ -411,6 +428,17 @@ export const ShowDetails: React.FC = () => {
                         <TableCell>${engTotal}.00 CAD</TableCell>
                       </TableRow>
                     </>
+                  )}
+
+                  {discountAmount > 0 && options.offerCode && (
+                    <TableRow>
+                      <TableCell>
+                        <strong>Discount ({options.offerCode})</strong>
+                      </TableCell>
+                      <TableCell className="text-green-600 dark:text-green-400">
+                        -${discountAmount}.00 CAD
+                      </TableCell>
+                    </TableRow>
                   )}
 
                   <TableRow>

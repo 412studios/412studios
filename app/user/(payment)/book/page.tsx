@@ -4,6 +4,7 @@ import { PickTime } from "./components/pickTime";
 import { PickEng } from "./components/pickEng";
 import { ShowDetails } from "./components/showDetails";
 import { StudioDetails } from "./components/studioDetails";
+import { OfferCodeInput } from "./components/offerCode";
 import { H2, H4 } from "@/components/ui/copy";
 import { useDashboard } from "./context";
 
@@ -38,6 +39,7 @@ export default function DashboardPage() {
           </div>
         </div>
         <PickEng />
+        <OfferCodeInput />
         <ShowDetails />
       </div>
     </section>

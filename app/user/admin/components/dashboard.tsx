@@ -5,6 +5,7 @@ import Bookings from "@/app/user/admin/components/bookings";
 import Users from "@/app/user/admin/components/users";
 import Pricing from "@/app/user/admin/components/pricing";
 import CalendarSync from "@/app/user/admin/components/calendarSync";
+import OfferCodes from "@/app/user/admin/components/offerCodes";
 
 export default async function Dashboard() {
   noStore();
@@ -44,6 +45,7 @@ export default async function Dashboard() {
         <TabsTrigger value="bookings">Bookings</TabsTrigger>
         <TabsTrigger value="users">Users</TabsTrigger>
         <TabsTrigger value="pricing">Pricing</TabsTrigger>
+        <TabsTrigger value="offers">Offer Codes</TabsTrigger>
         <TabsTrigger value="calendar">Calendar</TabsTrigger>
       </TabsList>
       {/* BOOKINGS SECTION */}
@@ -55,6 +57,9 @@ export default async function Dashboard() {
       </TabsContent>
       <TabsContent value="pricing">
         <Pricing pricing={pricing} />
+      </TabsContent>
+      <TabsContent value="offers">
+        <OfferCodes />
       </TabsContent>
       <TabsContent value="calendar">
         <CalendarSync />

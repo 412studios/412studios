@@ -27,13 +27,13 @@ model User {
 }
 
 model Bookings {
-  bookingId       String   @id
+  bookingId       String     @id
   roomId          Int
   date            Int
-  type            String   @default("hour")
+  type            String     @default("hour")
   startTime       Int
   endTime         Int
-  status          String   @default("pending")
+  status          String     @default("pending")
   userId          String
   stripeProductId String
   totalHours      Int
@@ -42,8 +42,11 @@ model Bookings {
   engineerStart   Int
   engineerStatus  String
   addDetails      String
-  createdAt       DateTime @default(now())
-  user            User     @relation(fields: [userId], references: [id])
+  offerCodeId     String?
+  discountAmount  Float?     @default(0)
+  createdAt       DateTime   @default(now())
+  user            User       @relation(fields: [userId], references: [id])
+  offerCode       OfferCode? @relation(fields: [offerCodeId], references: [id])
 }
 
 model Memberships {
@@ -76,4 +79,16 @@ model Pricing {
   blocked           Boolean @default(false)
   User              User?   @relation(fields: [userId], references: [id])
   userId            String?
+}
+
+model OfferCode {
+  id            String     @id @default(cuid())
+  code          String     @unique
+  description   String?
+  discountType  String     // "percentage" or "fixed"
+  discountValue Float      // percentage (e.g., 20 for 20%) or dollar amount (e.g., 20.00 for $20)
+  isActive      Boolean    @default(true)
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  bookings      Bookings[]
 }

@@ -221,6 +221,8 @@ export async function PostBooking(input: any) {
       engineerStatus: "pending",
       totalPrice: input.price,
       addDetails: "",
+      offerCodeId: input.offerCodeId || null,
+      discountAmount: input.discountAmount || 0,
     },
   });
 
