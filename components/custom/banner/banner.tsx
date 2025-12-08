@@ -6,9 +6,10 @@ interface BannerProps {
   imageSrc?: string;
 }
 
-export function Banner({ imageSrc = "/renders/lounge-day.png" }: BannerProps) {
+export function Banner({ imageSrc }: BannerProps) {
   const [navHeight, setNavHeight] = useState(0);
   const [currentTime, setCurrentTime] = useState("");
+  const [isDaytime, setIsDaytime] = useState(true);
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -28,9 +29,12 @@ export function Banner({ imageSrc = "/renders/lounge-day.png" }: BannerProps) {
     return () => window.removeEventListener("resize", handleResizeNav);
   }, []);
 
-  // Update Toronto time every second
+  // Update Toronto time and check if it's daytime
   useEffect(() => {
-    const updateTime = () => {
+    const updateTimeAndDaylight = () => {
+      const now = new Date();
+
+      // Format time for display
       const torontoTime = new Intl.DateTimeFormat("en-US", {
         timeZone: "America/Toronto",
         year: "numeric",
@@ -40,12 +44,47 @@ export function Banner({ imageSrc = "/renders/lounge-day.png" }: BannerProps) {
         minute: "2-digit",
         second: "2-digit",
         hour12: true,
-      }).format(new Date());
+      }).format(now);
       setCurrentTime(torontoTime);
+
+      // Get current hour in Toronto
+      const torontoHour = parseInt(
+        new Intl.DateTimeFormat("en-US", {
+          timeZone: "America/Toronto",
+          hour: "2-digit",
+          hour12: false,
+        }).format(now)
+      );
+
+      // Simple sunrise/sunset approximation for Toronto
+      // Sunrise around 7 AM, sunset around 7 PM (this is approximate)
+      // For more accuracy, you could use a library like suncalc
+      const month = parseInt(
+        new Intl.DateTimeFormat("en-US", {
+          timeZone: "America/Toronto",
+          month: "2-digit",
+        }).format(now)
+      );
+
+      // Approximate sunrise and sunset times by month for Toronto
+      let sunrise = 7;
+      let sunset = 19;
+
+      if (month >= 4 && month <= 9) {
+        // Spring/Summer: earlier sunrise, later sunset
+        sunrise = 6;
+        sunset = 20;
+      } else if (month === 11 || month === 12 || month === 1) {
+        // Winter: later sunrise, earlier sunset
+        sunrise = 7.5;
+        sunset = 17;
+      }
+
+      setIsDaytime(torontoHour >= sunrise && torontoHour < sunset);
     };
 
-    updateTime(); // Initial update
-    const interval = setInterval(updateTime, 1000);
+    updateTimeAndDaylight(); // Initial update
+    const interval = setInterval(updateTimeAndDaylight, 1000);
 
     return () => clearInterval(interval);
   }, []);
@@ -153,6 +192,9 @@ export function Banner({ imageSrc = "/renders/lounge-day.png" }: BannerProps) {
     };
   }, []);
 
+  // Determine which image to use
+  const displayImage = imageSrc || (isDaytime ? "/renders/lounge-day.png" : "/renders/lounge-night.png");
+
   return (
     <section
       id="home"
@@ -163,7 +205,7 @@ export function Banner({ imageSrc = "/renders/lounge-day.png" }: BannerProps) {
         <div
           className="img-inner"
           style={{
-            backgroundImage: `url(${imageSrc})`,
+            backgroundImage: `url(${displayImage})`,
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
