@@ -4,7 +4,7 @@ import { FaTiktok, FaInstagram, FaYoutube, FaSoundcloud } from "react-icons/fa";
 
 export function Footer() {
   return (
-    <footer className="bg-black text-white">
+    <footer className="bg-foreground text-background">
       <div className="flex flex-col min-h-[50vh]">
         {/* Logo Section */}
         <div className="p-2">
@@ -90,7 +90,7 @@ export function Footer() {
         </div>
 
         {/* Copyright */}
-        <div className="text-center text-[10px] border-t p-2 mt-auto bg-black">
+        <div className="text-center text-[10px] border-t p-2 mt-auto">
           © {new Date().getFullYear()} 412 Studios. All rights reserved.
         </div>
       </div>
