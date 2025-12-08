@@ -19,7 +19,7 @@ import {
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { timeSlots } from "@/app/user/(payment)/book/components/timeSlots";
+import { timeSlots } from "@/app/(public)/booking/components/timeSlots";
 
 interface BookingTableProps {
   user: {

@@ -29,7 +29,7 @@ import {
   ChevronDown,
 } from "lucide-react";
 import { getAllBooking, deleteBooking } from "@/lib/booking";
-import { timeSlots } from "@/app/user/(payment)/book/components/timeSlots";
+import { timeSlots } from "@/app/(public)/booking/components/timeSlots";
 
 interface User {
   id: string;
@@ -918,7 +918,7 @@ export default function Bookings(): JSX.Element {
               Show Previous
             </label>
           </div>
-          <Link href="/user/book">
+          <Link href="/booking">
             <Button>Create</Button>
           </Link>
         </div>

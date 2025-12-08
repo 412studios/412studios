@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import {
   timeSlots,
   membershipTimeSlots,
-} from "@/app/user/(payment)/book/components/timeSlots";
+} from "@/app/(public)/booking/components/timeSlots";
 import { H4 } from "@/components/ui/copy";
 import { useDashboard } from "../context";
 import {
@@ -17,6 +17,7 @@ import {
 
 export const ShowDetails: React.FC = () => {
   const {
+    user,
     prices,
     options,
     setOptions,
@@ -336,6 +337,20 @@ export const ShowDetails: React.FC = () => {
 
               <div className="mt-4">
                 {(() => {
+                  // Check if user is logged in first
+                  if (!user) {
+                    return (
+                      <Button
+                        className="w-full"
+                        onClick={() => {
+                          window.location.href = "/api/auth/login?post_login_redirect_url=/booking";
+                        }}
+                      >
+                        Login to Book Time
+                      </Button>
+                    );
+                  }
+
                   const validation = validateMembershipBooking(options);
                   if (!validation.isValid) {
                     return (
@@ -452,6 +467,20 @@ export const ShowDetails: React.FC = () => {
 
               <div className="p-4 pt-0">
                 {(() => {
+                  // Check if user is logged in first
+                  if (!user) {
+                    return (
+                      <Button
+                        className="w-full"
+                        onClick={() => {
+                          window.location.href = "/api/auth/login?post_login_redirect_url=/booking";
+                        }}
+                      >
+                        Login to Proceed to Payment
+                      </Button>
+                    );
+                  }
+
                   const validation = validateStandardBooking(options);
                   if (!validation.isValid) {
                     return (

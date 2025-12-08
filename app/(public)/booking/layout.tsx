@@ -1,6 +1,5 @@
 import { ReactNode } from "react";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-import { redirect } from "next/navigation";
 import prisma from "@/lib/db";
 import { stripe } from "@/lib/stripe";
 import { unstable_noStore as noStore } from "next/cache";
@@ -79,14 +78,6 @@ async function checkVerification(userId: string) {
   return data;
 }
 
-const formatDateToNumeric = (date: Date | undefined): string => {
-  if (!date) return "";
-  const year = date.getFullYear().toString();
-  const month = (date.getMonth() + 1).toString().padStart(2, "0");
-  const day = date.getDate().toString().padStart(2, "0");
-  return year + month + day;
-};
-
 async function getMembership(userId: string) {
   noStore();
   const data = await prisma.memberships.findMany({
@@ -101,35 +92,11 @@ async function getMembership(userId: string) {
         },
       ],
     },
-    select: {
-      availableHours: true,
-      userId: true,
-      status: true,
-      roomId: true,
-    },
     orderBy: {
       roomId: "asc",
     },
   });
 
-  const today = new Date();
-  const numericToday = parseInt(formatDateToNumeric(today));
-
-  // Fetch the current membership details
-  const membership = await prisma.memberships.findMany({
-    where: {
-      userId: userId,
-      currentPeriodEnd: {
-        lt: numericToday,
-      },
-      status: "active",
-    },
-    select: {
-      currentPeriodStart: true,
-      currentPeriodEnd: true,
-      membershipId: true,
-    },
-  });
   return data;
 }
 
@@ -138,30 +105,29 @@ export default async function DashboardLayout({
 }: {
   children: ReactNode;
 }) {
-  //redirect user of not logged in
+  // Check if user is logged in but don't redirect
   const { getUser } = getKindeServerSession();
   const user = await getUser();
-  if (!user) {
-    return redirect("/");
+
+  let fullUser: User | null = null;
+  let membershipData: Memberships[] = [];
+
+  // If user is logged in, fetch their data
+  if (user) {
+    await getData({
+      email: user.email as string,
+      firstName: user.given_name as string,
+      id: user.id as string,
+      lastName: user.family_name as string,
+    });
+
+    membershipData = await getMembership(user?.id as string);
+
+    // Convert user to full Prisma User object
+    fullUser = (await prisma.user.findUnique({
+      where: { id: user.id as string },
+    })) as User;
   }
-
-  await getData({
-    email: user.email as string,
-    firstName: user.given_name as string,
-    id: user.id as string,
-    lastName: user.family_name as string,
-  });
-
-  const membershipData = await getMembership(user?.id as string);
-  const userDetails = await checkVerification(user?.id as string);
-  if (userDetails?.isUserVerified != true) {
-    return redirect("/");
-  }
-
-  // Convert user to full Prisma User object
-  const fullUser = (await prisma.user.findUnique({
-    where: { id: user.id as string },
-  })) as User;
 
   const pricingArray = await getPricing();
   const prices: PricesMap = pricingArray.reduce((acc, price) => {

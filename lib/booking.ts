@@ -101,6 +101,11 @@ export async function getMembershipWeek(
 ) {
   noStore();
 
+  // If no user is logged in, return false (no booking limit restrictions)
+  if (!user || !user.id) {
+    return false;
+  }
+
   const getWeekBoundaries = (numericDate: number) => {
     const year = Math.floor(numericDate / 10000);
     const month = Math.floor((numericDate % 10000) / 100) - 1;
@@ -200,6 +205,11 @@ export async function PostBooking(input: any) {
   noStore();
   const { getUser } = getKindeServerSession();
   const user = await getUser();
+
+  // Require authentication for booking
+  if (!user) {
+    return redirect("/api/auth/login?post_login_redirect_url=/booking");
+  }
 
   // HANDLE DB UPDATE
   const bookingId: string = require("crypto").randomBytes(16).toString("hex");
@@ -315,7 +325,7 @@ export async function PostAdminBooking(input: any) {
 
     // Get time slot display strings
     const { timeSlots } = await import(
-      "@/app/user/(payment)/book/components/timeSlots"
+      "@/app/(public)/booking/components/timeSlots"
     );
     const startTimeStr =
       timeSlots[input.startTime]?.displayStart || `${input.startTime}:00`;
@@ -382,6 +392,11 @@ export async function PostMembershipBooking(
   //GET DETAILS
   const { getUser } = getKindeServerSession();
   const user = await getUser();
+
+  // Require authentication for booking
+  if (!user) {
+    return redirect("/api/auth/login?post_login_redirect_url=/booking");
+  }
 
   //CREATE BOOKING AND AUTO SET TO SUCCESS FOR PREPAID MEMBERSHIP
   const bookingId: any = require("crypto").randomBytes(16).toString("hex");
@@ -499,7 +514,7 @@ export async function PostMembershipBooking(
 
         // Get formatted time details
         const { timeSlots } = await import(
-          "@/app/user/(payment)/book/components/timeSlots"
+          "@/app/(public)/booking/components/timeSlots"
         );
         const startTimeStr =
           timeSlots[input.startTime]?.displayStart || `${input.startTime}:00`;

@@ -39,7 +39,7 @@ export default function NavCollapse({
       <div className="flex flex-col p-2 gap-1 relative">
         {isAuthenticated ? (
           <>
-            <Link href="/user/book">
+            <Link href="/booking">
               <Button variant="nav" size="sm">
                 BOOK NOW
               </Button>

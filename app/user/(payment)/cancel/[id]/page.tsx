@@ -71,7 +71,7 @@ export default async function PageCancel({
             </div>
             <div className="mt-5 w-full sm:mt-6">
               <Button className="w-full" asChild>
-                <Link href="/studios">Book Now</Link>
+                <Link href="/">HOME</Link>
               </Button>
             </div>
           </div>

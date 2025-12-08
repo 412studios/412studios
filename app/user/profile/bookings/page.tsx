@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import prisma from "@/lib/db";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { unstable_noStore as noStore } from "next/cache";
-import { timeSlots } from "@/app/user/(payment)/book/components/timeSlots";
+import { timeSlots } from "@/app/(public)/booking/components/timeSlots";
 import {
   Table,
   TableHeader,

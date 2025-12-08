@@ -79,7 +79,7 @@ export function DashboardProvider({
   pricingData,
 }: {
   children: ReactNode;
-  userData: User;
+  userData: User | null;
   membershipData: Memberships[];
   pricingData: PricesMap;
 }) {
@@ -184,6 +184,13 @@ export function DashboardProvider({
   }, [setOptions]);
 
   const submitBooking = useCallback(async () => {
+    // Check if user is authenticated
+    if (!userData) {
+      // Redirect to login
+      window.location.href = "/api/auth/login?post_login_redirect_url=/booking";
+      return;
+    }
+
     setOptions((prevOptions) => ({
       ...prevOptions,
       loading: true,
@@ -200,9 +207,16 @@ export function DashboardProvider({
         loading: false,
       }));
     }
-  }, [options, setOptions]);
+  }, [options, setOptions, userData]);
 
   const submitMembershipBooking = useCallback(async () => {
+    // Check if user is authenticated
+    if (!userData) {
+      // Redirect to login
+      window.location.href = "/api/auth/login?post_login_redirect_url=/booking";
+      return;
+    }
+
     setOptions((prevOptions) => ({
       ...prevOptions,
       loading: true,
@@ -223,14 +237,19 @@ export function DashboardProvider({
         loading: false,
       }));
     }
-  }, [options, setOptions]);
+  }, [options, setOptions, userData]);
 
   let isAdmin = false;
-  if (userData.role === "admin") {
+  if (userData && userData.role === "admin") {
     isAdmin = true;
   }
 
   const submitAdminBooking = useCallback(async () => {
+    // Check if user is authenticated and is admin
+    if (!userData || !isAdmin) {
+      return;
+    }
+
     try {
       // Import dynamically to avoid circular dependencies
       const { PostAdminBooking } = await import("@/lib/booking");
@@ -243,7 +262,7 @@ export function DashboardProvider({
         loading: false,
       }));
     }
-  }, [options, setOptions]);
+  }, [options, setOptions, userData, isAdmin]);
 
   return (
     <DashboardContext.Provider
@@ -270,11 +289,9 @@ export function DashboardProvider({
   );
 }
 
-// Hook for consuming context
+// Hook for consuming context - updated to allow null user
 export function useDashboard() {
   const context = useContext(DashboardContext);
-  if (!context.user) {
-    throw new Error("useDashboard must be used within a DashboardProvider");
-  }
+  // Don't throw error if user is null - allow viewing without login
   return context;
 }

@@ -71,7 +71,7 @@ export default async function Page({
                 <p>Membership Price: ${selectedRoom.membershipPrice}.00</p>
                 <p>Includes 4 X 4 hour sessions</p>
                 {selectedRoom.blocked ? (
-                  <Link href="/user/book">
+                  <Link href="/booking">
                     <Button className="w-full mt-4">Return to Booking</Button>
                   </Link>
                 ) : (

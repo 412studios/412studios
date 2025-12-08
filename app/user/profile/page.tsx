@@ -155,7 +155,7 @@ export default async function Page() {
             </Link>
             {data?.isUserVerified && (
               <Link
-                href="/user/book/"
+                href="/booking"
                 className="flex items-center text-xs gap-2"
               >
                 <Book className="h-4 w-4" />

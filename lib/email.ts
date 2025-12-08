@@ -253,7 +253,7 @@ export const handleBookingConfirmationEmail = async (
 
     try {
       const { timeSlots } = await import(
-        "@/app/user/(payment)/book/components/timeSlots"
+        "@/app/(public)/booking/components/timeSlots"
       );
       console.log("TimeSlots imported successfully");
       startTimeStr = timeSlots[booking.startTime]?.displayStart || startTimeStr;
@@ -346,7 +346,7 @@ export const handleMembershipUsageEmail = async (booking: any, prisma: any) => {
 
       try {
         const { timeSlots } = await import(
-          "@/app/user/(payment)/book/components/timeSlots"
+          "@/app/(public)/booking/components/timeSlots"
         );
         startTimeStr =
           timeSlots[booking.startTime]?.displayStart || startTimeStr;

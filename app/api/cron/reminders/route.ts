@@ -89,7 +89,7 @@ async function sendReminderEmails() {
 
         try {
           const { timeSlots } = await import(
-            "@/app/user/(payment)/book/components/timeSlots"
+            "@/app/(public)/booking/components/timeSlots"
           );
           startTimeStr =
             timeSlots[booking.startTime]?.displayStart || startTimeStr;

@@ -5,7 +5,7 @@ import { getBooking, getMembershipWeek } from "@/lib/booking";
 import {
   timeSlots,
   membershipTimeSlots,
-} from "@/app/user/(payment)/book/components/timeSlots";
+} from "@/app/(public)/booking/components/timeSlots";
 import { useDashboard } from "../context";
 import { BookingApiRecord } from "../types/booking";
 import {

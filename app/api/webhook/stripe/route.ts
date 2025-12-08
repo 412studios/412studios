@@ -89,7 +89,7 @@ async function handleBookingPaymentSuccess(session: Stripe.Checkout.Session) {
       const bookingDate = new Date(year, month, day).toDateString();
 
       // Get time slot display strings
-      const { timeSlots } = await import("@/app/user/(payment)/book/components/timeSlots");
+      const { timeSlots } = await import("@/app/(public)/booking/components/timeSlots");
       const startTimeStr = timeSlots[booking.startTime]?.displayStart || `${booking.startTime}:00`;
       const endTimeStr = timeSlots[booking.endTime]?.displayEnd || `${booking.endTime + 1}:00`;
 

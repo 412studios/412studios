@@ -10,7 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { timeSlots } from "@/app/user/(payment)/book/components/timeSlots";
+import { timeSlots } from "@/app/(public)/booking/components/timeSlots";
 import { H4 } from "@/components/ui/copy";
 import { useDashboard } from "../context";
 

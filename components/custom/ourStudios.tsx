@@ -126,7 +126,7 @@ export function OurStudios() {
         </div>
       </div>
 
-      <Link href="/studios">
+      <Link href="/booking">
         <Button className="mt-2">PRICING</Button>
       </Link>
     </>
@@ -138,7 +138,7 @@ const StudioCard = ({
 }: {
   studio: { name: string; image: string };
 }) => (
-  <Link href="/studios">
+  <Link href="/booking">
     <div className="flex-grow block">
       <H3 className="mb-2">STUDIO {studio.name}</H3>
       <div className="relative rounded-xl overflow-hidden">
