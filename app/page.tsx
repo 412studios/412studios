@@ -2,7 +2,7 @@
 import { Services } from "@/components/custom/servicesCarousel";
 import { Contact } from "@/components/custom/contact";
 import { OurStudios } from "@/components/custom/ourStudios";
-import { Banner } from "@/components/custom/banner";
+import { Banner } from "@/components/custom/banner/banner";
 import { H2, Subtitle, Section, Divider } from "@/components/ui/copy";
 export default function Home() {
   return (

@@ -8,6 +8,7 @@ interface BannerProps {
 
 export function Banner({ imageSrc = "/renders/lounge-day.png" }: BannerProps) {
   const [navHeight, setNavHeight] = useState(0);
+  const [currentTime, setCurrentTime] = useState("");
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -25,6 +26,28 @@ export function Banner({ imageSrc = "/renders/lounge-day.png" }: BannerProps) {
 
     window.addEventListener("resize", handleResizeNav);
     return () => window.removeEventListener("resize", handleResizeNav);
+  }, []);
+
+  // Update Toronto time every second
+  useEffect(() => {
+    const updateTime = () => {
+      const torontoTime = new Intl.DateTimeFormat("en-US", {
+        timeZone: "America/Toronto",
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: true,
+      }).format(new Date());
+      setCurrentTime(torontoTime);
+    };
+
+    updateTime(); // Initial update
+    const interval = setInterval(updateTime, 1000);
+
+    return () => clearInterval(interval);
   }, []);
 
   // Drag-to-scroll + momentum logic
@@ -113,18 +136,12 @@ export function Banner({ imageSrc = "/renders/lounge-day.png" }: BannerProps) {
       lastY = y;
     };
 
-    // Prevent scroll wheel/trackpad from moving the container
-    const handleWheel = (e: WheelEvent) => {
-      e.preventDefault();
-    };
-
     centerScroll();
     window.addEventListener("resize", centerScroll);
     container.addEventListener("mousedown", handleMouseDown);
     container.addEventListener("mouseleave", handleMouseLeave);
     container.addEventListener("mouseup", handleMouseUp);
     container.addEventListener("mousemove", handleMouseMove);
-    container.addEventListener("wheel", handleWheel, { passive: false });
 
     return () => {
       if (momentumID !== null) cancelAnimationFrame(momentumID);
@@ -133,7 +150,6 @@ export function Banner({ imageSrc = "/renders/lounge-day.png" }: BannerProps) {
       container.removeEventListener("mouseleave", handleMouseLeave);
       container.removeEventListener("mouseup", handleMouseUp);
       container.removeEventListener("mousemove", handleMouseMove);
-      container.removeEventListener("wheel", handleWheel);
     };
   }, []);
 
@@ -152,6 +168,13 @@ export function Banner({ imageSrc = "/renders/lounge-day.png" }: BannerProps) {
             backgroundPosition: "center",
           }}
         />
+      </div>
+
+      {/* Time Overlay */}
+      <div className="absolute bottom-4 left-4 text-foreground pointer-events-none z-10 border-[1px] p-2 bg-background/20">
+        {/* <div className="font-bold tracking-wider">YYZ</div> */}
+        <div className="font-bold tracking-wider leading-tight">412 Richmond St E<br /> Toronto, ON</div>
+        <div className="text-sm font-light">{currentTime}</div>
       </div>
 
       <style jsx>{`
