@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 
 interface BannerProps {
   imageSrc?: string;
@@ -20,10 +21,38 @@ export function Banner({ imageSrc }: BannerProps) {
   const [showImage1, setShowImage1] = useState(true);
 
   const rooms = [
-    { name: "Kitchen", dayImage: "/renders/kitchen-day.png", nightImage: "/renders/kitchen-night.png" },
-    { name: "Lounge", dayImage: "/renders/lounge-day.png", nightImage: "/renders/lounge-night.png" },
-    { name: "Studio A", dayImage: "/renders/rooma-day.png", nightImage: "/renders/rooma-night.png" },
-    { name: "Liveroom", dayImage: "/renders/liveroom-day.png", nightImage: "/renders/liveroom-night.png" },
+    {
+      name: "Kitchen",
+      dayImage: "/renders/kitchen-day.png",
+      nightImage: "/renders/kitchen-night.png",
+      links: [
+        
+      ]
+    },
+    {
+      name: "Lounge",
+      dayImage: "/renders/lounge-day.png",
+      nightImage: "/renders/lounge-night.png",
+      links: [
+        { x: 22, y: 38, href: "/booking", label: "Book Now" },
+      ]
+    },
+    {
+      name: "Studio A",
+      dayImage: "/renders/rooma-day.png",
+      nightImage: "/renders/rooma-night.png",
+      links: [
+        
+      ]
+    },
+    {
+      name: "Liveroom",
+      dayImage: "/renders/liveroom-day.png",
+      nightImage: "/renders/liveroom-night.png",
+      links: [
+        
+      ]
+    },
   ];
 
   useEffect(() => {
@@ -316,6 +345,34 @@ export function Banner({ imageSrc }: BannerProps) {
           ))}
         </div>
       </div>
+
+      {/* Interactive Link Dots */}
+      {currentRoom.links && currentRoom.links.length > 0 && (
+        <div className="absolute inset-0 pointer-events-none z-10">
+          {currentRoom.links.map((link, index) => (
+            <Link
+              key={index}
+              href={link.href}
+              className="absolute pointer-events-auto group"
+              style={{
+                left: `${link.x}%`,
+                top: `${link.y}%`,
+                transform: "translate(-50%, -50%)",
+              }}
+            >
+              {/* Pulsing dot */}
+              <div className="relative">
+                <div className="w-4 h-4 bg-white rounded-full animate-pulse" />
+                <div className="absolute inset-0 w-4 h-4 bg-white/40 rounded-full animate-ping" />
+              </div>
+              {/* Label on hover */}
+              <div className="absolute left-1/2 top-full mt-2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap bg-background/90 text-foreground px-3 py-1 rounded-sm text-sm font-medium border border-foreground/20">
+                {link.label}
+              </div>
+            </Link>
+          ))}
+        </div>
+      )}
 
       {/* Time Overlay */}
       <div className="absolute bottom-4 left-4 text-foreground pointer-events-none z-10 border-[1px] p-2 bg-background/20 border-[1px] border-foreground/20">
