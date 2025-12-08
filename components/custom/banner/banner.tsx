@@ -10,7 +10,17 @@ export function Banner({ imageSrc }: BannerProps) {
   const [navHeight, setNavHeight] = useState(0);
   const [currentTime, setCurrentTime] = useState("");
   const [isDaytime, setIsDaytime] = useState(true);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [selectedRoom, setSelectedRoom] = useState("Lounge");
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
+
+  const rooms = [
+    { name: "Kitchen", dayImage: "/renders/kitchen-day.png", nightImage: "/renders/kitchen-night.png" },
+    { name: "Lounge", dayImage: "/renders/lounge-day.png", nightImage: "/renders/lounge-night.png" },
+    { name: "Studio A", dayImage: "/renders/rooma-day.png", nightImage: "/renders/rooma-night.png" },
+    { name: "Liveroom", dayImage: "/renders/liveroom-day.png", nightImage: "/renders/liveroom-night.png" },
+  ];
 
   useEffect(() => {
     const nav = document.getElementById("main-nav");
@@ -28,6 +38,23 @@ export function Banner({ imageSrc }: BannerProps) {
     window.addEventListener("resize", handleResizeNav);
     return () => window.removeEventListener("resize", handleResizeNav);
   }, []);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    if (isDropdownOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isDropdownOpen]);
 
   // Update Toronto time and check if it's daytime
   useEffect(() => {
@@ -193,7 +220,13 @@ export function Banner({ imageSrc }: BannerProps) {
   }, []);
 
   // Determine which image to use
-  const displayImage = imageSrc || (isDaytime ? "/renders/lounge-day.png" : "/renders/lounge-night.png");
+  const currentRoom = rooms.find(room => room.name === selectedRoom) || rooms[0];
+  const displayImage = imageSrc || (isDaytime ? currentRoom.dayImage : currentRoom.nightImage);
+
+  const handleRoomSelect = (roomName: string) => {
+    setSelectedRoom(roomName);
+    setIsDropdownOpen(false);
+  };
 
   return (
     <section
@@ -212,8 +245,40 @@ export function Banner({ imageSrc }: BannerProps) {
         />
       </div>
 
+      {/* Room Selector Dropdown */}
+      <div
+        ref={dropdownRef}
+        className="absolute left-4 z-10 pointer-events-auto"
+        style={{ top: `${navHeight + 16}px` }}
+      >
+        <button
+          onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+          className="p-2 bg-background/20 border-[1px] border-foreground/20 text-foreground hover:bg-background/30 transition-colors"
+        >
+          <span className="font-bold">{selectedRoom}</span>
+        </button>
+
+        <div
+          className={`absolute top-full left-0 mt-1 min-w-[150px] bg-background/20 backdrop-blur-md border-[1px] border-foreground/20 shadow-lg overflow-hidden transition-all duration-300 ease-in-out ${
+            isDropdownOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0 border-0"
+          }`}
+        >
+          {rooms.map((room) => (
+            <button
+              key={room.name}
+              onClick={() => handleRoomSelect(room.name)}
+              className={`w-full text-left px-3 py-2 text-sm hover:bg-foreground/10 transition-colors ${
+                selectedRoom === room.name ? "bg-foreground/20 font-medium" : ""
+              }`}
+            >
+              {room.name}
+            </button>
+          ))}
+        </div>
+      </div>
+
       {/* Time Overlay */}
-      <div className="absolute bottom-4 left-4 text-foreground pointer-events-none z-10 border-[1px] p-2 bg-background/20">
+      <div className="absolute bottom-4 left-4 text-foreground pointer-events-none z-10 border-[1px] p-2 bg-background/20 border-[1px] border-foreground/20">
         {/* <div className="font-bold tracking-wider">YYZ</div> */}
         <div className="font-bold tracking-wider leading-tight">412 Richmond St E<br /> Toronto, ON</div>
         <div className="text-sm font-light">{currentTime}</div>
