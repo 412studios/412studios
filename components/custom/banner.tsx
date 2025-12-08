@@ -59,8 +59,8 @@ export function Banner({ imageSrc = "/renders/lounge-day.png" }: BannerProps) {
       ) {
         container.scrollLeft -= velocityX;
         container.scrollTop -= velocityY;
-        velocityX *= 0.5;
-        velocityY *= 0.5;
+        velocityX *= 0.95;
+        velocityY *= 0.95;
         momentumID = window.requestAnimationFrame(momentumLoop);
       } else if (!isDown) {
         velocityX = 0;
@@ -113,12 +113,18 @@ export function Banner({ imageSrc = "/renders/lounge-day.png" }: BannerProps) {
       lastY = y;
     };
 
+    // Prevent scroll wheel/trackpad from moving the container
+    const handleWheel = (e: WheelEvent) => {
+      e.preventDefault();
+    };
+
     centerScroll();
     window.addEventListener("resize", centerScroll);
     container.addEventListener("mousedown", handleMouseDown);
     container.addEventListener("mouseleave", handleMouseLeave);
     container.addEventListener("mouseup", handleMouseUp);
     container.addEventListener("mousemove", handleMouseMove);
+    container.addEventListener("wheel", handleWheel, { passive: false });
 
     return () => {
       if (momentumID !== null) cancelAnimationFrame(momentumID);
@@ -127,6 +133,7 @@ export function Banner({ imageSrc = "/renders/lounge-day.png" }: BannerProps) {
       container.removeEventListener("mouseleave", handleMouseLeave);
       container.removeEventListener("mouseup", handleMouseUp);
       container.removeEventListener("mousemove", handleMouseMove);
+      container.removeEventListener("wheel", handleWheel);
     };
   }, []);
 
