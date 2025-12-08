@@ -15,6 +15,10 @@ export function Banner({ imageSrc }: BannerProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
+  const [image1, setImage1] = useState("");
+  const [image2, setImage2] = useState("");
+  const [showImage1, setShowImage1] = useState(true);
+
   const rooms = [
     { name: "Kitchen", dayImage: "/renders/kitchen-day.png", nightImage: "/renders/kitchen-night.png" },
     { name: "Lounge", dayImage: "/renders/lounge-day.png", nightImage: "/renders/lounge-night.png" },
@@ -223,6 +227,28 @@ export function Banner({ imageSrc }: BannerProps) {
   const currentRoom = rooms.find(room => room.name === selectedRoom) || rooms[0];
   const displayImage = imageSrc || (isDaytime ? currentRoom.dayImage : currentRoom.nightImage);
 
+  // Handle image transitions with ping-pong between two image elements
+  useEffect(() => {
+    // Initialize on first load
+    if (!image1) {
+      setImage1(displayImage);
+      return;
+    }
+
+    // When display image changes, update the hidden layer and flip
+    if (displayImage !== image1 && displayImage !== image2) {
+      if (showImage1) {
+        // Image 1 is visible, update image 2 and flip to it
+        setImage2(displayImage);
+        setTimeout(() => setShowImage1(false), 50);
+      } else {
+        // Image 2 is visible, update image 1 and flip to it
+        setImage1(displayImage);
+        setTimeout(() => setShowImage1(true), 50);
+      }
+    }
+  }, [displayImage, image1, image2, showImage1]);
+
   const handleRoomSelect = (roomName: string) => {
     setSelectedRoom(roomName);
     setIsDropdownOpen(false);
@@ -235,12 +261,26 @@ export function Banner({ imageSrc }: BannerProps) {
       className="relative w-full h-screen overflow-hidden"
     >
       <div ref={containerRef} className="img-container">
+        {/* Image layer 1 */}
         <div
-          className="img-inner"
+          className="img-inner img-layer"
           style={{
-            backgroundImage: `url(${displayImage})`,
+            backgroundImage: `url(${image1})`,
             backgroundSize: "cover",
             backgroundPosition: "center",
+            opacity: showImage1 ? 1 : 0,
+            transition: "opacity 1s ease-in-out",
+          }}
+        />
+        {/* Image layer 2 */}
+        <div
+          className="img-inner img-layer"
+          style={{
+            backgroundImage: `url(${image2})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            opacity: showImage1 ? 0 : 1,
+            transition: "opacity 1s ease-in-out",
           }}
         />
       </div>
@@ -291,6 +331,7 @@ export function Banner({ imageSrc }: BannerProps) {
           overflow: scroll;
           cursor: grab;
           user-select: none;
+          position: relative;
 
           /* hide scrollbars everywhere */
           scrollbar-width: none; /* Firefox */
@@ -305,6 +346,16 @@ export function Banner({ imageSrc }: BannerProps) {
           min-height: 100vh;
           min-width: 100vh;
           aspect-ratio: 16 / 9;
+          width: 100%;
+          height: 100%;
+        }
+
+        .img-layer {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
         }
       `}</style>
     </section>
