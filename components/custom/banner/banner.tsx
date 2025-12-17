@@ -2,6 +2,7 @@
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { rooms } from "./rooms";
+import { TimeDisplay } from "./TimeDisplay";
 
 export function Banner() {
   const [navHeight, setNavHeight] = useState(0);
@@ -268,6 +269,9 @@ export function Banner() {
           ))}
         </div>
       </div>
+
+      {/* Time and Location Display */}
+      <TimeDisplay />
     </section>
   );
 }
