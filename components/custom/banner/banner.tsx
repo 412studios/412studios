@@ -26,7 +26,7 @@ export function Banner({ imageSrc }: BannerProps) {
       dayImage: "/renders/room-a-day.png",
       nightImage: "/renders/room-a-night.png",
       links: [
-        
+
       ]
     },
     {
@@ -34,7 +34,7 @@ export function Banner({ imageSrc }: BannerProps) {
       dayImage: "/renders/live-room-day.png",
       nightImage: "/renders/live-room-night.png",
       links: [
-        
+
       ]
     },
     {
@@ -50,10 +50,24 @@ export function Banner({ imageSrc }: BannerProps) {
       dayImage: "/renders/kitchen-day.png",
       nightImage: "/renders/kitchen-night.png",
       links: [
-        
+
       ]
     }
   ];
+
+  // Preload all images to prevent flickering on transitions
+  useEffect(() => {
+    const preloadImages = () => {
+      rooms.forEach(room => {
+        const dayImg = new Image();
+        dayImg.src = room.dayImage;
+        const nightImg = new Image();
+        nightImg.src = room.nightImage;
+      });
+    };
+
+    preloadImages();
+  }, []);
 
   useEffect(() => {
     const nav = document.getElementById("main-nav");
@@ -264,16 +278,24 @@ export function Banner({ imageSrc }: BannerProps) {
       return;
     }
 
-    // When display image changes, update the hidden layer and flip
-    if (displayImage !== image1 && displayImage !== image2) {
+    // Get the currently visible image
+    const currentVisibleImage = showImage1 ? image1 : image2;
+
+    // Only transition if the display image is actually different from what's currently visible
+    if (displayImage !== currentVisibleImage) {
       if (showImage1) {
         // Image 1 is visible, update image 2 and flip to it
         setImage2(displayImage);
-        setTimeout(() => setShowImage1(false), 50);
+        // Use requestAnimationFrame to ensure the image state is updated before flipping
+        requestAnimationFrame(() => {
+          setShowImage1(false);
+        });
       } else {
         // Image 2 is visible, update image 1 and flip to it
         setImage1(displayImage);
-        setTimeout(() => setShowImage1(true), 50);
+        requestAnimationFrame(() => {
+          setShowImage1(true);
+        });
       }
     }
   }, [displayImage, image1, image2, showImage1]);
