@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { rooms } from "./rooms";
 import { TimeDisplay } from "./TimeDisplay";
 
@@ -236,7 +237,33 @@ export function Banner() {
             backgroundPosition: "center",
           }}
         >
-          <div className="border-4 h-full w-full">HELLO</div>
+          {/* Interactive Link Dots */}
+          {currentRoom.links && currentRoom.links.length > 0 && (
+            <div className="absolute inset-0 pointer-events-none">
+              {currentRoom.links.map((link, index) => (
+                <Link
+                  key={index}
+                  href={link.href}
+                  className="absolute pointer-events-auto group"
+                  style={{
+                    left: `${link.x}%`,
+                    top: `${link.y}%`,
+                    transform: "translate(-50%, -50%)",
+                  }}
+                >
+                  {/* Pulsing dot */}
+                  <div className="relative">
+                    <div className="w-4 h-4 bg-white rounded-full animate-pulse" />
+                    <div className="absolute inset-0 w-4 h-4 bg-white/40 rounded-full animate-ping" />
+                  </div>
+                  {/* Label on hover */}
+                  <div className="absolute left-1/2 top-full mt-2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap bg-background/90 text-foreground px-3 py-1 rounded-sm text-sm font-medium border border-foreground/20">
+                    {link.label}
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 

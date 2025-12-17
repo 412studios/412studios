@@ -15,7 +15,7 @@ export const rooms: Room[] = [
     name: "Studio A",
     dayImage: "/renders/room-a-day.png",
     nightImage: "/renders/room-a-night.png",
-    links: [],
+    links: [{ x: 50.5, y: 83.8, href: "/booking", label: "Book Now" }],
   },
   {
     name: "Live Room",
@@ -27,7 +27,7 @@ export const rooms: Room[] = [
     name: "Lounge",
     dayImage: "/renders/lounge-day.png",
     nightImage: "/renders/lounge-night.png",
-    links: [{ x: 22, y: 38, href: "/booking", label: "Book Now" }],
+    links: [{ x: 24.6, y: 22, href: "/booking", label: "Book Now" }],
   },
   {
     name: "Kitchen",
