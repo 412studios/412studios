@@ -231,6 +231,15 @@ export function Banner() {
   const currentRoom = rooms.find((room) => room.name === selectedRoom) || rooms[0];
   const displayImage = isDaytime ? currentRoom.dayImage : currentRoom.nightImage;
 
+  // Prevent scroll on initial load
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    document.documentElement.style.scrollBehavior = "auto";
+    return () => {
+      document.documentElement.style.scrollBehavior = "";
+    };
+  }, []);
+
   // Handle initial fade-in from white
   useEffect(() => {
     const timer = setTimeout(() => {
