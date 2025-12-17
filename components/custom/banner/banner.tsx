@@ -24,6 +24,20 @@ export function Banner() {
 
   const clamp = (v: number, min: number, max: number) => Math.min(max, Math.max(min, v));
 
+  // Preload all images to prevent flickering on transitions
+  useEffect(() => {
+    const preloadImages = () => {
+      rooms.forEach((room) => {
+        const dayImg = new Image();
+        dayImg.src = room.dayImage;
+        const nightImg = new Image();
+        nightImg.src = room.nightImage;
+      });
+    };
+
+    preloadImages();
+  }, []);
+
   const applyTransform = () => {
     const el = contentRef.current;
     if (!el) return;
