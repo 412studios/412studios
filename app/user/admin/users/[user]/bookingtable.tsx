@@ -43,11 +43,7 @@ interface BookingTableProps {
   }>;
 }
 
-export default function BookingTable({
-  user,
-  membership,
-  bookings,
-}: BookingTableProps) {
+export default function BookingTable({ user, membership, bookings }: BookingTableProps) {
   const [isChecked, setIsChecked] = useState(true);
   const [selectedRoom, setSelectedRoom] = useState(0);
   const [filteredBookings, setFilteredBookings] = useState(bookings);
@@ -75,9 +71,7 @@ export default function BookingTable({
     }
 
     if (selectedRoom !== 0) {
-      filtered = filtered.filter(
-        (booking) => booking.roomId === selectedRoom - 1
-      );
+      filtered = filtered.filter((booking) => booking.roomId === selectedRoom - 1);
     }
 
     setFilteredBookings(filtered);
@@ -119,9 +113,7 @@ export default function BookingTable({
         <CardContent className="p-0">
           <div className="p-4">
             <Badge>{user?.role}</Badge>
-            <p className="text-2xl font-bold mt-2">
-              {user?.name ?? "No name provided"}
-            </p>
+            <p className="text-2xl font-bold mt-2">{user?.name ?? "No name provided"}</p>
             <p className="text-sm text-muted-foreground">{user?.email}</p>
           </div>
 
@@ -207,12 +199,8 @@ export default function BookingTable({
                     <TableRow key={index}>
                       <TableCell>{roomName[booking.roomId]}</TableCell>
                       <TableCell>{formatDate(booking.date)}</TableCell>
-                      <TableCell>
-                        {timeSlots[booking.startTime].displayStart}
-                      </TableCell>
-                      <TableCell>
-                        {timeSlots[booking.endTime].displayEnd}
-                      </TableCell>
+                      <TableCell>{timeSlots[booking.startTime].displayStart}</TableCell>
+                      <TableCell>{timeSlots[booking.endTime].displayEnd}</TableCell>
                       <TableCell>{booking.status}</TableCell>
                       <TableCell>
                         <Link

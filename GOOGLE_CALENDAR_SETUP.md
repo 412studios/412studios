@@ -3,15 +3,18 @@
 ## Step 1: Google Cloud Console Setup
 
 1. **Go to Google Cloud Console**
+
    - Visit https://console.cloud.google.com/
    - Select your project or create a new one
 
 2. **Enable Google Calendar API**
+
    - Go to "APIs & Services" > "Library"
    - Search for "Google Calendar API"
    - Click on it and press "Enable"
 
 3. **Create Service Account**
+
    - Go to "APIs & Services" > "Credentials"
    - Click "Create Credentials" > "Service Account"
    - Name: `412studios-calendar-service`
@@ -19,6 +22,7 @@
    - Click "Create and Continue"
 
 4. **Grant Permissions (Optional)**
+
    - You can skip the role assignment for now
    - Click "Continue" then "Done"
 
@@ -32,6 +36,7 @@
 ## Step 2: Google Calendar Setup
 
 1. **Create or Use Existing Calendar**
+
    - Go to https://calendar.google.com/
    - Create a new calendar or use an existing one
    - Copy the Calendar ID (found in calendar settings)
@@ -60,11 +65,13 @@ NEXT_PUBLIC_GOOGLE_CALENDAR_ID=your-calendar-id@gmail.com
 ## Step 4: Environment Variable Setup Tips
 
 1. **Private Key Formatting**
+
    - Copy the entire private_key value from the JSON file
    - Keep the quotes and newline characters as `\n`
    - Example: `"-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BA...\n-----END PRIVATE KEY-----"`
 
 2. **Service Account Email**
+
    - Copy the `client_email` value from the JSON file
    - Should look like: `service-name@project-id.iam.gserviceaccount.com`
 
@@ -83,21 +90,25 @@ NEXT_PUBLIC_GOOGLE_CALENDAR_ID=your-calendar-id@gmail.com
 ## Troubleshooting
 
 **"Request is missing required authentication credential" error:**
+
 - Check that all environment variables are set correctly
 - Ensure the private key is properly formatted with `\n` for newlines
 - Verify the service account has access to the calendar
 
 **"Calendar not found" error:**
+
 - Double-check the calendar ID
 - Ensure the calendar is shared with the service account email
 
 **"Forbidden" error:**
+
 - The service account needs "Make changes to events" permission on the calendar
 - Re-share the calendar with proper permissions
 
 ## JSON File Structure Reference
 
 Your downloaded JSON file should look like this:
+
 ```json
 {
   "type": "service_account",

@@ -85,10 +85,9 @@ export default function VerificationForm(user: any) {
       <CardHeader>
         <CardTitle>412 Studios Verification Form</CardTitle>
         <CardDescription>
-          Before booking, we would love to learn more about your musical. Please
-          provide any relevant details. Upon receiving your information, we will
-          verify your account, enabling you to start booking sessions or
-          purchasing a membership.
+          Before booking, we would love to learn more about your musical. Please provide any
+          relevant details. Upon receiving your information, we will verify your account, enabling
+          you to start booking sessions or purchasing a membership.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -138,18 +137,12 @@ export default function VerificationForm(user: any) {
               <SelectValue placeholder="Categories" />
             </SelectTrigger>
             <SelectContent ref={categorySelectRef} id="categorySelect">
-              <SelectItem value="corporate gatherings">
-                corporate gatherings
-              </SelectItem>
+              <SelectItem value="corporate gatherings">corporate gatherings</SelectItem>
               <SelectItem value="listening and release parties">
                 listening and release parties
               </SelectItem>
-              <SelectItem value="photo and film studio">
-                photo and film studio
-              </SelectItem>
-              <SelectItem value="brand activations">
-                brand activations
-              </SelectItem>
+              <SelectItem value="photo and film studio">photo and film studio</SelectItem>
+              <SelectItem value="brand activations">brand activations</SelectItem>
               <SelectItem value="writing camps">writing camps</SelectItem>
             </SelectContent>
           </Select>
@@ -184,20 +177,13 @@ export default function VerificationForm(user: any) {
               </AccordionTrigger>
               <AccordionContent>
                 <p className="max-w-[600px]">
-                  By accessing this website, we assume you accept these terms
-                  and conditions. Do not continue to use 412 Studios if you do
-                  not agree to take all of the terms and conditions stated on
-                  this page.
+                  By accessing this website, we assume you accept these terms and conditions. Do not
+                  continue to use 412 Studios if you do not agree to take all of the terms and
+                  conditions stated on this page.
                 </p>
               </AccordionContent>
               <div className="mt-4 flex items-center space-x-2">
-                <input
-                  type="checkbox"
-                  id="tnc"
-                  name="tnc"
-                  value="off"
-                  ref={termsRef}
-                />
+                <input type="checkbox" id="tnc" name="tnc" value="off" ref={termsRef} />
                 <label
                   htmlFor="tnc"
                   className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"

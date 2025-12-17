@@ -100,11 +100,7 @@ async function getMembership(userId: string) {
   return data;
 }
 
-export default async function DashboardLayout({
-  children,
-}: {
-  children: ReactNode;
-}) {
+export default async function DashboardLayout({ children }: { children: ReactNode }) {
   // Check if user is logged in but don't redirect
   const { getUser } = getKindeServerSession();
   const user = await getUser();

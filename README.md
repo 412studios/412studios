@@ -6,14 +6,18 @@ A music studio booking application built with Next.js, Prisma, and Stripe.
 
 1. Clone the repository
 2. Install dependencies:
+
 ```bash
 npm install
 ```
+
 3. Set up environment variables:
+
    - Copy `.env.example` to `.env`
    - Fill in the required environment variables
 
 4. Start the development server:
+
 ```bash
 npm run dev
 ```
@@ -23,11 +27,13 @@ npm run dev
 ## Database Management
 
 Push schema changes to your database:
+
 ```bash
 npx prisma db push
 ```
 
 Open Prisma Studio to manage your database:
+
 ```bash
 npx prisma studio
 ```
@@ -38,6 +44,7 @@ The application uses Resend for sending emails. To enable email functionality:
 
 1. Sign up for a Resend account at [resend.com](https://resend.com)
 2. Add your API key to the `.env` file:
+
 ```
 RESEND_API_KEY=your_api_key
 RESEND_FROM_EMAIL=your_verified_sender_email
@@ -46,6 +53,7 @@ RESEND_FROM_EMAIL=your_verified_sender_email
 ## Admin Booking
 
 When an admin creates a booking, the system automatically:
+
 1. Creates the booking record in the database
 2. Sends a confirmation email to the user with booking details
 3. Redirects back to the booking page

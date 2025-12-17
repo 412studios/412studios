@@ -20,14 +20,7 @@ import {
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
-import {
-  Calendar,
-  Clock,
-  User,
-  MapPin,
-  ArrowLeft,
-  ChevronDown,
-} from "lucide-react";
+import { Calendar, Clock, User, MapPin, ArrowLeft, ChevronDown } from "lucide-react";
 import { getAllBooking, deleteBooking } from "@/lib/booking";
 import { timeSlots } from "@/app/(public)/booking/components/timeSlots";
 
@@ -86,10 +79,7 @@ export default function Bookings(): JSX.Element {
   useEffect(() => {
     const fetchData = async (): Promise<void> => {
       try {
-        const [bookingsData, usersData] = await Promise.all([
-          getAllBooking(),
-          fetchUsers(),
-        ]);
+        const [bookingsData, usersData] = await Promise.all([getAllBooking(), fetchUsers()]);
         setBookings(bookingsData);
         setUsers(usersData);
       } catch (error) {
@@ -105,10 +95,7 @@ export default function Bookings(): JSX.Element {
   // Close user dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (
-        userDropdownRef.current &&
-        !userDropdownRef.current.contains(event.target as Node)
-      ) {
+      if (userDropdownRef.current && !userDropdownRef.current.contains(event.target as Node)) {
         setIsUserDropdownOpen(false);
       }
     };
@@ -179,16 +166,12 @@ export default function Bookings(): JSX.Element {
   };
 
   const today: Date = new Date();
-  const todayFormatted: string = today
-    .toISOString()
-    .split("T")[0]
-    .replace(/-/g, "");
+  const todayFormatted: string = today.toISOString().split("T")[0].replace(/-/g, "");
   const todayAsNumber: number = parseInt(todayFormatted);
 
   const filteredBookings: Booking[] = bookings.filter((booking: Booking) => {
     if (roomFilter !== "all") {
-      const roomIndex: number =
-        roomFilter === "a" ? 0 : roomFilter === "b" ? 1 : 2;
+      const roomIndex: number = roomFilter === "a" ? 0 : roomFilter === "b" ? 1 : 2;
       if (booking.roomId !== roomIndex) return false;
     }
 
@@ -238,9 +221,7 @@ export default function Bookings(): JSX.Element {
       setSelectedStatus(selectedBooking.status);
       setHasEngineer(selectedBooking.engineerTotal > 0);
       setEditedEngineerStart(selectedBooking.engineerStart);
-      setEditedEngineerEnd(
-        selectedBooking.engineerStart + selectedBooking.engineerTotal - 1
-      );
+      setEditedEngineerEnd(selectedBooking.engineerStart + selectedBooking.engineerTotal - 1);
       setUserSearchTerm("");
       setIsUserDropdownOpen(false);
       setConflictError("");
@@ -292,10 +273,7 @@ export default function Bookings(): JSX.Element {
     }
   };
 
-  const updateBookingUser = async (
-    bookingId: string,
-    userId: string
-  ): Promise<boolean> => {
+  const updateBookingUser = async (bookingId: string, userId: string): Promise<boolean> => {
     try {
       const response = await fetch("/api/booking/update-user", {
         method: "POST",
@@ -309,10 +287,7 @@ export default function Bookings(): JSX.Element {
     }
   };
 
-  const updateBookingStatus = async (
-    bookingId: string,
-    status: string
-  ): Promise<boolean> => {
+  const updateBookingStatus = async (bookingId: string, status: string): Promise<boolean> => {
     try {
       const response = await fetch("/api/booking/update-status", {
         method: "POST",
@@ -400,10 +375,7 @@ export default function Bookings(): JSX.Element {
     const newEngineerStart = parseInt(value);
 
     // Must be within booking time range
-    if (
-      newEngineerStart < editedStartTime ||
-      newEngineerStart >= editedEndTime
-    ) {
+    if (newEngineerStart < editedStartTime || newEngineerStart >= editedEndTime) {
       return;
     }
 
@@ -420,10 +392,7 @@ export default function Bookings(): JSX.Element {
     const newEngineerEnd = parseInt(value);
 
     // Must be within booking time range and after engineer start
-    if (
-      newEngineerEnd <= editedEngineerStart ||
-      newEngineerEnd > editedEndTime
-    ) {
+    if (newEngineerEnd <= editedEngineerStart || newEngineerEnd > editedEndTime) {
       return;
     }
 
@@ -439,16 +408,14 @@ export default function Bookings(): JSX.Element {
 
     // Check what needs to be updated
     const timesChanged =
-      editedStartTime !== selectedBooking.startTime ||
-      editedEndTime !== selectedBooking.endTime;
+      editedStartTime !== selectedBooking.startTime || editedEndTime !== selectedBooking.endTime;
     const userChanged = selectedUserId !== selectedBooking.user.id;
     const statusChanged = selectedStatus !== selectedBooking.status;
     const engineerChanged =
       hasEngineer !== selectedBooking.engineerTotal > 0 ||
       (hasEngineer &&
         (editedEngineerStart !== selectedBooking.engineerStart ||
-          editedEngineerEnd !==
-            selectedBooking.engineerStart + selectedBooking.engineerTotal - 1));
+          editedEngineerEnd !== selectedBooking.engineerStart + selectedBooking.engineerTotal - 1));
 
     if (!timesChanged && !userChanged && !statusChanged && !engineerChanged) {
       setSaving(false);
@@ -473,9 +440,7 @@ export default function Bookings(): JSX.Element {
       );
 
       if (hasConflict) {
-        setConflictError(
-          "Time conflict detected. Please choose different times."
-        );
+        setConflictError("Time conflict detected. Please choose different times.");
         setSaving(false);
         return;
       }
@@ -498,10 +463,7 @@ export default function Bookings(): JSX.Element {
 
     // Update user if changed
     if (userChanged) {
-      const userSuccess = await updateBookingUser(
-        selectedBooking.bookingId,
-        selectedUserId
-      );
+      const userSuccess = await updateBookingUser(selectedBooking.bookingId, selectedUserId);
 
       if (!userSuccess) {
         setConflictError("Failed to update booking user. Please try again.");
@@ -512,10 +474,7 @@ export default function Bookings(): JSX.Element {
 
     // Update status if changed
     if (statusChanged) {
-      const statusSuccess = await updateBookingStatus(
-        selectedBooking.bookingId,
-        selectedStatus
-      );
+      const statusSuccess = await updateBookingStatus(selectedBooking.bookingId, selectedStatus);
 
       if (!statusSuccess) {
         setConflictError("Failed to update booking status. Please try again.");
@@ -534,9 +493,7 @@ export default function Bookings(): JSX.Element {
       );
 
       if (!engineerSuccess) {
-        setConflictError(
-          "Failed to update engineer details. Please try again."
-        );
+        setConflictError("Failed to update engineer details. Please try again.");
         setSaving(false);
         return;
       }
@@ -544,9 +501,7 @@ export default function Bookings(): JSX.Element {
 
     // Update local state
     const selectedUser = users.find((user) => user.id === selectedUserId);
-    const newEngineerTotal = hasEngineer
-      ? editedEngineerEnd - editedEngineerStart + 1
-      : 0;
+    const newEngineerTotal = hasEngineer ? editedEngineerEnd - editedEngineerStart + 1 : 0;
     const updatedBookings = bookings.map((booking) =>
       booking.bookingId === selectedBooking.bookingId
         ? {
@@ -610,10 +565,7 @@ export default function Bookings(): JSX.Element {
           <TableRow>
             <TableCell>Date</TableCell>
             <TableCell>
-              <Button
-                variant="outline"
-                className="w-full justify-between pl-4 pr-4"
-              >
+              <Button variant="outline" className="w-full justify-between pl-4 pr-4">
                 {formatDate(booking.date)}
               </Button>
             </TableCell>
@@ -656,9 +608,7 @@ export default function Bookings(): JSX.Element {
                           </div>
                         ))
                       ) : (
-                        <div className="p-2 text-sm text-gray-500 text-center">
-                          No users found
-                        </div>
+                        <div className="p-2 text-sm text-gray-500 text-center">No users found</div>
                       )}
                     </div>
                   </div>
@@ -669,10 +619,7 @@ export default function Bookings(): JSX.Element {
           <TableRow>
             <TableCell>Start Time</TableCell>
             <TableCell>
-              <Select
-                value={editedStartTime.toString()}
-                onValueChange={handleStartTimeChange}
-              >
+              <Select value={editedStartTime.toString()} onValueChange={handleStartTimeChange}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
@@ -689,10 +636,7 @@ export default function Bookings(): JSX.Element {
           <TableRow>
             <TableCell>End Time</TableCell>
             <TableCell>
-              <Select
-                value={editedEndTime.toString()}
-                onValueChange={handleEndTimeChange}
-              >
+              <Select value={editedEndTime.toString()} onValueChange={handleEndTimeChange}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
@@ -714,10 +658,7 @@ export default function Bookings(): JSX.Element {
               <div className="flex justify-between items-center w-full gap-2">
                 {hasEngineer ? (
                   <>
-                    <Select
-                      value="yes"
-                      onValueChange={(value) => setHasEngineer(value === "yes")}
-                    >
+                    <Select value="yes" onValueChange={(value) => setHasEngineer(value === "yes")}>
                       <SelectTrigger className="w-20">
                         <SelectValue />
                       </SelectTrigger>
@@ -736,16 +677,9 @@ export default function Bookings(): JSX.Element {
                       </SelectTrigger>
                       <SelectContent>
                         {timeSlots
-                          .filter(
-                            (slot) =>
-                              slot.id >= editedStartTime &&
-                              slot.id < editedEndTime
-                          )
+                          .filter((slot) => slot.id >= editedStartTime && slot.id < editedEndTime)
                           .map((slot) => (
-                            <SelectItem
-                              key={slot.id}
-                              value={slot.id.toString()}
-                            >
+                            <SelectItem key={slot.id} value={slot.id.toString()}>
                               {slot.displayStart}
                             </SelectItem>
                           ))}
@@ -764,15 +698,10 @@ export default function Bookings(): JSX.Element {
                       <SelectContent>
                         {timeSlots
                           .filter(
-                            (slot) =>
-                              slot.id > editedEngineerStart &&
-                              slot.id <= editedEndTime
+                            (slot) => slot.id > editedEngineerStart && slot.id <= editedEndTime
                           )
                           .map((slot) => (
-                            <SelectItem
-                              key={slot.id}
-                              value={slot.id.toString()}
-                            >
+                            <SelectItem key={slot.id} value={slot.id.toString()}>
                               {slot.displayEnd}
                             </SelectItem>
                           ))}
@@ -781,18 +710,12 @@ export default function Bookings(): JSX.Element {
 
                     <div className="w-20 text-center text-sm">
                       ({editedEngineerEnd - editedEngineerStart + 1} hour
-                      {editedEngineerEnd - editedEngineerStart + 1 !== 1
-                        ? "s"
-                        : ""}
-                      )
+                      {editedEngineerEnd - editedEngineerStart + 1 !== 1 ? "s" : ""})
                     </div>
                   </>
                 ) : (
                   <>
-                    <Select
-                      value="no"
-                      onValueChange={(value) => setHasEngineer(value === "yes")}
-                    >
+                    <Select value="no" onValueChange={(value) => setHasEngineer(value === "yes")}>
                       <SelectTrigger className="flex-1">
                         <SelectValue />
                       </SelectTrigger>
@@ -813,9 +736,7 @@ export default function Bookings(): JSX.Element {
           {(conflictError || validateTimes()) && (
             <TableRow>
               <TableCell colSpan={2}>
-                <div className="text-red-500 text-sm">
-                  {conflictError || validateTimes()}
-                </div>
+                <div className="text-red-500 text-sm">{conflictError || validateTimes()}</div>
               </TableCell>
             </TableRow>
           )}
@@ -845,9 +766,7 @@ export default function Bookings(): JSX.Element {
                       (!hasEngineer ||
                         (editedEngineerStart === booking.engineerStart &&
                           editedEngineerEnd ===
-                            booking.engineerStart +
-                              booking.engineerTotal -
-                              1))) ||
+                            booking.engineerStart + booking.engineerTotal - 1))) ||
                     validateTimes() !== null
                   }
                 >
@@ -894,9 +813,7 @@ export default function Bookings(): JSX.Element {
         <div className="flex gap-4 mb-4 flex-wrap">
           <Select
             value={roomFilter}
-            onValueChange={(value: string) =>
-              setRoomFilter(value as RoomFilter)
-            }
+            onValueChange={(value: string) => setRoomFilter(value as RoomFilter)}
           >
             <SelectTrigger className="max-w-[180px]">
               <SelectValue placeholder="Studio" />
@@ -909,11 +826,7 @@ export default function Bookings(): JSX.Element {
             </SelectContent>
           </Select>
           <div className="flex gap-2 items-center">
-            <Checkbox
-              checked={showPrevious}
-              onCheckedChange={setShowPrevious}
-              id="showPrevious"
-            />
+            <Checkbox checked={showPrevious} onCheckedChange={setShowPrevious} id="showPrevious" />
             <label htmlFor="showPrevious" className="text-sm font-medium">
               Show Previous
             </label>
@@ -955,11 +868,7 @@ export default function Bookings(): JSX.Element {
                   <TableCell>{booking.user.name ?? ""}</TableCell>
                   <TableCell>{getEngineerStatus(booking)}</TableCell>
                   <TableCell>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleViewDetails(booking)}
-                    >
+                    <Button variant="outline" size="sm" onClick={() => handleViewDetails(booking)}>
                       View Details
                     </Button>
                   </TableCell>

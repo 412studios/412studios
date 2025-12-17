@@ -9,9 +9,7 @@ export default function CalendarSync() {
   const [isTestLoading, setIsTestLoading] = useState(false);
   const [isResetLoading, setIsResetLoading] = useState(false);
   const [lastSync, setLastSync] = useState<string | null>(null);
-  const [syncStatus, setSyncStatus] = useState<"idle" | "success" | "error">(
-    "idle",
-  );
+  const [syncStatus, setSyncStatus] = useState<"idle" | "success" | "error">("idle");
   const [testResult, setTestResult] = useState<any>(null);
 
   const handleSync = async () => {
@@ -59,7 +57,7 @@ export default function CalendarSync() {
   const handleReset = async () => {
     if (
       !confirm(
-        "This will reset all calendar sync data and allow all bookings to be synced again. Continue?",
+        "This will reset all calendar sync data and allow all bookings to be synced again. Continue?"
       )
     ) {
       return;
@@ -75,9 +73,7 @@ export default function CalendarSync() {
       const result = await response.json();
 
       if (response.ok && result.success) {
-        alert(
-          `Reset complete! ${result.count} bookings can now be synced again.`,
-        );
+        alert(`Reset complete! ${result.count} bookings can now be synced again.`);
         setSyncStatus("idle");
         setLastSync(null);
       } else {
@@ -110,9 +106,7 @@ export default function CalendarSync() {
             variant="outline"
             className="flex items-center gap-2"
           >
-            <RefreshCw
-              className={`h-4 w-4 ${isTestLoading ? "animate-spin" : ""}`}
-            />
+            <RefreshCw className={`h-4 w-4 ${isTestLoading ? "animate-spin" : ""}`} />
             {isTestLoading ? "Testing..." : "Test Connection"}
           </Button>
 
@@ -121,9 +115,7 @@ export default function CalendarSync() {
             disabled={isLoading || !testResult?.success}
             className="flex items-center gap-2"
           >
-            <RefreshCw
-              className={`h-4 w-4 ${isLoading ? "animate-spin" : ""}`}
-            />
+            <RefreshCw className={`h-4 w-4 ${isLoading ? "animate-spin" : ""}`} />
             {isLoading ? "Syncing..." : "Sync All Bookings"}
           </Button>
 
@@ -137,9 +129,7 @@ export default function CalendarSync() {
           </Button>
         </div>
 
-        {lastSync && (
-          <p className="text-sm text-muted-foreground">Last sync: {lastSync}</p>
-        )}
+        {lastSync && <p className="text-sm text-muted-foreground">Last sync: {lastSync}</p>}
 
         {syncStatus === "success" && (
           <div className="p-3 bg-green-50 border border-green-200 rounded-md">
@@ -160,9 +150,7 @@ export default function CalendarSync() {
         {testResult && (
           <div
             className={`p-3 border rounded-md ${
-              testResult.success
-                ? "bg-green-50 border-green-200"
-                : "bg-red-50 border-red-200"
+              testResult.success ? "bg-green-50 border-green-200" : "bg-red-50 border-red-200"
             }`}
           >
             <p
@@ -170,9 +158,7 @@ export default function CalendarSync() {
                 testResult.success ? "text-green-800" : "text-red-800"
               }`}
             >
-              {testResult.success
-                ? "✅ Connection Test Successful"
-                : "❌ Connection Test Failed"}
+              {testResult.success ? "✅ Connection Test Successful" : "❌ Connection Test Failed"}
             </p>
             {testResult.success && testResult.calendar && (
               <p className="text-sm text-green-700 mt-1">
@@ -195,8 +181,7 @@ export default function CalendarSync() {
                   </p>
                 )}
                 <p className="mt-2">
-                  <strong>Setup Guide:</strong> See GOOGLE_CALENDAR_SETUP.md in
-                  the project root
+                  <strong>Setup Guide:</strong> See GOOGLE_CALENDAR_SETUP.md in the project root
                 </p>
               </div>
             )}

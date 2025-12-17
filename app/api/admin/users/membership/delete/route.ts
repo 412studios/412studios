@@ -6,22 +6,16 @@ export async function POST(request: NextRequest) {
     const { membershipId } = await request.json();
 
     if (!membershipId) {
-      return NextResponse.json(
-        { error: "Membership ID is required" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Membership ID is required" }, { status: 400 });
     }
 
     // Check if membership exists
     const existingMembership = await prisma.memberships.findUnique({
-      where: { membershipId: membershipId }
+      where: { membershipId: membershipId },
     });
 
     if (!existingMembership) {
-      return NextResponse.json(
-        { error: "Membership not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Membership not found" }, { status: 404 });
     }
 
     // Instead of deleting, mark membership as cancelled
@@ -29,20 +23,16 @@ export async function POST(request: NextRequest) {
       where: { membershipId: membershipId },
       data: {
         status: "cancelled",
-        updtedAt: new Date()
-      }
+        updtedAt: new Date(),
+      },
     });
 
-    return NextResponse.json({ 
+    return NextResponse.json({
       success: true,
-      message: "Membership cancelled successfully"
+      message: "Membership cancelled successfully",
     });
-
   } catch (error) {
     console.error("Error deleting membership:", error);
-    return NextResponse.json(
-      { error: "Failed to delete membership" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to delete membership" }, { status: 500 });
   }
 }

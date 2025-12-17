@@ -54,7 +54,7 @@ export async function getAllBooking() {
 
 export async function deleteBooking(id: string) {
   noStore();
-  
+
   // First, get the booking with its calendar event ID
   const booking = await prisma.bookings.findUnique({
     where: {
@@ -90,15 +90,11 @@ export async function deleteBooking(id: string) {
       bookingId: true,
     },
   });
-  
+
   return data;
 }
 
-export async function getMembershipWeek(
-  roomId: number,
-  date: number,
-  user: any
-) {
+export async function getMembershipWeek(roomId: number, date: number, user: any) {
   noStore();
 
   // If no user is logged in, return false (no booking limit restrictions)
@@ -116,9 +112,7 @@ export async function getMembershipWeek(
     const startOfWeek = new Date(givenDate);
     const endOfWeek = new Date(givenDate);
 
-    startOfWeek.setDate(
-      givenDate.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1)
-    );
+    startOfWeek.setDate(givenDate.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1));
     startOfWeek.setHours(0, 0, 0, 0);
 
     endOfWeek.setDate(startOfWeek.getDate() + 6);
@@ -129,9 +123,7 @@ export async function getMembershipWeek(
       (startOfWeek.getMonth() + 1) * 100 +
       startOfWeek.getDate();
     const endOfWeekNumeric =
-      endOfWeek.getFullYear() * 10000 +
-      (endOfWeek.getMonth() + 1) * 100 +
-      endOfWeek.getDate();
+      endOfWeek.getFullYear() * 10000 + (endOfWeek.getMonth() + 1) * 100 + endOfWeek.getDate();
     return { startOfWeekNumeric, endOfWeekNumeric };
   };
 
@@ -169,8 +161,7 @@ export async function getMembershipWeek(
 
   // CHECK FOR MAX WEEK EXCEPTION
   const hasWeekMaxException = userMembership.some(
-    (membership: any) =>
-      membership.roomId === roomId && membership.weekMax === false
+    (membership: any) => membership.roomId === roomId && membership.weekMax === false
   );
 
   if (hasWeekMaxException) {
@@ -324,13 +315,9 @@ export async function PostAdminBooking(input: any) {
         ).toDateString();
 
     // Get time slot display strings
-    const { timeSlots } = await import(
-      "@/app/(public)/booking/components/timeSlots"
-    );
-    const startTimeStr =
-      timeSlots[input.startTime]?.displayStart || `${input.startTime}:00`;
-    const endTimeStr =
-      timeSlots[input.endTime]?.displayEnd || `${input.endTime + 1}:00`;
+    const { timeSlots } = await import("@/app/(public)/booking/components/timeSlots");
+    const startTimeStr = timeSlots[input.startTime]?.displayStart || `${input.startTime}:00`;
+    const endTimeStr = timeSlots[input.endTime]?.displayEnd || `${input.endTime + 1}:00`;
 
     if (userToBook?.email) {
       await sendBookingConfirmationEmail(userToBook.email, {
@@ -423,12 +410,7 @@ export async function PostMembershipBooking(
 
   //CHECK IF PAYMENT IS NEEDED
   if (input.price > 0) {
-    const paymentUrl = await HandlePayment(
-      user,
-      bookingId,
-      priceId,
-      input.price
-    );
+    const paymentUrl = await HandlePayment(user, bookingId, priceId, input.price);
     return { success: true, bookingId, paymentUrl };
   } else {
     //DO THIS IF SUCCESSFUL
@@ -513,23 +495,16 @@ export async function PostMembershipBooking(
         });
 
         // Get formatted time details
-        const { timeSlots } = await import(
-          "@/app/(public)/booking/components/timeSlots"
-        );
-        const startTimeStr =
-          timeSlots[input.startTime]?.displayStart || `${input.startTime}:00`;
-        const endTimeStr =
-          timeSlots[input.endTime]?.displayEnd || `${input.endTime + 1}:00`;
+        const { timeSlots } = await import("@/app/(public)/booking/components/timeSlots");
+        const startTimeStr = timeSlots[input.startTime]?.displayStart || `${input.startTime}:00`;
+        const endTimeStr = timeSlots[input.endTime]?.displayEnd || `${input.endTime + 1}:00`;
 
         // Format date for display
         const bookingDate = input.date.toDateString();
 
         // Send email notification about hours usage
         if (userDetails?.email) {
-          console.log(
-            "Sending membership hours usage email to:",
-            userDetails.email
-          );
+          console.log("Sending membership hours usage email to:", userDetails.email);
 
           const { sendMembershipUsageEmail } = await import("@/lib/email");
           await sendMembershipUsageEmail(userDetails.email, {
@@ -545,10 +520,7 @@ export async function PostMembershipBooking(
           console.log("Membership hours usage email sent successfully");
         }
       } catch (emailError) {
-        console.error(
-          "Failed to send membership hours usage email:",
-          emailError
-        );
+        console.error("Failed to send membership hours usage email:", emailError);
         // Don't block the booking process if email fails
       }
     }
@@ -556,12 +528,7 @@ export async function PostMembershipBooking(
   }
 }
 
-export async function HandlePayment(
-  user: any,
-  bookingId: string,
-  priceId: string,
-  price: number
-) {
+export async function HandlePayment(user: any, bookingId: string, priceId: string, price: number) {
   // Calculate the final price including Canadian tax
   const formatPrice = parseInt(price + "00");
   const CANADIAN_TAX_RATE = 0.13;

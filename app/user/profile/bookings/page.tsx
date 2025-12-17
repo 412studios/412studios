@@ -89,18 +89,12 @@ export default async function SettingsPage() {
               {bookings.map((booking, index) => (
                 <TableRow key={index}>
                   <TableCell>Studio {rooms[booking.roomId]}</TableCell>
+                  <TableCell>{numericToDate(booking.date.toString())}</TableCell>
                   <TableCell>
-                    {numericToDate(booking.date.toString())}
+                    {fromatTime(parseInt(timeSlots[booking.startTime].startTime))}
                   </TableCell>
                   <TableCell>
-                    {fromatTime(
-                      parseInt(timeSlots[booking.startTime].startTime)
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    {fromatTime(
-                      parseInt(timeSlots[booking.endTime].startTime) + 1
-                    )}
+                    {fromatTime(parseInt(timeSlots[booking.endTime].startTime) + 1)}
                   </TableCell>
                   {/* <TableCell>$ {booking.totalPrice}.00</TableCell> */}
                 </TableRow>

@@ -6,14 +6,11 @@ export async function POST(req: NextRequest) {
     const { bookingId, hasEngineer, engineerStart, engineerEnd } = await req.json();
 
     if (!bookingId) {
-      return NextResponse.json(
-        { error: "Booking ID is required" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Booking ID is required" }, { status: 400 });
     }
 
     // Calculate engineer total hours
-    const engineerTotal = hasEngineer ? (engineerEnd - engineerStart + 1) : 0;
+    const engineerTotal = hasEngineer ? engineerEnd - engineerStart + 1 : 0;
 
     // Update the booking
     await prisma.bookings.update({
@@ -30,9 +27,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Error updating booking engineer:", error);
-    return NextResponse.json(
-      { error: "Failed to update booking engineer" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to update booking engineer" }, { status: 500 });
   }
 }

@@ -268,9 +268,7 @@ export default function OfferCodes() {
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>
-                {editingCode ? "Edit Offer Code" : "Create Offer Code"}
-              </DialogTitle>
+              <DialogTitle>{editingCode ? "Edit Offer Code" : "Create Offer Code"}</DialogTitle>
               <DialogDescription>
                 {editingCode
                   ? "Update the offer code details below."
@@ -284,9 +282,7 @@ export default function OfferCodes() {
                   id="code"
                   placeholder="SAVE20"
                   value={formData.code}
-                  onChange={(e) =>
-                    setFormData({ ...formData, code: e.target.value.toUpperCase() })
-                  }
+                  onChange={(e) => setFormData({ ...formData, code: e.target.value.toUpperCase() })}
                 />
               </div>
               <div className="grid gap-2">
@@ -295,18 +291,14 @@ export default function OfferCodes() {
                   id="description"
                   placeholder="20% off all bookings"
                   value={formData.description}
-                  onChange={(e) =>
-                    setFormData({ ...formData, description: e.target.value })
-                  }
+                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                 />
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="discountType">Discount Type *</Label>
                 <Select
                   value={formData.discountType}
-                  onValueChange={(value) =>
-                    setFormData({ ...formData, discountType: value })
-                  }
+                  onValueChange={(value) => setFormData({ ...formData, discountType: value })}
                 >
                   <SelectTrigger>
                     <SelectValue />
@@ -319,8 +311,7 @@ export default function OfferCodes() {
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="discountValue">
-                  Discount Value *{" "}
-                  {formData.discountType === "percentage" ? "(%)" : "($)"}
+                  Discount Value * {formData.discountType === "percentage" ? "(%)" : "($)"}
                 </Label>
                 <Input
                   id="discountValue"
@@ -328,13 +319,9 @@ export default function OfferCodes() {
                   step={formData.discountType === "percentage" ? "1" : "0.01"}
                   min="0"
                   max={formData.discountType === "percentage" ? "100" : undefined}
-                  placeholder={
-                    formData.discountType === "percentage" ? "20" : "20.00"
-                  }
+                  placeholder={formData.discountType === "percentage" ? "20" : "20.00"}
                   value={formData.discountValue}
-                  onChange={(e) =>
-                    setFormData({ ...formData, discountValue: e.target.value })
-                  }
+                  onChange={(e) => setFormData({ ...formData, discountValue: e.target.value })}
                 />
               </div>
               <div className="flex items-center space-x-2">
@@ -381,9 +368,7 @@ export default function OfferCodes() {
           ) : (
             offerCodes.map((code) => (
               <TableRow key={code.id}>
-                <TableCell className="font-mono font-medium">
-                  {code.code}
-                </TableCell>
+                <TableCell className="font-mono font-medium">{code.code}</TableCell>
                 <TableCell>{code.description || "-"}</TableCell>
                 <TableCell>
                   {code.discountType === "percentage"
@@ -402,18 +387,10 @@ export default function OfferCodes() {
                 </TableCell>
                 <TableCell>
                   <div className="flex gap-2">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => handleOpenDialog(code)}
-                    >
+                    <Button variant="ghost" size="sm" onClick={() => handleOpenDialog(code)}>
                       <Edit className="h-4 w-4" />
                     </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => handleDelete(code.id)}
-                    >
+                    <Button variant="ghost" size="sm" onClick={() => handleDelete(code.id)}>
                       <Trash2 className="h-4 w-4" />
                     </Button>
                   </div>

@@ -1,12 +1,6 @@
 "use client";
 
-import React, {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  ReactNode,
-} from "react";
+import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { Logo } from "@/public/icons/logo";
 
@@ -19,10 +13,7 @@ interface LoadingScreenProps {
   excludedPatterns?: RegExp[];
 }
 
-function LoadingScreen({
-  excludedPaths = [],
-  excludedPatterns = [],
-}: LoadingScreenProps) {
+function LoadingScreen({ excludedPaths = [], excludedPatterns = [] }: LoadingScreenProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [shouldShow, setShouldShow] = useState(true);
   const [isVisible, setIsVisible] = useState(true);
@@ -174,16 +165,13 @@ export function LoadingProvider({
   defaultExcludedPatterns = [],
 }: LoadingProviderProps) {
   const [isLoading, setIsLoading] = useState(false);
-  const [excludedPaths, setExcludedPaths] =
-    useState<string[]>(defaultExcludedPaths);
+  const [excludedPaths, setExcludedPaths] = useState<string[]>(defaultExcludedPaths);
   const [excludedPatterns] = useState<RegExp[]>(
     defaultExcludedPatterns.map((pattern) => new RegExp(pattern))
   );
 
-  const excludePage = (path: string) =>
-    setExcludedPaths((prev) => [...prev, path]);
-  const includePage = (path: string) =>
-    setExcludedPaths((prev) => prev.filter((p) => p !== path));
+  const excludePage = (path: string) => setExcludedPaths((prev) => [...prev, path]);
+  const includePage = (path: string) => setExcludedPaths((prev) => prev.filter((p) => p !== path));
 
   const contextValue: LoadingContextType = {
     isLoading,
@@ -194,14 +182,8 @@ export function LoadingProvider({
 
   return (
     <LoadingContext.Provider value={contextValue}>
-      <LoadingScreen
-        excludedPaths={excludedPaths}
-        excludedPatterns={excludedPatterns}
-      />
-      <NavigationLoader
-        excludedPaths={excludedPaths}
-        excludedPatterns={excludedPatterns}
-      >
+      <LoadingScreen excludedPaths={excludedPaths} excludedPatterns={excludedPatterns} />
+      <NavigationLoader excludedPaths={excludedPaths} excludedPatterns={excludedPatterns}>
         {children}
       </NavigationLoader>
     </LoadingContext.Provider>

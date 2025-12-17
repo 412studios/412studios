@@ -17,8 +17,7 @@ import {
 
 // Email service configuration
 export const RESEND_API_KEY = process.env.RESEND_API_KEY || "";
-export const RESEND_FROM_EMAIL =
-  process.env.RESEND_FROM_EMAIL || "booking@412studios.com";
+export const RESEND_FROM_EMAIL = process.env.RESEND_FROM_EMAIL || "booking@412studios.com";
 
 // Re-export constants for backwards compatibility
 export const STUDIO_ADDRESS = EMAIL_CONSTANTS.STUDIO_ADDRESS;
@@ -26,10 +25,7 @@ export const GOOGLE_MAPS_URL = EMAIL_CONSTANTS.GOOGLE_MAPS_URL;
 export const SUPPORT_EMAIL = EMAIL_CONSTANTS.SUPPORT_EMAIL;
 
 // Initialize Resend with API key
-console.log(
-  "Initializing Resend client with API key:",
-  RESEND_API_KEY ? "Present" : "Missing"
-);
+console.log("Initializing Resend client with API key:", RESEND_API_KEY ? "Present" : "Missing");
 let resendClient: Resend;
 
 try {
@@ -48,12 +44,7 @@ try {
  * @param html Optional HTML email content
  * @returns Promise with the send result
  */
-export const sendEmail = async (
-  to: string,
-  subject: string,
-  text: string,
-  html?: string
-) => {
+export const sendEmail = async (to: string, subject: string, text: string, html?: string) => {
   console.log(`=== EMAIL SENDING DEBUG ===`);
   console.log(`To: ${to}`);
   console.log(`Subject: ${subject}`);
@@ -97,14 +88,8 @@ export const sendEmail = async (
     return { success: true, data };
   } catch (error) {
     console.error("Exception sending email with Resend:", error);
-    console.error(
-      "Error details:",
-      error instanceof Error ? error.message : "Unknown error"
-    );
-    console.error(
-      "Error stack:",
-      error instanceof Error ? error.stack : "No stack"
-    );
+    console.error("Error details:", error instanceof Error ? error.message : "Unknown error");
+    console.error("Error stack:", error instanceof Error ? error.stack : "No stack");
     console.log("=== EMAIL SENDING FAILED ===");
     return { success: false, error };
   }
@@ -115,10 +100,7 @@ export const sendEmail = async (
  * @param to Recipient email address
  * @param bookingDetails Booking information
  */
-export const sendBookingConfirmationEmail = async (
-  to: string,
-  bookingDetails: BookingDetails
-) => {
+export const sendBookingConfirmationEmail = async (to: string, bookingDetails: BookingDetails) => {
   const subject = `Your Studio Booking Confirmation - ${bookingDetails.studioName}`;
   const emailContent = generateEmail("booking-confirmation", bookingDetails);
 
@@ -135,10 +117,7 @@ export const sendMembershipConfirmationEmail = async (
   membershipDetails: MembershipDetails
 ) => {
   const subject = `Your 412 Studios Membership Confirmation`;
-  const emailContent = generateEmail(
-    "membership-confirmation",
-    membershipDetails
-  );
+  const emailContent = generateEmail("membership-confirmation", membershipDetails);
 
   return sendEmail(to, subject, emailContent.text, emailContent.html);
 };
@@ -148,10 +127,7 @@ export const sendMembershipConfirmationEmail = async (
  * @param to Recipient email address
  * @param usageDetails Usage information
  */
-export const sendMembershipUsageEmail = async (
-  to: string,
-  usageDetails: UsageDetails
-) => {
+export const sendMembershipUsageEmail = async (to: string, usageDetails: UsageDetails) => {
   const subject = `Membership Hours Used - 412 Studios`;
   const emailContent = generateEmail("membership-usage", usageDetails);
 
@@ -163,10 +139,7 @@ export const sendMembershipUsageEmail = async (
  * @param to Recipient email address
  * @param bookingDetails Booking information
  */
-export const sendBookingReminderEmail = async (
-  to: string,
-  bookingDetails: BookingDetails
-) => {
+export const sendBookingReminderEmail = async (to: string, bookingDetails: BookingDetails) => {
   const subject = `Reminder: Your studio session is tomorrow at ${bookingDetails.studioName}`;
   const emailContent = generateEmail("booking-reminder", bookingDetails);
 
@@ -177,9 +150,7 @@ export const sendBookingReminderEmail = async (
  * Generate booking confirmation email HTML for display purposes
  * @param bookingDetails Booking information
  */
-export const generateBookingConfirmationHTML = (
-  bookingDetails: BookingDetails
-) => {
+export const generateBookingConfirmationHTML = (bookingDetails: BookingDetails) => {
   return generateBookingConfirmationEmail(bookingDetails);
 };
 
@@ -223,10 +194,7 @@ export const sendTestEmail = async () => {
 /**
  * Handle booking confirmation email with all necessary data fetching
  */
-export const handleBookingConfirmationEmail = async (
-  booking: any,
-  prisma: any
-) => {
+export const handleBookingConfirmationEmail = async (booking: any, prisma: any) => {
   try {
     console.log("Starting booking email process...");
 
@@ -252,27 +220,19 @@ export const handleBookingConfirmationEmail = async (
     console.log("Initial time strings:", { startTimeStr, endTimeStr });
 
     try {
-      const { timeSlots } = await import(
-        "@/app/(public)/booking/components/timeSlots"
-      );
+      const { timeSlots } = await import("@/app/(public)/booking/components/timeSlots");
       console.log("TimeSlots imported successfully");
       startTimeStr = timeSlots[booking.startTime]?.displayStart || startTimeStr;
       endTimeStr = timeSlots[booking.endTime]?.displayEnd || endTimeStr;
       console.log("Formatted time strings:", { startTimeStr, endTimeStr });
     } catch (timeSlotError) {
-      console.error(
-        "Failed to import timeSlots, using default time format:",
-        timeSlotError
-      );
+      console.error("Failed to import timeSlots, using default time format:", timeSlotError);
     }
 
     const duration = booking.endTime + 1 - booking.startTime;
 
     if (booking.user?.email) {
-      console.log(
-        "Starting to send booking confirmation email to:",
-        booking.user.email
-      );
+      console.log("Starting to send booking confirmation email to:", booking.user.email);
       console.log("Email data:", {
         studioName: `Studio ${studioInfo?.room || booking.roomId}`,
         date: bookingDate,
@@ -310,9 +270,7 @@ export const handleBookingConfirmationEmail = async (
  */
 export const handleMembershipUsageEmail = async (booking: any, prisma: any) => {
   try {
-    console.log(
-      "Membership hours were decremented, fetching details for email notification"
-    );
+    console.log("Membership hours were decremented, fetching details for email notification");
 
     const updatedMembership = await prisma.memberships.findFirst({
       where: {
@@ -345,11 +303,8 @@ export const handleMembershipUsageEmail = async (booking: any, prisma: any) => {
       let endTimeStr = `${booking.endTime + 1}:00`;
 
       try {
-        const { timeSlots } = await import(
-          "@/app/(public)/booking/components/timeSlots"
-        );
-        startTimeStr =
-          timeSlots[booking.startTime]?.displayStart || startTimeStr;
+        const { timeSlots } = await import("@/app/(public)/booking/components/timeSlots");
+        startTimeStr = timeSlots[booking.startTime]?.displayStart || startTimeStr;
         endTimeStr = timeSlots[booking.endTime]?.displayEnd || endTimeStr;
       } catch (timeSlotError) {
         console.error(
@@ -360,10 +315,7 @@ export const handleMembershipUsageEmail = async (booking: any, prisma: any) => {
 
       const duration = booking.endTime + 1 - booking.startTime;
 
-      console.log(
-        "Sending membership hours usage email to:",
-        booking.user.email
-      );
+      console.log("Sending membership hours usage email to:", booking.user.email);
 
       const result = await sendMembershipUsageEmail(booking.user.email, {
         studioName: `Studio ${studioInfo?.room || booking.roomId}`,
@@ -385,10 +337,7 @@ export const handleMembershipUsageEmail = async (booking: any, prisma: any) => {
       };
     }
   } catch (usageEmailError) {
-    console.error(
-      "Failed to send membership hours usage email:",
-      usageEmailError
-    );
+    console.error("Failed to send membership hours usage email:", usageEmailError);
     return { success: false, error: usageEmailError };
   }
 };
@@ -396,10 +345,7 @@ export const handleMembershipUsageEmail = async (booking: any, prisma: any) => {
 /**
  * Handle membership confirmation email with all necessary data fetching
  */
-export const handleMembershipConfirmationEmail = async (
-  membership: any,
-  prisma: any
-) => {
+export const handleMembershipConfirmationEmail = async (membership: any, prisma: any) => {
   try {
     console.log("Starting membership email process...");
 
@@ -415,17 +361,10 @@ export const handleMembershipConfirmationEmail = async (
     console.log("Membership studio info fetched:", studioInfo);
 
     const now = new Date();
-    const firstDayOfNextMonth = new Date(
-      now.getFullYear(),
-      now.getMonth() + 1,
-      1
-    );
+    const firstDayOfNextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
 
     if (membership.user?.email) {
-      console.log(
-        "Starting to send membership confirmation email to:",
-        membership.user.email
-      );
+      console.log("Starting to send membership confirmation email to:", membership.user.email);
       console.log("Membership email data:", {
         studioName: `Studio ${studioInfo?.room || membership.roomId}`,
         availableHours: membership.availableHours,
@@ -435,21 +374,16 @@ export const handleMembershipConfirmationEmail = async (
         validThrough: firstDayOfNextMonth.toLocaleDateString(),
       });
 
-      const result = await sendMembershipConfirmationEmail(
-        membership.user.email,
-        {
-          studioName: `Studio ${studioInfo?.room || membership.roomId}`,
-          availableHours: membership.availableHours,
-          membershipPrice: studioInfo?.membershipPrice || 0,
-          billingCycle: membership.interval,
-          status: membership.status,
-          validThrough: firstDayOfNextMonth.toLocaleDateString(),
-        }
-      );
+      const result = await sendMembershipConfirmationEmail(membership.user.email, {
+        studioName: `Studio ${studioInfo?.room || membership.roomId}`,
+        availableHours: membership.availableHours,
+        membershipPrice: studioInfo?.membershipPrice || 0,
+        billingCycle: membership.interval,
+        status: membership.status,
+        validThrough: firstDayOfNextMonth.toLocaleDateString(),
+      });
       console.log("Membership email send result:", result);
-      console.log(
-        `Membership confirmation email sent to ${membership.user.email}`
-      );
+      console.log(`Membership confirmation email sent to ${membership.user.email}`);
       return result;
     } else {
       console.warn("No user email found for membership confirmation");

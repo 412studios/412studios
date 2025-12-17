@@ -1,11 +1,7 @@
 import Link from "next/link";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 
-import {
-  RegisterLink,
-  LoginLink,
-  LogoutLink,
-} from "@kinde-oss/kinde-auth-nextjs/components";
+import { RegisterLink, LoginLink, LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
 import { Button } from "@/components/ui/button";
 import { UserNav } from "./UserNav";
 
@@ -19,24 +15,16 @@ export async function Navbar() {
       </Link>
       <div className="flex">
         {(await isAuthenticated()) ? (
-          <UserNav
-            name={user?.given_name as string}
-            email={user?.email as string}
-          />
+          <UserNav name={user?.given_name as string} email={user?.email as string} />
         ) : (
           <div className="flex">
             <LoginLink>
-              <Button
-                variant="outline"
-                className="mr-2 h-full rounded-md border px-2"
-              >
+              <Button variant="outline" className="mr-2 h-full rounded-md border px-2">
                 Sign in
               </Button>
             </LoginLink>
             <RegisterLink>
-              <Button className="mr-2 h-full rounded-md border px-2">
-                Sign up
-              </Button>
+              <Button className="mr-2 h-full rounded-md border px-2">Sign up</Button>
             </RegisterLink>
           </div>
         )}

@@ -10,41 +10,28 @@ export async function POST(request: NextRequest) {
         roomId: roomId,
         date: date,
         bookingId: {
-          not: bookingId
+          not: bookingId,
         },
         OR: [
           {
-            AND: [
-              { startTime: { lte: startTime } },
-              { endTime: { gt: startTime } }
-            ]
+            AND: [{ startTime: { lte: startTime } }, { endTime: { gt: startTime } }],
           },
           {
-            AND: [
-              { startTime: { lt: endTime } },
-              { endTime: { gte: endTime } }
-            ]
+            AND: [{ startTime: { lt: endTime } }, { endTime: { gte: endTime } }],
           },
           {
-            AND: [
-              { startTime: { gte: startTime } },
-              { endTime: { lte: endTime } }
-            ]
-          }
-        ]
-      }
+            AND: [{ startTime: { gte: startTime } }, { endTime: { lte: endTime } }],
+          },
+        ],
+      },
     });
 
-    return NextResponse.json({ 
+    return NextResponse.json({
       hasConflict: conflictingBookings.length > 0,
-      conflictCount: conflictingBookings.length 
+      conflictCount: conflictingBookings.length,
     });
-
   } catch (error) {
     console.error("Error checking booking conflict:", error);
-    return NextResponse.json(
-      { error: "Failed to check booking conflict" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to check booking conflict" }, { status: 500 });
   }
 }

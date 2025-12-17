@@ -14,28 +14,25 @@ interface CheckboxProps
   onCheckedChange?: (checked: boolean) => void;
 }
 
-const Checkbox = React.forwardRef<
-  React.ElementRef<typeof CheckboxPrimitive.Root>,
-  CheckboxProps
->(({ className, checked, onCheckedChange, ...props }, ref) => (
-  <CheckboxPrimitive.Root
-    ref={ref}
-    checked={checked}
-    onCheckedChange={(checked) => onCheckedChange?.(!!checked)}
-    aria-label="check engineer"
-    className={cn(
-      "peer h-4 w-4 shrink-0 rounded-lg border border-primary ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-background",
-      className
-    )}
-    {...props}
-  >
-    <CheckboxPrimitive.Indicator
-      className={cn("flex items-center justify-center text-current")}
+const Checkbox = React.forwardRef<React.ElementRef<typeof CheckboxPrimitive.Root>, CheckboxProps>(
+  ({ className, checked, onCheckedChange, ...props }, ref) => (
+    <CheckboxPrimitive.Root
+      ref={ref}
+      checked={checked}
+      onCheckedChange={(checked) => onCheckedChange?.(!!checked)}
+      aria-label="check engineer"
+      className={cn(
+        "peer h-4 w-4 shrink-0 rounded-lg border border-primary ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-background",
+        className
+      )}
+      {...props}
     >
-      <Check className="h-4 w-4" />
-    </CheckboxPrimitive.Indicator>
-  </CheckboxPrimitive.Root>
-));
+      <CheckboxPrimitive.Indicator className={cn("flex items-center justify-center text-current")}>
+        <Check className="h-4 w-4" />
+      </CheckboxPrimitive.Indicator>
+    </CheckboxPrimitive.Root>
+  )
+);
 
 Checkbox.displayName = "Checkbox";
 

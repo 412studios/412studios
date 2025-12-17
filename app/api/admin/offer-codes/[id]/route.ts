@@ -2,33 +2,23 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/db";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 
-export async function PATCH(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   try {
     const { getPermission } = getKindeServerSession();
     const admin = await getPermission("admin");
 
     if (!admin?.isGranted) {
-      return NextResponse.json(
-        { error: "Unauthorized - Admin access required" },
-        { status: 403 }
-      );
+      return NextResponse.json({ error: "Unauthorized - Admin access required" }, { status: 403 });
     }
-    const { code, description, discountType, discountValue, isActive } =
-      await req.json();
+    const { code, description, discountType, discountValue, isActive } = await req.json();
 
     const existingOfferCode = await prisma.offerCode.findUnique({
       where: { id },
     });
 
     if (!existingOfferCode) {
-      return NextResponse.json(
-        { error: "Offer code not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Offer code not found" }, { status: 404 });
     }
 
     const updateData: any = {};
@@ -42,10 +32,7 @@ export async function PATCH(
       });
 
       if (codeExists) {
-        return NextResponse.json(
-          { error: "Offer code already exists" },
-          { status: 409 }
-        );
+        return NextResponse.json({ error: "Offer code already exists" }, { status: 409 });
       }
 
       updateData.code = code.toUpperCase();
@@ -76,10 +63,7 @@ export async function PATCH(
       }
 
       if (discountValue < 0) {
-        return NextResponse.json(
-          { error: "Discount value cannot be negative" },
-          { status: 400 }
-        );
+        return NextResponse.json({ error: "Discount value cannot be negative" }, { status: 400 });
       }
 
       updateData.discountValue = parseFloat(discountValue);
@@ -97,27 +81,18 @@ export async function PATCH(
     return NextResponse.json({ offerCode });
   } catch (error) {
     console.error("Error updating offer code:", error);
-    return NextResponse.json(
-      { error: "Failed to update offer code" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to update offer code" }, { status: 500 });
   }
 }
 
-export async function DELETE(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   try {
     const { getPermission } = getKindeServerSession();
     const admin = await getPermission("admin");
 
     if (!admin?.isGranted) {
-      return NextResponse.json(
-        { error: "Unauthorized - Admin access required" },
-        { status: 403 }
-      );
+      return NextResponse.json({ error: "Unauthorized - Admin access required" }, { status: 403 });
     }
 
     const existingOfferCode = await prisma.offerCode.findUnique({
@@ -125,10 +100,7 @@ export async function DELETE(
     });
 
     if (!existingOfferCode) {
-      return NextResponse.json(
-        { error: "Offer code not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Offer code not found" }, { status: 404 });
     }
 
     await prisma.offerCode.delete({
@@ -138,9 +110,6 @@ export async function DELETE(
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Error deleting offer code:", error);
-    return NextResponse.json(
-      { error: "Failed to delete offer code" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to delete offer code" }, { status: 500 });
   }
 }

@@ -53,9 +53,7 @@ interface MembershipTableProps {
   memberships: Membership[];
 }
 
-export default function MembershipTable({
-  memberships = [],
-}: MembershipTableProps) {
+export default function MembershipTable({ memberships = [] }: MembershipTableProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedRoom, setSelectedRoom] = useState(0);
   const [filteredMemberships, setFilteredMemberships] = useState(memberships);
@@ -72,9 +70,7 @@ export default function MembershipTable({
     let filtered = memberships;
 
     if (selectedRoom !== 0) {
-      filtered = filtered.filter(
-        (membership) => membership.roomId === selectedRoom - 1
-      );
+      filtered = filtered.filter((membership) => membership.roomId === selectedRoom - 1);
     }
 
     if (searchQuery) {
@@ -124,21 +120,15 @@ export default function MembershipTable({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {Array.isArray(filteredMemberships) &&
-          filteredMemberships.length > 0 ? (
+          {Array.isArray(filteredMemberships) && filteredMemberships.length > 0 ? (
             filteredMemberships.map((membership: Membership, index: number) => (
               <TableRow key={index}>
                 <TableCell>{roomName[membership.roomId]}</TableCell>
                 <TableCell>{membership.status}</TableCell>
-                <TableCell>
-                  {formatDate(membership.currentPeriodStart)}
-                </TableCell>
+                <TableCell>{formatDate(membership.currentPeriodStart)}</TableCell>
                 <TableCell>{formatDate(membership.currentPeriodEnd)}</TableCell>
                 <TableCell>
-                  <Link
-                    href={`/admin/users/${membership.userId}`}
-                    className="hover:underline"
-                  >
+                  <Link href={`/admin/users/${membership.userId}`} className="hover:underline">
                     {membership.user.name}
                   </Link>
                 </TableCell>

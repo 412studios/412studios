@@ -6,22 +6,16 @@ export async function POST(request: NextRequest) {
     const { userId, roomId, availableHours } = await request.json();
 
     if (!userId || roomId === undefined || !availableHours) {
-      return NextResponse.json(
-        { error: "Missing required fields" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
     // Check if user exists
     const user = await prisma.user.findUnique({
-      where: { id: userId }
+      where: { id: userId },
     });
 
     if (!user) {
-      return NextResponse.json(
-        { error: "User not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
     // Check if membership already exists for this user and room
@@ -29,8 +23,8 @@ export async function POST(request: NextRequest) {
       where: {
         userId: userId,
         roomId: roomId,
-        status: "active"
-      }
+        status: "active",
+      },
     });
 
     if (existingMembership) {
@@ -43,7 +37,7 @@ export async function POST(request: NextRequest) {
     // Create new membership
     const membershipId = require("crypto").randomBytes(16).toString("hex");
     const currentDate = new Date();
-    
+
     const membership = await prisma.memberships.create({
       data: {
         membershipId: membershipId,
@@ -52,15 +46,20 @@ export async function POST(request: NextRequest) {
         interval: "month",
         status: "active",
         planId: "admin_created",
-        currentPeriodStart: parseInt(currentDate.toISOString().split('T')[0].replace(/-/g, '')),
-        currentPeriodEnd: parseInt(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, currentDate.getDate()).toISOString().split('T')[0].replace(/-/g, '')),
+        currentPeriodStart: parseInt(currentDate.toISOString().split("T")[0].replace(/-/g, "")),
+        currentPeriodEnd: parseInt(
+          new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, currentDate.getDate())
+            .toISOString()
+            .split("T")[0]
+            .replace(/-/g, "")
+        ),
         createdAt: currentDate,
         updtedAt: currentDate,
         roomId: roomId,
         availableHours: availableHours,
         updateHours: currentDate,
         userId: userId,
-        weekMax: true
+        weekMax: true,
       },
       select: {
         membershipId: true,
@@ -68,19 +67,15 @@ export async function POST(request: NextRequest) {
         roomId: true,
         availableHours: true,
         planId: true,
-      }
+      },
     });
 
-    return NextResponse.json({ 
-      success: true, 
-      membership: membership 
+    return NextResponse.json({
+      success: true,
+      membership: membership,
     });
-
   } catch (error) {
     console.error("Error creating membership:", error);
-    return NextResponse.json(
-      { error: "Failed to create membership" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to create membership" }, { status: 500 });
   }
 }

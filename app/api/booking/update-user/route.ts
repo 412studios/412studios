@@ -7,40 +7,34 @@ export async function POST(request: NextRequest) {
     const { bookingId, userId } = await request.json();
 
     if (!bookingId || !userId) {
-      return NextResponse.json(
-        { error: "Missing required fields" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
     // Verify the user exists
     const userExists = await prisma.user.findUnique({
-      where: { id: userId }
+      where: { id: userId },
     });
 
     if (!userExists) {
-      return NextResponse.json(
-        { error: "User not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
     const updatedBooking = await prisma.bookings.update({
       where: {
-        bookingId: bookingId
+        bookingId: bookingId,
       },
       data: {
-        userId: userId
+        userId: userId,
       },
       include: {
         user: {
           select: {
             id: true,
             name: true,
-            email: true
-          }
-        }
-      }
+            email: true,
+          },
+        },
+      },
     });
 
     // Update calendar event if it exists
@@ -58,9 +52,9 @@ export async function POST(request: NextRequest) {
           engineerTotal: updatedBooking.engineerTotal,
           engineerStart: updatedBooking.engineerStart,
           totalPrice: updatedBooking.totalPrice,
-          status: updatedBooking.status
+          status: updatedBooking.status,
         };
-        
+
         await updateCalendarEvent(updatedBooking.addDetails, bookingEvent);
       } catch (calendarError) {
         console.error("Error updating calendar event:", calendarError);
@@ -68,16 +62,12 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    return NextResponse.json({ 
-      success: true, 
-      booking: updatedBooking 
+    return NextResponse.json({
+      success: true,
+      booking: updatedBooking,
     });
-
   } catch (error) {
     console.error("Error updating booking user:", error);
-    return NextResponse.json(
-      { error: "Failed to update booking user" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to update booking user" }, { status: 500 });
   }
 }

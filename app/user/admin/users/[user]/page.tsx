@@ -32,11 +32,7 @@ export default async function Page(props: any) {
 
   return (
     <>
-      <BookingTable
-        user={userDetails}
-        membership={userMembership}
-        bookings={userBookings}
-      />
+      <BookingTable user={userDetails} membership={userMembership} bookings={userBookings} />
     </>
   );
 }

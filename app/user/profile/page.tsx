@@ -117,47 +117,38 @@ export default async function Page() {
             </div>
           </div>
           {/* membership DETAILS SECTION */}
-          {typeof membershipData[0] !== "undefined" &&
-            membershipData[0].status === "success" && (
-              <p>
-                <span className="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-blue-400 border border-blue-400">
-                  Membership
-                </span>
-              </p>
-            )}
+          {typeof membershipData[0] !== "undefined" && membershipData[0].status === "success" && (
+            <p>
+              <span className="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-blue-400 border border-blue-400">
+                Membership
+              </span>
+            </p>
+          )}
           {/* Main Buttons */}
           <div className="flex flex-col sm:flex-row gap-2">
-            {typeof membershipData[0] !== "undefined" &&
-              membershipData[0].userId && (
-                <Link href="/user/profile/bookings" className="w-full">
-                  <Button variant="nav" size="sm" className="w-full">
-                    View Bookings
-                  </Button>
-                </Link>
-              )}
-            {typeof membershipData[0] !== "undefined" &&
-              membershipData[0].userId && (
-                <Link href="/user/profile" className="w-full">
-                  <Button variant="nav" size="sm" className="w-full">
-                    Manage Memberships
-                  </Button>
-                </Link>
-              )}
+            {typeof membershipData[0] !== "undefined" && membershipData[0].userId && (
+              <Link href="/user/profile/bookings" className="w-full">
+                <Button variant="nav" size="sm" className="w-full">
+                  View Bookings
+                </Button>
+              </Link>
+            )}
+            {typeof membershipData[0] !== "undefined" && membershipData[0].userId && (
+              <Link href="/user/profile" className="w-full">
+                <Button variant="nav" size="sm" className="w-full">
+                  Manage Memberships
+                </Button>
+              </Link>
+            )}
           </div>
           {/* Final Links */}
           <div className="flex flex-col sm:flex-row gap-4">
-            <Link
-              href="/user/profile/settings"
-              className="flex items-center text-xs gap-2"
-            >
+            <Link href="/user/profile/settings" className="flex items-center text-xs gap-2">
               <Settings className="h-4 w-4" />
               Settings
             </Link>
             {data?.isUserVerified && (
-              <Link
-                href="/booking"
-                className="flex items-center text-xs gap-2"
-              >
+              <Link href="/booking" className="flex items-center text-xs gap-2">
                 <Book className="h-4 w-4" />
                 Book Now
               </Link>

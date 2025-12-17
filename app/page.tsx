@@ -14,10 +14,9 @@ export default function Home() {
         </H2>
         <Divider className="max-w-[1000px] my-2"></Divider>
         <Subtitle className="max-w-[900px]">
-          Formerly known as the “House of Balloons”, our studio carries a rich
-          legacy of musical innovation. Today, we proudly continue that
-          tradition as 412 Studios, providing a dynamic space for artists to
-          explore, create and collaborate.
+          Formerly known as the “House of Balloons”, our studio carries a rich legacy of musical
+          innovation. Today, we proudly continue that tradition as 412 Studios, providing a dynamic
+          space for artists to explore, create and collaborate.
         </Subtitle>
       </Section>
       <Divider />

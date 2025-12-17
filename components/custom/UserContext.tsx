@@ -25,9 +25,5 @@ export const UserProvider = ({
   isAuthenticated: boolean;
   user: any;
 }) => {
-  return (
-    <UserContext.Provider value={{ isAuthenticated, user }}>
-      {children}
-    </UserContext.Provider>
-  );
+  return <UserContext.Provider value={{ isAuthenticated, user }}>{children}</UserContext.Provider>;
 };

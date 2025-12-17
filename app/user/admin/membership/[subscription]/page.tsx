@@ -58,12 +58,10 @@ export default async function Page(id: any) {
               <strong>Interval:</strong> {membership?.interval}
             </div>
             <div>
-              <strong>Current Period Start:</strong>{" "}
-              {membership?.currentPeriodStart}
+              <strong>Current Period Start:</strong> {membership?.currentPeriodStart}
             </div>
             <div>
-              <strong>Current Period End:</strong>{" "}
-              {membership?.currentPeriodEnd}
+              <strong>Current Period End:</strong> {membership?.currentPeriodEnd}
             </div>
             <div>
               <strong>Available Hours</strong>

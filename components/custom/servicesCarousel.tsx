@@ -17,8 +17,7 @@ export function Services() {
     },
     {
       title: "Mixing and Mastering",
-      description:
-        "Expert mixing and mastering services to perfect your sound.",
+      description: "Expert mixing and mastering services to perfect your sound.",
     },
     {
       title: "Post Production",
@@ -26,8 +25,7 @@ export function Services() {
     },
     {
       title: "Photography and Videography",
-      description:
-        "Creative photography and videography services for various needs.",
+      description: "Creative photography and videography services for various needs.",
     },
   ];
 
@@ -70,9 +68,7 @@ export function Services() {
               key={index}
               className={cn(
                 "p-4 cursor-pointer transition-all duration-700 ease-in-out",
-                selectedService === index
-                  ? "bg-primary/10"
-                  : "hover:bg-primary/10"
+                selectedService === index ? "bg-primary/10" : "hover:bg-primary/10"
               )}
               onClick={() => handleServiceClick(index)}
             >
@@ -113,11 +109,7 @@ export function Services() {
             <div
               className={`
               overflow-hidden transition-all duration-300 ease-in-out
-              ${
-                openMobileItem === index
-                  ? "max-h-40 opacity-100"
-                  : "max-h-0 opacity-0"
-              }
+              ${openMobileItem === index ? "max-h-40 opacity-100" : "max-h-0 opacity-0"}
             `}
             >
               <div className="p-4 border-t">

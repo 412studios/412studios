@@ -2,27 +2,14 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { getBooking, getMembershipWeek } from "@/lib/booking";
-import {
-  timeSlots,
-  membershipTimeSlots,
-} from "@/app/(public)/booking/components/timeSlots";
+import { timeSlots, membershipTimeSlots } from "@/app/(public)/booking/components/timeSlots";
 import { useDashboard } from "../context";
 import { BookingApiRecord } from "../types/booking";
-import {
-  formatDateToNumeric,
-  fillArrGaps,
-  isTimeSlotAvailable,
-} from "../utils/dateUtils";
+import { formatDateToNumeric, fillArrGaps, isTimeSlotAvailable } from "../utils/dateUtils";
 
 export const PickTime = () => {
-  const {
-    options,
-    prices,
-    isAdmin,
-    setOptions,
-    handleTimePick,
-    clearTimeSelection,
-  } = useDashboard();
+  const { options, prices, isAdmin, setOptions, handleTimePick, clearTimeSelection } =
+    useDashboard();
   const [isLoading, setIsLoading] = useState(false);
   const [selList, setSelList] = useState<number[]>([]);
   const [bookedTimes, setBookedTimes] = useState<number[]>([]);
@@ -37,15 +24,9 @@ export const PickTime = () => {
   );
 
   // New: Check if we should use membership time slots - only when membership AND not admin
-  const useMembershipSlots = useMemo(
-    () => isMembership && !isAdmin,
-    [isMembership, isAdmin]
-  );
+  const useMembershipSlots = useMemo(() => isMembership && !isAdmin, [isMembership, isAdmin]);
 
-  const formattedDate = useMemo(
-    () => formatDateToNumeric(options.date),
-    [options.date]
-  );
+  const formattedDate = useMemo(() => formatDateToNumeric(options.date), [options.date]);
 
   // Changed: Use time slots based on usemembershipslots rather than just ismembership
   const timeArray = useMemo(
@@ -58,9 +39,7 @@ export const PickTime = () => {
     (id: number, selList: number[]) => {
       // Changed: For membership bookings when not admin, select only one slot
       if (useMembershipSlots) {
-        const currentMembership = options.membership.find(
-          (item) => item.roomId === roomIdAsNumber
-        );
+        const currentMembership = options.membership.find((item) => item.roomId === roomIdAsNumber);
 
         // Check if membership has enough hours
         if (!currentMembership || currentMembership.availableHours < 4) {
@@ -75,9 +54,7 @@ export const PickTime = () => {
       }
 
       // For standard bookings or admin, handle range selection
-      const sortedList = Array.from(new Set([...selList, id])).sort(
-        (a, b) => a - b
-      );
+      const sortedList = Array.from(new Set([...selList, id])).sort((a, b) => a - b);
       const min = Math.min(sortedList[0], id);
       const max = Math.max(sortedList[sortedList.length - 1], id);
 
@@ -143,11 +120,7 @@ export const PickTime = () => {
       // Fetch booking data in parallel
       const [bookings, checkMembershipWeek] = await Promise.all([
         getBooking(roomIdAsNumber, parseInt(formattedDate)),
-        getMembershipWeek(
-          roomIdAsNumber,
-          parseInt(formattedDate),
-          options.user
-        ),
+        getMembershipWeek(roomIdAsNumber, parseInt(formattedDate), options.user),
       ]);
 
       // Process booking data
@@ -168,9 +141,7 @@ export const PickTime = () => {
             const start = useMembershipSlots
               ? Math.floor(booking.startTime / 4)
               : booking.startTime;
-            const end = useMembershipSlots
-              ? Math.floor(booking.endTime / 4)
-              : booking.endTime;
+            const end = useMembershipSlots ? Math.floor(booking.endTime / 4) : booking.endTime;
             fillArrGaps(bookedSlots, start, end);
           });
         }
@@ -178,8 +149,7 @@ export const PickTime = () => {
 
       // Add slots that are less than 2 hours in advance to bookedSlots
       if (options.date) {
-        const isToday =
-          new Date(options.date).toDateString() === new Date().toDateString();
+        const isToday = new Date(options.date).toDateString() === new Date().toDateString();
 
         if (isToday) {
           // If booking is for today, check which slots are less than 2 hours away
@@ -205,14 +175,7 @@ export const PickTime = () => {
       setIsLoading(false);
       setOptions((prev) => ({ ...prev, loading: false }));
     }
-  }, [
-    roomIdAsNumber,
-    options.date,
-    options.user,
-    formattedDate,
-    useMembershipSlots,
-    setOptions,
-  ]);
+  }, [roomIdAsNumber, options.date, options.user, formattedDate, useMembershipSlots, setOptions]);
 
   useEffect(() => {
     fetchData();
@@ -234,13 +197,7 @@ export const PickTime = () => {
         onClick={() => !isBooked && handleClick(slot.id)}
         className={`flex items-center justify-center text-center rounded-full
       ${useMembershipSlots ? "h-[25%] rounded-lg" : "p-1 my-1"}
-      ${
-        isBooked
-          ? "btn-booked"
-          : isSelected
-            ? "bg-emerald-300"
-            : "bg-background hover:bg-accent"
-      }`}
+      ${isBooked ? "btn-booked" : isSelected ? "bg-emerald-300" : "bg-background hover:bg-accent"}`}
         role="button"
         aria-pressed={isSelected}
         aria-disabled={isBooked}
@@ -260,12 +217,7 @@ export const PickTime = () => {
         const isSelected = selList.includes(slot.id);
 
         return (
-          <TimeSlotItem
-            key={slot.id}
-            slot={slot}
-            isBooked={isBooked}
-            isSelected={isSelected}
-          />
+          <TimeSlotItem key={slot.id} slot={slot} isBooked={isBooked} isSelected={isSelected} />
         );
       }),
     [timeArray, bookedTimes, selList, TimeSlotItem]
@@ -274,10 +226,7 @@ export const PickTime = () => {
   return (
     <>
       {isLoading ? (
-        <div
-          className="flex grow rounded-lg border items-center justify-center"
-          aria-live="polite"
-        >
+        <div className="flex grow rounded-lg border items-center justify-center" aria-live="polite">
           <div className="text-center flex items-center justify-center gap-2">
             <div className="animate-spin rounded-full h-4 w-4 border-2 border-gray-300 border-t-gray-600"></div>
             Loading...
@@ -288,11 +237,7 @@ export const PickTime = () => {
           <div className="flex-1 overflow-hidden">
             <div
               className={`w-full h-full rounded-t-lg overflow-y-scroll p-2
-                  ${
-                    useMembershipSlots
-                      ? "flex justify-center flex-col grow w-full"
-                      : ""
-                  }`}
+                  ${useMembershipSlots ? "flex justify-center flex-col grow w-full" : ""}`}
               role="listbox"
               aria-label="Available time slots"
             >
@@ -300,11 +245,7 @@ export const PickTime = () => {
             </div>
           </div>
           <div className="flex-shrink-0 p-2 border-t">
-            <Button
-              className="w-full"
-              onClick={handleClear}
-              disabled={selList.length === 0}
-            >
+            <Button className="w-full" onClick={handleClear} disabled={selList.length === 0}>
               CLEAR SELECTION
             </Button>
           </div>

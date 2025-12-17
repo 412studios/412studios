@@ -38,14 +38,14 @@ export function fillArrGaps(arr: number[], min: number, max: number): number[] {
 export function isTimeSlotAvailable(date: Date, slotStartHour: number): boolean {
   const now = new Date();
   const selectedDate = new Date(date);
-  
+
   // Set the selected date to the specified hour
   selectedDate.setHours(slotStartHour, 0, 0, 0);
-  
+
   // Calculate the difference in milliseconds
   const differenceInMs = selectedDate.getTime() - now.getTime();
   const differenceInHours = differenceInMs / (1000 * 60 * 60);
-  
+
   // Return true if the slot is at least 2 hours in the future
   return differenceInHours >= 2;
 }

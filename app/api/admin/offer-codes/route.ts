@@ -8,10 +8,7 @@ export async function GET(req: NextRequest) {
     const admin = await getPermission("admin");
 
     if (!admin?.isGranted) {
-      return NextResponse.json(
-        { error: "Unauthorized - Admin access required" },
-        { status: 403 }
-      );
+      return NextResponse.json({ error: "Unauthorized - Admin access required" }, { status: 403 });
     }
 
     const offerCodes = await prisma.offerCode.findMany({
@@ -30,10 +27,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ offerCodes });
   } catch (error) {
     console.error("Error fetching offer codes:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch offer codes" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to fetch offer codes" }, { status: 500 });
   }
 }
 
@@ -43,14 +37,10 @@ export async function POST(req: NextRequest) {
     const admin = await getPermission("admin");
 
     if (!admin?.isGranted) {
-      return NextResponse.json(
-        { error: "Unauthorized - Admin access required" },
-        { status: 403 }
-      );
+      return NextResponse.json({ error: "Unauthorized - Admin access required" }, { status: 403 });
     }
 
-    const { code, description, discountType, discountValue, isActive } =
-      await req.json();
+    const { code, description, discountType, discountValue, isActive } = await req.json();
 
     if (!code || !discountType || discountValue === undefined) {
       return NextResponse.json(
@@ -74,10 +64,7 @@ export async function POST(req: NextRequest) {
     }
 
     if (discountValue < 0) {
-      return NextResponse.json(
-        { error: "Discount value cannot be negative" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Discount value cannot be negative" }, { status: 400 });
     }
 
     const existingCode = await prisma.offerCode.findUnique({
@@ -85,10 +72,7 @@ export async function POST(req: NextRequest) {
     });
 
     if (existingCode) {
-      return NextResponse.json(
-        { error: "Offer code already exists" },
-        { status: 409 }
-      );
+      return NextResponse.json({ error: "Offer code already exists" }, { status: 409 });
     }
 
     const offerCode = await prisma.offerCode.create({
@@ -104,9 +88,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ offerCode }, { status: 201 });
   } catch (error) {
     console.error("Error creating offer code:", error);
-    return NextResponse.json(
-      { error: "Failed to create offer code" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to create offer code" }, { status: 500 });
   }
 }

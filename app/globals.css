@@ -61,9 +61,7 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    background-color: hsl(
-      var(--muted-foreground) / 0.5
-    ); /* semi-transparent thumb */
+    background-color: hsl(var(--muted-foreground) / 0.5); /* semi-transparent thumb */
     border-radius: 10px;
     border: 2px solid transparent;
     background-clip: content-box;

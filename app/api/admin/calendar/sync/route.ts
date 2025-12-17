@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { syncAllBookingsToCalendar } from "@/lib/calendar";
 
-export const runtime = 'nodejs';
+export const runtime = "nodejs";
 export const maxDuration = 60;
 
 export async function POST(request: NextRequest) {
@@ -10,21 +10,25 @@ export async function POST(request: NextRequest) {
     // Check if user is admin
     const { getPermission } = getKindeServerSession();
     const admin = await getPermission("admin");
-    
+
     if (!admin?.isGranted) {
-      return NextResponse.json(
-        { error: "Unauthorized - Admin access required" },
-        { status: 403 }
-      );
+      return NextResponse.json({ error: "Unauthorized - Admin access required" }, { status: 403 });
     }
 
     // Check if Google Calendar is configured
-    if (!process.env.GOOGLE_CALENDAR_ID || !process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL || !process.env.GOOGLE_PRIVATE_KEY) {
-      return NextResponse.json({
-        success: false,
-        error: "Google Calendar not configured",
-        message: "Please configure Google Calendar environment variables first",
-      }, { status: 400 });
+    if (
+      !process.env.GOOGLE_CALENDAR_ID ||
+      !process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL ||
+      !process.env.GOOGLE_PRIVATE_KEY
+    ) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Google Calendar not configured",
+          message: "Please configure Google Calendar environment variables first",
+        },
+        { status: 400 }
+      );
     }
 
     // Trigger calendar sync
@@ -39,11 +43,11 @@ export async function POST(request: NextRequest) {
     });
   } catch (error: any) {
     console.error("Calendar sync error:", error);
-    
+
     // More specific error handling
     let errorMessage = "Failed to sync calendar";
     let statusCode = 500;
-    
+
     if (error.message?.includes("authentication")) {
       errorMessage = "Google Calendar authentication failed - check service account credentials";
       statusCode = 401;
@@ -54,13 +58,16 @@ export async function POST(request: NextRequest) {
       errorMessage = "Google Calendar not found - check calendar ID and permissions";
       statusCode = 404;
     }
-    
-    return NextResponse.json({
-      success: false,
-      error: errorMessage,
-      details: error.message,
-      timestamp: new Date().toISOString(),
-    }, { status: statusCode });
+
+    return NextResponse.json(
+      {
+        success: false,
+        error: errorMessage,
+        details: error.message,
+        timestamp: new Date().toISOString(),
+      },
+      { status: statusCode }
+    );
   }
 }
 
@@ -69,12 +76,9 @@ export async function GET(request: NextRequest) {
     // Check if user is admin
     const { getPermission } = getKindeServerSession();
     const admin = await getPermission("admin");
-    
+
     if (!admin?.isGranted) {
-      return NextResponse.json(
-        { error: "Unauthorized - Admin access required" },
-        { status: 403 }
-      );
+      return NextResponse.json({ error: "Unauthorized - Admin access required" }, { status: 403 });
     }
 
     return NextResponse.json({
@@ -83,9 +87,6 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     console.error("Calendar info error:", error);
-    return NextResponse.json(
-      { error: "Failed to get calendar info" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to get calendar info" }, { status: 500 });
   }
 }

@@ -57,9 +57,7 @@ export function OurStudios() {
     <>
       <H2>STUDIOS</H2>
       <Divider className="my-2" />
-      <Subtitle>
-        State-of-the-art recording spaces equipped with modern acoustics.
-      </Subtitle>
+      <Subtitle>State-of-the-art recording spaces equipped with modern acoustics.</Subtitle>
 
       {/* Desktop View */}
       <div className="my-8 hidden md:flex gap-4">
@@ -105,9 +103,7 @@ export function OurStudios() {
                 onClick={() => handleTransition(idx)}
                 className={cn(
                   "h-2.5 w-2.5 rounded-full transition-all duration-300",
-                  idx === currentIndex
-                    ? "bg-black w-4"
-                    : "bg-gray-300 hover:bg-gray-400"
+                  idx === currentIndex ? "bg-black w-4" : "bg-gray-300 hover:bg-gray-400"
                 )}
                 aria-label={`Go to studio ${idx + 1}`}
                 disabled={isAnimating}
@@ -133,11 +129,7 @@ export function OurStudios() {
   );
 }
 
-const StudioCard = ({
-  studio,
-}: {
-  studio: { name: string; image: string };
-}) => (
+const StudioCard = ({ studio }: { studio: { name: string; image: string } }) => (
   <Link href="/booking">
     <div className="flex-grow block">
       <H3 className="mb-2">STUDIO {studio.name}</H3>

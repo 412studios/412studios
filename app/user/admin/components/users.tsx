@@ -62,12 +62,9 @@ export default function Users(): JSX.Element {
   const [editedUserBio, setEditedUserBio] = useState<string>("");
   const [editedSocialLinks, setEditedSocialLinks] = useState<string>("");
   const [editedCategories, setEditedCategories] = useState<string>("");
-  const [editedVerifyFormSubmitted, setEditedVerifyFormSubmitted] =
-    useState<boolean>(false);
-  const [editedIsUserVerified, setEditedIsUserVerified] =
-    useState<boolean>(false);
-  const [editedAcceptedTerms, setEditedAcceptedTerms] =
-    useState<boolean>(false);
+  const [editedVerifyFormSubmitted, setEditedVerifyFormSubmitted] = useState<boolean>(false);
+  const [editedIsUserVerified, setEditedIsUserVerified] = useState<boolean>(false);
+  const [editedAcceptedTerms, setEditedAcceptedTerms] = useState<boolean>(false);
 
   // Membership management state
   const [editedMemberships, setEditedMemberships] = useState<Membership[]>([]);
@@ -94,11 +91,7 @@ export default function Users(): JSX.Element {
   }, []);
 
   const getActiveMemberships = (user: User): Membership[] => {
-    return (
-      user.memberships?.filter(
-        (membership) => membership.status === "active"
-      ) || []
-    );
+    return user.memberships?.filter((membership) => membership.status === "active") || [];
   };
 
   const filteredUsers = users.filter((user) => {
@@ -140,8 +133,7 @@ export default function Users(): JSX.Element {
     const studios = ["A", "B", "C"];
     const details = activeMemberships
       .map(
-        (membership) =>
-          `Studio ${studios[membership.roomId]}: ${membership.availableHours} hours`
+        (membership) => `Studio ${studios[membership.roomId]}: ${membership.availableHours} hours`
       )
       .join(", ");
 
@@ -200,9 +192,7 @@ export default function Users(): JSX.Element {
   };
 
   const removeMembership = (membershipId: string) => {
-    setEditedMemberships(
-      editedMemberships.filter((m) => m.membershipId !== membershipId)
-    );
+    setEditedMemberships(editedMemberships.filter((m) => m.membershipId !== membershipId));
     const newChanges = { ...membershipChanges };
     delete newChanges[membershipId];
     setMembershipChanges(newChanges);
@@ -245,15 +235,12 @@ export default function Users(): JSX.Element {
     const membershipStructureChanged =
       editedMemberships.length !== originalMemberships.length ||
       editedMemberships.some(
-        (em) =>
-          !originalMemberships.find((om) => om.membershipId === em.membershipId)
+        (em) => !originalMemberships.find((om) => om.membershipId === em.membershipId)
       );
 
     const membershipHoursChanged = Object.keys(membershipChanges).length > 0;
 
-    return (
-      userFieldsChanged || membershipStructureChanged || membershipHoursChanged
-    );
+    return userFieldsChanged || membershipStructureChanged || membershipHoursChanged;
   };
 
   const handleSaveChanges = async () => {
@@ -302,32 +289,26 @@ export default function Users(): JSX.Element {
 
       // Find memberships to remove
       const removedMemberships = originalMemberships.filter(
-        (om) =>
-          !editedMemberships.find((em) => em.membershipId === om.membershipId)
+        (om) => !editedMemberships.find((em) => em.membershipId === om.membershipId)
       );
 
       // Find memberships with hour changes
       const modifiedMemberships = editedMemberships.filter((em) => {
-        const original = originalMemberships.find(
-          (om) => om.membershipId === em.membershipId
-        );
+        const original = originalMemberships.find((om) => om.membershipId === em.membershipId);
         return original && original.availableHours !== em.availableHours;
       });
 
       // Process membership changes
       for (const membership of newMemberships) {
-        const createResponse = await fetch(
-          "/api/admin/users/membership/create",
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              userId: selectedUser.id,
-              roomId: membership.roomId,
-              availableHours: membership.availableHours,
-            }),
-          }
-        );
+        const createResponse = await fetch("/api/admin/users/membership/create", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            userId: selectedUser.id,
+            roomId: membership.roomId,
+            availableHours: membership.availableHours,
+          }),
+        });
 
         if (!createResponse.ok) {
           setSaveError("Failed to create membership. Please try again.");
@@ -337,16 +318,13 @@ export default function Users(): JSX.Element {
       }
 
       for (const membership of removedMemberships) {
-        const deleteResponse = await fetch(
-          "/api/admin/users/membership/delete",
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              membershipId: membership.membershipId,
-            }),
-          }
-        );
+        const deleteResponse = await fetch("/api/admin/users/membership/delete", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            membershipId: membership.membershipId,
+          }),
+        });
 
         if (!deleteResponse.ok) {
           setSaveError("Failed to remove membership. Please try again.");
@@ -356,17 +334,14 @@ export default function Users(): JSX.Element {
       }
 
       for (const membership of modifiedMemberships) {
-        const updateResponse = await fetch(
-          "/api/admin/users/membership/update",
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              membershipId: membership.membershipId,
-              availableHours: membership.availableHours,
-            }),
-          }
-        );
+        const updateResponse = await fetch("/api/admin/users/membership/update", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            membershipId: membership.membershipId,
+            availableHours: membership.availableHours,
+          }),
+        });
 
         if (!updateResponse.ok) {
           setSaveError("Failed to update membership hours. Please try again.");
@@ -379,9 +354,7 @@ export default function Users(): JSX.Element {
       const refreshResponse = await fetch(`/api/admin/users/detailed`);
       if (refreshResponse.ok) {
         const allUsers = await refreshResponse.json();
-        const refreshedUser = allUsers.find(
-          (u: User) => u.id === selectedUser.id
-        );
+        const refreshedUser = allUsers.find((u: User) => u.id === selectedUser.id);
 
         if (refreshedUser) {
           setUsers(allUsers);
@@ -480,9 +453,7 @@ export default function Users(): JSX.Element {
                         key={membership.membershipId}
                         className="flex items-center gap-2 p-2 border rounded"
                       >
-                        <span className="min-w-16">
-                          Studio {studios[membership.roomId]}:
-                        </span>
+                        <span className="min-w-16">Studio {studios[membership.roomId]}:</span>
                         <Input
                           type="number"
                           value={membership.availableHours}
@@ -499,9 +470,7 @@ export default function Users(): JSX.Element {
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={() =>
-                            removeMembership(membership.membershipId)
-                          }
+                          onClick={() => removeMembership(membership.membershipId)}
                           className="ml-auto"
                         >
                           Remove
@@ -512,9 +481,7 @@ export default function Users(): JSX.Element {
 
                 {getAvailableStudios().length > 0 && (
                   <div className="flex gap-2">
-                    <span className="text-sm text-gray-600">
-                      Add membership:
-                    </span>
+                    <span className="text-sm text-gray-600">Add membership:</span>
                     {getAvailableStudios().map((roomId) => {
                       const studios = ["A", "B", "C"];
                       return (
@@ -531,11 +498,8 @@ export default function Users(): JSX.Element {
                   </div>
                 )}
 
-                {editedMemberships.filter((m) => m.status === "active")
-                  .length === 0 && (
-                  <div className="text-gray-500 text-sm">
-                    No active memberships
-                  </div>
+                {editedMemberships.filter((m) => m.status === "active").length === 0 && (
+                  <div className="text-gray-500 text-sm">No active memberships</div>
                 )}
               </div>
             </TableCell>
@@ -635,11 +599,7 @@ export default function Users(): JSX.Element {
                   <TableCell>{user.email}</TableCell>
                   <TableCell>{getMembershipStatus(user)}</TableCell>
                   <TableCell>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleViewDetails(user)}
-                    >
+                    <Button variant="outline" size="sm" onClick={() => handleViewDetails(user)}>
                       View Details
                     </Button>
                   </TableCell>

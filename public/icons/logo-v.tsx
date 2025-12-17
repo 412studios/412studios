@@ -2,12 +2,7 @@ import React, { SVGProps } from "react";
 
 export function LogoV(props: SVGProps<SVGSVGElement>) {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 1372 373"
-      fill="currentColor"
-      {...props}
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1372 373" fill="currentColor" {...props}>
       <g clipPath="url(#clip0_567_21)">
         <path
           d="M1185.5 373H186.482C83.6503 373 0 289.342 0 186.5C0 83.6583 83.6503 0 186.482 0H1185.5C1288.33 0 1371.98 83.6583 1371.98 186.5C1371.98 289.342 1288.33 373 1185.5 373ZM186.482 39.9719C105.69 39.9719 39.9529 105.715 39.9529 186.515C39.9529 267.315 105.69 333.059 186.482 333.059H1185.5C1266.29 333.059 1332.03 267.315 1332.03 186.515C1332.03 105.715 1266.29 39.9719 1185.5 39.9719H186.482Z"

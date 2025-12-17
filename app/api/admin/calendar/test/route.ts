@@ -7,12 +7,9 @@ export async function GET(request: NextRequest) {
     // Check if user is admin
     const { getPermission } = getKindeServerSession();
     const admin = await getPermission("admin");
-    
+
     if (!admin?.isGranted) {
-      return NextResponse.json(
-        { error: "Unauthorized - Admin access required" },
-        { status: 403 }
-      );
+      return NextResponse.json({ error: "Unauthorized - Admin access required" }, { status: 403 });
     }
 
     // Test environment variables
@@ -39,17 +36,17 @@ export async function GET(request: NextRequest) {
     try {
       const credentials = {
         client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
-        private_key: process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+        private_key: process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, "\n"),
       };
 
       const auth = new google.auth.JWT({
         email: credentials.client_email,
         key: credentials.private_key,
-        scopes: ['https://www.googleapis.com/auth/calendar'],
+        scopes: ["https://www.googleapis.com/auth/calendar"],
       });
 
       await auth.authorize();
-      const calendar = google.calendar({ version: 'v3', auth });
+      const calendar = google.calendar({ version: "v3", auth });
 
       // Test calendar access
       const calendarInfo = await calendar.calendars.get({
@@ -77,10 +74,10 @@ export async function GET(request: NextRequest) {
   } catch (error: any) {
     console.error("Calendar test error:", error);
     return NextResponse.json(
-      { 
+      {
         success: false,
-        error: "Test failed", 
-        details: error.message 
+        error: "Test failed",
+        details: error.message,
       },
       { status: 500 }
     );

@@ -18,28 +18,19 @@ export async function POST(request: NextRequest) {
     } = await request.json();
 
     if (!userId) {
-      return NextResponse.json(
-        { error: "User ID is required" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "User ID is required" }, { status: 400 });
     }
 
     // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      return NextResponse.json(
-        { error: "Invalid email format" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Invalid email format" }, { status: 400 });
     }
 
     // Validate role
     const validRoles = ["user", "admin"];
     if (!validRoles.includes(role)) {
-      return NextResponse.json(
-        { error: "Invalid role" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Invalid role" }, { status: 400 });
     }
 
     // Check if email is already taken by another user
@@ -47,9 +38,9 @@ export async function POST(request: NextRequest) {
       where: {
         email: email,
         id: {
-          not: userId
-        }
-      }
+          not: userId,
+        },
+      },
     });
 
     if (existingUser) {
@@ -61,7 +52,7 @@ export async function POST(request: NextRequest) {
 
     const updatedUser = await prisma.user.update({
       where: {
-        id: userId
+        id: userId,
       },
       data: {
         name: name || null,
@@ -88,19 +79,15 @@ export async function POST(request: NextRequest) {
         phone: true,
         socialLinks: true,
         categories: true,
-      }
+      },
     });
 
-    return NextResponse.json({ 
-      success: true, 
-      user: updatedUser 
+    return NextResponse.json({
+      success: true,
+      user: updatedUser,
     });
-
   } catch (error) {
     console.error("Error updating user:", error);
-    return NextResponse.json(
-      { error: "Failed to update user" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to update user" }, { status: 500 });
   }
 }

@@ -14,11 +14,7 @@ interface PriceItem {
   blocked: boolean;
 }
 
-export default async function Page({
-  params,
-}: {
-  params: Promise<{ room: string }>;
-}) {
+export default async function Page({ params }: { params: Promise<{ room: string }> }) {
   // Await the params promise explicitly
   const resolvedParams = await params;
   const roomId = resolvedParams.room;
@@ -59,9 +55,7 @@ export default async function Page({
                   />
                   {selectedRoom.blocked ? (
                     <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-xl w-full max-w-[600px] mx-auto">
-                      <div className="text-white text-2xl font-bold">
-                        Currently Unavailable
-                      </div>
+                      <div className="text-white text-2xl font-bold">Currently Unavailable</div>
                     </div>
                   ) : null}
                 </div>

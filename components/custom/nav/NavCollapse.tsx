@@ -1,10 +1,6 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import {
-  RegisterLink,
-  LoginLink,
-  LogoutLink,
-} from "@kinde-oss/kinde-auth-nextjs/components";
+import { RegisterLink, LoginLink, LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
 
 interface NavCollapseProps {
   isAuthenticated: boolean;

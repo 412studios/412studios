@@ -21,9 +21,7 @@ function validateBaseBooking(options: BookingOptions): BookingValidation {
  * @param options - The booking options to validate
  * @returns Validation result with success status and optional error message
  */
-export function validateStandardBooking(
-  options: BookingOptions
-): BookingValidation {
+export function validateStandardBooking(options: BookingOptions): BookingValidation {
   const baseValidation = validateBaseBooking(options);
   if (!baseValidation.isValid) {
     return baseValidation;
@@ -46,9 +44,7 @@ export function validateStandardBooking(
  * @param options - The booking options to validate
  * @returns Validation result with success status and optional error message
  */
-export function validateMembershipBooking(
-  options: BookingOptions
-): BookingValidation {
+export function validateMembershipBooking(options: BookingOptions): BookingValidation {
   const baseValidation = validateBaseBooking(options);
   if (!baseValidation.isValid) {
     return baseValidation;

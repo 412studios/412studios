@@ -1,13 +1,7 @@
 "use client";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
-import {
-  Table,
-  TableHeader,
-  TableRow,
-  TableBody,
-  TableCell,
-} from "@/components/ui/table";
+import { Table, TableHeader, TableRow, TableBody, TableCell } from "@/components/ui/table";
 import { Checkbox } from "@/components/ui/checkbox";
 interface Price {
   room: string;
@@ -56,9 +50,7 @@ export default function Page(data: any) {
               name={index + "blocked"}
               checked={val.blocked}
               value="true"
-              onCheckedChange={(checked) =>
-                handleCheckboxChange(index, checked as boolean)
-              }
+              onCheckedChange={(checked) => handleCheckboxChange(index, checked as boolean)}
             />
           </TableCell>
           <TableCell>
@@ -72,27 +64,21 @@ export default function Page(data: any) {
             <Input
               name={index + "hour"}
               value={val.hourlyRate}
-              onChange={(e) =>
-                handleChange(index, "hourlyRate", e.target.value)
-              }
+              onChange={(e) => handleChange(index, "hourlyRate", e.target.value)}
             />
           </TableCell>
           <TableCell>
             <Input
               name={index + "membership"}
               value={val.membershipPrice}
-              onChange={(e) =>
-                handleChange(index, "membershipPrice", e.target.value)
-              }
+              onChange={(e) => handleChange(index, "membershipPrice", e.target.value)}
             />
           </TableCell>
           <TableCell>
             <Input
               name={index + "eng"}
               value={val.engineerPrice}
-              onChange={(e) =>
-                handleChange(index, "engineerPrice", e.target.value)
-              }
+              onChange={(e) => handleChange(index, "engineerPrice", e.target.value)}
             />
           </TableCell>
         </TableRow>

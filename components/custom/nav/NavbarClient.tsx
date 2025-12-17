@@ -7,11 +7,7 @@ import { Logo } from "@/public/icons/logo";
 import { Button } from "@/components/ui/button";
 import { usePathname } from "next/navigation";
 
-import {
-  RegisterLink,
-  LoginLink,
-  LogoutLink,
-} from "@kinde-oss/kinde-auth-nextjs/components";
+import { RegisterLink, LoginLink, LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
 
 interface NavbarClientProps {
   isAuthenticated: boolean;
@@ -19,11 +15,7 @@ interface NavbarClientProps {
   isAdmin: boolean;
 }
 
-export default function NavbarClient({
-  isAuthenticated,
-  user,
-  isAdmin,
-}: NavbarClientProps) {
+export default function NavbarClient({ isAuthenticated, user, isAdmin }: NavbarClientProps) {
   const links = [
     { href: "#home", label: "HOME" },
     { href: "#about", label: "ABOUT" },
@@ -99,21 +91,14 @@ export default function NavbarClient({
     subNavElement.addEventListener("transitionend", handleTransitionEnd);
 
     return () => {
-      subNavElement.removeEventListener(
-        "transitionstart",
-        handleTransitionStart
-      );
+      subNavElement.removeEventListener("transitionstart", handleTransitionStart);
       subNavElement.removeEventListener("transitionend", handleTransitionEnd);
     };
   }, []);
 
   return (
     <header className="sticky top-0 z-50 border-b border-x-0 w-[calc(100%+1px)] border-r">
-      <nav
-        id="main-nav"
-        ref={navRef}
-        className="bg-background/30 backdrop-blur-md"
-      >
+      <nav id="main-nav" ref={navRef} className="bg-background/30 backdrop-blur-md">
         <div className="flex flex-col">
           {/* MAIN NAV */}
           <div
@@ -127,12 +112,7 @@ export default function NavbarClient({
             <div>
               {isAuthenticated ? (
                 <>
-                  <Button
-                    id="menu-button"
-                    variant="ghost"
-                    size="sm"
-                    onClick={handleMenuClick}
-                  >
+                  <Button id="menu-button" variant="ghost" size="sm" onClick={handleMenuClick}>
                     {isOpen ? "CLOSE" : "MENU"}
                   </Button>
                 </>
@@ -166,12 +146,7 @@ export default function NavbarClient({
                     )}
                   </div>
                   <div className="flex sm:hidden">
-                    <Button
-                      id="menu-button"
-                      variant="ghost"
-                      size="sm"
-                      onClick={handleMenuClick}
-                    >
+                    <Button id="menu-button" variant="ghost" size="sm" onClick={handleMenuClick}>
                       {isOpen ? "CLOSE" : "MENU"}
                     </Button>
                   </div>

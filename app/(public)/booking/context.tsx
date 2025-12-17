@@ -135,9 +135,7 @@ export function DashboardProvider({
   const activeMembership = useMemo(() => {
     if (!isMembership) return null;
     return (
-      options.membership.find(
-        (membership) => membership.roomId === parseInt(options.room)
-      ) || null
+      options.membership.find((membership) => membership.roomId === parseInt(options.room)) || null
     );
   }, [isMembership, options.membership, options.room]);
 

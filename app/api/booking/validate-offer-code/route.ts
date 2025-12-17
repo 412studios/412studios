@@ -6,10 +6,7 @@ export async function POST(req: NextRequest) {
     const { code } = await req.json();
 
     if (!code) {
-      return NextResponse.json(
-        { error: "Offer code is required" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Offer code is required" }, { status: 400 });
     }
 
     const offerCode = await prisma.offerCode.findUnique({
@@ -19,17 +16,11 @@ export async function POST(req: NextRequest) {
     });
 
     if (!offerCode) {
-      return NextResponse.json(
-        { error: "Invalid offer code" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Invalid offer code" }, { status: 404 });
     }
 
     if (!offerCode.isActive) {
-      return NextResponse.json(
-        { error: "This offer code is no longer active" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "This offer code is no longer active" }, { status: 400 });
     }
 
     return NextResponse.json({
@@ -44,9 +35,6 @@ export async function POST(req: NextRequest) {
     });
   } catch (error) {
     console.error("Error validating offer code:", error);
-    return NextResponse.json(
-      { error: "Failed to validate offer code" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to validate offer code" }, { status: 500 });
   }
 }

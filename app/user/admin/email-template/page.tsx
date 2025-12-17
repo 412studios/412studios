@@ -79,9 +79,7 @@ async function sendTestMembershipEmail(formData: FormData) {
       membershipPrice: 200,
       billingCycle: "monthly",
       status: "active",
-      validThrough: new Date(
-        Date.now() + 30 * 24 * 60 * 60 * 1000
-      ).toLocaleDateString(),
+      validThrough: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toLocaleDateString(),
     });
 
     console.log("Test membership email sent:", result);
@@ -189,45 +187,25 @@ export default async function EmailTemplate() {
         </div>
         <div className="flex flex-col gap-4">
           <form action={sendTestBookingEmail}>
-            <Button
-              type="submit"
-              variant="outline"
-              size="sm"
-              className="w-full justify-start"
-            >
+            <Button type="submit" variant="outline" size="sm" className="w-full justify-start">
               <Mail className="mr-2 h-4 w-4" />
               Send Test Booking Email
             </Button>
           </form>
           <form action={sendTestMembershipEmail}>
-            <Button
-              type="submit"
-              variant="outline"
-              size="sm"
-              className="w-full justify-start"
-            >
+            <Button type="submit" variant="outline" size="sm" className="w-full justify-start">
               <Mail className="mr-2 h-4 w-4" />
               Send Test Membership Email
             </Button>
           </form>
           <form action={sendTestUsageEmail}>
-            <Button
-              type="submit"
-              variant="outline"
-              size="sm"
-              className="w-full justify-start"
-            >
+            <Button type="submit" variant="outline" size="sm" className="w-full justify-start">
               <Mail className="mr-2 h-4 w-4" />
               Send Test Usage Email
             </Button>
           </form>
           <form action={sendTestReminderEmail}>
-            <Button
-              type="submit"
-              variant="outline"
-              size="sm"
-              className="w-full justify-start"
-            >
+            <Button type="submit" variant="outline" size="sm" className="w-full justify-start">
               <Mail className="mr-2 h-4 w-4" />
               Send Test Reminder Email
             </Button>

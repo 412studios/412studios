@@ -3,13 +3,7 @@ import Page from "./page";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { redirect } from "next/navigation";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
   TableHeader,
@@ -52,35 +46,35 @@ export default async function Main() {
   return (
     <>
       <Section>
-      <Card>
-        <form action={submit}>
-          <CardHeader>
-            <CardTitle>Update Pricing</CardTitle>
-          </CardHeader>
-          <div className="px-4 flex gap-4">
-            <Link href="/user/admin">
-              <Button>Back</Button>
-            </Link>
-            <Button type="submit">Submit</Button>
-          </div>
-          <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Studio</TableHead>
-                  <TableHead>Blocked</TableHead>
-                  <TableHead>Day Rate</TableHead>
-                  <TableHead>Hourly Rate</TableHead>
-                  <TableHead>Membership Rate</TableHead>
-                  <TableHead>Engineer Fee</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                <Page prices={prices} />
-              </TableBody>
-            </Table>
-          </CardContent>
-        </form>
+        <Card>
+          <form action={submit}>
+            <CardHeader>
+              <CardTitle>Update Pricing</CardTitle>
+            </CardHeader>
+            <div className="px-4 flex gap-4">
+              <Link href="/user/admin">
+                <Button>Back</Button>
+              </Link>
+              <Button type="submit">Submit</Button>
+            </div>
+            <CardContent>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Studio</TableHead>
+                    <TableHead>Blocked</TableHead>
+                    <TableHead>Day Rate</TableHead>
+                    <TableHead>Hourly Rate</TableHead>
+                    <TableHead>Membership Rate</TableHead>
+                    <TableHead>Engineer Fee</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  <Page prices={prices} />
+                </TableBody>
+              </Table>
+            </CardContent>
+          </form>
         </Card>
       </Section>
     </>

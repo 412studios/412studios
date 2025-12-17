@@ -84,7 +84,7 @@ export default function Pricing({ pricing }: PricingProps) {
           {isSaving ? "Saving..." : "Save Changes"}
         </Button>
       </div>
-      
+
       <Table>
         <TableHeader>
           <TableRow>
@@ -103,9 +103,7 @@ export default function Pricing({ pricing }: PricingProps) {
               <TableCell>
                 <Checkbox
                   checked={val.blocked}
-                  onCheckedChange={(checked) =>
-                    handleCheckboxChange(index, checked as boolean)
-                  }
+                  onCheckedChange={(checked) => handleCheckboxChange(index, checked as boolean)}
                 />
               </TableCell>
               <TableCell>
@@ -120,9 +118,7 @@ export default function Pricing({ pricing }: PricingProps) {
                 <Input
                   type="number"
                   value={val.hourlyRate}
-                  onChange={(e) =>
-                    handleChange(index, "hourlyRate", e.target.value)
-                  }
+                  onChange={(e) => handleChange(index, "hourlyRate", e.target.value)}
                   className="w-20"
                 />
               </TableCell>
@@ -130,9 +126,7 @@ export default function Pricing({ pricing }: PricingProps) {
                 <Input
                   type="number"
                   value={val.membershipPrice}
-                  onChange={(e) =>
-                    handleChange(index, "membershipPrice", e.target.value)
-                  }
+                  onChange={(e) => handleChange(index, "membershipPrice", e.target.value)}
                   className="w-20"
                 />
               </TableCell>
@@ -140,9 +134,7 @@ export default function Pricing({ pricing }: PricingProps) {
                 <Input
                   type="number"
                   value={val.engineerPrice}
-                  onChange={(e) =>
-                    handleChange(index, "engineerPrice", e.target.value)
-                  }
+                  onChange={(e) => handleChange(index, "engineerPrice", e.target.value)}
                   className="w-20"
                 />
               </TableCell>

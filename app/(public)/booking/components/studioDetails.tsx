@@ -51,13 +51,9 @@ export const StudioDetails = () => {
               Studio {element.room}
             </Button>
             <CardDescription>
-              <span className="whitespace-nowrap">
-                Hourly rate: {element.hourlyRate}
-              </span>
+              <span className="whitespace-nowrap">Hourly rate: {element.hourlyRate}</span>
               <span className="whitespace-nowrap mx-2">|</span>
-              <span className="whitespace-nowrap">
-                Day rate: {element.dayRate}
-              </span>
+              <span className="whitespace-nowrap">Day rate: {element.dayRate}</span>
             </CardDescription>
             <CardDescription>
               <Link href={`/user/membership/${element.id}`} className="w-full">
@@ -99,19 +95,12 @@ export const StudioDetails = () => {
                     Studio {element.room}
                   </Button>
                   <CardDescription>
-                    <span className="whitespace-nowrap">
-                      Hourly rate: {element.hourlyRate}
-                    </span>
+                    <span className="whitespace-nowrap">Hourly rate: {element.hourlyRate}</span>
                     <span className="whitespace-nowrap mx-2">|</span>
-                    <span className="whitespace-nowrap">
-                      Day rate: {element.dayRate}
-                    </span>
+                    <span className="whitespace-nowrap">Day rate: {element.dayRate}</span>
                   </CardDescription>
                   <CardDescription>
-                    <Link
-                      href={`/user/membership/${element.id}`}
-                      className="w-full"
-                    >
+                    <Link href={`/user/membership/${element.id}`} className="w-full">
                       Purchase Membership: {element.membershipPrice}
                     </Link>
                   </CardDescription>

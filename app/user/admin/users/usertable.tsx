@@ -35,9 +35,7 @@ export default function UserTable({ users }: UserTableProps) {
             <div
               key={index}
               className={`p-4 ${
-                index !== filteredUsers.length - 1
-                  ? "border-b border-dashed"
-                  : ""
+                index !== filteredUsers.length - 1 ? "border-b border-dashed" : ""
               }`}
             >
               <p className="text-wrap">

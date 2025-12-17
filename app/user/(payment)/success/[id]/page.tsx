@@ -4,18 +4,14 @@ import { Check } from "lucide-react";
 import Link from "next/link";
 import prisma from "@/lib/db";
 import { unstable_noStore as noStore } from "next/cache";
-import { 
+import {
   sendTestEmail,
   handleBookingConfirmationEmail,
-  handleMembershipUsageEmail, 
-  handleMembershipConfirmationEmail
+  handleMembershipUsageEmail,
+  handleMembershipConfirmationEmail,
 } from "@/lib/email";
 
-export default async function PageSuccess({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
+export default async function PageSuccess({ params }: { params: Promise<{ id: string }> }) {
   noStore();
   // Await the params promise explicitly
   const resolvedParams = await params;
@@ -57,8 +53,7 @@ export default async function PageSuccess({
       });
     }
 
-    const duration =
-      successfulBooking.endTime + 1 - successfulBooking.startTime;
+    const duration = successfulBooking.endTime + 1 - successfulBooking.startTime;
 
     //Update membership details
     const membershipUpdateResult = await prisma.memberships.updateMany({
@@ -72,7 +67,7 @@ export default async function PageSuccess({
         },
       },
     });
-    
+
     // If membership hours were decremented, send notification email
     if (membershipUpdateResult.count > 0) {
       await handleMembershipUsageEmail(successfulBooking, prisma);
@@ -101,11 +96,7 @@ export default async function PageSuccess({
       firstDayOfMonth.getMonth() + 1
     ).padStart(2, "0")}01`;
     // First day of the next month
-    const firstDayOfNextMonth = new Date(
-      now.getFullYear(),
-      now.getMonth() + 1,
-      1
-    );
+    const firstDayOfNextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
     const formattedFirstDayOfNextMonth = `${firstDayOfNextMonth.getFullYear()}${String(
       firstDayOfNextMonth.getMonth() + 1
     ).padStart(2, "0")}01`;
@@ -120,7 +111,7 @@ export default async function PageSuccess({
         currentPeriodEnd: parseInt(formattedFirstDayOfNextMonth),
       },
     });
-    
+
     // Send email confirmation for membership
     await handleMembershipConfirmationEmail(successfulMembership, prisma);
   }
@@ -134,9 +125,7 @@ export default async function PageSuccess({
               <Check className="h-12 w-12 rounded-full bg-green-500/30 p-2 text-green-500" />
             </div>
             <div className="mt-3 w-full text-center sm:mt-5">
-              <h3 className="text-lg font-medium leading-6">
-                Payment Successful
-              </h3>
+              <h3 className="text-lg font-medium leading-6">Payment Successful</h3>
               <div className="mt-5 w-full sm:mt-6">
                 <Button className="w-full" asChild>
                   <Link href="/user/profile">Go to dashboard</Link>

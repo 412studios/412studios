@@ -94,9 +94,10 @@ async function handleBookingPaymentSuccess(session: Stripe.Checkout.Session) {
       const endTimeStr = timeSlots[booking.endTime]?.displayEnd || `${booking.endTime + 1}:00`;
 
       // Calculate original price if discount was applied
-      const originalPrice = booking.discountAmount && booking.discountAmount > 0
-        ? booking.totalPrice + booking.discountAmount
-        : undefined;
+      const originalPrice =
+        booking.discountAmount && booking.discountAmount > 0
+          ? booking.totalPrice + booking.discountAmount
+          : undefined;
 
       if (booking.user?.email) {
         await sendBookingConfirmationEmail(booking.user.email, {
@@ -128,11 +129,7 @@ export async function POST(req: Request) {
   const signature = headersList.get("Stripe-Signature") as string;
   let event: Stripe.Event;
   try {
-    event = stripe.webhooks.constructEvent(
-      body,
-      signature,
-      process.env.STRIPE_WEBHOOK_SECRET!
-    );
+    event = stripe.webhooks.constructEvent(body, signature, process.env.STRIPE_WEBHOOK_SECRET!);
   } catch (error: any) {
     console.error(`Webhook error: ${error.message}`);
     return new Response(`Webhook Error: ${error.message}`, { status: 400 });
@@ -143,17 +140,17 @@ export async function POST(req: Request) {
     case "checkout.session.completed":
       const session = event.data.object as Stripe.Checkout.Session;
       console.log("Checkout completed:", session.id);
-      
+
       // Handle booking payment completion
       await handleBookingPaymentSuccess(session);
       break;
-      
+
     case "payment_intent.succeeded":
       const paymentIntent = event.data.object as Stripe.PaymentIntent;
       console.log("Payment succeeded:", paymentIntent.id);
       // Process successful payment
       break;
-      
+
     // Add other event types as needed
     default:
       console.log(`Unhandled event type: ${event.type}`);

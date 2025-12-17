@@ -8,7 +8,8 @@ export const EMAIL_CONSTANTS = {
   WEBSITE_URL: "https://412studios.ca",
   BASE_URL:
     process.env.NODE_ENV === "production"
-      ? (process.env.PRODUCTION_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "https://412studios.ca"))
+      ? process.env.PRODUCTION_URL ||
+        (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "https://412studios.ca")
       : "http://localhost:3000",
 };
 
@@ -42,8 +43,7 @@ const INLINE_STYLES = {
   button:
     "display: inline-block; background-color: #111; color: white; padding: 2px 30px; border-radius: 25px; text-decoration: none; margin-top: 10px;",
   link: "color: #111; text-decoration: none;",
-  footer:
-    "background-color: #111; color: white; padding: 15px; text-align: center;",
+  footer: "background-color: #111; color: white; padding: 15px; text-align: center;",
 };
 
 // Email types
@@ -101,10 +101,14 @@ const generateBookingContent = (data: BookingDetails) => ({
       <p style="${INLINE_STYLES.p}"><span style="${INLINE_STYLES.strong}">Time:</span> ${data.startTime} - ${data.endTime}</p>
       <p style="${INLINE_STYLES.p}"><span style="${INLINE_STYLES.strong}">Duration:</span> ${data.duration} hours</p>
       <p style="${INLINE_STYLES.p}"><span style="${INLINE_STYLES.strong}">Engineering Services:</span> ${data.engineeringIncluded ? "Included" : "Not included"}</p>
-      ${data.offerCode && data.discountAmount ? `
+      ${
+        data.offerCode && data.discountAmount
+          ? `
       <p style="${INLINE_STYLES.p}"><span style="${INLINE_STYLES.strong}">Original Price:</span> $${data.originalPrice}.00 CAD</p>
       <p style="${INLINE_STYLES.p}; color: #16a34a;"><span style="${INLINE_STYLES.strong}">Discount (${data.offerCode}):</span> -$${data.discountAmount}.00 CAD</p>
-      ` : ''}
+      `
+          : ""
+      }
       <p style="${INLINE_STYLES.p}"><span style="${INLINE_STYLES.strong}">Total Price:</span> $${data.price}.00 CAD</p>
     </div>
   `,
@@ -118,9 +122,13 @@ Booking Details:
 - Time: ${data.startTime} - ${data.endTime}
 - Duration: ${data.duration} hours
 - Engineering Services: ${data.engineeringIncluded ? "Included" : "Not included"}
-${data.offerCode && data.discountAmount ? `- Original Price: $${data.originalPrice}.00 CAD
+${
+  data.offerCode && data.discountAmount
+    ? `- Original Price: $${data.originalPrice}.00 CAD
 - Discount (${data.offerCode}): -$${data.discountAmount}.00 CAD
-` : ''}- Total Price: $${data.price}.00 CAD
+`
+    : ""
+}- Total Price: $${data.price}.00 CAD
 
 Studio Location:
 ${EMAIL_CONSTANTS.STUDIO_ADDRESS}
@@ -258,7 +266,7 @@ ${EMAIL_CONSTANTS.SUPPORT_EMAIL}
 // Universal email template generator
 export const generateEmail = (
   type: EmailType,
-  data: BookingDetails | MembershipDetails | UsageDetails,
+  data: BookingDetails | MembershipDetails | UsageDetails
 ) => {
   let emailContent;
 

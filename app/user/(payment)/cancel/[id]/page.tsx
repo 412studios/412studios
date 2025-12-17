@@ -5,11 +5,7 @@ import Link from "next/link";
 import prisma from "@/lib/db";
 
 // Using a separate API route pattern for Next.js 15.2+
-export default async function PageCancel({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
+export default async function PageCancel({ params }: { params: Promise<{ id: string }> }) {
   // Await the params promise explicitly
   const resolvedParams = await params;
   const id = resolvedParams.id;
@@ -65,8 +61,8 @@ export default async function PageCancel({
             <h3 className="text-lg font-medium leading-6">Payment Cancelled</h3>
             <div className="mt-2">
               <p className="text-muted-foreground text-sm">
-                Unfortunately a processing error has occured. You wont be
-                charged. Please try to book again through the dashboard.
+                Unfortunately a processing error has occured. You wont be charged. Please try to
+                book again through the dashboard.
               </p>
             </div>
             <div className="mt-5 w-full sm:mt-6">

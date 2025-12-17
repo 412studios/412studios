@@ -97,10 +97,7 @@ export const OfferCodeInput: React.FC = () => {
             disabled={isValidating}
             className="flex-1"
           />
-          <Button
-            onClick={handleApplyCode}
-            disabled={isValidating || !code.trim()}
-          >
+          <Button onClick={handleApplyCode} disabled={isValidating || !code.trim()}>
             {isValidating ? "Validating..." : "Apply"}
           </Button>
         </div>
@@ -130,9 +127,7 @@ export const OfferCodeInput: React.FC = () => {
         </div>
       )}
 
-      {error && (
-        <p className="text-sm text-red-600 dark:text-red-400 mt-2">{error}</p>
-      )}
+      {error && <p className="text-sm text-red-600 dark:text-red-400 mt-2">{error}</p>}
     </div>
   );
 };

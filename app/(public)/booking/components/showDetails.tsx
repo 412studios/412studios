@@ -2,16 +2,10 @@
 import { useCallback, useEffect, useMemo } from "react";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import {
-  timeSlots,
-  membershipTimeSlots,
-} from "@/app/(public)/booking/components/timeSlots";
+import { timeSlots, membershipTimeSlots } from "@/app/(public)/booking/components/timeSlots";
 import { H4 } from "@/components/ui/copy";
 import { useDashboard } from "../context";
-import {
-  validateStandardBooking,
-  validateMembershipBooking,
-} from "../utils/bookingValidation";
+import { validateStandardBooking, validateMembershipBooking } from "../utils/bookingValidation";
 
 // No need to redeclare fbq as it's already declared in FacebookPixel.tsx
 
@@ -28,10 +22,7 @@ export const ShowDetails: React.FC = () => {
     submitAdminBooking,
   } = useDashboard();
   // Determine if we should use Membership behavior
-  const useMembershipSlots = useMemo(
-    () => isMembership && !isAdmin,
-    [isMembership, isAdmin]
-  );
+  const useMembershipSlots = useMemo(() => isMembership && !isAdmin, [isMembership, isAdmin]);
   // Use useMemo to calculate derived values that depend on options
   const {
     displayStart,
@@ -54,9 +45,7 @@ export const ShowDetails: React.FC = () => {
 
     // Find membership for current room with proper type safety
     const foundMembership =
-      options.membership.find(
-        (membership) => membership.roomId === parseInt(options.room)
-      ) || null;
+      options.membership.find((membership) => membership.roomId === parseInt(options.room)) || null;
     const membershipHasHours = (foundMembership?.availableHours ?? 0) >= 4;
 
     // Changed: Use useMembershipSlots instead of just ismembership
@@ -95,7 +84,12 @@ export const ShowDetails: React.FC = () => {
     }
 
     // Apply discount if offer code is present (only for non-membership bookings)
-    if (!useMembershipSlots && options.offerCodeId && options.discountType && options.discountValue) {
+    if (
+      !useMembershipSlots &&
+      options.offerCodeId &&
+      options.discountType &&
+      options.discountValue
+    ) {
       if (options.discountType === "percentage") {
         discountAmount = Math.round((total * options.discountValue) / 100);
       } else if (options.discountType === "fixed") {
@@ -154,15 +148,7 @@ export const ShowDetails: React.FC = () => {
     }
 
     submitBooking();
-  }, [
-    submitBooking,
-    options.room,
-    options.date,
-    options.user,
-    prices,
-    total,
-    duration,
-  ]);
+  }, [submitBooking, options.room, options.date, options.user, prices, total, duration]);
 
   const handleMembershipSubmit = useCallback(() => {
     // Track Facebook Pixel event for membership booking checkout
@@ -180,15 +166,7 @@ export const ShowDetails: React.FC = () => {
     }
 
     submitMembershipBooking();
-  }, [
-    submitMembershipBooking,
-    options.room,
-    options.date,
-    options.user,
-    prices,
-    total,
-    duration,
-  ]);
+  }, [submitMembershipBooking, options.room, options.date, options.user, prices, total, duration]);
 
   const handleAdminSubmit = useCallback(() => {
     // Prevent double submission
@@ -253,9 +231,7 @@ export const ShowDetails: React.FC = () => {
                       <strong>Date</strong>
                     </TableCell>
                     <TableCell>
-                      {options.date
-                        ? options.date.toDateString()
-                        : "Not selected"}
+                      {options.date ? options.date.toDateString() : "Not selected"}
                     </TableCell>
                   </TableRow>
                   <TableRow>
@@ -290,10 +266,7 @@ export const ShowDetails: React.FC = () => {
                           <strong>Remaining Hours</strong>
                         </TableCell>
                         <TableCell>
-                          {Math.max(
-                            0,
-                            foundMembership.availableHours - duration
-                          )}
+                          {Math.max(0, foundMembership.availableHours - duration)}
                         </TableCell>
                       </TableRow>
                     </>
@@ -388,9 +361,7 @@ export const ShowDetails: React.FC = () => {
                       <strong>Date</strong>
                     </TableCell>
                     <TableCell>
-                      {options.date
-                        ? options.date.toDateString()
-                        : "Not selected"}
+                      {options.date ? options.date.toDateString() : "Not selected"}
                     </TableCell>
                   </TableRow>
                   <TableRow>
@@ -507,9 +478,7 @@ export const ShowDetails: React.FC = () => {
                         onClick={handleBookingSubmit}
                         disabled={options.loading}
                       >
-                        {options.loading
-                          ? "Redirecting..."
-                          : "Proceed to Payment"}
+                        {options.loading ? "Redirecting..." : "Proceed to Payment"}
                       </Button>
                     );
                   }

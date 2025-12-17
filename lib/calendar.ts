@@ -48,7 +48,7 @@ async function getCalendarClient() {
   // Validate required environment variables
   if (!credentials.client_email || !credentials.private_key) {
     throw new Error(
-      "Google service account credentials not configured. Please check GOOGLE_SERVICE_ACCOUNT_EMAIL and GOOGLE_PRIVATE_KEY environment variables.",
+      "Google service account credentials not configured. Please check GOOGLE_SERVICE_ACCOUNT_EMAIL and GOOGLE_PRIVATE_KEY environment variables."
     );
   }
 
@@ -68,7 +68,7 @@ async function getCalendarClient() {
 function formatBookingDateTime(
   date: number,
   timeSlotId: number,
-  isEndTime: boolean = false,
+  isEndTime: boolean = false
 ): string {
   const year = Math.floor(date / 10000);
   const month = Math.floor((date % 10000) / 100) - 1; // Month is 0-indexed
@@ -135,9 +135,7 @@ async function getUserDetails(userId: string) {
 }
 
 // Create calendar event for booking
-export async function createCalendarEvent(
-  booking: BookingEvent,
-): Promise<string | null> {
+export async function createCalendarEvent(booking: BookingEvent): Promise<string | null> {
   try {
     const calendar = await getCalendarClient();
     const calendarId = process.env.GOOGLE_CALENDAR_ID;
@@ -152,15 +150,8 @@ export async function createCalendarEvent(
     const studioName = await getStudioName(booking.roomId);
 
     // Format times
-    const startDateTime = formatBookingDateTime(
-      booking.date,
-      booking.startTime,
-    );
-    const endDateTime = formatBookingDateTime(
-      booking.date,
-      booking.endTime,
-      true,
-    );
+    const startDateTime = formatBookingDateTime(booking.date, booking.startTime);
+    const endDateTime = formatBookingDateTime(booking.date, booking.endTime, true);
 
     // Calculate actual duration (number of time slots selected)
     const duration = booking.endTime - booking.startTime + 1;
@@ -172,9 +163,7 @@ export async function createCalendarEvent(
     description += `Duration: ${duration} hours\n`;
 
     if (booking.engineerTotal && booking.engineerTotal > 0) {
-      const engineerStartHour = booking.engineerStart
-        ? timeSlotToHour(booking.engineerStart)
-        : 0;
+      const engineerStartHour = booking.engineerStart ? timeSlotToHour(booking.engineerStart) : 0;
       description += `Engineer: ${booking.engineerTotal} hours (starts at ${engineerStartHour}:00)\n`;
     }
 
@@ -213,7 +202,7 @@ export async function createCalendarEvent(
 // Update calendar event
 export async function updateCalendarEvent(
   eventId: string,
-  booking: BookingEvent,
+  booking: BookingEvent
 ): Promise<boolean> {
   try {
     const calendar = await getCalendarClient();
@@ -228,15 +217,8 @@ export async function updateCalendarEvent(
     const studioName = await getStudioName(booking.roomId);
 
     // Format times
-    const startDateTime = formatBookingDateTime(
-      booking.date,
-      booking.startTime,
-    );
-    const endDateTime = formatBookingDateTime(
-      booking.date,
-      booking.endTime,
-      true,
-    );
+    const startDateTime = formatBookingDateTime(booking.date, booking.startTime);
+    const endDateTime = formatBookingDateTime(booking.date, booking.endTime, true);
 
     // Calculate actual duration (number of time slots selected)
     const duration = booking.endTime - booking.startTime + 1;
@@ -252,9 +234,7 @@ export async function updateCalendarEvent(
     }
 
     if (booking.engineerTotal && booking.engineerTotal > 0) {
-      const engineerStartHour = booking.engineerStart
-        ? timeSlotToHour(booking.engineerStart)
-        : 0;
+      const engineerStartHour = booking.engineerStart ? timeSlotToHour(booking.engineerStart) : 0;
       description += `Engineer: ${booking.engineerTotal} hours (starts at ${engineerStartHour}:00)\n`;
     }
 
@@ -348,7 +328,7 @@ export async function syncAllBookingsToCalendar(): Promise<void> {
     for (let i = 0; i < bookings.length; i += batchSize) {
       const batch = bookings.slice(i, i + batchSize);
       console.log(
-        `Processing batch ${Math.floor(i / batchSize) + 1} of ${Math.ceil(bookings.length / batchSize)}`,
+        `Processing batch ${Math.floor(i / batchSize) + 1} of ${Math.ceil(bookings.length / batchSize)}`
       );
 
       for (const booking of batch) {
@@ -377,17 +357,12 @@ export async function syncAllBookingsToCalendar(): Promise<void> {
               data: { addDetails: eventId },
             });
 
-            console.log(
-              `Synced booking ${booking.bookingId} to calendar event ${eventId}`,
-            );
+            console.log(`Synced booking ${booking.bookingId} to calendar event ${eventId}`);
           } else {
             console.error(`Failed to sync booking ${booking.bookingId}`);
           }
         } catch (bookingError) {
-          console.error(
-            `Error syncing booking ${booking.bookingId}:`,
-            bookingError,
-          );
+          console.error(`Error syncing booking ${booking.bookingId}:`, bookingError);
           // Continue with other bookings even if one fails
         }
 

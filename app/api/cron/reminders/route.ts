@@ -10,11 +10,7 @@ async function sendReminderEmails() {
     tomorrow.setDate(tomorrow.getDate() + 1);
 
     // Create date range for tomorrow (start and end of day)
-    const tomorrowStart = new Date(
-      tomorrow.getFullYear(),
-      tomorrow.getMonth(),
-      tomorrow.getDate()
-    );
+    const tomorrowStart = new Date(tomorrow.getFullYear(), tomorrow.getMonth(), tomorrow.getDate());
     const tomorrowEnd = new Date(
       tomorrow.getFullYear(),
       tomorrow.getMonth(),
@@ -28,9 +24,7 @@ async function sendReminderEmails() {
         tomorrow.getDate().toString().padStart(2, "0")
     );
 
-    console.log(
-      `[CRON REMINDERS] Looking for bookings on date: ${tomorrowDateNumber}`
-    );
+    console.log(`[CRON REMINDERS] Looking for bookings on date: ${tomorrowDateNumber}`);
 
     // Find all confirmed bookings for tomorrow
     const tomorrowBookings = await prisma.bookings.findMany({
@@ -48,9 +42,7 @@ async function sendReminderEmails() {
       },
     });
 
-    console.log(
-      `[CRON REMINDERS] Found ${tomorrowBookings.length} bookings for tomorrow`
-    );
+    console.log(`[CRON REMINDERS] Found ${tomorrowBookings.length} bookings for tomorrow`);
 
     let emailsSent = 0;
     let emailsFailed = 0;
@@ -58,9 +50,7 @@ async function sendReminderEmails() {
     // Send reminder emails for each booking
     for (const booking of tomorrowBookings) {
       if (!booking.user?.email) {
-        console.warn(
-          `[CRON REMINDERS] No email found for booking ${booking.bookingId}`
-        );
+        console.warn(`[CRON REMINDERS] No email found for booking ${booking.bookingId}`);
         emailsFailed++;
         continue;
       }
@@ -88,16 +78,11 @@ async function sendReminderEmails() {
         let endTimeStr = `${booking.endTime + 1}:00`;
 
         try {
-          const { timeSlots } = await import(
-            "@/app/(public)/booking/components/timeSlots"
-          );
-          startTimeStr =
-            timeSlots[booking.startTime]?.displayStart || startTimeStr;
+          const { timeSlots } = await import("@/app/(public)/booking/components/timeSlots");
+          startTimeStr = timeSlots[booking.startTime]?.displayStart || startTimeStr;
           endTimeStr = timeSlots[booking.endTime]?.displayEnd || endTimeStr;
         } catch (timeSlotError) {
-          console.warn(
-            "[CRON REMINDERS] Could not import timeSlots, using default format"
-          );
+          console.warn("[CRON REMINDERS] Could not import timeSlots, using default format");
         }
 
         const duration = booking.endTime + 1 - booking.startTime;
@@ -126,10 +111,7 @@ async function sendReminderEmails() {
           emailsFailed++;
         }
       } catch (error) {
-        console.error(
-          `[CRON REMINDERS] Error processing booking ${booking.bookingId}:`,
-          error
-        );
+        console.error(`[CRON REMINDERS] Error processing booking ${booking.bookingId}:`, error);
         emailsFailed++;
       }
     }
@@ -147,10 +129,7 @@ async function sendReminderEmails() {
     });
   } catch (error) {
     console.error("[CRON REMINDERS] Error in reminder job:", error);
-    return NextResponse.json(
-      { success: false, error: "Internal server error" },
-      { status: 500 }
-    );
+    return NextResponse.json({ success: false, error: "Internal server error" }, { status: 500 });
   }
 }
 

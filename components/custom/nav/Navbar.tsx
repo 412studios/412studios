@@ -6,7 +6,7 @@ export async function Navbar() {
   // Fetch authentication status on the server
   const { isAuthenticated, getUser } = getKindeServerSession();
   const user = await getUser();
-  
+
   let isAdmin = false;
   if (user) {
     const userData = await prisma.user.findUnique({
@@ -15,6 +15,6 @@ export async function Navbar() {
     });
     isAdmin = userData?.role === "admin";
   }
-  
+
   return <NavbarClient isAuthenticated={await isAuthenticated()} user={user} isAdmin={isAdmin} />;
 }

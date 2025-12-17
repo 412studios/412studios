@@ -14,7 +14,7 @@ export function DashboardNav() {
           <span
             className={cn(
               "hover:bg-accent hover:text-accent-foreground group flex items-center rounded-md px-3 py-2 text-sm font-medium",
-              pathname === item.href ? "bg-accent" : "bg-transparent",
+              pathname === item.href ? "bg-accent" : "bg-transparent"
             )}
           >
             <item.icon className="text-primary mr-2 h-4 w-4" />

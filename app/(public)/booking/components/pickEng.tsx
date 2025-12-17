@@ -31,10 +31,7 @@ export const PickEng = () => {
   );
 
   // New: Check if we should use membership-specific logic - only when Membership AND not admin
-  const useMembershipslots = useMemo(
-    () => isMembership && !isAdmin,
-    [isMembership, isAdmin]
-  );
+  const useMembershipslots = useMemo(() => isMembership && !isAdmin, [isMembership, isAdmin]);
 
   // Calculate startArr only when dependencies change
   const startArr = useMemo(() => {
@@ -156,9 +153,7 @@ export const PickEng = () => {
 
   return (
     <div className="border rounded-lg mt-4 p-4">
-      <H4>
-        Engineering Fee: ${prices[options.room].engineerPrice}.00 per hour
-      </H4>
+      <H4>Engineering Fee: ${prices[options.room].engineerPrice}.00 per hour</H4>
       <div className="border-b mt-4"></div>
       {startArr.length >= 1 ? (
         <div className="pt-4">
@@ -189,9 +184,7 @@ export const PickEng = () => {
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Select start time">
                       {startTime === placeholderStart ? (
-                        <span className="text-gray-400">
-                          {placeholderStart}
-                        </span>
+                        <span className="text-gray-400">{placeholderStart}</span>
                       ) : (
                         startTime
                       )}
@@ -210,17 +203,11 @@ export const PickEng = () => {
                 </Select>
               </div>
               <div className="w-full md:w-1/2 mt-4 md:mt-0">
-                <Select
-                  disabled={!isChecked}
-                  value={duration}
-                  onValueChange={handleDurationChange}
-                >
+                <Select disabled={!isChecked} value={duration} onValueChange={handleDurationChange}>
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Select end time">
                       {duration === placeholderDuration ? (
-                        <span className="text-gray-400">
-                          {placeholderDuration}
-                        </span>
+                        <span className="text-gray-400">{placeholderDuration}</span>
                       ) : (
                         duration
                       )}

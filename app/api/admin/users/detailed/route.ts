@@ -24,21 +24,17 @@ export async function GET(request: NextRequest) {
             roomId: true,
             availableHours: true,
             planId: true,
-          }
+          },
         },
       },
       orderBy: {
-        name: 'asc'
-      }
+        name: "asc",
+      },
     });
 
     return NextResponse.json(users);
-
   } catch (error) {
     console.error("Error fetching detailed users:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch users" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to fetch users" }, { status: 500 });
   }
 }

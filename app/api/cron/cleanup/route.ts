@@ -36,10 +36,7 @@ async function cleanupPendingBookings() {
     });
   } catch (error) {
     console.error("[CRON] Error in cleanup job:", error);
-    return NextResponse.json(
-      { success: false, error: "Internal server error" },
-      { status: 500 }
-    );
+    return NextResponse.json({ success: false, error: "Internal server error" }, { status: 500 });
   }
 }
 
