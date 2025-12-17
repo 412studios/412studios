@@ -12,7 +12,7 @@ export function Banner({ imageSrc }: BannerProps) {
   const [currentTime, setCurrentTime] = useState("");
   const [isDaytime, setIsDaytime] = useState(true);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [selectedRoom, setSelectedRoom] = useState("Lounge");
+  const [selectedRoom, setSelectedRoom] = useState("Studio A");
   const containerRef = useRef<HTMLDivElement | null>(null);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
@@ -22,9 +22,17 @@ export function Banner({ imageSrc }: BannerProps) {
 
   const rooms = [
     {
-      name: "Kitchen",
-      dayImage: "/renders/kitchen-day.png",
-      nightImage: "/renders/kitchen-night.png",
+      name: "Studio A",
+      dayImage: "/renders/room-a-day.png",
+      nightImage: "/renders/room-a-night.png",
+      links: [
+        
+      ]
+    },
+    {
+      name: "Live Room",
+      dayImage: "/renders/live-room-day.png",
+      nightImage: "/renders/live-room-night.png",
       links: [
         
       ]
@@ -38,21 +46,13 @@ export function Banner({ imageSrc }: BannerProps) {
       ]
     },
     {
-      name: "Studio A",
-      dayImage: "/renders/rooma-day.png",
-      nightImage: "/renders/rooma-night.png",
+      name: "Kitchen",
+      dayImage: "/renders/kitchen-day.png",
+      nightImage: "/renders/kitchen-night.png",
       links: [
         
       ]
-    },
-    {
-      name: "Liveroom",
-      dayImage: "/renders/liveroom-day.png",
-      nightImage: "/renders/liveroom-night.png",
-      links: [
-        
-      ]
-    },
+    }
   ];
 
   useEffect(() => {
