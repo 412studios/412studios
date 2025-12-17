@@ -163,6 +163,12 @@ export function Banner() {
     const viewport = viewportRef.current;
     if (!viewport) return;
 
+    // Don't start drag if clicking on a link
+    const target = e.target as HTMLElement;
+    if (target.closest("a")) {
+      return;
+    }
+
     // Only left mouse button (but allow touch/pen)
     if (e.pointerType === "mouse" && e.button !== 0) return;
 
