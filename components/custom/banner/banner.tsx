@@ -15,6 +15,11 @@ export function Banner() {
   const viewportRef = useRef<HTMLDivElement | null>(null);
   const contentRef = useRef<HTMLDivElement | null>(null);
 
+  // Dual image layers for crossfade transitions
+  const [image1, setImage1] = useState("");
+  const [image2, setImage2] = useState("");
+  const [showImage1, setShowImage1] = useState(true);
+
   // Drag state (refs so we don't re-render on every pointermove)
   const isDraggingRef = useRef(false);
   const startRef = useRef({ x: 0, y: 0 });
@@ -225,6 +230,36 @@ export function Banner() {
   const currentRoom = rooms.find((room) => room.name === selectedRoom) || rooms[0];
   const displayImage = isDaytime ? currentRoom.dayImage : currentRoom.nightImage;
 
+  // Handle image transitions with ping-pong between two image elements
+  useEffect(() => {
+    // Initialize on first load
+    if (!image1) {
+      setImage1(displayImage);
+      return;
+    }
+
+    // Get the currently visible image
+    const currentVisibleImage = showImage1 ? image1 : image2;
+
+    // Only transition if the display image is actually different from what's currently visible
+    if (displayImage !== currentVisibleImage) {
+      if (showImage1) {
+        // Image 1 is visible, update image 2 and flip to it
+        setImage2(displayImage);
+        // Use requestAnimationFrame to ensure the image state is updated before flipping
+        requestAnimationFrame(() => {
+          setShowImage1(false);
+        });
+      } else {
+        // Image 2 is visible, update image 1 and flip to it
+        setImage1(displayImage);
+        requestAnimationFrame(() => {
+          setShowImage1(true);
+        });
+      }
+    }
+  }, [displayImage, image1, image2, showImage1]);
+
   return (
     <section
       id="home"
@@ -246,17 +281,36 @@ export function Banner() {
       >
         <div
           ref={contentRef}
-          className="absolute left-1/2 top-1/2 aspect-video min-w-full min-h-full flex items-center justify-center"
+          className="absolute left-1/2 top-1/2 aspect-video min-w-full min-h-full"
           style={{
             // We control transform in JS for smooth drag
             willChange: "transform",
             transform: "translate(-50%, -50%) translate(0px, 0px)",
-            // IMAGE PART
-            backgroundImage: `url(${displayImage})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
           }}
         >
+          {/* Image layer 1 */}
+          <div
+            className="absolute inset-0"
+            style={{
+              backgroundImage: `url(${image1})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              opacity: showImage1 ? 1 : 0,
+              transition: "opacity 1s ease-in-out",
+            }}
+          />
+          {/* Image layer 2 */}
+          <div
+            className="absolute inset-0"
+            style={{
+              backgroundImage: `url(${image2})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              opacity: showImage1 ? 0 : 1,
+              transition: "opacity 1s ease-in-out",
+            }}
+          />
+
           {/* Interactive Link Dots */}
           {currentRoom.links && currentRoom.links.length > 0 && (
             <div className="absolute inset-0 pointer-events-none">
