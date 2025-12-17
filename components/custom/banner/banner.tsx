@@ -235,7 +235,9 @@ export function Banner() {
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
-        ></div>
+        >
+          <div className="border-4 h-full w-full">HELLO</div>
+        </div>
       </div>
 
       {/* Room Selector Dropdown */}
