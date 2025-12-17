@@ -19,6 +19,7 @@ export function Banner() {
   const [image1, setImage1] = useState("");
   const [image2, setImage2] = useState("");
   const [showImage1, setShowImage1] = useState(true);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   // Drag state (refs so we don't re-render on every pointermove)
   const isDraggingRef = useRef(false);
@@ -230,6 +231,14 @@ export function Banner() {
   const currentRoom = rooms.find((room) => room.name === selectedRoom) || rooms[0];
   const displayImage = isDaytime ? currentRoom.dayImage : currentRoom.nightImage;
 
+  // Handle initial fade-in from white
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsInitialLoad(false);
+    }, 100);
+    return () => clearTimeout(timer);
+  }, []);
+
   // Handle image transitions with ping-pong between two image elements
   useEffect(() => {
     // Initialize on first load
@@ -307,6 +316,15 @@ export function Banner() {
               backgroundSize: "cover",
               backgroundPosition: "center",
               opacity: showImage1 ? 0 : 1,
+              transition: "opacity 1s ease-in-out",
+            }}
+          />
+
+          {/* White overlay for initial fade-in */}
+          <div
+            className="absolute inset-0 bg-white pointer-events-none"
+            style={{
+              opacity: isInitialLoad ? 1 : 0,
               transition: "opacity 1s ease-in-out",
             }}
           />
