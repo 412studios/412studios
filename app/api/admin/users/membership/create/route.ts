@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
             .replace(/-/g, "")
         ),
         createdAt: currentDate,
-        updtedAt: currentDate,
+        updatedAt: currentDate,
         roomId: roomId,
         availableHours: availableHours,
         updateHours: currentDate,

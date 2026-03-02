@@ -5,7 +5,6 @@ import Link from "next/link";
 import prisma from "@/lib/db";
 import { unstable_noStore as noStore } from "next/cache";
 import {
-  sendTestEmail,
   handleBookingConfirmationEmail,
   handleMembershipUsageEmail,
   handleMembershipConfirmationEmail,
@@ -16,9 +15,6 @@ export default async function PageSuccess({ params }: { params: Promise<{ id: st
   // Await the params promise explicitly
   const resolvedParams = await params;
   const id = resolvedParams.id;
-
-  // Test email configuration
-  await sendTestEmail();
 
   //HANDLE STANDARD BOOKING CONFIMATION
   const successfulBooking = await prisma.bookings.findUnique({

@@ -59,7 +59,7 @@ model Memberships {
   currentPeriodStart   Int
   currentPeriodEnd     Int
   createdAt            DateTime @default(now())
-  updtedAt             DateTime @updatedAt
+  updatedAt            DateTime @updatedAt @map("updtedAt")
   roomId               Int
   availableHours       Int
   updateHours          DateTime @default(now())

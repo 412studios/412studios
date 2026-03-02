@@ -237,10 +237,7 @@ export function DashboardProvider({
     }
   }, [options, setOptions, userData]);
 
-  let isAdmin = false;
-  if (userData && userData.role === "admin") {
-    isAdmin = true;
-  }
+  const isAdmin = userData?.role === "admin";
 
   const submitAdminBooking = useCallback(async () => {
     // Check if user is authenticated and is admin

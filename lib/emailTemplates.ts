@@ -344,27 +344,6 @@ export const generateEmail = (
   };
 };
 
-// Convenience functions for backwards compatibility
+// Used by admin email-template preview page
 export const generateBookingConfirmationEmail = (data: BookingDetails) =>
   generateEmail("booking-confirmation", data).html;
-
-export const generateBookingConfirmationText = (data: BookingDetails) =>
-  generateEmail("booking-confirmation", data).text;
-
-export const generateMembershipConfirmationEmail = (data: MembershipDetails) =>
-  generateEmail("membership-confirmation", data).html;
-
-export const generateMembershipConfirmationText = (data: MembershipDetails) =>
-  generateEmail("membership-confirmation", data).text;
-
-export const generateMembershipUsageEmail = (data: UsageDetails) =>
-  generateEmail("membership-usage", data).html;
-
-export const generateMembershipUsageText = (data: UsageDetails) =>
-  generateEmail("membership-usage", data).text;
-
-export const generateBookingReminderEmail = (data: BookingDetails) =>
-  generateEmail("booking-reminder", data).html;
-
-export const generateBookingReminderText = (data: BookingDetails) =>
-  generateEmail("booking-reminder", data).text;

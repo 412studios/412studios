@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { Logo } from "@/public/icons/logo";
 
 // =====================
@@ -14,7 +14,6 @@ interface LoadingScreenProps {
 }
 
 function LoadingScreen({ excludedPaths = [], excludedPatterns = [] }: LoadingScreenProps) {
-  const [isLoading, setIsLoading] = useState(true);
   const [shouldShow, setShouldShow] = useState(true);
   const [isVisible, setIsVisible] = useState(true);
   const [opacity, setOpacity] = useState(1);
@@ -29,13 +28,11 @@ function LoadingScreen({ excludedPaths = [], excludedPatterns = [] }: LoadingScr
   useEffect(() => {
     if (isExcluded()) {
       setShouldShow(false);
-      setIsLoading(false);
       setIsVisible(false);
       return;
     }
 
     setShouldShow(true);
-    setIsLoading(true);
     setIsVisible(true);
     setOpacity(1);
     setLoadingProgress(0);
@@ -46,7 +43,6 @@ function LoadingScreen({ excludedPaths = [], excludedPatterns = [] }: LoadingScr
     const progressInterval = setInterval(() => {
       const elapsed = Date.now() - startTime;
       const progress = Math.min(elapsed / duration, 1);
-      // Easing: smoother start and end, less overshoot
       const eased = progress * progress * (3 - 2 * progress);
       setLoadingProgress(eased * 100);
 
@@ -59,9 +55,8 @@ function LoadingScreen({ excludedPaths = [], excludedPatterns = [] }: LoadingScr
     const minTimer = setTimeout(() => {
       setOpacity(0);
       const fadeOutTimer = setTimeout(() => {
-        setIsLoading(false);
         setIsVisible(false);
-      }, 500); // Match fade duration
+      }, 500);
       return () => clearTimeout(fadeOutTimer);
     }, 1000);
 
@@ -71,25 +66,12 @@ function LoadingScreen({ excludedPaths = [], excludedPatterns = [] }: LoadingScr
     };
   }, [pathname, excludedPaths, excludedPatterns]);
 
-  useEffect(() => {
-    if (!isExcluded()) {
-      setIsLoading(true);
-      setShouldShow(true);
-      setIsVisible(true);
-      setOpacity(1);
-      setLoadingProgress(0);
-    }
-  }, [pathname, excludedPaths, excludedPatterns]);
-
   if (!shouldShow || !isVisible) return null;
 
   return (
     <div
       className="fixed inset-0 flex items-center justify-center bg-background transition-opacity duration-500 ease-out pointer-events-none"
-      style={{
-        opacity: opacity,
-        zIndex: 99999,
-      }}
+      style={{ opacity, zIndex: 99999 }}
       aria-hidden="true"
     >
       <div className="flex flex-col items-center space-y-2">
@@ -97,9 +79,7 @@ function LoadingScreen({ excludedPaths = [], excludedPatterns = [] }: LoadingScr
           <Logo className="h-auto w-48 text-gray-300" />
           <div
             className="absolute inset-0 overflow-hidden"
-            style={{
-              clipPath: `inset(${100 - loadingProgress}% 0 0 0)`,
-            }}
+            style={{ clipPath: `inset(${100 - loadingProgress}% 0 0 0)` }}
           >
             <Logo className="h-auto w-48 text-primary" />
           </div>
@@ -107,37 +87,6 @@ function LoadingScreen({ excludedPaths = [], excludedPatterns = [] }: LoadingScr
       </div>
     </div>
   );
-}
-
-// =====================
-// Navigation Loader Component
-// =====================
-
-interface NavigationLoaderProps {
-  excludedPaths?: string[];
-  excludedPatterns?: RegExp[];
-  children: ReactNode;
-}
-
-function NavigationLoader({
-  excludedPaths = [],
-  excludedPatterns = [],
-  children,
-}: NavigationLoaderProps) {
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-
-  const isExcluded = () => {
-    if (excludedPaths.includes(pathname)) return true;
-    return excludedPatterns.some((pattern) => pattern.test(pathname));
-  };
-
-  useEffect(() => {
-    if (isExcluded()) return;
-    // Potentially extend logic here for analytics or transitions
-  }, [pathname, searchParams, excludedPaths, excludedPatterns]);
-
-  return <>{children}</>;
 }
 
 // =====================
@@ -156,7 +105,7 @@ const LoadingContext = createContext<LoadingContextType | undefined>(undefined);
 interface LoadingProviderProps {
   children: ReactNode;
   defaultExcludedPaths?: string[];
-  defaultExcludedPatterns?: string[]; // Patterns as strings
+  defaultExcludedPatterns?: string[];
 }
 
 export function LoadingProvider({
@@ -173,19 +122,12 @@ export function LoadingProvider({
   const excludePage = (path: string) => setExcludedPaths((prev) => [...prev, path]);
   const includePage = (path: string) => setExcludedPaths((prev) => prev.filter((p) => p !== path));
 
-  const contextValue: LoadingContextType = {
-    isLoading,
-    setLoading: setIsLoading,
-    excludePage,
-    includePage,
-  };
-
   return (
-    <LoadingContext.Provider value={contextValue}>
+    <LoadingContext.Provider
+      value={{ isLoading, setLoading: setIsLoading, excludePage, includePage }}
+    >
       <LoadingScreen excludedPaths={excludedPaths} excludedPatterns={excludedPatterns} />
-      <NavigationLoader excludedPaths={excludedPaths} excludedPatterns={excludedPatterns}>
-        {children}
-      </NavigationLoader>
+      {children}
     </LoadingContext.Provider>
   );
 }

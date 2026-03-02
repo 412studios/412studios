@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
       where: { membershipId: membershipId },
       data: {
         status: "cancelled",
-        updtedAt: new Date(),
+        updatedAt: new Date(),
       },
     });
 

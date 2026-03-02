@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
       where: { membershipId: membershipId },
       data: {
         availableHours: availableHours,
-        updtedAt: new Date(),
+        updatedAt: new Date(),
         updateHours: new Date(),
       },
       select: {

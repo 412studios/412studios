@@ -294,6 +294,39 @@ export async function deleteCalendarEvent(eventId: string): Promise<boolean> {
   }
 }
 
+/**
+ * Build a BookingEvent from a Prisma booking record (with user relation).
+ * Eliminates the repeated object-building pattern across API routes.
+ */
+export async function bookingToEvent(booking: {
+  bookingId: string;
+  roomId: number;
+  date: number;
+  startTime: number;
+  endTime: number;
+  userId: string;
+  engineerTotal: number;
+  engineerStart: number;
+  totalPrice: number;
+  status: string;
+  user?: { id?: string; name?: string | null; email?: string | null } | null;
+}): Promise<BookingEvent> {
+  return {
+    bookingId: booking.bookingId,
+    roomId: booking.roomId,
+    date: booking.date,
+    startTime: booking.startTime,
+    endTime: booking.endTime,
+    userId: booking.userId,
+    userName: booking.user?.name || undefined,
+    userEmail: booking.user?.email || "",
+    engineerTotal: booking.engineerTotal,
+    engineerStart: booking.engineerStart,
+    totalPrice: booking.totalPrice,
+    status: booking.status,
+  };
+}
+
 // Sync all existing bookings to calendar
 export async function syncAllBookingsToCalendar(): Promise<void> {
   try {

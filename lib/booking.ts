@@ -357,7 +357,7 @@ export async function PostMembership(input: any) {
       currentPeriodStart: formatDate(new Date()),
       currentPeriodEnd: formatDate(new Date()),
       createdAt: new Date(),
-      updtedAt: new Date(),
+      updatedAt: new Date(),
       roomId: parseInt(input.id),
       availableHours: 16,
       updateHours: new Date(),
