@@ -4,27 +4,27 @@
 @custom-variant dark (&.dark);
 
 :root {
-  --background: hsl(48 33% 97%);
-  --foreground: hsl(30 3% 12%);
+  --background: oklch(0.9785 0.0067 97.35);
+  --foreground: oklch(0.2272 0.0025 67.7);
 
   --card: var(--background);
   --card-foreground: var(--foreground);
   --popover: var(--background);
   --popover-foreground: var(--foreground);
 
-  --primary: hsl(0 5% 12.7%);
-  --primary-foreground: hsl(0 5% 12.7%);
+  --primary: oklch(24.19% 0.005 17.28);
+  --primary-foreground: oklch(24.19% 0.005 17.28);
 
-  --secondary: hsl(0 0% 37.3%);
-  --secondary-foreground: hsl(0 0% 37.3%);
+  --secondary: oklch(48.59% 0 0);
+  --secondary-foreground: oklch(48.59% 0 0);
 
-  --muted: hsl(210 40% 96.1%);
-  --muted-foreground: hsl(215.4 16.3% 46.9%);
+  --muted: oklch(96.84% 0.0069 248.08);
+  --muted-foreground: oklch(55.47% 0.0408 257.45);
 
-  --accent: hsl(198 34.3% 83.7%);
-  --accent-foreground: hsl(222.2 47.4% 11.2%);
+  --accent: oklch(87.95% 0.0245 225.44);
+  --accent-foreground: oklch(20.79% 0.0399 265.73);
 
-  --destructive: hsl(0 84.2% 60.2%);
+  --destructive: oklch(63.69% 0.2077 25.32);
   --destructive-foreground: var(--background);
 
   --border: var(--foreground);
@@ -166,7 +166,7 @@ a:hover {
     45deg,
     var(--accent),
     var(--accent) 5px,
-    #ffffff 5px,
-    #ffffff 10px
+    oklch(100% 0 0) 5px,
+    oklch(100% 0 0) 10px
   );
 }
