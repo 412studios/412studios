@@ -20,7 +20,6 @@ export default function NavbarClient({ isAuthenticated, user, isAdmin }: NavbarC
     { href: "#home", label: "HOME" },
     { href: "#about", label: "ABOUT" },
     { href: "#studios", label: "STUDIOS" },
-    { href: "#services", label: "SERVICES" },
     { href: "#contact", label: "CONTACT" },
   ];
 
@@ -107,7 +106,7 @@ export default function NavbarClient({ isAuthenticated, user, isAdmin }: NavbarC
             }`}
           >
             <Link href="/" aria-label="Header Logo">
-              <Logo className="rounded-full bg-stone-50 bg-opacity-5 h-6 text-primary hover:text-secondary hover:fill-secondary transition-all duration-300 ease-in-out" />
+              <Logo className="rounded-full bg-opacity-5 h-6 text-primary hover:text-secondary hover:fill-secondary transition-all duration-300 ease-in-out" />
             </Link>
             <div>
               {isAuthenticated ? (

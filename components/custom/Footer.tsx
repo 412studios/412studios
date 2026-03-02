@@ -9,7 +9,7 @@ export function Footer() {
         {/* Logo Section */}
         <div className="p-2">
           <Link href="#home" aria-label="Header Logo">
-            <Logo className="rounded-full bg-white bg-opacity-5 h-6 text-background hover:text-secondary hover:fill-secondary transition-all duration-700 ease-in-out" />
+            <Logo className="rounded-full bg-opacity-5 h-6 hover:text-secondary hover:fill-secondary transition-all duration-700 ease-in-out" />
           </Link>
         </div>
 

@@ -1,5 +1,4 @@
 "use client";
-import { Services } from "@/components/custom/servicesCarousel";
 import { Contact } from "@/components/custom/contact";
 import { OurStudios } from "@/components/custom/ourStudios";
 import { Banner } from "@/components/custom/banner/banner";
@@ -22,10 +21,6 @@ export default function Home() {
       <Divider />
       <Section id="studios">
         <OurStudios />
-      </Section>
-      <Divider />
-      <Section id="services">
-        <Services />
       </Section>
       <Divider />
       <Section id="contact">

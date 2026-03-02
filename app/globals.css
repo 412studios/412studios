@@ -1,32 +1,86 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@import "tw-animate-css";
 
-@layer base {
-  :root {
-    --background: 48 33% 97%;
-    --foreground: 30 3% 12%;
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    /* --primary: 0 5% 8%; */
-    --primary: 0 5% 12.7%;
-    --primary-foreground: 0 5% 12.7%;
-    --secondary: 0 0% 37.3%;
-    --secondary-foreground: 0 0% 37.3%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 198 34.3% 83.7%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-    --radius: 0.3rem;
-    --circle-size: 40vw;
-    --blending: hard-light;
+@custom-variant dark (&.dark);
+
+:root {
+  --background: hsl(48 33% 97%);
+  --foreground: hsl(30 3% 12%);
+  --card: hsl(0 0% 100%);
+  --card-foreground: hsl(222.2 84% 4.9%);
+  --popover: hsl(0 0% 100%);
+  --popover-foreground: hsl(222.2 84% 4.9%);
+  --primary: hsl(0 5% 12.7%);
+  --primary-foreground: hsl(0 5% 12.7%);
+  --secondary: hsl(0 0% 37.3%);
+  --secondary-foreground: hsl(0 0% 37.3%);
+  --muted: hsl(210 40% 96.1%);
+  --muted-foreground: hsl(215.4 16.3% 46.9%);
+  --accent: hsl(198 34.3% 83.7%);
+  --accent-foreground: hsl(222.2 47.4% 11.2%);
+  --destructive: hsl(0 84.2% 60.2%);
+  --destructive-foreground: hsl(210 40% 98%);
+  --border: hsl(30 3% 12%);
+  --input: hsl(214.3 31.8% 91.4%);
+  --ring: hsl(222.2 84% 4.9%);
+  --radius: 0.3rem;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+  --animate-fade-in: fade-in 0.4s ease-in-out;
+}
+
+@keyframes accordion-down {
+  from {
+    height: 0;
+  }
+  to {
+    height: var(--radix-accordion-content-height);
+  }
+}
+
+@keyframes accordion-up {
+  from {
+    height: var(--radix-accordion-content-height);
+  }
+  to {
+    height: 0;
+  }
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
   }
 }
 
@@ -38,8 +92,7 @@
     @apply scroll-smooth;
     font-family: "Arial", sans-serif !important;
     font-weight: 100 !important;
-    /* letter-spacing: 0.1em; */
-    color: hsl(var(--primary)) !important;
+    color: var(--primary) !important;
   }
   body {
     @apply bg-background text-foreground;
@@ -55,21 +108,17 @@
     width: 8px;
     height: 8px;
   }
-
   ::-webkit-scrollbar-track {
     background: transparent;
   }
-
   ::-webkit-scrollbar-thumb {
-    background-color: hsl(var(--muted-foreground) / 0.5); /* semi-transparent thumb */
+    background-color: color-mix(in srgb, var(--muted-foreground) 50%, transparent);
     border-radius: 10px;
     border: 2px solid transparent;
     background-clip: content-box;
   }
-
-  /* Firefox */
   * {
-    scrollbar-color: hsl(var(--muted-foreground) / 0.5) transparent;
+    scrollbar-color: color-mix(in srgb, var(--muted-foreground) 50%, transparent) transparent;
     scrollbar-width: thin;
   }
 }
@@ -82,12 +131,14 @@ a:hover {
   font-family: "Arial", sans-serif !important;
   font-weight: 900 !important;
 }
+
 @media only screen and (max-width: 640px) {
   .title {
     font-size: 10vw !important;
     width: 100% !important;
   }
 }
+
 @media only screen and (max-width: 330px) {
   .title-mob {
     font-size: 100% !important;
@@ -102,11 +153,11 @@ a:hover {
 }
 
 .btn-booked {
-  border: 1px solid hsl(var(--accent));
+  border: 1px solid var(--accent);
   background-image: repeating-linear-gradient(
     45deg,
-    hsl(var(--accent)),
-    hsl(var(--accent)) 5px,
+    var(--accent),
+    var(--accent) 5px,
     #ffffff 5px,
     #ffffff 10px
   );
