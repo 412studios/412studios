@@ -28,7 +28,7 @@ export function TimeDisplay() {
   }, []);
 
   return (
-    <div className="absolute bottom-4 left-4 text-foreground pointer-events-none z-10 border-[1px] p-2 bg-background/20 border-foreground/20">
+    <div className="hidden md:block absolute bottom-4 left-4 text-foreground pointer-events-none z-10 border-[1px] p-2 bg-background/20 border-foreground/20">
       <div className="font-bold tracking-wider leading-tight">
         412 Richmond St E
         <br /> Toronto, ON

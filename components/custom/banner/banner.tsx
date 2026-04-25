@@ -4,6 +4,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { rooms } from "./rooms";
 import { TimeDisplay } from "./TimeDisplay";
+import { Logo } from "@/public/icons/logo";
 
 export function Banner() {
   const [navHeight, setNavHeight] = useState(0);
@@ -284,9 +285,33 @@ export function Banner() {
       style={{ marginTop: -navHeight }}
       className="relative w-full h-screen overflow-hidden"
     >
+      {/* Mobile: looping video background with logo + subtitle */}
+      <div className="md:hidden absolute inset-0">
+        <video
+          src="/videos/412-vid.mp4"
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-black/40" />
+        <div className="relative z-10 flex flex-col items-start justify-center text-left px-6 h-full text-white">
+          {/* <Logo className="h-10 text-white mb-4" /> */}
+          <p className="hl font-bold italic uppercase text-6xl w-full text-justify [text-align-last:justify]">
+            Toronto&rsquo;s independent record label and artist management company.
+          </p>
+          <p className="hl !font-light uppercase mt-6 text-2xl text-justify [text-align-last:justify] w-full">
+            Rooted in legacy and built for long-term artist development. Established in 2023, 412
+            provides structure, mentorship, and strategic support for creators.
+          </p>
+        </div>
+      </div>
+
+      {/* Desktop: 3D scene */}
       <div
         ref={viewportRef}
-        className="absolute inset-0 overflow-hidden cursor-grab active:cursor-grabbing"
+        className="hidden md:block absolute inset-0 overflow-hidden cursor-grab active:cursor-grabbing"
         style={{
           // Important: stops mobile browser “scroll/pan” so your drag always works
           touchAction: "none",
@@ -371,7 +396,7 @@ export function Banner() {
       {/* Room Selector Dropdown */}
       <div
         ref={dropdownRef}
-        className="absolute left-4 z-10 pointer-events-auto"
+        className="hidden md:block absolute left-4 z-10 pointer-events-auto"
         style={{ top: `${navHeight + 16}px` }}
       >
         <button
