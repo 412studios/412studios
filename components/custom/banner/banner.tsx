@@ -293,9 +293,14 @@ export function Banner() {
           muted
           playsInline
           className="absolute inset-0 w-full h-full object-cover"
-          style={{ filter: "sepia(1) saturate(3) hue-rotate(-15deg) brightness(0.55)" }}
+          style={{
+            filter: "sepia(1) saturate(2) hue-rotate(-20deg) brightness(0.35) contrast(1.5)",
+          }}
         />
-        <div className="absolute inset-0 bg-black/50" />
+        <div
+          className="absolute inset-0 mix-blend-screen"
+          style={{ backgroundColor: "#3D1A00" }}
+        />
         <div
           className="relative z-10 flex flex-col items-start justify-center text-left px-6 h-full"
           style={{ color: "#FFD60A" }}

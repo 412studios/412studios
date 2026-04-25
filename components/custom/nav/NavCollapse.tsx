@@ -21,11 +21,11 @@ export default function NavCollapse({
   isAdmin = false,
 }: NavCollapseProps) {
   const itemClass =
-    "flex items-center w-full p-8 text-base font-bold uppercase border-b hover:text-secondary transition-colors duration-300";
+    "flex items-center w-full p-8 text-base font-bold uppercase border-b hover:bg-[#FFD60A] hover:no-underline transition-colors duration-300";
 
   return (
     <div
-      className={`z-50 absolute right-0 transition-all duration-300 ease-in-out overflow-hidden border-t bg-background/30 backdrop-blur-md ${
+      className={`z-50 absolute right-0 transition-all duration-300 ease-in-out overflow-hidden border-t border-r bg-background ${
         isOpen ? "w-full sm:w-72 sm:border-l" : "w-0"
       }`}
       style={{

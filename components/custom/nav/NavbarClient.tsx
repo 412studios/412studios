@@ -95,17 +95,17 @@ export default function NavbarClient({ isAuthenticated, user, isAdmin }: NavbarC
   }, []);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-x-0 w-[calc(100%+1px)]">
-      <nav id="main-nav" ref={navRef} className="bg-background/30 backdrop-blur-md">
+    <header className="sticky top-0 z-50 border-b border-x-0 w-[calc(100%+1px)] box-border [&_*]:box-border">
+      <nav id="main-nav" ref={navRef} className="bg-background">
         <div className="flex flex-col">
           {/* MAIN NAV */}
           <div className="border-b-0 flex justify-between items-stretch">
             <Link
               href="/"
               aria-label="Header Logo"
-              className="p-4 md:p-8 flex items-center border-r hover:text-secondary transition-colors duration-300"
+              className="p-4 md:p-8 flex items-center border-r hover:bg-[#FFD60A] hover:no-underline transition-colors duration-300"
             >
-              <Logo className="rounded-full bg-opacity-5 h-8 md:h-12 text-primary hover:text-secondary hover:fill-secondary transition-all duration-300 ease-in-out" />
+              <Logo className="rounded-full bg-opacity-5 h-8 md:h-12 text-primary transition-all duration-300 ease-in-out" />
             </Link>
             <div
               ref={subNavRef}
@@ -117,7 +117,7 @@ export default function NavbarClient({ isAuthenticated, user, isAdmin }: NavbarC
                     key={link.href}
                     href={link.href}
                     onClick={closeMenu}
-                    className="hidden xl:inline-flex items-center p-4 md:p-8 hover:text-secondary transition-colors duration-300"
+                    className="hidden xl:inline-flex items-center p-4 md:p-8 hover:bg-[#FFD60A] hover:no-underline transition-colors duration-300"
                   >
                     {link.label}
                   </Link>
@@ -126,7 +126,7 @@ export default function NavbarClient({ isAuthenticated, user, isAdmin }: NavbarC
                 <button
                   id="menu-button"
                   onClick={handleMenuClick}
-                  className="uppercase p-4 md:p-8 hover:text-secondary transition-colors duration-300"
+                  className="uppercase p-4 md:p-8 cursor-pointer hover:bg-[#FFD60A] hover:no-underline transition-colors duration-300"
                 >
                   {isOpen ? "CLOSE" : "MENU"}
                 </button>
@@ -134,22 +134,22 @@ export default function NavbarClient({ isAuthenticated, user, isAdmin }: NavbarC
                 <button
                   id="menu-button"
                   onClick={handleMenuClick}
-                  className="uppercase p-4 md:p-8 hover:text-secondary transition-colors duration-300"
+                  className="uppercase p-4 md:p-8 cursor-pointer hover:bg-[#FFD60A] hover:no-underline transition-colors duration-300"
                 >
                   {isOpen ? "CLOSE" : "MENU"}
                 </button>
               ) : (
                 <>
-                  <RegisterLink className="uppercase hidden xl:inline-flex items-center p-4 md:p-8 hover:text-secondary transition-colors duration-300">
+                  <RegisterLink className="uppercase hidden xl:inline-flex items-center p-4 md:p-8 hover:bg-[#FFD60A] hover:no-underline transition-colors duration-300">
                     Sign Up
                   </RegisterLink>
-                  <LoginLink className="uppercase hidden xl:inline-flex items-center p-4 md:p-8 hover:text-secondary transition-colors duration-300">
+                  <LoginLink className="uppercase hidden xl:inline-flex items-center p-4 md:p-8 hover:bg-[#FFD60A] hover:no-underline transition-colors duration-300">
                     Log In
                   </LoginLink>
                   <button
                     id="menu-button"
                     onClick={handleMenuClick}
-                    className="uppercase xl:hidden p-4 md:p-8 hover:text-secondary transition-colors duration-300"
+                    className="uppercase xl:hidden p-4 md:p-8 cursor-pointer hover:bg-[#FFD60A] hover:no-underline transition-colors duration-300"
                   >
                     {isOpen ? "CLOSE" : "MENU"}
                   </button>
