@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface PaintRevealProps {
   children: React.ReactNode;
@@ -9,13 +9,24 @@ interface PaintRevealProps {
 
 const BRUSH_RADIUS = 120;
 const PAINT_COLOR = "#FFD60A";
+const DESKTOP_QUERY = "(min-width: 768px)";
 
 export function PaintReveal({ children, className = "" }: PaintRevealProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const lastPointRef = useRef<{ x: number; y: number } | null>(null);
+  const [isDesktop, setIsDesktop] = useState(false);
 
   useEffect(() => {
+    const mq = window.matchMedia(DESKTOP_QUERY);
+    const update = () => setIsDesktop(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+
+  useEffect(() => {
+    if (!isDesktop) return;
     const container = containerRef.current;
     const canvas = canvasRef.current;
     if (!container || !canvas) return;
@@ -88,7 +99,11 @@ export function PaintReveal({ children, className = "" }: PaintRevealProps) {
       container.removeEventListener("pointermove", onMove);
       container.removeEventListener("pointerleave", onLeave);
     };
-  }, []);
+  }, [isDesktop]);
+
+  if (!isDesktop) {
+    return <div className={className}>{children}</div>;
+  }
 
   return (
     <div ref={containerRef} className={`relative isolate bg-background ${className}`}>

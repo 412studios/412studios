@@ -12,7 +12,7 @@ export default function Home() {
       <Banner />
       <section id="studios" className="border-t">
         <div className="w-full border-b">
-          <PaintReveal className="py-28 md:py-32 px-4 md:px-8">
+          <PaintReveal className="py-12 md:py-32 px-4 md:px-8">
             <H2 className="text-left">OUR STUDIOS</H2>
             <Subtitle className="italic mt-2 max-w-[900px]">
               Our fully equipped studios are designed for recording, production, and creative
@@ -25,7 +25,7 @@ export default function Home() {
       <section id="artists" className="border-t">
         <div className="w-full border-b">
           <PaintReveal>
-            <H2 className="text-left py-28 md:py-32 px-4 md:px-8">ARTISTS</H2>
+            <H2 className="text-left py-12 md:py-32 px-4 md:px-8">ARTISTS</H2>
           </PaintReveal>
         </div>
         <ArtistRoster />
@@ -33,7 +33,7 @@ export default function Home() {
       <section id="origin" className="border-t">
         <div className="w-full border-b">
           <PaintReveal>
-            <H2 className="text-left py-28 md:py-32 px-4 md:px-8">OUR ORIGIN</H2>
+            <H2 className="text-left py-12 md:py-32 px-4 md:px-8">OUR ORIGIN</H2>
           </PaintReveal>
         </div>
         <OurOrigin />
@@ -41,7 +41,7 @@ export default function Home() {
       <section id="contact" className="border-t">
         <div className="w-full border-b">
           <PaintReveal>
-            <H2 className="text-left py-28 md:py-32 px-4 md:px-8">CONTACT</H2>
+            <H2 className="text-left py-12 md:py-32 px-4 md:px-8">CONTACT</H2>
           </PaintReveal>
         </div>
         <Contact />

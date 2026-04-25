@@ -1,8 +1,9 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { ChevronLeft, ChevronRight, ChevronDown } from "lucide-react";
+import { ChevronLeft, ChevronRight, ChevronDown, X, Plus } from "lucide-react";
 
 const studioAImages = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 30, 31, 32, 33].map(
   (n) => `/images/studios/studioa/412 Studio-${n}.jpg`
@@ -35,6 +36,7 @@ export function StudiosCarousel() {
   const [canNext, setCanNext] = useState(true);
   const [currentStudio, setCurrentStudio] = useState<"A" | "B" | "C">("A");
   const [isOpen, setIsOpen] = useState(false);
+  const [isDescOpen, setIsDescOpen] = useState(true);
 
   const updateState = useCallback(() => {
     const el = scrollRef.current;
@@ -129,15 +131,39 @@ export function StudiosCarousel() {
         ))}
       </div>
 
-      <div className="z-10 absolute bottom-2 left-2 right-12 md:bottom-4 md:left-16 md:right-16 max-w-2xl bg-black/25 backdrop-blur-sm border border-white/15 p-2 md:p-3 pointer-events-none">
-        <p
-          className="italic font-bold text-xs md:text-base uppercase tracking-wider leading-snug mix-blend-difference"
+      <div
+        className={`z-10 absolute bottom-2 left-2 right-12 md:bottom-4 md:left-16 md:right-16 ${
+          isDescOpen ? "max-w-2xl" : "max-w-fit"
+        } bg-black/25 backdrop-blur-sm border border-white/15 p-2 md:p-3 pointer-events-auto flex items-start gap-2`}
+      >
+        {isDescOpen && (
+          <div className="flex-1 flex flex-col gap-2">
+            <p
+              className="italic font-bold text-xs md:text-base uppercase tracking-wider leading-snug mix-blend-difference"
+              style={{ color: STUDIO_YELLOW }}
+            >
+              Built for focused creation and collaboration, the space supports artists, producers,
+              and writers at every stage of their projects. 412 features 4 fully treated
+              professional studios designed for high-quality recording and production.
+            </p>
+            <Link
+              href="/booking"
+              className="self-start px-3 py-1 border border-white/30 text-xs md:text-sm font-bold uppercase tracking-wider hover:bg-[#FFD60A] hover:text-black transition-colors mix-blend-difference"
+              style={{ color: STUDIO_YELLOW }}
+            >
+              Book Now
+            </Link>
+          </div>
+        )}
+        <button
+          type="button"
+          onClick={() => setIsDescOpen((v) => !v)}
+          aria-label={isDescOpen ? "Minimize description" : "Expand description"}
+          className="shrink-0 p-1 hover:bg-[#FFD60A] hover:text-black transition-colors cursor-pointer mix-blend-difference"
           style={{ color: STUDIO_YELLOW }}
         >
-          Built for focused creation and collaboration, the space supports artists, producers, and
-          writers at every stage of their projects. 412 features 4 fully treated professional
-          studios designed for high-quality recording and production.
-        </p>
+          {isDescOpen ? <X className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
+        </button>
       </div>
 
       <button
@@ -161,7 +187,7 @@ export function StudiosCarousel() {
 
       <div
         ref={dropdownRef}
-        className="z-20 absolute top-2 left-12 md:top-4 md:left-16"
+        className="z-20 absolute top-2 left-2 md:top-4 md:left-16"
       >
         <button
           type="button"

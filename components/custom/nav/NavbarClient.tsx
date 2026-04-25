@@ -131,6 +131,12 @@ export default function NavbarClient({ isAuthenticated, user, isAdmin }: NavbarC
                     {link.label}
                   </Link>
                 ))}
+              <Link
+                href="/booking"
+                className="hidden xl:inline-flex items-center p-4 md:p-8 hover:bg-[#FFD60A] hover:no-underline transition-colors duration-300"
+              >
+                BOOK NOW
+              </Link>
               {isAuthenticated ? (
                 <button
                   id="menu-button"

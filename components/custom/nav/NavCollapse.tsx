@@ -59,11 +59,11 @@ export default function NavCollapse({
             {link.label}
           </Link>
         ))}
+        <Link href="/booking" onClick={handleMenuClick} className={itemClass}>
+          BOOK NOW
+        </Link>
         {isAuthenticated ? (
           <>
-            <Link href="/booking" onClick={handleMenuClick} className={itemClass}>
-              BOOK NOW
-            </Link>
             <Link href="/user/profile" onClick={handleMenuClick} className={itemClass}>
               PROFILE
             </Link>
