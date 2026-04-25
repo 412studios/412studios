@@ -4,7 +4,6 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { rooms } from "./rooms";
 import { TimeDisplay } from "./TimeDisplay";
-import { Logo } from "@/public/icons/logo";
 
 export function Banner() {
   const [navHeight, setNavHeight] = useState(0);
@@ -286,7 +285,7 @@ export function Banner() {
       className="relative w-full h-screen overflow-hidden"
     >
       {/* Mobile: looping video background with logo + subtitle */}
-      <div className="md:hidden absolute inset-0">
+      <div className="md:hidden absolute inset-0 bg-black">
         <video
           src="/videos/412-vid.mp4"
           autoPlay
@@ -294,11 +293,18 @@ export function Banner() {
           muted
           playsInline
           className="absolute inset-0 w-full h-full object-cover"
+          style={{ filter: "sepia(1) saturate(3) hue-rotate(-15deg) brightness(0.55)" }}
         />
-        <div className="absolute inset-0 bg-black/40" />
-        <div className="relative z-10 flex flex-col items-start justify-center text-left px-6 h-full text-white">
-          {/* <Logo className="h-10 text-white mb-4" /> */}
-          <p className="hl font-bold italic uppercase text-6xl w-full text-justify [text-align-last:justify]">
+        <div className="absolute inset-0 bg-black/50" />
+        <div
+          className="relative z-10 flex flex-col items-start justify-center text-left px-6 h-full"
+          style={{ color: "#FFD60A" }}
+        >
+          {/* <Logo className="h-10 mb-4" /> */}
+          <p
+            className="hl font-bold italic uppercase w-full text-justify [text-align-last:justify] leading-[1]"
+            style={{ fontSize: "clamp(2rem, 11vw, 6rem)" }}
+          >
             Toronto&rsquo;s independent record label and artist management company.
           </p>
           <p className="hl !font-light uppercase mt-6 text-2xl text-justify [text-align-last:justify] w-full">
