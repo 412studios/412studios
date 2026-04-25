@@ -26,7 +26,7 @@ const studioStartIndex: Record<"A" | "B" | "C", number> = {
   C: studioAImages.length + studioBImages.length,
 };
 
-const STUDIO_YELLOW = "#A8C8E8";
+const STUDIO_YELLOW = "#FFD60A";
 
 export function StudiosCarousel() {
   const scrollRef = useRef<HTMLDivElement | null>(null);
@@ -145,7 +145,7 @@ export function StudiosCarousel() {
         onClick={() => scrollByAmount(-1)}
         disabled={!canPrev}
         aria-label="Previous"
-        className="z-10 absolute left-2 md:left-0 top-1/2 -translate-y-1/2 md:top-0 md:bottom-0 md:translate-y-0 md:flex md:items-center p-2 md:p-0 md:px-2 bg-black/25 backdrop-blur-sm border md:border-0 md:border-r border-white/15 hover:bg-[#A8C8E8] hover:text-black transition-colors disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
+        className="z-10 absolute left-2 md:left-0 top-1/2 -translate-y-1/2 md:top-0 md:bottom-0 md:translate-y-0 md:flex md:items-center p-2 md:p-0 md:px-2 bg-black/25 backdrop-blur-sm border md:border-0 md:border-r border-white/15 hover:bg-[#FFD60A] hover:text-black transition-colors disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
       >
         <ChevronLeft className="w-6 h-6 mix-blend-difference" style={{ color: STUDIO_YELLOW }} />
       </button>
@@ -154,7 +154,7 @@ export function StudiosCarousel() {
         onClick={() => scrollByAmount(1)}
         disabled={!canNext}
         aria-label="Next"
-        className="z-10 absolute right-2 md:right-0 top-1/2 -translate-y-1/2 md:top-0 md:bottom-0 md:translate-y-0 md:flex md:items-center p-2 md:p-0 md:px-2 bg-black/25 backdrop-blur-sm border md:border-0 md:border-l border-white/15 hover:bg-[#A8C8E8] hover:text-black transition-colors disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
+        className="z-10 absolute right-2 md:right-0 top-1/2 -translate-y-1/2 md:top-0 md:bottom-0 md:translate-y-0 md:flex md:items-center p-2 md:p-0 md:px-2 bg-black/25 backdrop-blur-sm border md:border-0 md:border-l border-white/15 hover:bg-[#FFD60A] hover:text-black transition-colors disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
       >
         <ChevronRight className="w-6 h-6 mix-blend-difference" style={{ color: STUDIO_YELLOW }} />
       </button>
@@ -194,7 +194,7 @@ export function StudiosCarousel() {
               role="option"
               aria-selected={currentStudio === studio}
               onClick={() => scrollToStudio(studio)}
-              className={`w-full text-left px-3 py-2 text-base font-bold uppercase tracking-wider hover:bg-[#A8C8E8] hover:text-black transition-colors cursor-pointer ${
+              className={`w-full text-left px-3 py-2 text-base font-bold uppercase tracking-wider hover:bg-[#FFD60A] hover:text-black transition-colors cursor-pointer ${
                 currentStudio === studio ? "bg-white/10" : ""
               }`}
               style={{ color: STUDIO_YELLOW }}

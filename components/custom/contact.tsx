@@ -44,14 +44,14 @@ export function Contact() {
         <div className="flex flex-col gap-2">
           <Link
             href="mailto:Info@412studios.ca"
-            className="inline-flex items-center gap-2 hover:text-[#A8C8E8] transition-colors"
+            className="inline-flex items-center gap-2 hover:text-[#FFD60A] transition-colors"
           >
             <Mail className="w-5 h-5" />
             <span>Info@412studios.ca</span>
           </Link>
           <Link
             href="tel:647-540-2321"
-            className="inline-flex items-center gap-2 hover:text-[#A8C8E8] transition-colors"
+            className="inline-flex items-center gap-2 hover:text-[#FFD60A] transition-colors"
           >
             <Phone className="w-5 h-5" />
             <span>647-540-2321</span>
@@ -65,7 +65,7 @@ export function Contact() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={social.label}
-                className="flex items-center gap-2 px-3 py-2 border border-foreground/20 hover:bg-[#A8C8E8] hover:text-black transition-colors text-xs md:text-sm font-bold uppercase tracking-wider"
+                className="flex items-center gap-2 px-3 py-2 border border-foreground/20 hover:bg-[#FFD60A] hover:text-black transition-colors text-xs md:text-sm font-bold uppercase tracking-wider"
               >
                 {social.icon}
                 <span>{social.label}</span>

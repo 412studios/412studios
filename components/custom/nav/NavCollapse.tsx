@@ -1,5 +1,6 @@
+"use client";
 import Link from "next/link";
-import { RegisterLink, LoginLink, LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
+import { LoginLink, LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
 
 interface NavCollapseProps {
   isAuthenticated: boolean;
@@ -9,6 +10,16 @@ interface NavCollapseProps {
   handleMenuClick: () => void;
   links?: Array<{ href: string; label: string }>;
   isAdmin?: boolean;
+}
+
+function scrollToHash(href: string, navHeight: number) {
+  if (!href.startsWith("#")) return false;
+  const target = document.getElementById(href.slice(1));
+  if (!target) return false;
+  const top = target.getBoundingClientRect().top + window.scrollY - navHeight;
+  window.scrollTo({ top, behavior: "smooth" });
+  if (history.replaceState) history.replaceState(null, "", href);
+  return true;
 }
 
 export default function NavCollapse({
@@ -39,7 +50,10 @@ export default function NavCollapse({
           <Link
             key={link.href}
             href={link.href}
-            onClick={handleMenuClick}
+            onClick={(e) => {
+              if (scrollToHash(link.href, navHeight)) e.preventDefault();
+              handleMenuClick();
+            }}
             className={`xl:hidden ${itemClass}`}
           >
             {link.label}
@@ -62,8 +76,7 @@ export default function NavCollapse({
           </>
         ) : (
           <>
-            <RegisterLink className={itemClass}>SIGN UP</RegisterLink>
-            <LoginLink className={itemClass}>LOG IN</LoginLink>
+            <LoginLink className={itemClass}>SIGN IN</LoginLink>
           </>
         )}
       </div>

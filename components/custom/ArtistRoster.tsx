@@ -179,7 +179,7 @@ export function ArtistRoster() {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={`${artist.name} on ${link.label}`}
-                    className="flex items-center gap-2 px-3 py-2 border border-foreground/20 hover:bg-[#A8C8E8] hover:text-black transition-colors text-xs md:text-sm font-bold uppercase tracking-wider"
+                    className="flex items-center gap-2 px-3 py-2 border border-foreground/20 hover:bg-[#FFD60A] hover:text-black transition-colors text-xs md:text-sm font-bold uppercase tracking-wider"
                   >
                     {link.icon}
                     <span>{link.label}</span>

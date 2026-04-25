@@ -6,7 +6,7 @@ import Link from "next/link";
 import { Logo } from "@/public/icons/logo";
 import { usePathname } from "next/navigation";
 
-import { RegisterLink, LoginLink, LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
+import { LoginLink } from "@kinde-oss/kinde-auth-nextjs/components";
 
 interface NavbarClientProps {
   isAuthenticated: boolean;
@@ -17,10 +17,23 @@ interface NavbarClientProps {
 export default function NavbarClient({ isAuthenticated, user, isAdmin }: NavbarClientProps) {
   const links = [
     { href: "#home", label: "HOME" },
-    { href: "#about", label: "ABOUT" },
     { href: "#studios", label: "STUDIOS" },
+    { href: "#artists", label: "ARTISTS" },
     { href: "#contact", label: "CONTACT" },
   ];
+
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    if (!href.startsWith("#")) return;
+    const id = href.slice(1);
+    const target = document.getElementById(id);
+    if (!target) return;
+    e.preventDefault();
+    const navOffset = navRef.current?.offsetHeight ?? 0;
+    const top = target.getBoundingClientRect().top + window.scrollY - navOffset;
+    window.scrollTo({ top, behavior: "smooth" });
+    setIsOpen(false);
+    if (history.replaceState) history.replaceState(null, "", href);
+  };
 
   const navRef = useRef<HTMLElement | null>(null);
   const subNavRef = useRef<HTMLDivElement | null>(null);
@@ -33,10 +46,6 @@ export default function NavbarClient({ isAuthenticated, user, isAdmin }: NavbarC
 
   const handleMenuClick = () => {
     setIsOpen(!isOpen);
-  };
-
-  const closeMenu = () => {
-    setIsOpen(false);
   };
 
   // Close menu when URL changes
@@ -116,7 +125,7 @@ export default function NavbarClient({ isAuthenticated, user, isAdmin }: NavbarC
                   <Link
                     key={link.href}
                     href={link.href}
-                    onClick={closeMenu}
+                    onClick={(e) => handleNavClick(e, link.href)}
                     className="hidden xl:inline-flex items-center p-4 md:p-8 hover:bg-[#FFD60A] hover:no-underline transition-colors duration-300"
                   >
                     {link.label}
@@ -140,11 +149,8 @@ export default function NavbarClient({ isAuthenticated, user, isAdmin }: NavbarC
                 </button>
               ) : (
                 <>
-                  <RegisterLink className="uppercase hidden xl:inline-flex items-center p-4 md:p-8 hover:bg-[#FFD60A] hover:no-underline transition-colors duration-300">
-                    Sign Up
-                  </RegisterLink>
                   <LoginLink className="uppercase hidden xl:inline-flex items-center p-4 md:p-8 hover:bg-[#FFD60A] hover:no-underline transition-colors duration-300">
-                    Log In
+                    Sign In
                   </LoginLink>
                   <button
                     id="menu-button"
