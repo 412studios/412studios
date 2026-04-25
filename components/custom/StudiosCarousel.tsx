@@ -26,7 +26,7 @@ const studioStartIndex: Record<"A" | "B" | "C", number> = {
   C: studioAImages.length + studioBImages.length,
 };
 
-const PASTEL_BLUE = "#A8C8E8";
+const STUDIO_YELLOW = "#A8C8E8";
 
 export function StudiosCarousel() {
   const scrollRef = useRef<HTMLDivElement | null>(null);
@@ -129,23 +129,34 @@ export function StudiosCarousel() {
         ))}
       </div>
 
+      <div className="z-10 absolute bottom-2 left-2 right-12 md:bottom-4 md:left-16 md:right-16 max-w-2xl bg-black/25 backdrop-blur-sm border border-white/15 p-2 md:p-3 pointer-events-none">
+        <p
+          className="italic font-bold text-xs md:text-base uppercase tracking-wider leading-snug mix-blend-difference"
+          style={{ color: STUDIO_YELLOW }}
+        >
+          Built for focused creation and collaboration, the space supports artists, producers, and
+          writers at every stage of their projects. 412 features 4 fully treated professional
+          studios designed for high-quality recording and production.
+        </p>
+      </div>
+
       <button
         type="button"
         onClick={() => scrollByAmount(-1)}
         disabled={!canPrev}
         aria-label="Previous"
-        className="z-10 absolute left-2 md:left-0 top-1/2 -translate-y-1/2 md:top-0 md:bottom-0 md:translate-y-0 md:flex md:items-center p-2 md:p-0 md:px-2 bg-background/20 border md:border-0 md:border-r border-foreground/20 hover:bg-[#FFD60A] transition-colors disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
+        className="z-10 absolute left-2 md:left-0 top-1/2 -translate-y-1/2 md:top-0 md:bottom-0 md:translate-y-0 md:flex md:items-center p-2 md:p-0 md:px-2 bg-black/25 backdrop-blur-sm border md:border-0 md:border-r border-white/15 hover:bg-[#A8C8E8] hover:text-black transition-colors disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
       >
-        <ChevronLeft className="w-6 h-6" />
+        <ChevronLeft className="w-6 h-6 mix-blend-difference" style={{ color: STUDIO_YELLOW }} />
       </button>
       <button
         type="button"
         onClick={() => scrollByAmount(1)}
         disabled={!canNext}
         aria-label="Next"
-        className="z-10 absolute right-2 md:right-0 top-1/2 -translate-y-1/2 md:top-0 md:bottom-0 md:translate-y-0 md:flex md:items-center p-2 md:p-0 md:px-2 bg-background/20 border md:border-0 md:border-l border-foreground/20 hover:bg-[#FFD60A] transition-colors disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
+        className="z-10 absolute right-2 md:right-0 top-1/2 -translate-y-1/2 md:top-0 md:bottom-0 md:translate-y-0 md:flex md:items-center p-2 md:p-0 md:px-2 bg-black/25 backdrop-blur-sm border md:border-0 md:border-l border-white/15 hover:bg-[#A8C8E8] hover:text-black transition-colors disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
       >
-        <ChevronRight className="w-6 h-6" />
+        <ChevronRight className="w-6 h-6 mix-blend-difference" style={{ color: STUDIO_YELLOW }} />
       </button>
 
       <div
@@ -157,18 +168,22 @@ export function StudiosCarousel() {
           onClick={() => setIsOpen((v) => !v)}
           aria-haspopup="listbox"
           aria-expanded={isOpen}
-          className="inline-flex items-center gap-2 italic font-bold text-2xl md:text-6xl uppercase tracking-wider leading-none cursor-pointer"
-          style={{ color: PASTEL_BLUE }}
+          className="bg-black/25 backdrop-blur-sm border border-white/15 px-2 py-1 md:px-3 md:py-2 cursor-pointer"
         >
-          <span>Studio {currentStudio}</span>
-          <ChevronDown
-            className={`w-5 h-5 md:w-8 md:h-8 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
-          />
+          <span
+            className="inline-flex items-center gap-2 italic font-bold text-2xl md:text-6xl uppercase tracking-wider leading-none mix-blend-difference"
+            style={{ color: STUDIO_YELLOW }}
+          >
+            <span>Studio {currentStudio}</span>
+            <ChevronDown
+              className={`w-5 h-5 md:w-8 md:h-8 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
+            />
+          </span>
         </button>
 
         <div
           role="listbox"
-          className={`absolute top-full left-0 mt-2 min-w-[160px] bg-background/95 backdrop-blur-sm border border-foreground/20 shadow-lg overflow-hidden transition-all duration-200 ease-in-out ${
+          className={`absolute top-full left-0 mt-2 min-w-[160px] bg-black/25 backdrop-blur-sm border border-white/15 shadow-lg overflow-hidden transition-all duration-200 ease-in-out ${
             isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0 border-0"
           }`}
         >
@@ -179,11 +194,12 @@ export function StudiosCarousel() {
               role="option"
               aria-selected={currentStudio === studio}
               onClick={() => scrollToStudio(studio)}
-              className={`w-full text-left px-3 py-2 text-base font-bold uppercase tracking-wider hover:bg-[#FFD60A] transition-colors cursor-pointer ${
-                currentStudio === studio ? "bg-foreground/10" : ""
+              className={`w-full text-left px-3 py-2 text-base font-bold uppercase tracking-wider hover:bg-[#FFD60A] hover:text-black transition-colors cursor-pointer ${
+                currentStudio === studio ? "bg-white/10" : ""
               }`}
+              style={{ color: STUDIO_YELLOW }}
             >
-              Studio {studio}
+              <span className="mix-blend-difference">Studio {studio}</span>
             </button>
           ))}
         </div>

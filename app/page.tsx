@@ -10,7 +10,7 @@ export default function Home() {
       <Banner />
       <section id="studios" className="border-t">
         <div className="w-full border-b p-4 md:p-8">
-          <H2 className="text-left">STUDIOS</H2>
+          <H2 className="text-left">OUR STUDIOS</H2>
           <Subtitle className="italic mt-2 max-w-[900px]">
             Our fully equipped studios are designed for recording, production, and creative
             collaboration.
