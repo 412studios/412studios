@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { RegisterLink, LoginLink, LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
 
 interface NavCollapseProps {
@@ -21,6 +20,9 @@ export default function NavCollapse({
   links = [],
   isAdmin = false,
 }: NavCollapseProps) {
+  const itemClass =
+    "flex items-center w-full p-8 text-base font-bold uppercase border-b hover:text-secondary transition-colors duration-300";
+
   return (
     <div
       className={`z-50 absolute right-0 transition-all duration-300 ease-in-out overflow-hidden border-t bg-background/30 backdrop-blur-md ${
@@ -32,60 +34,38 @@ export default function NavCollapse({
         transitionDelay: isTransitioning ? "0.1s" : "0s",
       }}
     >
-      <div className="flex flex-col p-2 gap-1 relative">
+      <div className="flex flex-col relative">
+        {links.map((link) => (
+          <Link
+            key={link.href}
+            href={link.href}
+            onClick={handleMenuClick}
+            className={`xl:hidden ${itemClass}`}
+          >
+            {link.label}
+          </Link>
+        ))}
         {isAuthenticated ? (
           <>
-            <Link href="/booking">
-              <Button variant="nav" size="sm">
-                BOOK NOW
-              </Button>
+            <Link href="/booking" onClick={handleMenuClick} className={itemClass}>
+              BOOK NOW
             </Link>
-            <Link href="/user/profile">
-              <Button variant="nav" size="sm">
-                PROFILE
-              </Button>
+            <Link href="/user/profile" onClick={handleMenuClick} className={itemClass}>
+              PROFILE
             </Link>
             {isAdmin && (
-              <Link href="/user/admin">
-                <Button variant="nav" size="sm">
-                  ADMIN
-                </Button>
+              <Link href="/user/admin" onClick={handleMenuClick} className={itemClass}>
+                ADMIN
               </Link>
             )}
-            <LogoutLink>
-              <Button variant="nav" size="sm">
-                LOG OUT
-              </Button>
-            </LogoutLink>
+            <LogoutLink className={itemClass}>LOG OUT</LogoutLink>
           </>
         ) : (
           <>
-            <RegisterLink>
-              <Button variant="nav" size="sm">
-                SIGN UP
-              </Button>
-            </RegisterLink>
-            <LoginLink>
-              <Button variant="nav" size="sm">
-                LOG IN
-              </Button>
-            </LoginLink>
+            <RegisterLink className={itemClass}>SIGN UP</RegisterLink>
+            <LoginLink className={itemClass}>LOG IN</LoginLink>
           </>
         )}
-        <div className="flex sm:hidden flex-col gap-2 mt-2">
-          {links.map((link) => (
-            <Link key={link.href} href={link.href}>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="w-full text-left justify-start px-2"
-                onClick={handleMenuClick}
-              >
-                {link.label}
-              </Button>
-            </Link>
-          ))}
-        </div>
       </div>
     </div>
   );

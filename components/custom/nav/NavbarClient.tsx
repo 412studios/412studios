@@ -105,11 +105,11 @@ export default function NavbarClient({ isAuthenticated, user, isAdmin }: NavbarC
               aria-label="Header Logo"
               className="p-8 flex items-center border-r hover:text-secondary transition-colors duration-300"
             >
-              <Logo className="rounded-full bg-opacity-5 h-6 text-primary hover:text-secondary hover:fill-secondary transition-all duration-300 ease-in-out" />
+              <Logo className="rounded-full bg-opacity-5 h-12 text-primary hover:text-secondary hover:fill-secondary transition-all duration-300 ease-in-out" />
             </Link>
             <div
               ref={subNavRef}
-              className="flex items-stretch ml-auto text-[12px] font-normal uppercase [&>*]:border-l"
+              className="flex items-stretch ml-auto text-base font-bold uppercase [&>*]:border-l border-r"
             >
               {isHomepage &&
                 links.map((link) => (
@@ -117,7 +117,7 @@ export default function NavbarClient({ isAuthenticated, user, isAdmin }: NavbarC
                     key={link.href}
                     href={link.href}
                     onClick={closeMenu}
-                    className="hidden md:inline-flex items-center p-8 hover:text-secondary transition-colors duration-300"
+                    className="hidden xl:inline-flex items-center p-8 hover:text-secondary transition-colors duration-300"
                   >
                     {link.label}
                   </Link>
@@ -140,16 +140,16 @@ export default function NavbarClient({ isAuthenticated, user, isAdmin }: NavbarC
                 </button>
               ) : (
                 <>
-                  <RegisterLink className="uppercase hidden sm:inline-flex items-center p-8 hover:text-secondary transition-colors duration-300">
+                  <RegisterLink className="uppercase hidden xl:inline-flex items-center p-8 hover:text-secondary transition-colors duration-300">
                     Sign Up
                   </RegisterLink>
-                  <LoginLink className="uppercase hidden sm:inline-flex items-center p-8 hover:text-secondary transition-colors duration-300">
+                  <LoginLink className="uppercase hidden xl:inline-flex items-center p-8 hover:text-secondary transition-colors duration-300">
                     Log In
                   </LoginLink>
                   <button
                     id="menu-button"
                     onClick={handleMenuClick}
-                    className="uppercase sm:hidden p-8 hover:text-secondary transition-colors duration-300"
+                    className="uppercase xl:hidden p-8 hover:text-secondary transition-colors duration-300"
                   >
                     {isOpen ? "CLOSE" : "MENU"}
                   </button>
