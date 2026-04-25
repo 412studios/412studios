@@ -194,7 +194,7 @@ export function StudiosCarousel() {
               role="option"
               aria-selected={currentStudio === studio}
               onClick={() => scrollToStudio(studio)}
-              className={`w-full text-left px-3 py-2 text-base font-bold uppercase tracking-wider hover:bg-[#FFD60A] hover:text-black transition-colors cursor-pointer ${
+              className={`w-full text-left px-3 py-2 text-base font-bold uppercase tracking-wider hover:bg-[#A8C8E8] hover:text-black transition-colors cursor-pointer ${
                 currentStudio === studio ? "bg-white/10" : ""
               }`}
               style={{ color: STUDIO_YELLOW }}
