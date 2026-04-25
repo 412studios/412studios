@@ -70,13 +70,13 @@ function LoadingScreen({ excludedPaths = [], excludedPatterns = [] }: LoadingScr
 
   return (
     <div
-      className="fixed inset-0 flex items-center justify-center bg-background transition-opacity duration-500 ease-out pointer-events-none"
-      style={{ opacity, zIndex: 99999 }}
+      className="fixed inset-0 flex items-center justify-center transition-opacity duration-500 ease-out pointer-events-none"
+      style={{ opacity, zIndex: 99999, backgroundColor: "#FFD60A" }}
       aria-hidden="true"
     >
       <div className="flex flex-col items-center space-y-2">
         <div className="relative h-auto w-48">
-          <Logo className="h-auto w-48 text-gray-300" />
+          <Logo className="h-auto w-48 text-primary opacity-20" />
           <div
             className="absolute inset-0 overflow-hidden"
             style={{ clipPath: `inset(${100 - loadingProgress}% 0 0 0)` }}

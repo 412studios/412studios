@@ -310,11 +310,56 @@ export function Banner() {
             className="hl font-bold italic uppercase w-full text-justify [text-align-last:justify] leading-[1]"
             style={{ fontSize: "clamp(2rem, 11vw, 6rem)" }}
           >
-            Toronto&rsquo;s independent record label and artist management company.
+            {(() => {
+              let charIndex = 0;
+              return "Toronto’s independent record label and artist management company."
+                .split(" ")
+                .map((word, wi, arr) => (
+                  <span key={wi}>
+                    <span style={{ display: "inline-block", whiteSpace: "nowrap" }}>
+                    {Array.from(word).map((ch) => {
+                      const i = charIndex++;
+                      return (
+                        <span
+                          key={i}
+                          className="letter-dissolve"
+                          style={{ animationDelay: `${1500 + i * 8}ms` }}
+                        >
+                          {ch}
+                        </span>
+                      );
+                    })}
+                    </span>
+                    {wi < arr.length - 1 && " "}
+                  </span>
+                ));
+            })()}
           </p>
           <p className="hl !font-light uppercase mt-6 text-2xl text-justify [text-align-last:justify] w-full">
-            Rooted in legacy and built for long-term artist development. Established in 2023, 412
-            provides structure, mentorship, and strategic support for creators.
+            {(() => {
+              let charIndex = 0;
+              return "Rooted in legacy and built for long-term artist development. Established in 2023, 412 provides structure, mentorship, and strategic support for creators."
+                .split(" ")
+                .map((word, wi, arr) => (
+                  <span key={wi}>
+                    <span style={{ display: "inline-block", whiteSpace: "nowrap" }}>
+                    {Array.from(word).map((ch) => {
+                      const i = charIndex++;
+                      return (
+                        <span
+                          key={i}
+                          className="letter-dissolve"
+                          style={{ animationDelay: `${1500 + i * 8}ms` }}
+                        >
+                          {ch}
+                        </span>
+                      );
+                    })}
+                    </span>
+                    {wi < arr.length - 1 && " "}
+                  </span>
+                ));
+            })()}
           </p>
         </div>
       </div>
