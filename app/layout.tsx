@@ -5,7 +5,6 @@ import { Navbar } from "@/components/custom/nav/Navbar";
 import { Footer } from "@/components/custom/Footer";
 import { UserProvider } from "@/components/custom/UserContext";
 import { LoadingProvider } from "@/components/custom/LoadingProvider";
-import { ScrollToTop } from "@/components/custom/ScrollToTop";
 import { unstable_noStore as noStore } from "next/cache";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import FacebookPixel from "@/components/custom/FacebookPixel";
@@ -69,7 +68,6 @@ export default async function RootLayout({
             </div>
           </div>
         </LoadingProvider>
-        <ScrollToTop />
         <FacebookPixel pixelId={FACEBOOK_PIXEL_ID} />
       </body>
     </html>
