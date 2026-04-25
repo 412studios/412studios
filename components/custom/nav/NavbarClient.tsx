@@ -4,7 +4,6 @@ import NavCollapse from "./NavCollapse";
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { Logo } from "@/public/icons/logo";
-import { Button } from "@/components/ui/button";
 import { usePathname } from "next/navigation";
 
 import { RegisterLink, LoginLink, LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
@@ -96,80 +95,68 @@ export default function NavbarClient({ isAuthenticated, user, isAdmin }: NavbarC
   }, []);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-x-0 w-[calc(100%+1px)] border-r">
+    <header className="sticky top-0 z-50 border-b border-x-0 w-[calc(100%+1px)]">
       <nav id="main-nav" ref={navRef} className="bg-background/30 backdrop-blur-md">
         <div className="flex flex-col">
           {/* MAIN NAV */}
-          <div
-            className={`p-1 border-b-0 flex justify-between items-center ${
-              isHomepage ? "md:border-b" : "md:border-b-0"
-            }`}
-          >
-            <Link href="/" aria-label="Header Logo">
+          <div className="border-b-0 flex justify-between items-stretch">
+            <Link
+              href="/"
+              aria-label="Header Logo"
+              className="p-8 flex items-center border-r hover:text-secondary transition-colors duration-300"
+            >
               <Logo className="rounded-full bg-opacity-5 h-6 text-primary hover:text-secondary hover:fill-secondary transition-all duration-300 ease-in-out" />
             </Link>
-            <div>
+            <div
+              ref={subNavRef}
+              className="flex items-stretch ml-auto text-[12px] font-normal uppercase [&>*]:border-l"
+            >
+              {isHomepage &&
+                links.map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    onClick={closeMenu}
+                    className="hidden md:inline-flex items-center p-8 hover:text-secondary transition-colors duration-300"
+                  >
+                    {link.label}
+                  </Link>
+                ))}
               {isAuthenticated ? (
-                <>
-                  <Button id="menu-button" variant="ghost" size="sm" onClick={handleMenuClick}>
-                    {isOpen ? "CLOSE" : "MENU"}
-                  </Button>
-                </>
+                <button
+                  id="menu-button"
+                  onClick={handleMenuClick}
+                  className="uppercase p-8 hover:text-secondary transition-colors duration-300"
+                >
+                  {isOpen ? "CLOSE" : "MENU"}
+                </button>
+              ) : isOpen ? (
+                <button
+                  id="menu-button"
+                  onClick={handleMenuClick}
+                  className="uppercase p-8 hover:text-secondary transition-colors duration-300"
+                >
+                  {isOpen ? "CLOSE" : "MENU"}
+                </button>
               ) : (
                 <>
-                  <div className="hidden sm:flex">
-                    {isOpen ? (
-                      <>
-                        <Button
-                          id="menu-button"
-                          variant="ghost"
-                          size="sm"
-                          onClick={handleMenuClick}
-                        >
-                          {isOpen ? "CLOSE" : "MENU"}
-                        </Button>
-                      </>
-                    ) : (
-                      <>
-                        <RegisterLink className="mr-2">
-                          <Button variant="ghost" size="sm">
-                            Sign Up
-                          </Button>
-                        </RegisterLink>
-                        <LoginLink>
-                          <Button variant="ghost" size="sm">
-                            Log In
-                          </Button>
-                        </LoginLink>
-                      </>
-                    )}
-                  </div>
-                  <div className="flex sm:hidden">
-                    <Button id="menu-button" variant="ghost" size="sm" onClick={handleMenuClick}>
-                      {isOpen ? "CLOSE" : "MENU"}
-                    </Button>
-                  </div>
+                  <RegisterLink className="uppercase hidden sm:inline-flex items-center p-8 hover:text-secondary transition-colors duration-300">
+                    Sign Up
+                  </RegisterLink>
+                  <LoginLink className="uppercase hidden sm:inline-flex items-center p-8 hover:text-secondary transition-colors duration-300">
+                    Log In
+                  </LoginLink>
+                  <button
+                    id="menu-button"
+                    onClick={handleMenuClick}
+                    className="uppercase sm:hidden p-8 hover:text-secondary transition-colors duration-300"
+                  >
+                    {isOpen ? "CLOSE" : "MENU"}
+                  </button>
                 </>
               )}
             </div>
           </div>
-          {/* Membership NAV */}
-          {isHomepage ? (
-            <>
-              <div
-                ref={subNavRef}
-                className="hidden md:flex items-start gap-2 text-[12px] font-normal overflow-hidden p-1"
-              >
-                {links.map((link) => (
-                  <Link key={link.href} href={link.href} onClick={closeMenu}>
-                    {link.label}
-                  </Link>
-                ))}
-              </div>
-            </>
-          ) : (
-            <></>
-          )}
         </div>
       </nav>
       <NavCollapse
