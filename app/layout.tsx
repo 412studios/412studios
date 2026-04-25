@@ -15,7 +15,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "412 Studios",
-  description: "412 Studios Toronto",
+  description: "412 is an independent record label and studio based in Toronto, Canada.",
   metadataBase: new URL("https://www.412studios.ca/"),
   icons: {
     icon: "/icon.png",
