@@ -51,7 +51,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body
-        className="flex flex-col min-h-screen max-w-[2000px] mx-auto border-x overflow-x-hidden"
+        className="flex flex-col min-h-screen max-w-[2800px] mx-auto border-x overflow-x-hidden"
         suppressHydrationWarning
       >
         <LoadingProvider
