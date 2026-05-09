@@ -5,13 +5,13 @@ import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, ChevronDown, X, Plus } from "lucide-react";
 
-const studioAImages = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 30, 31, 32, 33].map(
+const studioAImages = [1, 3, 4, 13].map(
   (n) => `/images/studios/studioa/412 Studio-${n}.jpg`
 );
-const studioBImages = [22, 23, 24, 25, 26, 27, 28, 29].map(
+const studioBImages = [24, 29].map(
   (n) => `/images/studios/studiob/412 Studio-${n}.jpg`
 );
-const studioCImages = [54, 55, 56, 60, 61, 62, 63, 64].map(
+const studioCImages = [61, 63].map(
   (n) => `/images/studios/studioc/412 Studio-${n}.jpg`
 );
 
