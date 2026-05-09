@@ -80,20 +80,10 @@ export function StudiosCarousel() {
   useEffect(() => {
     const el = scrollRef.current;
     if (!el) return;
-
-    const onWheel = (e: WheelEvent) => {
-      if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
-        e.preventDefault();
-        el.scrollLeft += e.deltaY;
-      }
-    };
-
     el.addEventListener("scroll", updateState, { passive: true });
-    el.addEventListener("wheel", onWheel, { passive: false });
     updateState();
     return () => {
       el.removeEventListener("scroll", updateState);
-      el.removeEventListener("wheel", onWheel);
     };
   }, [updateState]);
 

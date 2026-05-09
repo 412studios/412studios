@@ -3,7 +3,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { FaInstagram, FaTiktok, FaYoutube, FaSpotify, FaApple } from "react-icons/fa";
+
+const STUDIO_YELLOW = "#FFD60A";
 
 type ArtistLink = {
   label: string;
@@ -122,17 +125,8 @@ export function ArtistRoster() {
 
     const raf = requestAnimationFrame(init);
 
-    const onWheel = (e: WheelEvent) => {
-      if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
-        e.preventDefault();
-        el.scrollLeft += e.deltaY;
-      }
-    };
-
-    el.addEventListener("wheel", onWheel, { passive: false });
     return () => {
       cancelAnimationFrame(raf);
-      el.removeEventListener("wheel", onWheel);
     };
   }, []);
 
@@ -143,7 +137,14 @@ export function ArtistRoster() {
     return () => el.removeEventListener("scroll", handleLoop);
   }, [ready, handleLoop]);
 
+  const scrollByAmount = (dir: 1 | -1) => {
+    const el = scrollRef.current;
+    if (!el) return;
+    el.scrollBy({ left: dir * el.clientWidth * 0.9, behavior: "smooth" });
+  };
+
   return (
+    <div className="relative isolate">
     <div
       ref={scrollRef}
       className="flex overflow-x-auto overscroll-x-contain [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
@@ -190,6 +191,23 @@ export function ArtistRoster() {
           </div>
         </div>
       ))}
+    </div>
+      <button
+        type="button"
+        onClick={() => scrollByAmount(-1)}
+        aria-label="Previous"
+        className="z-10 absolute left-2 md:left-0 top-1/2 -translate-y-1/2 md:top-0 md:bottom-0 md:translate-y-0 md:flex md:items-center p-2 md:p-0 md:px-2 bg-black/25 backdrop-blur-sm border md:border-0 md:border-r border-white/15 hover:bg-[#FFD60A] hover:text-black transition-colors cursor-pointer"
+      >
+        <ChevronLeft className="w-6 h-6 mix-blend-difference" style={{ color: STUDIO_YELLOW }} />
+      </button>
+      <button
+        type="button"
+        onClick={() => scrollByAmount(1)}
+        aria-label="Next"
+        className="z-10 absolute right-2 md:right-0 top-1/2 -translate-y-1/2 md:top-0 md:bottom-0 md:translate-y-0 md:flex md:items-center p-2 md:p-0 md:px-2 bg-black/25 backdrop-blur-sm border md:border-0 md:border-l border-white/15 hover:bg-[#FFD60A] hover:text-black transition-colors cursor-pointer"
+      >
+        <ChevronRight className="w-6 h-6 mix-blend-difference" style={{ color: STUDIO_YELLOW }} />
+      </button>
     </div>
   );
 }
