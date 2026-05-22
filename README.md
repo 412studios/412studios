@@ -12,7 +12,6 @@ npm install
 ```
 
 3. Set up environment variables:
-
    - Copy `.env.example` to `.env`
    - Fill in the required environment variables
 
@@ -58,8 +57,6 @@ When an admin creates a booking, the system automatically:
 2. Sends a confirmation email to the user with booking details
 3. Redirects back to the booking page
 
-========================================================================================================================
-
 Website Development
 Section 1 - Home Page
 Headline
@@ -78,10 +75,6 @@ Explore Studio
 
 Our Origin
 → Links to Origin Page
-
-# ===========================================================================
-
-===========================================================================
 
 Section 4 — Studio Page
 
@@ -192,10 +185,6 @@ Total: $240
 Additional Fee
 
 We have engineers available for $35 per hr.
-
-# ===========================================================================
-
-===========================================================================
 
 Section 3 — Artist Roster Page
 
