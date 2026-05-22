@@ -191,6 +191,65 @@ export async function getPricing() {
   return prices;
 }
 
+// SERVER-SIDE PRICE CALCULATION
+/**
+ * Recomputes a standard booking's price on the server from the Pricing and
+ * OfferCode tables. The client-submitted price and discount are never trusted
+ * — this prevents a tampered request from paying an arbitrary amount (e.g. $0).
+ * The formula mirrors the booking form in showDetails.tsx.
+ */
+async function calculateBookingPrice(params: {
+  roomId: number;
+  startTime: number;
+  endTime: number;
+  hasEngineer: boolean;
+  offerCodeId?: string | null;
+}): Promise<{ total: number; discountAmount: number; offerCodeId: string | null }> {
+  const pricing = await prisma.pricing.findUnique({
+    where: { id: String(params.roomId) },
+    select: { hourlyRate: true, dayRate: true, engineerPrice: true },
+  });
+  if (!pricing) {
+    throw new Error(`Pricing not found for room ${params.roomId}`);
+  }
+
+  const duration = params.endTime - params.startTime + 1;
+  if (duration <= 0) {
+    throw new Error("Invalid booking duration");
+  }
+
+  // Base room cost — the full-day rate applies to a 16-hour booking.
+  let total = duration * pricing.hourlyRate;
+  if (duration === 16) {
+    total = Math.min(pricing.dayRate, duration * pricing.hourlyRate);
+  }
+
+  // Engineering add-on (priced per the existing booking-form formula).
+  if (params.hasEngineer) {
+    total += pricing.engineerPrice * duration;
+  }
+
+  // Offer-code discount — recomputed from the DB record, never the client.
+  let discountAmount = 0;
+  let appliedOfferCodeId: string | null = null;
+  if (params.offerCodeId) {
+    const offerCode = await prisma.offerCode.findUnique({
+      where: { id: params.offerCodeId },
+    });
+    if (offerCode?.isActive) {
+      if (offerCode.discountType === "percentage") {
+        discountAmount = Math.round((total * offerCode.discountValue) / 100);
+      } else if (offerCode.discountType === "fixed") {
+        discountAmount = Math.round(Math.min(offerCode.discountValue, total));
+      }
+      appliedOfferCodeId = offerCode.id;
+    }
+  }
+
+  total = Math.max(0, total - discountAmount);
+  return { total, discountAmount, offerCodeId: appliedOfferCodeId };
+}
+
 // BOOKING TYPES
 export async function PostBooking(input: any) {
   noStore();
@@ -202,33 +261,44 @@ export async function PostBooking(input: any) {
     return redirect("/api/auth/login?post_login_redirect_url=/booking");
   }
 
+  // Recompute price and discount on the server — input.price /
+  // input.discountAmount from the client are ignored to prevent price tampering.
+  const roomId = parseInt(input.room);
+  const { total, discountAmount, offerCodeId } = await calculateBookingPrice({
+    roomId,
+    startTime: input.startTime,
+    endTime: input.endTime,
+    hasEngineer: input.engDuration !== -1,
+    offerCodeId: input.offerCodeId || null,
+  });
+
   // HANDLE DB UPDATE
   const bookingId: string = require("crypto").randomBytes(16).toString("hex");
 
   await prisma.bookings.create({
     data: {
       bookingId: bookingId,
-      roomId: parseInt(input.room),
+      roomId: roomId,
       date: formatDate(input.date),
       type: "hour",
       startTime: input.startTime,
       endTime: input.endTime,
       status: "pending",
-      userId: user?.id || "",
+      userId: user.id,
       stripeProductId: priceId,
       totalHours: input.duration,
       engineerTotal: input.engDuration,
       engineerStart: input.engStart,
       engineerStatus: "pending",
-      totalPrice: input.price,
+      totalPrice: total,
       addDetails: "",
-      offerCodeId: input.offerCodeId || null,
-      discountAmount: input.discountAmount || 0,
+      offerCodeId: offerCodeId,
+      discountAmount: discountAmount,
     },
   });
 
-  // Process payment
-  return HandlePayment(user, bookingId, priceId, input.price);
+  // Process payment with the server-computed total
+  return HandlePayment(user, bookingId, priceId, total);
 }
 
 // BOOKING TYPES
