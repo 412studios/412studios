@@ -45,7 +45,7 @@ interface User {
   memberships: Membership[];
 }
 
-export default function Users(): JSX.Element {
+export default function Users(): React.JSX.Element {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);

@@ -16,5 +16,7 @@ export async function Navbar() {
     isAdmin = userData?.role === "admin";
   }
 
-  return <NavbarClient isAuthenticated={await isAuthenticated()} user={user} isAdmin={isAdmin} />;
+  return (
+    <NavbarClient isAuthenticated={(await isAuthenticated()) ?? false} user={user} isAdmin={isAdmin} />
+  );
 }
