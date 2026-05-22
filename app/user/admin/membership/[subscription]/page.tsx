@@ -5,10 +5,11 @@ import NumberInput from "./numinput";
 import { redirect } from "next/navigation";
 import prisma from "@/lib/db";
 
-export default async function Page(id: any) {
+export default async function Page(props: { params: Promise<{ subscription: string }> }) {
+  const { subscription } = await props.params;
   const membership = await prisma.memberships.findUnique({
     where: {
-      membershipId: id.params.membership,
+      membershipId: subscription,
     },
     include: {
       user: {
@@ -24,7 +25,7 @@ export default async function Page(id: any) {
     try {
       await prisma.memberships.update({
         where: {
-          membershipId: id.params.membership,
+          membershipId: subscription,
         },
         data: {
           availableHours: Number(formData.get("num")),

@@ -40,7 +40,7 @@ export default async function RootLayout({
 
   if (pathname.startsWith("/user")) {
     const { isAuthenticated, getUser } = getKindeServerSession();
-    isUserAuthenticated = await isAuthenticated();
+    isUserAuthenticated = (await isAuthenticated()) ?? false;
     user = await getUser();
   }
 

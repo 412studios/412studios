@@ -45,7 +45,7 @@ interface Booking {
 
 type RoomFilter = "all" | "a" | "b" | "c";
 
-export default function Bookings(): JSX.Element {
+export default function Bookings(): React.JSX.Element {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [roomFilter, setRoomFilter] = useState<RoomFilter>("all");
   const [showPrevious, setShowPrevious] = useState<boolean>(false);
