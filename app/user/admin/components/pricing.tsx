@@ -18,6 +18,7 @@ interface Price {
   dayRate: number;
   hourlyRate: number;
   membershipPrice: number;
+  membershipPrice8: number;
   engineerPrice: number;
   blocked: boolean;
 }
@@ -92,7 +93,8 @@ export default function Pricing({ pricing }: PricingProps) {
             <TableHead>Blocked</TableHead>
             <TableHead>Day Rate ($)</TableHead>
             <TableHead>Hourly Rate ($)</TableHead>
-            <TableHead>Membership ($)</TableHead>
+            <TableHead>16-Hr Membership ($)</TableHead>
+            <TableHead>8-Hr Membership ($)</TableHead>
             <TableHead>Engineer ($)</TableHead>
           </TableRow>
         </TableHeader>
@@ -127,6 +129,14 @@ export default function Pricing({ pricing }: PricingProps) {
                   type="number"
                   value={val.membershipPrice}
                   onChange={(e) => handleChange(index, "membershipPrice", e.target.value)}
+                  className="w-20"
+                />
+              </TableCell>
+              <TableCell>
+                <Input
+                  type="number"
+                  value={val.membershipPrice8}
+                  onChange={(e) => handleChange(index, "membershipPrice8", e.target.value)}
                   className="w-20"
                 />
               </TableCell>

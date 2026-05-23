@@ -35,6 +35,7 @@ export default async function Dashboard() {
       dayRate: true,
       hourlyRate: true,
       membershipPrice: true,
+      membershipPrice8: true,
       engineerPrice: true,
       blocked: true,
     },

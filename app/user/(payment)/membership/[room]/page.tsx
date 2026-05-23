@@ -10,6 +10,7 @@ interface PriceItem {
   id: string;
   room: string;
   membershipPrice: number;
+  membershipPrice8: number;
   img: string;
   blocked: boolean;
 }
@@ -62,14 +63,17 @@ export default async function Page({ params }: { params: Promise<{ room: string 
                 <h1 className="text-2xl font-bold tracking-tight mt-4">
                   Room {selectedRoom.room} Membership
                 </h1>
-                <p>Membership Price: ${selectedRoom.membershipPrice}.00</p>
-                <p>Includes 4 X 4 hour sessions</p>
+                <p>Choose a membership bundle below. Each session is 4 hours.</p>
                 {selectedRoom.blocked ? (
                   <Link href="/booking">
                     <Button className="w-full mt-4">Return to Booking</Button>
                   </Link>
                 ) : (
-                  <Submit id={roomId} price={selectedRoom.membershipPrice} />
+                  <Submit
+                    id={roomId}
+                    price16={selectedRoom.membershipPrice}
+                    price8={selectedRoom.membershipPrice8}
+                  />
                 )}
               </div>
             )}

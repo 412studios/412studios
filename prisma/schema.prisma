@@ -75,6 +75,7 @@ model Pricing {
   hourlyRate        Int
   img               String
   membershipPrice   Int
+  membershipPrice8  Int     @default(0)
   engineerPrice     Int
   blocked           Boolean @default(false)
   User              User?   @relation(fields: [userId], references: [id])

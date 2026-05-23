@@ -183,6 +183,7 @@ export async function getPricing() {
       hourlyRate: true,
       img: true,
       membershipPrice: true,
+      membershipPrice8: true,
       engineerPrice: true,
       userId: true,
       blocked: true,
@@ -413,7 +414,31 @@ export async function PostMembership(input: any) {
   const { getUser } = getKindeServerSession();
   const user = await getUser();
 
-  const membershipId: any = require("crypto").randomBytes(16).toString("hex");
+  // Require authentication for membership purchase
+  if (!user) {
+    return redirect("/api/auth/login?post_login_redirect_url=/booking");
+  }
+
+  // The customer chooses an 8-hour or 16-hour bundle; anything else falls
+  // back to 16 hours.
+  const hours = input.hours === 8 ? 8 : 16;
+
+  // Recompute the membership price on the server from the Pricing table —
+  // the client-submitted price is never trusted (prevents price tampering).
+  const roomId = parseInt(input.id);
+  const pricing = await prisma.pricing.findUnique({
+    where: { id: String(roomId) },
+    select: { membershipPrice: true, membershipPrice8: true },
+  });
+  if (!pricing) {
+    throw new Error(`Pricing not found for room ${roomId}`);
+  }
+  const price = hours === 8 ? pricing.membershipPrice8 : pricing.membershipPrice;
+  if (!price || price <= 0) {
+    throw new Error(`The ${hours}-hour membership is not available for this room`);
+  }
+
+  const membershipId: string = require("crypto").randomBytes(16).toString("hex");
 
   //HANDLE DB UPDATE
   await prisma.memberships.create({
@@ -428,15 +453,15 @@ export async function PostMembership(input: any) {
       currentPeriodEnd: formatDate(new Date()),
       createdAt: new Date(),
       updatedAt: new Date(),
-      roomId: parseInt(input.id),
-      availableHours: 16,
+      roomId: roomId,
+      availableHours: hours,
       updateHours: new Date(),
-      userId: user?.id || "",
+      userId: user.id,
     },
   });
 
-  //SEND TO STRIPE
-  return HandlePayment(user, membershipId, priceId, input.price);
+  //SEND TO STRIPE with the server-computed price
+  return HandlePayment(user, membershipId, priceId, price);
 }
 
 export async function PostMembershipBooking(

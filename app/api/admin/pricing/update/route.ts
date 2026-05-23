@@ -31,6 +31,7 @@ export async function POST(request: NextRequest) {
           dayRate: price.dayRate,
           hourlyRate: price.hourlyRate,
           membershipPrice: price.membershipPrice,
+          membershipPrice8: price.membershipPrice8,
           engineerPrice: price.engineerPrice,
           blocked: price.blocked,
         },
